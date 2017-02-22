@@ -11,17 +11,26 @@
     tools:context="com.example.dmitryvedmed.taskbook.TaskActivity"
     android:orientation="vertical">
 
-    <TextView
-        android:text="Task headline text"
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/TaskHeadLineText"
-        android:textStyle="normal|bold" />
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:textSize="14sp"
+        android:ems="10"
+        android:id="@+id/headEditText"
+        android:textStyle="normal|bold"
+        android:hint="Заголовок" />
 
-    <TextView
-        android:paddingTop="5dp"
-        android:text="Task text"
+    <EditText
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/taskText" />
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:text="Name"
+        android:textSize="14sp"
+        android:ems="10"
+        android:id="@+id/taskEditText"
+        android:textStyle="normal"
+        android:gravity="top|left"
+        android:hint="Заметка про вашего мальчика" />
 </LinearLayout>
