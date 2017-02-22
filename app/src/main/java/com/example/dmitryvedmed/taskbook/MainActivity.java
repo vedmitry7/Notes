@@ -43,6 +43,7 @@ public class MainActivity extends ListActivity  {
 
     @Override
     protected void onResume() {
+        adapter.notifyDataSetChanged();
         super.onResume();
     }
 
