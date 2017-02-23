@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,14 +101,10 @@ public class MainActivity extends ListActivity  {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        String item = (String) getListAdapter().getItem(position);
-        Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
 
 
         Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
-        intent.putExtra("pos", position);
-        intent.putExtra("head", item);
-        intent.putExtra("text", item + item + item);
+        intent.putExtra("id", values.get(position).getId());
         startActivity(intent);
     }
 
