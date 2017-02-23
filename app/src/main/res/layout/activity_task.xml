@@ -15,18 +15,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Name"
         android:textSize="14sp"
         android:ems="10"
         android:id="@+id/headEditText"
         android:textStyle="normal|bold"
-        android:hint="Заголовок" />
+        android:hint="Заголовок"
+        android:focusableInTouchMode="true"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
-        android:text="Name"
         android:textSize="14sp"
         android:ems="10"
         android:id="@+id/taskEditText"
