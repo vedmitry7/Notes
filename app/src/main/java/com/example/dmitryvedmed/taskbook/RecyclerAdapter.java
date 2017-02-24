@@ -1,20 +1,23 @@
 package com.example.dmitryvedmed.taskbook;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder> {
-    private String[] image_urls;
+    private List<Task> tasks;
     private Context context;
 
-    public RecyclerAdapter(String[] names, Context context) {
-        this.image_urls = names;
+    public RecyclerAdapter(List<Task> tasks, Context context) {
+        this.tasks = tasks;
         this.context = context;
-        System.out.println("rv constructor" + " " + image_urls.length);
+        System.out.println("rv constructor" + " " + tasks.size());
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
@@ -39,12 +42,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
-        holder.headTextView.setText(image_urls[position]);
-        holder.taskTextView.setText(image_urls[position]+image_urls[position]+image_urls[position]);
+        holder.headTextView.setText(tasks.get(position).getHeadLine());
+        holder.taskTextView.setText(tasks.get(position).getContext());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(image_urls[position]);
+                Intent intent = new Intent(context, TaskActivity.class);
+                intent.putExtra("id", tasks.get(position).getId());
+                context.startActivity(intent);
             }
         });
         System.out.println(position);
@@ -53,6 +58,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     @Override
     public int getItemCount() {
-        return image_urls.length;
+        return tasks.size();
     }
 }

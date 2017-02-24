@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
 
-import static com.example.dmitryvedmed.taskbook.MainActivity.dbHelper;
+import static com.example.dmitryvedmed.taskbook.MainActivity2.dbHelper;
 
 public class TaskActivity extends AppCompatActivity {
 
