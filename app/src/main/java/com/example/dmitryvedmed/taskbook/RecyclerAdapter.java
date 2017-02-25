@@ -20,6 +20,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         System.out.println("rv constructor" + " " + tasks.size());
     }
 
+    public void dataChanged( List<Task> tasks){
+
+        this.tasks = tasks;
+        notifyDataSetChanged();
+    }
+
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private TextView headTextView, taskTextView;
 
@@ -59,5 +65,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     @Override
     public int getItemCount() {
         return tasks.size();
+    }
+
+
+    public void refreshList(List<Task> tasks){
+        this.tasks = tasks;
     }
 }

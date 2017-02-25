@@ -13,6 +13,7 @@ public class TaskActivity extends AppCompatActivity {
     private int id;
     private EditText head,text;
     private Task task;
+    private boolean wasChange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +47,20 @@ public class TaskActivity extends AppCompatActivity {
 
         Log.d("TAG", "SAVE  !!! " +  headline + " " + content);
 
+        Log.d("TAG", "SAVE id = " + id + "???");
+
         task.setHeadLine(headline);
         task.setContext(content);
 
         if(task.getId()==-1) {
-            id = MainActivity.dbHelper.addTask(task);
-            Log.d("TAG", "SAVE id = " + id + "???");
+            id = MainActivity2.dbHelper.addTask(task);
+            task.setId(id);
+            Log.d("TAG", "NEW TASK ID = " + id);
         }
-        else
+        else{
+            Log.d("TAG", "UPDATE id = " + id);
             dbHelper.updateTask(task);
+        }
     }
 
     @Override

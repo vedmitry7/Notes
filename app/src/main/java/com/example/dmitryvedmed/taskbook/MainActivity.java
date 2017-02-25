@@ -20,7 +20,6 @@ public class MainActivity extends ListActivity  {
     MyArrayAdapter adapter;
     public static DBHelper dbHelper;
     List<Task> values;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

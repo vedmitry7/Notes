@@ -49,6 +49,8 @@ class DBHelper extends SQLiteOpenHelper {
         // 4. close
         db.close();
         Log.d("TAG", "  addTask "  + task.toString());
+        Log.d("TAG", "  ID "  + id);
+
         return (int) id;
     }
 
