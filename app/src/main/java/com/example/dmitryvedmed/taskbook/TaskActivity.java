@@ -1,6 +1,5 @@
 package com.example.dmitryvedmed.taskbook;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -27,15 +26,19 @@ public class TaskActivity extends AppCompatActivity {
         head = ( EditText) findViewById(R.id.headEditText);
         text = ( EditText) findViewById(R.id.taskEditText);
 
-        Intent intent = getIntent();
-        id = intent.getIntExtra("id", -1);
-        Log.d("TAG", String.valueOf(id));
-        if(id==-1){
+       // Intent intent = getIntent();
+       // id = intent.getIntExtra("id", -1);
+       // Log.d("TAG", String.valueOf(id));
+
+        task = getIntent().getParcelableExtra("Task");
+        Log.d("TAG", "Eah, I've get task - " + String.valueOf(id));
+
+      /*  if(id==-1){
             task = new Task();
             task.setId(id);
             return;
-        }
-        task = dbHelper.getTask(id);
+        }*/
+       // task = dbHelper.getTask(id);
         head.setText(task.getHeadLine());
         text.setText(task.getContext());
     }

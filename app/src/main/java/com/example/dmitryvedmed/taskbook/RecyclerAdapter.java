@@ -54,7 +54,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, TaskActivity.class);
-                intent.putExtra("id", tasks.get(position).getId());
+               // intent.putExtra("id", tasks.get(position).getId());
+                intent.putExtra("Task", tasks.get(position));
                 context.startActivity(intent);
             }
         });
