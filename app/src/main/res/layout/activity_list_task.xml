@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_list_task"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.dmitryvedmed.taskbook.ListTaskActivity">
 
-   <include layout="@layout/item_list_task_aktivity"/>
-</RelativeLayout>
+
+   <EditText
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:inputType="textPersonName"
+       android:textSize="14sp"
+       android:ems="10"
+       android:id="@+id/listHeadEditText"
+       android:textStyle="normal|bold"
+       android:hint="Заголовок"
+       android:focusableInTouchMode="true"/>
+
+   <LinearLayout
+       android:id="@+id/activity_list_task_layout"
+       android:orientation="vertical"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+   </LinearLayout>
+
+   <Button
+       android:layout_marginLeft="16dp"
+       android:onClick="newItem"
+       android:background="@drawable/ic_add"
+       android:layout_width="24dp"
+       android:layout_height="24dp"
+       android:id="@+id/button2"
+       android:elevation="0dp" />
+
+
+</LinearLayout>

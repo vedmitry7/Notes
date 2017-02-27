@@ -8,6 +8,10 @@ public class ListTask {
     private String headLine;
     private ArrayList<String> tasks;
 
+    public ListTask() {
+        tasks = new ArrayList<>();
+    }
+
     public int getId() {
         return id;
     }
