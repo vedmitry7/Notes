@@ -30,8 +30,16 @@ public class TaskActivity extends AppCompatActivity {
        // id = intent.getIntExtra("id", -1);
        // Log.d("TAG", String.valueOf(id));
 
-        task = getIntent().getParcelableExtra("Task");
-        Log.d("TAG", "Eah, I've get task - " + String.valueOf(id));
+        task = (Task) getIntent().getSerializableExtra("Task");
+        if(task == null){
+            task = new Task();
+            task.setId(-1);
+            Log.d("TAG", "TAAAAAAASKA  NEEEET");
+        }
+        else
+            Log.d("TAG", "TAAAAAAASK EST'!!!!!!!!");
+
+        // Log.d("TAG", "Eah, I've get task - " + String.valueOf(id));
 
       /*  if(id==-1){
             task = new Task();

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder> {
@@ -55,7 +56,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             public void onClick(View view) {
                 Intent intent = new Intent(context, TaskActivity.class);
                // intent.putExtra("id", tasks.get(position).getId());
-                intent.putExtra("Task", tasks.get(position));
+                intent.putExtra("Task", (Serializable) tasks.get(position));
                 context.startActivity(intent);
             }
         });

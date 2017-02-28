@@ -4,7 +4,9 @@ package com.example.dmitryvedmed.taskbook;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Task implements Parcelable {
+import java.io.Serializable;
+
+public class Task implements Parcelable, Serializable {
 
     private int id;
     private String headLine, context;

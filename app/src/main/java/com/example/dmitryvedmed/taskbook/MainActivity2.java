@@ -13,7 +13,7 @@ public class MainActivity2 extends AppCompatActivity {
 
 
     List<Task> values;
-    public static DBHelper dbHelper;
+    public static DBHelper2 dbHelper;
     public static RecyclerView recyclerView;
     private RecyclerAdapter adapter;
 
@@ -22,7 +22,7 @@ public class MainActivity2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        dbHelper = new DBHelper(this);
+        dbHelper = new DBHelper2(this);
         values = dbHelper.getAllTask();
         initView();
     }
