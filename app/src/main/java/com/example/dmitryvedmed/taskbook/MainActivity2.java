@@ -11,7 +11,6 @@ import java.util.List;
 
 public class MainActivity2 extends AppCompatActivity {
 
-
     List<Task> values;
     public static DBHelper2 dbHelper;
     public static RecyclerView recyclerView;

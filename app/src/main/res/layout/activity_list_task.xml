@@ -31,6 +31,8 @@
 
    </LinearLayout>
 
+
+
    <Button
        android:layout_marginLeft="16dp"
        android:onClick="newItem"

@@ -6,10 +6,12 @@ import java.util.ArrayList;
 public class ListTask {
     private int id;
     private String headLine;
-    private ArrayList<String> tasks;
+    private ArrayList<String> uncheckedTasks;
+    private ArrayList<String> checkedTasks;
 
     public ListTask() {
-        tasks = new ArrayList<>();
+        uncheckedTasks = new ArrayList<>();
+        checkedTasks = new ArrayList<>();
     }
 
     public int getId() {
@@ -28,19 +30,35 @@ public class ListTask {
         this.headLine = headLine;
     }
 
-    public ArrayList<String> getTasks() {
-        return tasks;
+    public ArrayList<String> getUncheckedTasks() {
+        return uncheckedTasks;
     }
 
-    public void setTasks(ArrayList<String> tasks) {
-        this.tasks = tasks;
+    public void setUncheckedTasks(ArrayList<String> tasks) {
+        this.uncheckedTasks = tasks;
     }
 
-    public void addTask(String s){
-        tasks.add(s);
+    public void addUncheckedTask(String s){
+        uncheckedTasks.add(s);
     }
 
-    public String getTask(int i){
-        return tasks.get(i);
+    public String getUncheckedTask(int i){
+        return uncheckedTasks.get(i);
+    }
+
+    public void addCheckedTask(String s){
+        checkedTasks.add(s);
+    }
+
+    public String getCheckedTask(int i){
+        return checkedTasks.get(i);
+    }
+
+    public ArrayList<String> getCheckedTasks() {
+        return checkedTasks;
+    }
+
+    public void setCheckedTasks(ArrayList<String> tasks) {
+        this.checkedTasks = tasks;
     }
 }
