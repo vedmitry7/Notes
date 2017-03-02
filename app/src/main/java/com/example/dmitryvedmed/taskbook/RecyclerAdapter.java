@@ -36,8 +36,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             headTextView = (TextView) itemView.findViewById(R.id.headTextView);
             taskTextView = (TextView) itemView.findViewById(R.id.taskTextView);
         }
-
     }
+
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 

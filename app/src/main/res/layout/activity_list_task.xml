@@ -11,7 +11,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.dmitryvedmed.taskbook.ListTaskActivity">
 
-
    <EditText
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
@@ -23,24 +22,14 @@
        android:hint="Заголовок"
        android:focusableInTouchMode="true"/>
 
-   <LinearLayout
-       android:id="@+id/activity_list_task_layout"
-       android:orientation="vertical"
+   <android.support.v7.widget.RecyclerView
+       android:id="@+id/list_activity_recycler_view"
+       android:scrollbars="vertical"
        android:layout_width="match_parent"
-       android:layout_height="wrap_content">
-
-   </LinearLayout>
-
+       android:layout_height="wrap_content"
+       />
 
 
-   <Button
-       android:layout_marginLeft="16dp"
-       android:onClick="newItem"
-       android:background="@drawable/ic_add"
-       android:layout_width="24dp"
-       android:layout_height="24dp"
-       android:id="@+id/button2"
-       android:elevation="0dp" />
 
 
 </LinearLayout>

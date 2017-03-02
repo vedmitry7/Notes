@@ -1,9 +1,10 @@
 package com.example.dmitryvedmed.taskbook;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ListTask {
+public class ListTask implements Serializable {
     private int id;
     private String headLine;
     private ArrayList<String> uncheckedTasks;
