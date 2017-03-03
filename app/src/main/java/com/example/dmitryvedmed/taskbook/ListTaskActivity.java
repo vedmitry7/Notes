@@ -38,14 +38,26 @@ public class ListTaskActivity extends AppCompatActivity {
 
 
     private void initTask() {
-
         listTask = new ListTask();
         listTask.addUncheckedTask("Гармошка");
         listTask.addUncheckedTask("Матрешка");
         listTask.addUncheckedTask("Антошка");
+       /* listTask.addUncheckedTask("Гармошка1");
+        listTask.addUncheckedTask("Матрешка1");
+        listTask.addUncheckedTask("Антошка1");
+        listTask.addUncheckedTask("Гармошка2");
+        listTask.addUncheckedTask("Матрешка2");
+        listTask.addUncheckedTask("Антошка2");*/
 
-        listTask.addCheckedTask("UN Гармошка");
+
+       listTask.addCheckedTask("UN Гармошка");
         listTask.addCheckedTask("UN Матрешка");
         listTask.addCheckedTask("UN Антошка");
+/*        listTask.addCheckedTask("UN Гармошка1");
+        listTask.addCheckedTask("UN Матрешка1");
+        listTask.addCheckedTask("UN Антошка1");
+        listTask.addCheckedTask("UN Гармошка2");
+        listTask.addCheckedTask("UN Матрешка2");
+        listTask.addCheckedTask("UN Антошка2");*/
     }
 }

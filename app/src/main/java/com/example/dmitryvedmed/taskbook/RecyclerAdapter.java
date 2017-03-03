@@ -73,4 +73,5 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public void refreshList(List<Task> tasks){
         this.tasks = tasks;
     }
+
 }
