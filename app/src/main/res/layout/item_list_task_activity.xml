@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item_list_task_layout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="1">
 
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/checkBox"
-        android:layout_weight="1"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_gravity="center|left"
+       />
+
+    <Button
+        android:layout_gravity="right|center"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:id="@+id/delButton"
+        android:visibility="invisible"
+        android:background="@drawable/ic_clear"/>
 
     <EditText
-        android:layout_width="match_parent"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:textSize="14sp"
@@ -23,7 +31,5 @@
         android:textStyle="normal|bold"
         android:hint="Пункт списка"
         android:focusableInTouchMode="true"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/checkBox"
-        android:layout_toEndOf="@+id/checkBox" />
-</RelativeLayout>
+        android:layout_gravity="center"/>
+</FrameLayout>
