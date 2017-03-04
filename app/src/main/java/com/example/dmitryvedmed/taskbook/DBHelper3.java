@@ -16,23 +16,23 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-class DBHelper2 extends SQLiteOpenHelper {
+class DBHelper3 extends SQLiteOpenHelper {
 
-    private static final String TABLE = "mytable2";
+    private static final String TABLE = "mytable3";
     private static final String KEY_ID = "id";
     private static final String KEY_TASK = "task";
     private static final String[] COLUMNS = {KEY_ID, KEY_TASK};
 
-    public DBHelper2(Context context) {
+    public DBHelper3(Context context) {
         // конструктор суперкласса
-        super(context, "myDB2", null, 1);
+        super(context, "myDB3", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d("TAG", "--- onCreate database ---");
         // создаем таблицу с полями
-        db.execSQL("create table mytable2 ("
+        db.execSQL("create table mytable3 ("
                 + "id integer primary key autoincrement,"
                 + "task blob" + ");");
     }
@@ -42,7 +42,7 @@ class DBHelper2 extends SQLiteOpenHelper {
 
     }
 
-    public int addTask(Task task) {
+    public int addTask(ListTask task) {
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
         // 2. create ContentValues to add key "column"/value
@@ -78,8 +78,8 @@ class DBHelper2 extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<Task> getAllTask() {
-        ArrayList<Task> tasks = new ArrayList<>();
+    public ArrayList<ListTask> getAllTask() {
+        ArrayList<ListTask> tasks = new ArrayList<>();
 
         // 1. build the query
         String query = "SELECT  * FROM " + TABLE;
@@ -89,7 +89,7 @@ class DBHelper2 extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
 
         // 3. go over each row, build book and add it to list
-        Task task = null;
+        ListTask task = null;
         if (cursor.moveToFirst()) {
             do {
                 byte[] bytes = cursor.getBlob(1);
@@ -97,7 +97,7 @@ class DBHelper2 extends SQLiteOpenHelper {
                 ObjectInput in = null;
                 try {
                     in = new ObjectInputStream(bis);
-                    task = (Task) in.readObject();
+                    task = (ListTask) in.readObject();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -124,7 +124,7 @@ class DBHelper2 extends SQLiteOpenHelper {
         return tasks;
     }
 
-    public int updateTask(Task task) {
+    public int updateTask(ListTask task) {
 
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
@@ -181,6 +181,6 @@ class DBHelper2 extends SQLiteOpenHelper {
 
     public void clearDB(){
         SQLiteDatabase db = this.getWritableDatabase();
-        int clearCount = db.delete("mytable2", null, null);
+        int clearCount = db.delete("mytable3", null, null);
     }
 }

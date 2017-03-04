@@ -21,23 +21,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         System.out.println("rv constructor" + " " + tasks.size());
     }
 
-    public void dataChanged( List<Task> tasks){
-
-        this.tasks = tasks;
-        notifyDataSetChanged();
-    }
-
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        private TextView headTextView, taskTextView;
 
+        private TextView headTextView, taskTextView;
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             System.out.println("rvh constructor with view");
             headTextView = (TextView) itemView.findViewById(R.id.headTextView);
             taskTextView = (TextView) itemView.findViewById(R.id.taskTextView);
         }
-    }
 
+    }
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -63,7 +57,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         System.out.println(position);
     }
 
-
     @Override
     public int getItemCount() {
         return tasks.size();
@@ -72,6 +65,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     public void refreshList(List<Task> tasks){
         this.tasks = tasks;
+    }
+
+
+    public void dataChanged( List<Task> tasks){
+
+        this.tasks = tasks;
+        notifyDataSetChanged();
     }
 
 }

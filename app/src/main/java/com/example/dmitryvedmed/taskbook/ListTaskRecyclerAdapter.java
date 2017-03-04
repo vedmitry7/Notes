@@ -71,6 +71,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
         }
     }
 
+
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerViewHolder recyclerViewHolder = null;
@@ -88,6 +89,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                     public void onClick(View view) {
                         listTask.getUncheckedTasks().add("");
                         update();
+
                         System.out.println("                    CLiCK");
                     }
                 });
@@ -127,6 +129,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                     System.out.println(position + " BUTTON          CLICK");
                     listTask.getUncheckedTasks().remove(position);
                     update();
+
                 }
             });
         }
@@ -155,7 +158,6 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                     System.out.println(position + " BUTTON          CLICK");
                     listTask.getCheckedTasks().remove(position - (listTask.getUncheckedTasks().size()+1));
                     update();
-
                 }
             });
             holder.checkBoxListener.updatePosition(position);

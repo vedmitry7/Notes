@@ -16,23 +16,23 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-class DBHelper2 extends SQLiteOpenHelper {
+class DBHelper4 extends SQLiteOpenHelper {
 
-    private static final String TABLE = "mytable2";
+    private static final String TABLE = "mytable4";
     private static final String KEY_ID = "id";
     private static final String KEY_TASK = "task";
     private static final String[] COLUMNS = {KEY_ID, KEY_TASK};
 
-    public DBHelper2(Context context) {
+    public DBHelper4(Context context) {
         // конструктор суперкласса
-        super(context, "myDB2", null, 1);
+        super(context, "myDB4", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d("TAG", "--- onCreate database ---");
         // создаем таблицу с полями
-        db.execSQL("create table mytable2 ("
+        db.execSQL("create table mytable4 ("
                 + "id integer primary key autoincrement,"
                 + "task blob" + ");");
     }
@@ -78,8 +78,8 @@ class DBHelper2 extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<Task> getAllTask() {
-        ArrayList<Task> tasks = new ArrayList<>();
+    public ArrayList<ListTask> getAllTask() {
+        ArrayList<ListTask> tasks = new ArrayList<>();
 
         // 1. build the query
         String query = "SELECT  * FROM " + TABLE;
@@ -115,7 +115,7 @@ class DBHelper2 extends SQLiteOpenHelper {
                 task.setId(Integer.parseInt(cursor.getString(0)));
 
                 // Add book to books
-                tasks.add(task);
+               // tasks.add(task);
             } while (cursor.moveToNext());
         }
 
@@ -124,7 +124,7 @@ class DBHelper2 extends SQLiteOpenHelper {
         return tasks;
     }
 
-    public int updateTask(Task task) {
+    public int updateTask(ListTask task) {
 
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
@@ -181,6 +181,6 @@ class DBHelper2 extends SQLiteOpenHelper {
 
     public void clearDB(){
         SQLiteDatabase db = this.getWritableDatabase();
-        int clearCount = db.delete("mytable2", null, null);
+        int clearCount = db.delete("mytable4", null, null);
     }
 }
