@@ -1,7 +1,7 @@
 package com.example.dmitryvedmed.taskbook;
 
 
-public class SimpleTask extends Task {
+public class SimpleTask extends SuperTask {
 
     private String headLine, context;
 
@@ -30,7 +30,7 @@ public class SimpleTask extends Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "SimpleTask{" +
                 "id=" + getId() +
                 ", headLine='" + headLine + '\'' +
                 ", context='" + context + '\'' +

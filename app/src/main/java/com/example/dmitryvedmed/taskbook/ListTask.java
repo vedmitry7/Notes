@@ -4,8 +4,8 @@ package com.example.dmitryvedmed.taskbook;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ListTask implements Serializable {
-    private int id;
+public class ListTask extends SuperTask implements Serializable {
+
     private String headLine;
     private ArrayList<String> uncheckedTasks;
     private ArrayList<String> checkedTasks;
@@ -13,14 +13,6 @@ public class ListTask implements Serializable {
     public ListTask() {
         uncheckedTasks = new ArrayList<>();
         checkedTasks = new ArrayList<>();
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getHeadLine() {
