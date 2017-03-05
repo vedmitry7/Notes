@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.WindowManager;
 
+import static com.example.dmitryvedmed.taskbook.MainListTaskActivity.dbHelper;
+
 public class ListTaskActivity extends AppCompatActivity {
 
     private ListTask listTask;
@@ -34,38 +36,33 @@ public class ListTaskActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
-
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(listTaskRecyclerAdapter);
 
     }
 
-
     private void initTask() {
-        listTask = new ListTask();
-        listTask.addUncheckedTask("Гармошка");
-        listTask.addUncheckedTask("Матрешка");
-        listTask.addUncheckedTask("Антошка");
-       /* listTask.addUncheckedTask("Гармошка1");
-        listTask.addUncheckedTask("Матрешка1");
-        listTask.addUncheckedTask("Антошка1");
-        listTask.addUncheckedTask("Гармошка2");
-        listTask.addUncheckedTask("Матрешка2");
-        listTask.addUncheckedTask("Антошка2");*/
-
-
-       listTask.addCheckedTask("UN Гармошка");
-        listTask.addCheckedTask("UN Матрешка");
-        listTask.addCheckedTask("UN Антошка");
-/*        listTask.addCheckedTask("UN Гармошка1");
-        listTask.addCheckedTask("UN Матрешка1");
-        listTask.addCheckedTask("UN Антошка1");
-        listTask.addCheckedTask("UN Гармошка2");
-        listTask.addCheckedTask("UN Матрешка2");
-        listTask.addCheckedTask("UN Антошка2");*/
+        listTask = (ListTask) getIntent().getSerializableExtra("ListTask");
+        if(listTask==null){
+            System.out.println("LIST TASK = NULL!");
+            listTask = new ListTask();
+            listTask.setId(-1);}
+        else
+        System.out.println("LIST TASK != NULL, id = " + listTask.getId());
     }
+
+
     public void hideDefaultKeyboard() {
         Activity activity = (Activity) context;
                 activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);//u have got lot of methods here
+    }
+
+    @Override
+    protected void onPause() {
+        listTask = listTaskRecyclerAdapter.getListTask();
+        if(listTask.getId() == -1)
+            dbHelper.addTask(listTask);
+        else dbHelper.updateTask(listTask);
+        super.onPause();
     }
 }

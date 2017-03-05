@@ -1,13 +1,12 @@
 package com.example.dmitryvedmed.taskbook;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainListTaskActivity extends AppCompatActivity {
@@ -24,8 +23,9 @@ public class MainListTaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_list_task);
 
         dbHelper = new DBHelper3(this);
-        //values = dbHelper.getAllTask();
-         ListTask listTask = new ListTask();
+        values = dbHelper.getAllTask();
+
+      /*ListTask listTask = new ListTask();
         listTask.addUncheckedTask("Гармошка");
         listTask.addUncheckedTask("Матрешка");
         ListTask listTask2 = new ListTask();
@@ -34,7 +34,7 @@ public class MainListTaskActivity extends AppCompatActivity {
 
         values = new ArrayList<>();
         values.add(listTask);
-        values.add(listTask2);
+        values.add(listTask2);*/
         initView();
     }
 
@@ -73,7 +73,7 @@ public class MainListTaskActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-       // update();
+        update();
         super.onResume();
     }
 

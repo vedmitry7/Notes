@@ -26,6 +26,12 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
     public ListTaskRecyclerAdapter(ListTask listTask, Context context) {
         this.context = context;
         this.listTask = listTask;
+        if(listTask.getId() == -1)
+            listTask.getUncheckedTasks().add("");
+    }
+
+    public ListTask getListTask() {
+        return listTask;
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
