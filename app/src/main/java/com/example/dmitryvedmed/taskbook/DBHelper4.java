@@ -42,7 +42,7 @@ class DBHelper4 extends SQLiteOpenHelper {
 
     }
 
-    public int addTask(Task task) {
+    public int addTask(SuperTask task) {
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
         // 2. create ContentValues to add key "column"/value
@@ -78,8 +78,8 @@ class DBHelper4 extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<ListTask> getAllTask() {
-        ArrayList<ListTask> tasks = new ArrayList<>();
+    public ArrayList<SuperTask> getAllTask() {
+        ArrayList<SuperTask> tasks = new ArrayList<>();
 
         // 1. build the query
         String query = "SELECT  * FROM " + TABLE;
@@ -88,8 +88,9 @@ class DBHelper4 extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
+        Log.d("TAG", " DB - getAllTask"  );
         // 3. go over each row, build book and add it to list
-        Task task = null;
+        SuperTask task = null;
         if (cursor.moveToFirst()) {
             do {
                 byte[] bytes = cursor.getBlob(1);
@@ -97,7 +98,7 @@ class DBHelper4 extends SQLiteOpenHelper {
                 ObjectInput in = null;
                 try {
                     in = new ObjectInputStream(bis);
-                    task = (Task) in.readObject();
+                    task = (SuperTask) in.readObject();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -115,7 +116,7 @@ class DBHelper4 extends SQLiteOpenHelper {
                 task.setId(Integer.parseInt(cursor.getString(0)));
 
                 // Add book to books
-               // tasks.add(task);
+                tasks.add(task);
             } while (cursor.moveToNext());
         }
 
@@ -124,7 +125,7 @@ class DBHelper4 extends SQLiteOpenHelper {
         return tasks;
     }
 
-    public int updateTask(ListTask task) {
+    public int updateTask(SuperTask task) {
 
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();

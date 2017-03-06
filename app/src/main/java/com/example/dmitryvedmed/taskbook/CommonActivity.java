@@ -1,8 +1,8 @@
 package com.example.dmitryvedmed.taskbook;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -19,18 +19,16 @@ public class CommonActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_common);
         dbHelper = new DBHelper4(this);
-       // values = dbHelper.getAllTask();
+        values = dbHelper.getAllTask();
         initView();
     }
 
     private void initView() {
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_common);
 
-
-
-       // adapter = new RecyclerAdapter(values, CommonActivity.this);
+        adapter = new CommonRecyclerAdapter(values, CommonActivity.this);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
@@ -49,11 +47,15 @@ public class CommonActivity extends AppCompatActivity {
 
     }
 
-    public void newTask(View v){
+    public void newSimpleTask(View v){
         Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
         startActivity(intent);
     }
 
+   public void newListTask(View v){
+        Intent intent = new Intent(getApplicationContext(), ListTaskActivity.class);
+        startActivity(intent);
+    }
 
     public void clearList(View v){
         dbHelper.clearDB();
@@ -67,7 +69,7 @@ public class CommonActivity extends AppCompatActivity {
     }
 
     void update(){
-       // values = dbHelper.getAllTask();
-      //  adapter.dataChanged(values);
+        values = dbHelper.getAllTask();
+        adapter.dataChanged(values);
     }
 }

@@ -42,7 +42,7 @@ class DBHelper2 extends SQLiteOpenHelper {
 
     }
 
-    public int addTask(Task task) {
+    public int addTask(SuperTask task) {
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
         // 2. create ContentValues to add key "column"/value

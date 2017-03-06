@@ -29,13 +29,10 @@ public class MainActivity2 extends AppCompatActivity {
     private void initView() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-
-
         adapter = new RecyclerAdapter(values, MainActivity2.this);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
-
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
@@ -54,7 +51,6 @@ public class MainActivity2 extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
         startActivity(intent);
     }
-
 
     public void clearList(View v){
         dbHelper.clearDB();

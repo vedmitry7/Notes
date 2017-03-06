@@ -21,10 +21,21 @@
 
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"
-        android:onClick="newTask"
+        android:onClick="newSimpleTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_add"
+        fab:fab_colorNormal="#444499"
+        fab:fab_colorPressed="@color/colorPrimaryDark" />
+
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/fab2"
+        android:onClick="newListTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
         android:layout_marginBottom="16dp"
         android:src="@drawable/ic_add"
         fab:fab_colorNormal="#444499"

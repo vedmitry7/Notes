@@ -1,7 +1,9 @@
 package com.example.dmitryvedmed.taskbook;
 
 
-public class SimpleTask extends SuperTask {
+import java.io.Serializable;
+
+public class SimpleTask extends SuperTask implements Serializable {
 
     private String headLine, context;
 
@@ -9,6 +11,9 @@ public class SimpleTask extends SuperTask {
         this.setId(id);
         this.headLine = headLine;
         this.context = context;
+    }
+
+    public SimpleTask() {
     }
 
     public String getHeadLine() {

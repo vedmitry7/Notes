@@ -8,7 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.WindowManager;
 
-import static com.example.dmitryvedmed.taskbook.MainListTaskActivity.dbHelper;
+import static com.example.dmitryvedmed.taskbook.CommonActivity.dbHelper;
 
 public class ListTaskActivity extends AppCompatActivity {
 

@@ -21,13 +21,17 @@
             android:name=".ListTaskActivity"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".MainListTaskActivity">
+
+        </activity>
+        <activity android:name=".CommonActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".CommonActivity"></activity>
     </application>
 
 </manifest>

@@ -5,13 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
 
-import static com.example.dmitryvedmed.taskbook.MainActivity2.dbHelper;
+import static com.example.dmitryvedmed.taskbook.CommonActivity.dbHelper;
 
 public class TaskActivity extends AppCompatActivity {
 
     private int id;
     private EditText head,text;
-    private Task task;
+    private SimpleTask task;
     private boolean wasChange;
 
     @Override
@@ -30,9 +30,9 @@ public class TaskActivity extends AppCompatActivity {
        // id = intent.getIntExtra("id", -1);
        // Log.d("TAG", String.valueOf(id));
 
-        task = (Task) getIntent().getSerializableExtra("Task");
+        task = (SimpleTask) getIntent().getSerializableExtra("Task");
         if(task == null){
-            task = new Task();
+            task = new SimpleTask();
             task.setId(-1);
             Log.d("TAG", "TAAAAAAASKA  NEEEET");
         }
@@ -64,7 +64,7 @@ public class TaskActivity extends AppCompatActivity {
         task.setContext(content);
 
         if(task.getId()==-1) {
-            id = MainActivity2.dbHelper.addTask(task);
+            id = dbHelper.addTask(task);
             task.setId(id);
             Log.d("TAG", "NEW TASK ID = " + id);
         }
