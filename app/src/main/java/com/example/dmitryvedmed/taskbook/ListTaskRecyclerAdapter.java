@@ -50,7 +50,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             if(editText != null) {
                 editText.addTextChangedListener(editTextListener);
                 //editText.setOnFocusChangeListener(editTextListener);
-                editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                         if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER

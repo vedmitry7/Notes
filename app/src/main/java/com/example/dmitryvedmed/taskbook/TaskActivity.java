@@ -3,7 +3,11 @@ package com.example.dmitryvedmed.taskbook;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import static com.example.dmitryvedmed.taskbook.CommonActivity.dbHelper;
 
@@ -35,6 +39,7 @@ public class TaskActivity extends AppCompatActivity {
             task = new SimpleTask();
             task.setId(-1);
             Log.d("TAG", "TAAAAAAASKA  NEEEET");
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
         else
             Log.d("TAG", "TAAAAAAASK EST'!!!!!!!!");
@@ -46,9 +51,59 @@ public class TaskActivity extends AppCompatActivity {
             task.setId(id);
             return;
         }*/
+
        // task = dbHelper.getTask(id);
         head.setText(task.getHeadLine());
         text.setText(task.getContext());
+
+        head.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
+                        && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
+                    Log.d("TAG", "                                  ENTER!");
+                    text.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        head.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction()==KeyEvent.ACTION_DOWN){
+                        text.requestFocus();
+                }
+                return false;
+            }
+        });
+
+       /* text.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL
+                        && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
+                    Log.d("TAG", "                                  DEL!" + text.getText());
+
+                    if(text.getText().toString().equals("")){
+                        head.requestFocus();
+                    }
+                    return true;
+                }
+                return true;
+            }
+        });*/
+        text.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_DEL && event.getAction()==KeyEvent.ACTION_DOWN){
+                    if(text.getText().toString().equals(""))
+                        head.requestFocus();
+                }
+                return false;
+            }
+        });
     }
 
     private void saveTask() {

@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/checkBox"
         android:layout_gravity="center|left"
+
        />
 
     <Button
@@ -26,6 +27,7 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:textSize="14sp"
+        android:background="#00000000"
         android:ems="10"
         android:id="@+id/itemListEditText"
         android:textStyle="normal|bold"

@@ -19,6 +19,7 @@
         <TextView
             android:text="TextView"
             android:textSize="14sp"
+            android:maxLines="3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/headTextView"
@@ -26,6 +27,7 @@
 
         <TextView
             android:text="TextView"
+            android:maxLines="3"
             android:textSize="12sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
