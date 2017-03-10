@@ -1,5 +1,6 @@
 package com.example.dmitryvedmed.taskbook;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -30,6 +31,12 @@ public class TaskActivity extends AppCompatActivity {
         head = ( EditText) findViewById(R.id.headEditText);
         text = ( EditText) findViewById(R.id.taskEditText);
 
+        Typeface typeFace = Typeface.createFromAsset(getAssets(), "font/Roboto-Regular.ttf");
+        Typeface boldTypeFace = Typeface.createFromAsset(getAssets(), "font/Roboto-Bold.ttf");
+
+
+        text.setTypeface(typeFace);
+        head.setTypeface(boldTypeFace);
        // Intent intent = getIntent();
        // id = intent.getIntExtra("id", -1);
        // Log.d("TAG", String.valueOf(id));
@@ -40,6 +47,7 @@ public class TaskActivity extends AppCompatActivity {
             task.setId(-1);
             Log.d("TAG", "TAAAAAAASKA  NEEEET");
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            head.requestFocus();
         }
         else
             Log.d("TAG", "TAAAAAAASK EST'!!!!!!!!");
@@ -102,6 +110,26 @@ public class TaskActivity extends AppCompatActivity {
                         head.requestFocus();
                 }
                 return false;
+            }
+        });
+
+    /*    text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("TAG", "EDITTWXT                  CLICK");
+                text.setSelection(text.getText().length());
+            }
+        });*/
+        text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    // Always use a TextKeyListener when clearing a TextView to prevent android
+                    // warnings in the log
+                    Log.d("TAG", "EDITTWXT                  HAS FOKUS");
+                    text.setSelection(text.getText().length());
+                }
             }
         });
     }
