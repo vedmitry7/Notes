@@ -73,7 +73,12 @@ public class CommonRecyclerAdapter extends RecyclerView.Adapter<CommonRecyclerAd
 
             case 0:
                 simpleTask = (SimpleTask) tasks.get(position);
+                if(simpleTask.getHeadLine().equals(""))
+                    holder.stHeadLine.setVisibility(View.GONE);
+                else
                 holder.stHeadLine.setText(simpleTask.getHeadLine());
+                if(simpleTask.getContext().equals(""))
+                    holder.stContent.setVisibility(View.GONE);
                 holder.stContent.setText(simpleTask.getContext());
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -89,6 +94,9 @@ public class CommonRecyclerAdapter extends RecyclerView.Adapter<CommonRecyclerAd
                 listTask = (ListTask) tasks.get(position);
                     holder.ltFirst.setText(listTask.getUncheckedTask(0));
                     holder.ltSecond.setText(listTask.getUncheckedTask(1));
+                if(listTask.getHeadLine().equals(""))
+                    holder.listHeadEditText.setVisibility(View.GONE);
+                else
                     holder.listHeadEditText.setText(listTask.getHeadLine());
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
