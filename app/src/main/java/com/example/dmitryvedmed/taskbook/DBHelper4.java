@@ -85,7 +85,7 @@ class DBHelper4 extends SQLiteOpenHelper {
         String query = "SELECT  * FROM " + TABLE;
 
         // 2. get reference to writable DB
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         Log.d("TAG", " DB - getAllTask"  );

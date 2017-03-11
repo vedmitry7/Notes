@@ -3,6 +3,7 @@ package com.example.dmitryvedmed.taskbook;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,15 +30,24 @@ public class CommonRecyclerAdapter extends RecyclerView.Adapter<CommonRecyclerAd
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder{
-        private TextView stHeadLine, stContent, ltFirst, ltSecond;
+        private TextView stHeadLine, stContent, listHeadEditText, ltFirst, ltSecond;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
-            stHeadLine = (TextView) itemView.findViewById(headTextView);
-            stContent = (TextView) itemView.findViewById(taskTextView);
 
-            ltFirst = (TextView) itemView.findViewById(R.id.textView4);
-            ltSecond = (TextView) itemView.findViewById(R.id.textView3);
+                    stHeadLine = (TextView) itemView.findViewById(headTextView);
+                    stContent = (TextView) itemView.findViewById(taskTextView);
+                    Typeface typeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Regular.ttf");
+                    Typeface boldTypeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Bold.ttf");
+                   if(stContent!=null){
+                    stHeadLine.setTypeface(boldTypeFace);
+                    stContent.setTypeface(typeFace);}
+
+                    listHeadEditText = (TextView) itemView.findViewById(R.id.mainRecListItemHead);
+                    ltFirst = (TextView) itemView.findViewById(R.id.textView4);
+                    ltSecond = (TextView) itemView.findViewById(R.id.textView3);
+
+
         }
     }
 
@@ -77,9 +87,10 @@ public class CommonRecyclerAdapter extends RecyclerView.Adapter<CommonRecyclerAd
                 break;
             case 1:
                 listTask = (ListTask) tasks.get(position);
-                holder.ltFirst.setText(listTask.getUncheckedTask(0));
-                holder.ltSecond.setText(listTask.getUncheckedTask(1));
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    holder.ltFirst.setText(listTask.getUncheckedTask(0));
+                    holder.ltSecond.setText(listTask.getUncheckedTask(1));
+                    holder.listHeadEditText.setText(listTask.getHeadLine());
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(context, ListTaskActivity.class);

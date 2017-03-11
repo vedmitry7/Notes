@@ -1,6 +1,7 @@
 package com.example.dmitryvedmed.taskbook;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spanned;
@@ -46,8 +47,12 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             ///????
             System.out.println("TYPE = " + this.getItemViewType());
             editText = (EditText) itemView.findViewById(R.id.itemListEditText);
+
+            Typeface typeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Regular.ttf");
+
             editTextListener = new EditTextListener();
             if(editText != null) {
+                editText.setTypeface(typeFace);
                 editText.addTextChangedListener(editTextListener);
                 //editText.setOnFocusChangeListener(editTextListener);
                 editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
