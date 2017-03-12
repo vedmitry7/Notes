@@ -30,8 +30,8 @@ public class MainListActivityRecyclerAdapter extends RecyclerView.Adapter<MainLi
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             System.out.println("rvh constructor with view");
-            first = (TextView) itemView.findViewById(R.id.textView4);
-            second = (TextView) itemView.findViewById(R.id.textView3);
+         //   first = (TextView) itemView.findViewById(R.id.textView4);
+         //  second = (TextView) itemView.findViewById(R.id.textView3);
         }
     }
 
