@@ -1,10 +1,10 @@
 package com.example.dmitryvedmed.taskbook;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -125,6 +125,9 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             onBind = false;
             System.out.println(position + " - " + listTask.getUncheckedTasks().get(position));
 
+            holder.editText.setPaintFlags(Paint.ANTI_ALIAS_FLAG);
+            holder.editText.setAlpha(1f);
+
             holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
@@ -148,11 +151,9 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
         {
             System.out.println("POSITION = " + position);
             holder.editTextListener.updatePosition(holder.getAdapterPosition());
-            String s = ("<u>" + listTask.getCheckedTasks().get(position - (listTask.getUncheckedTasks().size()+1)) + "</u>");
-            Spanned spanned = android.text.Html.fromHtml(s);
-
-            System.out.println("  -----------" + spanned);
-            holder.editText.setText(spanned);
+            String s = (listTask.getCheckedTasks().get(position - (listTask.getUncheckedTasks().size()+1)));
+            holder.editText.setText(s);
+            holder.editText.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             holder.editText.setAlpha(0.5f);
             holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override

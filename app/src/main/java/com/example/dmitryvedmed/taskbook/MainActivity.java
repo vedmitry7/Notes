@@ -1,103 +1,75 @@
 package com.example.dmitryvedmed.taskbook;
 
-import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.List;
 
-public class MainActivity extends ListActivity  {
+public class MainActivity extends AppCompatActivity {
+    List<SuperTask> values;
+    public static DBHelper4 dbHelper;
+    public static RecyclerView recyclerView;
+    private MainRecyclerAdapter adapter;
 
-    public static final String NAME_PREFERENCES = "prefs";
-    MyArrayAdapter adapter;
-    public static DBHelper dbHelper;
-    List<Task> values;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        dbHelper = new DBHelper(this);
-
+        setContentView(R.layout.activity_common);
+        dbHelper = new DBHelper4(this);
         values = dbHelper.getAllTask();
-
-        adapter = new MyArrayAdapter(this, values);
-
-        setListAdapter(adapter);
+        initView();
     }
 
-    public void newTask(View v){
+    private void initView() {
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_common);
+
+        adapter = new MainRecyclerAdapter(values, MainActivity.this);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
+        recyclerView.setLayoutManager(layoutManager);
+
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+
+        recyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("qq " );
+            }
+        });
+        System.out.println("eeeah");
+
+    }
+
+    public void newSimpleTask(View v){
         Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
+        startActivity(intent);
+    }
+
+   public void newListTask(View v){
+        Intent intent = new Intent(getApplicationContext(), ListTaskActivity.class);
         startActivity(intent);
     }
 
     public void clearList(View v){
-       dbHelper.clearDB();
-        updateList();
+        dbHelper.clearDB();
+        update();
     }
 
     @Override
     protected void onResume() {
-        Log.d("TAG", "onResume");
-        updateList();
+        update();
         super.onResume();
     }
 
-    private void updateList(){
+    void update(){
         values = dbHelper.getAllTask();
-        adapter.refresh(values);
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
-        intent.putExtra("id", values.get(position).getId());
-        startActivity(intent);
-    }
-
-    public class MyArrayAdapter extends ArrayAdapter<String>{
-        private final Context context;
-        //private final String[] values;
-        List<Task> values;
-        MyArrayAdapter(Context context,  List values ) {
-            super(context,  R.layout.rowlayout, R.id.label, values);
-            this.context = context;
-            this.values = values;
-           Log.d("TAG", "list size = " + values.size());
-        }
-
-        public void refresh(List values){
-            this.clear();
-            this.addAll(values);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-           Log.d("TAG", "getView " + position);
-
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.rowlayout, parent, false);
-
-           // linearLayout.setBackgroundResource(R.drawable.task_shape);
-            TextView textView = (TextView) rowView.findViewById(R.id.label);
-            TextView textView1 = (TextView) rowView.findViewById(R.id.label1);
-
-            textView.setText(values.get(position).getHeadLine());
-            textView1.setText(values.get(position).getContext());
-
-        /*    textView1.setText(sharedPreferences.getString(String.valueOf(position)+"0","ХЗ заголовок"));
-            textView.setText(sharedPreferences.getString(String.valueOf(position)+"1","ХЗ текст"));*/
-
-            return rowView;
-        }
+        adapter.dataChanged(values);
     }
 }

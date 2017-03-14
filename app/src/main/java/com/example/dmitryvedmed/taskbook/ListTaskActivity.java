@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import static com.example.dmitryvedmed.taskbook.CommonActivity.dbHelper;
+import static com.example.dmitryvedmed.taskbook.MainActivity.dbHelper;
 
 public class ListTaskActivity extends AppCompatActivity {
 
@@ -37,8 +37,6 @@ public class ListTaskActivity extends AppCompatActivity {
         headList.setTypeface(boldTypeFace);
         headList.setText(listTask.getHeadLine());
 
-
-
         recyclerView = (RecyclerView) findViewById(R.id.list_activity_recycler_view);
 
         listTaskRecyclerAdapter = new ListTaskRecyclerAdapter(listTask, ListTaskActivity.this);
@@ -53,19 +51,21 @@ public class ListTaskActivity extends AppCompatActivity {
 
     private void initTask() {
         listTask = (ListTask) getIntent().getSerializableExtra("ListTask");
-        if(listTask==null){
+        if(listTask==null) {
             System.out.println("LIST TASK = NULL!");
             listTask = new ListTask();
             listTask.setHeadLine("");
-            listTask.setId(-1);}
+            listTask.setId(-1);
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        }
         else
-        System.out.println("LIST TASK != NULL, id = " + listTask.getHeadLine());
+            System.out.println("LIST TASK != NULL, id = " + listTask.getHeadLine());
     }
 
 
     public void hideDefaultKeyboard() {
         Activity activity = (Activity) context;
-                activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);//u have got lot of methods here
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);//u have got lot of methods here
     }
 
     @Override

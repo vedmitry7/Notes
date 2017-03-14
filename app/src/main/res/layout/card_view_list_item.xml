@@ -12,6 +12,7 @@
                 />
 
             <TextView
+                android:paddingLeft="2dp"
                 android:text="TextView TextView View TextView "
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

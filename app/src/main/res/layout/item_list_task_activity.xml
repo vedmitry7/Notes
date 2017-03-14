@@ -15,7 +15,8 @@
         />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:paddingLeft="10dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:textSize="16sp"
@@ -24,9 +25,11 @@
         android:id="@+id/itemListEditText"
         android:textStyle="normal"
         android:hint="Пункт списка"
-        android:layout_toRightOf="@+id/checkBox"
         android:focusableInTouchMode="true"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:layout_toRightOf="@+id/checkBox"
+        android:layout_toLeftOf="@+id/delButton"
+        android:layout_toStartOf="@+id/delButton" />
 
     <Button
         android:layout_gravity="right"

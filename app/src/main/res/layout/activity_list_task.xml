@@ -13,7 +13,7 @@
    <EditText
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:inputType="textPersonName"
+       android:inputType="textMultiLine"
        android:background="#00000000"
        android:textSize="16sp"
        android:paddingBottom="14dp"

@@ -164,7 +164,7 @@ class DBHelper4 extends SQLiteOpenHelper {
         Log.d("TAG", "Update " + task.toString());
         return i;
     }
-    public void deleteBook(Task task) {
+    public void deleteBook(SuperTask task) {
 
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();

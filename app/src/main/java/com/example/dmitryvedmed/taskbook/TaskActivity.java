@@ -10,7 +10,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import static com.example.dmitryvedmed.taskbook.CommonActivity.dbHelper;
+import static com.example.dmitryvedmed.taskbook.MainActivity.dbHelper;
 
 public class TaskActivity extends AppCompatActivity {
 

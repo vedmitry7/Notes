@@ -3,6 +3,7 @@ package com.example.dmitryvedmed.taskbook;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +19,7 @@ import java.util.List;
 import static com.example.dmitryvedmed.taskbook.R.id.headTextView;
 import static com.example.dmitryvedmed.taskbook.R.id.taskTextView;
 
-public class CommonRecyclerAdapter extends RecyclerView.Adapter<CommonRecyclerAdapter.RecyclerViewHolder>{
+public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.RecyclerViewHolder>{
 
     private List<SuperTask> tasks;
     private Context context;
@@ -28,13 +29,13 @@ public class CommonRecyclerAdapter extends RecyclerView.Adapter<CommonRecyclerAd
     Typeface typeFace ;
     Typeface boldTypeFace ;
 
-    public CommonRecyclerAdapter(List<SuperTask> tasks, Context context) {
+    public MainRecyclerAdapter(List<SuperTask> tasks, Context context) {
         this.tasks = tasks;
         this.context = context;
         System.out.println("rv constructor" + " " + tasks.size());
         textView = new TextView(context);
         textView.setText("1234we5r");
-      typeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Regular.ttf");
+         typeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Regular.ttf");
          boldTypeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Bold.ttf");
     }
 
@@ -112,6 +113,7 @@ public class CommonRecyclerAdapter extends RecyclerView.Adapter<CommonRecyclerAd
                     holder.listHeadEditText.setText(listTask.getHeadLine());
                 }
 
+
                 LayoutInflater inflater = (LayoutInflater)context.getSystemService
                         (Context.LAYOUT_INFLATER_SERVICE);
 
@@ -133,6 +135,7 @@ public class CommonRecyclerAdapter extends RecyclerView.Adapter<CommonRecyclerAd
                     ImageButton c = (ImageButton) view.findViewById(R.id.checkBox);
                     c.setPressed(true);
                     t.setTypeface(typeFace);
+                    t.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                     t.setText(s);
                     holder.layout.addView(view);
                 }
