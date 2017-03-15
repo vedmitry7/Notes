@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+
+import com.example.dmitryvedmed.taskbook.helper.SimpleItemTouchHelperCallback;
 
 import java.util.List;
 
@@ -14,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     public static DBHelper4 dbHelper;
     public static RecyclerView recyclerView;
     private MainRecyclerAdapter adapter;
+    private ItemTouchHelper mItemTouchHelper;
 
 
     @Override
@@ -45,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
         });
         System.out.println("eeeah");
 
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
+
     }
 
     public void newSimpleTask(View v){
@@ -67,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         update();
         super.onResume();
     }
+
 
     void update(){
         values = dbHelper.getAllTask();

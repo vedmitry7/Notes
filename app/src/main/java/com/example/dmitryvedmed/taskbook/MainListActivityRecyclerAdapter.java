@@ -12,10 +12,12 @@ import android.widget.TextView;
 import java.io.Serializable;
 import java.util.List;
 
-public class MainListActivityRecyclerAdapter extends RecyclerView.Adapter<MainListActivityRecyclerAdapter.RecyclerViewHolder>  {
+public class MainListActivityRecyclerAdapter extends RecyclerView.Adapter<MainListActivityRecyclerAdapter.RecyclerViewHolder> {
 
     private List<ListTask> tasks;
     private Context context;
+
+
 
     public MainListActivityRecyclerAdapter(List<ListTask> tasks, Context context) {
         this.context = context;
@@ -23,21 +25,19 @@ public class MainListActivityRecyclerAdapter extends RecyclerView.Adapter<MainLi
         System.out.println("LIST SIZE = " + tasks.size());
     }
 
-
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private TextView first, second;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             System.out.println("rvh constructor with view");
-         //   first = (TextView) itemView.findViewById(R.id.textView4);
-         //  second = (TextView) itemView.findViewById(R.id.textView3);
+           // first = (TextView) itemView.findViewById(R.id.textView4);
+          //  second = (TextView) itemView.findViewById(R.id.textView3);
         }
     }
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_list_activity_recycler_item, parent,false);
         RecyclerViewHolder recyclerViewHolder = new RecyclerViewHolder(view);
         return recyclerViewHolder;
@@ -51,7 +51,6 @@ public class MainListActivityRecyclerAdapter extends RecyclerView.Adapter<MainLi
         catch (IndexOutOfBoundsException e){
             holder.first.setText("null");
         }
-
         try {
             holder.second.setText(tasks.get(position).getUncheckedTask(1));
         }
@@ -78,4 +77,5 @@ public class MainListActivityRecyclerAdapter extends RecyclerView.Adapter<MainLi
         this.tasks = tasks;
         notifyDataSetChanged();
     }
+
 }

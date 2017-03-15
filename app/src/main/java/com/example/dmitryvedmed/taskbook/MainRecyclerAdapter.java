@@ -3,6 +3,7 @@ package com.example.dmitryvedmed.taskbook;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
@@ -13,13 +14,17 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperAdapter;
+import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperViewHolder;
+
 import java.io.Serializable;
 import java.util.List;
 
 import static com.example.dmitryvedmed.taskbook.R.id.headTextView;
 import static com.example.dmitryvedmed.taskbook.R.id.taskTextView;
 
-public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.RecyclerViewHolder>{
+public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.RecyclerViewHolder>
+        implements ItemTouchHelperAdapter {
 
     private List<SuperTask> tasks;
     private Context context;
@@ -28,6 +33,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private TextView textView;
     Typeface typeFace ;
     Typeface boldTypeFace ;
+
+    public MainRecyclerAdapter() {
+    }
 
     public MainRecyclerAdapter(List<SuperTask> tasks, Context context) {
         this.tasks = tasks;
@@ -39,13 +47,26 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
          boldTypeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Bold.ttf");
     }
 
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder{
+    @Override
+    public void onItemDismiss(int position) {
+        tasks.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        SuperTask prev = tasks.remove(fromPosition);
+        tasks.add(toPosition > fromPosition ? toPosition - 1 : toPosition, prev);
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
+    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements
+            ItemTouchHelperViewHolder {
         private TextView stHeadLine, stContent, listHeadEditText, ltFirst, ltSecond;
         private LinearLayout layout;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
-
                     stHeadLine = (TextView) itemView.findViewById(headTextView);
                     stContent = (TextView) itemView.findViewById(taskTextView);
 
@@ -57,7 +78,16 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     //ltFirst = (TextView) itemView.findViewById(R.id.textView4);
                     //ltSecond = (TextView) itemView.findViewById(R.id.textView3);
                     layout = (LinearLayout) itemView.findViewById(R.id.card_view_list_layout);
+        }
 
+        @Override
+        public void onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY);
+        }
+
+        @Override
+        public void onItemClear() {
+            itemView.setBackgroundColor(Color.WHITE);
         }
     }
 
