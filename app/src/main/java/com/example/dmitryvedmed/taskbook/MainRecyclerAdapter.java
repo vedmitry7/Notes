@@ -3,7 +3,6 @@ package com.example.dmitryvedmed.taskbook;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
@@ -34,8 +33,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     Typeface typeFace ;
     Typeface boldTypeFace ;
 
-    public MainRecyclerAdapter() {
-    }
 
     public MainRecyclerAdapter(List<SuperTask> tasks, Context context) {
         this.tasks = tasks;
@@ -55,8 +52,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
+        System.out.println("ON ITEM MOVE, FROM " +fromPosition + ", TO " + toPosition);
         SuperTask prev = tasks.remove(fromPosition);
-        tasks.add(toPosition > fromPosition ? toPosition - 1 : toPosition, prev);
+        tasks.add(toPosition > fromPosition ? toPosition  : toPosition, prev);
         notifyItemMoved(fromPosition, toPosition);
     }
 
@@ -75,19 +73,22 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     stContent.setTypeface(typeFace);}
 
                     listHeadEditText = (TextView) itemView.findViewById(R.id.mainRecListItemHead);
-                    //ltFirst = (TextView) itemView.findViewById(R.id.textView4);
-                    //ltSecond = (TextView) itemView.findViewById(R.id.textView3);
+
                     layout = (LinearLayout) itemView.findViewById(R.id.card_view_list_layout);
         }
 
         @Override
         public void onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY);
+           // itemView.setBackgroundColor(Color.LTGRAY);
+         //   itemView.setSelected(true);
         }
+
 
         @Override
         public void onItemClear() {
-            itemView.setBackgroundColor(Color.WHITE);
+           // itemView.setBackgroundColor(Color.WHITE);
+          //  itemView.setSelected(false);
+
         }
     }
 
@@ -96,11 +97,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         RecyclerViewHolder recyclerViewHolder = null;
         switch (viewType) {
             case 0:
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item, parent,false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task, parent,false);
                 recyclerViewHolder = new RecyclerViewHolder(view);
                 break;
             case 1:
-                View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_list_activity_recycler_item, parent,false);
+                View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_list_task, parent,false);
                 recyclerViewHolder = new RecyclerViewHolder(view1);
                 break;
         }

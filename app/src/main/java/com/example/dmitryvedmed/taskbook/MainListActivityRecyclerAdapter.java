@@ -38,7 +38,7 @@ public class MainListActivityRecyclerAdapter extends RecyclerView.Adapter<MainLi
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_list_activity_recycler_item, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_list_task, parent,false);
         RecyclerViewHolder recyclerViewHolder = new RecyclerViewHolder(view);
         return recyclerViewHolder;
     }
