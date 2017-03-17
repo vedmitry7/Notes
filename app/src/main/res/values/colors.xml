@@ -3,6 +3,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorCardView">#558877</color>
-    <color name="colorCardViewPressed">#CCCC99</color>
+    <color name="colorCardView">#FFF</color>
+    <color name="colorCardViewPressed">#999</color>
 </resources>

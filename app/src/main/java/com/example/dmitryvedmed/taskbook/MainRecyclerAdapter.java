@@ -3,8 +3,11 @@ package com.example.dmitryvedmed.taskbook;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +65,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             ItemTouchHelperViewHolder {
         private TextView stHeadLine, stContent, listHeadEditText, ltFirst, ltSecond;
         private LinearLayout layout;
+        private CardView cardView;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
@@ -75,10 +79,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     listHeadEditText = (TextView) itemView.findViewById(R.id.mainRecListItemHead);
 
                     layout = (LinearLayout) itemView.findViewById(R.id.card_view_list_layout);
+                    cardView = (CardView) itemView.findViewById(R.id.card_view);
         }
 
         @Override
         public void onItemSelected() {
+            cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorCardViewPressed));
            // itemView.setBackgroundColor(Color.LTGRAY);
          //   itemView.setSelected(true);
         }
@@ -86,7 +92,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public void onItemClear() {
-           // itemView.setBackgroundColor(Color.WHITE);
+
+            cardView.setCardBackgroundColor(Color.YELLOW);
+            cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorCardView));
+            // itemView.setBackgroundColor(Color.WHITE);
           //  itemView.setSelected(false);
 
         }
