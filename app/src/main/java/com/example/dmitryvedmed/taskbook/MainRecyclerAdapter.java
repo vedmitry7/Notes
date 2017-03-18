@@ -85,10 +85,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         @Override
         public void onItemSelected() {
             cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorCardViewPressed));
+
            // itemView.setBackgroundColor(Color.LTGRAY);
          //   itemView.setSelected(true);
         }
-
 
         @Override
         public void onItemClear() {
