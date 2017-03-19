@@ -20,6 +20,7 @@ import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperAdapter;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperViewHolder;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.dmitryvedmed.taskbook.R.id.headTextView;
@@ -27,19 +28,27 @@ import static com.example.dmitryvedmed.taskbook.R.id.taskTextView;
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.RecyclerViewHolder>
         implements ItemTouchHelperAdapter {
-
     private List<SuperTask> tasks;
+    private List<SuperTask> selectedTasks;
+
     private Context context;
     private SimpleTask simpleTask;
     private ListTask listTask;
     private TextView textView;
-    Typeface typeFace ;
+    Typeface typeFace;
     Typeface boldTypeFace ;
+    Main3Activity main3Activity;
+
+    public List<SuperTask> getTasks() {
+        return tasks;
+    }
 
 
     public MainRecyclerAdapter(List<SuperTask> tasks, Context context) {
         this.tasks = tasks;
         this.context = context;
+        selectedTasks = new ArrayList<>();
+        main3Activity = (Main3Activity) context;
         System.out.println("rv constructor" + " " + tasks.size());
         textView = new TextView(context);
         textView.setText("1234we5r");
@@ -80,24 +89,20 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
                     layout = (LinearLayout) itemView.findViewById(R.id.card_view_list_layout);
                     cardView = (CardView) itemView.findViewById(R.id.card_view);
+                    cardView.setOnLongClickListener((Main3Activity)context);
         }
 
         @Override
         public void onItemSelected() {
-            cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorCardViewPressed));
-
-           // itemView.setBackgroundColor(Color.LTGRAY);
-         //   itemView.setSelected(true);
+            cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorCardViewPressed));
+       /*     dbHelper.deleteBook(tasks.get(getAdapterPosition()));
+            main3Activity.update();*/
         }
 
         @Override
         public void onItemClear() {
-
             cardView.setCardBackgroundColor(Color.YELLOW);
             cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorCardView));
-            // itemView.setBackgroundColor(Color.WHITE);
-          //  itemView.setSelected(false);
-
         }
     }
 

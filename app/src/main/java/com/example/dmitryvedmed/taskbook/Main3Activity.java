@@ -15,22 +15,54 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.dmitryvedmed.taskbook.helper.SimpleItemTouchHelperCallback;
 
 import java.util.List;
 
 public class Main3Activity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnLongClickListener {
 
     ActionMode actionMode;
     MenuItem menuItemDelete;
     List<SuperTask> values;
+    List<SuperTask> selectedTasks;
     public static DBHelper4 dbHelper;
     public static RecyclerView recyclerView;
     private MainRecyclerAdapter adapter;
     private ItemTouchHelper mItemTouchHelper;
     public static Mode mode;
+    boolean is_in_action_mode = false;
+    TextView counterTextView;
+    Toolbar toolbar;
+
+
+    @Override
+    public boolean onLongClick(View view) {
+        toolbar.getMenu().clear();
+        toolbar.inflateMenu(R.menu.menu_action_mode);
+        counterTextView.setVisibility(View.VISIBLE);
+        is_in_action_mode = true;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        return false;
+    }
+
+
+
+    public void prepareSelection(View view){
+
+    }
+
+    public void updateCounter(int counter){
+        if(counter == 0){
+            counterTextView.setText("0 item selected");
+        } else {
+            counterTextView.setText(counter + " item selected");
+        }
+
+
+    }
 
     public static enum Mode {
         NORMAL, REMOVE, SELECTED;
@@ -45,8 +77,12 @@ public class Main3Activity extends AppCompatActivity
         values = dbHelper.getAllTask();
         initView();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+       toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        counterTextView = (TextView) findViewById(R.id.counter_text);
+        counterTextView.setVisibility(View.GONE);
+
 
        /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
                 fab.setOnClickListener(new View.OnClickListener() {
@@ -133,9 +169,9 @@ public class Main3Activity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main3, menu);
-        menuItemDelete = menu.findItem(R.id.delete);
-        menuItemDelete.setVisible(false);
+        getMenuInflater().inflate(R.menu.menu_activity_main, menu);
+      //  menuItemDelete = menu.findItem(R.id.delete);
+      //  menuItemDelete.setVisible(false);
         return true;
     }
 
@@ -178,4 +214,6 @@ public class Main3Activity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

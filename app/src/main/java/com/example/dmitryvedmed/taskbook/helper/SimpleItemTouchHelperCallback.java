@@ -52,7 +52,6 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
         mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
         System.out.println("ON Swipe - " + i);
-
     }
 
     @Override
@@ -60,6 +59,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
             ItemTouchHelperViewHolder itemViewHolder = (ItemTouchHelperViewHolder) viewHolder;
             itemViewHolder.onItemSelected();
+
         }
         System.out.println(" onSelectedChanged " + actionState);
 
