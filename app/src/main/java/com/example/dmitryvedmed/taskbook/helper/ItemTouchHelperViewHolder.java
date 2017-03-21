@@ -22,4 +22,5 @@ public interface ItemTouchHelperViewHolder {
      * state should be cleared.
      */
     void onItemClear();
+
 }

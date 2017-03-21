@@ -38,6 +38,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     Typeface typeFace;
     Typeface boldTypeFace ;
     Main3Activity main3Activity;
+    boolean wasSelected;
 
     public List<SuperTask> getTasks() {
         return tasks;
@@ -58,6 +59,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public void onItemDismiss(int position) {
+        System.out.println("POSITION " + position);
+        main3Activity.dbHelper.deleteBook(tasks.get(position));
         tasks.remove(position);
         notifyItemRemoved(position);
     }
@@ -97,13 +100,18 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorCardViewPressed));
        /*     dbHelper.deleteBook(tasks.get(getAdapterPosition()));
             main3Activity.update();*/
+            wasSelected = true;
+            selectedTasks.add(tasks.get(getAdapterPosition()));
         }
 
         @Override
         public void onItemClear() {
+            wasSelected = false;
+            selectedTasks.clear();
             cardView.setCardBackgroundColor(Color.YELLOW);
             cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorCardView));
         }
+
     }
 
     @Override
@@ -138,6 +146,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
                         Intent intent = new Intent(context, TaskActivity.class);
                         // intent.putExtra("id", tasks.get(position).getId());
                         intent.putExtra("Task", (Serializable) tasks.get(position));

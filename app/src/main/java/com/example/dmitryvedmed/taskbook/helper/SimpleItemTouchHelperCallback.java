@@ -16,7 +16,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperAdapter mAdapter;
-    private boolean wasMoved;
+    private boolean wasMoved = true;
 
     public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
@@ -37,14 +37,16 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
         System.out.println("    getMovementFlags ");
-        return makeMovementFlags(dragFlags, swipeFlags);
+        if(wasMoved)
+            return makeMovementFlags(dragFlags, swipeFlags);
+        else
+            return 0;
     }
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder source, RecyclerView.ViewHolder target) {
-        System.out.println("    ON move");
-        wasMoved = true;
         mAdapter.onItemMove(source.getAdapterPosition(), target.getAdapterPosition());
+        wasMoved = true;
         return true;
     }
 
@@ -57,12 +59,12 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+            wasMoved = false;
             ItemTouchHelperViewHolder itemViewHolder = (ItemTouchHelperViewHolder) viewHolder;
             itemViewHolder.onItemSelected();
-
         }
-        System.out.println(" onSelectedChanged " + actionState);
 
+        System.out.println(" onSelectedChanged " + actionState);
         super.onSelectedChanged(viewHolder, actionState);
     }
 
@@ -70,10 +72,10 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
         System.out.println(" clearView ");
-
         ItemTouchHelperViewHolder itemViewHolder = (ItemTouchHelperViewHolder) viewHolder;
-        if(wasMoved)
-        itemViewHolder.onItemClear();
-        wasMoved = false;
+        if (wasMoved) {
+            itemViewHolder.onItemClear();
+            wasMoved = true;
+        }
     }
 }
