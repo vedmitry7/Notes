@@ -48,10 +48,7 @@ public class Main3Activity extends AppCompatActivity
         return false;
     }
 
-
-
     public void prepareSelection(View view){
-
     }
 
     public void updateCounter(int counter){
@@ -74,7 +71,7 @@ public class Main3Activity extends AppCompatActivity
         setContentView(R.layout.activity_main3);
         mode = Mode.NORMAL;
         dbHelper = new DBHelper4(this);
-        values = dbHelper.getAllTask();
+        update();
         initView();
 
        toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -131,11 +128,13 @@ public class Main3Activity extends AppCompatActivity
 
     public void newSimpleTask(View v){
         Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
+        intent.putExtra("position", adapter.getTasks().size());
         startActivity(intent);
     }
 
     public void newListTask(View v){
         Intent intent = new Intent(getApplicationContext(), ListTaskActivity.class);
+        intent.putExtra("position", adapter.getTasks().size());
         startActivity(intent);
     }
 
@@ -152,7 +151,9 @@ public class Main3Activity extends AppCompatActivity
 
 
     void update(){
+        System.out.println("                    UPDATE  !@@@@@@@@@@@@@@!@!@!");
         values = dbHelper.getAllTask();
+        if(adapter!=null)
         adapter.dataChanged(values);
     }
 

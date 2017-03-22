@@ -45,6 +45,7 @@ public class TaskActivity extends AppCompatActivity {
         if(task == null){
             task = new SimpleTask();
             task.setId(-1);
+            task.setPosition(getIntent().getIntExtra("position", 0));
             Log.d("TAG", "TAAAAAAASKA  NEEEET");
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             head.requestFocus();

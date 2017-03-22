@@ -8,7 +8,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
  * swipe-to-dismiss. Drag events are automatically started by an item long-press.<br/>
  * </br/>
  * Expects the <code>RecyclerView.Adapter</code> to react to {@link
- * ItemTouchHelperAdapter} callbacks and the <code>RecyclerView.ViewHolder</code> to implement
+ * ItemTouchHelperAdapter} callbacksинструкция по применению and the <code>RecyclerView.ViewHolder</code> to implement
  * {@link ItemTouchHelperViewHolder}.
  *
  * @author Paul Burke (ipaulpro)
@@ -37,16 +37,13 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
         System.out.println("    getMovementFlags ");
-        if(wasMoved)
             return makeMovementFlags(dragFlags, swipeFlags);
-        else
-            return 0;
+
     }
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder source, RecyclerView.ViewHolder target) {
         mAdapter.onItemMove(source.getAdapterPosition(), target.getAdapterPosition());
-        wasMoved = true;
         return true;
     }
 
@@ -59,7 +56,6 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-            wasMoved = false;
             ItemTouchHelperViewHolder itemViewHolder = (ItemTouchHelperViewHolder) viewHolder;
             itemViewHolder.onItemSelected();
         }
@@ -73,9 +69,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         super.clearView(recyclerView, viewHolder);
         System.out.println(" clearView ");
         ItemTouchHelperViewHolder itemViewHolder = (ItemTouchHelperViewHolder) viewHolder;
-        if (wasMoved) {
             itemViewHolder.onItemClear();
-            wasMoved = true;
-        }
+
     }
 }

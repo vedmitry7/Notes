@@ -21,6 +21,8 @@ import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperViewHolder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.example.dmitryvedmed.taskbook.R.id.headTextView;
@@ -46,7 +48,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
 
     public MainRecyclerAdapter(List<SuperTask> tasks, Context context) {
+        System.out.println("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
         this.tasks = tasks;
+        compareTasks();
+        for (SuperTask s:tasks
+                ) {
+            System.out.println(s.getPosition());
+        }
         this.context = context;
         selectedTasks = new ArrayList<>();
         main3Activity = (Main3Activity) context;
@@ -69,8 +77,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public void onItemMove(int fromPosition, int toPosition) {
         System.out.println("ON ITEM MOVE, FROM " +fromPosition + ", TO " + toPosition);
         SuperTask prev = tasks.remove(fromPosition);
-        tasks.add(toPosition > fromPosition ? toPosition  : toPosition, prev);
+       // tasks.add(toPosition > fromPosition ? toPosition  : toPosition, prev);
+        tasks.add(toPosition, prev);
         notifyItemMoved(fromPosition, toPosition);
+        setRightPosition();
+        for (SuperTask s:tasks
+                ) {
+            System.out.println(s.getId() + " " + s.getPosition());
+        }
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements
@@ -224,6 +238,24 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public void dataChanged(List<SuperTask> tasks){
         this.tasks = tasks;
+        compareTasks();
         notifyDataSetChanged();
     }
+
+    private void compareTasks(){
+        Comparator<SuperTask> comparator = new Comparator<SuperTask>() {
+            @Override
+            public int compare(SuperTask superTask, SuperTask t1) {
+                return superTask.getPosition() < t1.getPosition() ? 1 : -1;
+            }
+        };
+        Collections.sort(tasks, comparator);
+    }
+
+    private void setRightPosition(){
+        for (int i = 0; i < tasks.size(); i++) {
+            tasks.get(i).setPosition(tasks.size()-i-1);
+        }
+    }
+
 }

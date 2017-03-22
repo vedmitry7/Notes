@@ -57,6 +57,7 @@ public class ListTaskActivity extends AppCompatActivity {
             listTask = new ListTask();
             listTask.setHeadLine("");
             listTask.setId(-1);
+            listTask.setPosition(getIntent().getIntExtra("position", 0));
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
         else
