@@ -39,33 +39,6 @@ public class Main3Activity extends AppCompatActivity
 
 
     @Override
-    public boolean onLongClick(View view) {
-        toolbar.getMenu().clear();
-        toolbar.inflateMenu(R.menu.menu_action_mode);
-        counterTextView.setVisibility(View.VISIBLE);
-        is_in_action_mode = true;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        return false;
-    }
-
-    public void prepareSelection(View view){
-    }
-
-    public void updateCounter(int counter){
-        if(counter == 0){
-            counterTextView.setText("0 item selected");
-        } else {
-            counterTextView.setText(counter + " item selected");
-        }
-
-
-    }
-
-    public static enum Mode {
-        NORMAL, REMOVE, SELECTED;
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
@@ -74,7 +47,7 @@ public class Main3Activity extends AppCompatActivity
         update();
         initView();
 
-       toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         counterTextView = (TextView) findViewById(R.id.counter_text);
@@ -126,6 +99,33 @@ public class Main3Activity extends AppCompatActivity
 
     }
 
+    @Override
+    public boolean onLongClick(View view) {
+        toolbar.getMenu().clear();
+        toolbar.inflateMenu(R.menu.menu_action_mode);
+        counterTextView.setVisibility(View.VISIBLE);
+        is_in_action_mode = true;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        return false;
+    }
+
+    public void prepareSelection(View view){
+    }
+    public void updateCounter(int counter){
+        if(counter == 0){
+            counterTextView.setText("0 item selected");
+        } else {
+            counterTextView.setText(counter + " item selected");
+        }
+
+
+    }
+
+    public static enum Mode {
+        NORMAL, REMOVE, SELECTED;
+
+    }
+
     public void newSimpleTask(View v){
         Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
         intent.putExtra("position", adapter.getTasks().size());
@@ -149,6 +149,15 @@ public class Main3Activity extends AppCompatActivity
         super.onResume();
     }
 
+    @Override
+    protected void onPause() {
+        values = adapter.getTasks();
+        for (SuperTask s:values
+             ) {
+            dbHelper.updateTask(s);
+        }
+        super.onPause();
+    }
 
     void update(){
         System.out.println("                    UPDATE  !@@@@@@@@@@@@@@!@!@!");

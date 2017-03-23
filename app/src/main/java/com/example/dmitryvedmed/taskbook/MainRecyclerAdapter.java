@@ -71,6 +71,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         main3Activity.dbHelper.deleteBook(tasks.get(position));
         tasks.remove(position);
         notifyItemRemoved(position);
+        setRightPosition();
     }
 
     @Override
