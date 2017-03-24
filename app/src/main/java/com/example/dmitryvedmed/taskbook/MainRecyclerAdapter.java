@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     public MainRecyclerAdapter(List<SuperTask> tasks, Context context) {
-        System.out.println("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
+        Log.d("TAG", "       Adapter --- constructor  ---");
         this.tasks = tasks;
         compareTasks();
         for (SuperTask s:tasks
@@ -57,7 +58,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         this.context = context;
         selectedTasks = new ArrayList<>();
         main3Activity = (Main3Activity) context;
-        System.out.println("rv constructor" + " " + tasks.size());
+        Log.d("TAG", "       Adapter, tasksSize = " + tasks.size());
         textView = new TextView(context);
         textView.setText("1234we5r");
          typeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Regular.ttf");
@@ -66,7 +67,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public void onItemDismiss(int position) {
-        System.out.println("POSITION " + position);
+        Log.d("TAG", "       Adapter --- onItemDismiss, position = " + position);
         main3Activity.dbHelper.deleteBook(tasks.get(position));
         tasks.remove(position);
         notifyItemRemoved(position);
@@ -75,16 +76,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-        System.out.println("ON ITEM MOVE, FROM " +fromPosition + ", TO " + toPosition);
+        Log.d("TAG", "       Adapter --- onItemMove, FROM - " + fromPosition + ", TO - " + toPosition);
         SuperTask prev = tasks.remove(fromPosition);
-       // tasks.add(toPosition > fromPosition ? toPosition  : toPosition, prev);
         tasks.add(toPosition, prev);
         notifyItemMoved(fromPosition, toPosition);
         setRightPosition();
-        for (SuperTask s:tasks
-                ) {
-            System.out.println(s.getId() + " " + s.getPosition());
-        }
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements
@@ -98,9 +94,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     stHeadLine = (TextView) itemView.findViewById(headTextView);
                     stContent = (TextView) itemView.findViewById(taskTextView);
 
-                   if(stContent!=null){
-                    stHeadLine.setTypeface(boldTypeFace);
-                    stContent.setTypeface(typeFace);}
+                   if(stContent!=null) {
+                        stHeadLine.setTypeface(boldTypeFace);
+                        stContent.setTypeface(typeFace);
+                   }
 
                     listHeadEditText = (TextView) itemView.findViewById(R.id.mainRecListItemHead);
 
@@ -111,15 +108,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public void onItemSelected() {
+            Log.d("TAG", "       Adapter --- onItemSelected");
             cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorCardViewPressed));
-       /*     dbHelper.deleteBook(tasks.get(getAdapterPosition()));
-            main3Activity.update();*/
             wasSelected = true;
             selectedTasks.add(tasks.get(getAdapterPosition()));
         }
 
         @Override
         public void onItemClear() {
+            Log.d("TAG", "       Adapter --- onItemClear");
             wasSelected = false;
             selectedTasks.clear();
             cardView.setCardBackgroundColor(Color.YELLOW);
@@ -128,12 +125,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public void onClick(View view) {
-
         }
     }
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.d("TAG", "       Adapter --- onCreateViewHolder");
         RecyclerViewHolder recyclerViewHolder = null;
         switch (viewType) {
             case 0:
@@ -150,8 +147,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
-        switch (getItemViewType(position)){
+        Log.d("TAG", "       Adapter --- onBindViewHolder");
 
+        switch (getItemViewType(position)){
             case 0:
                 simpleTask = (SimpleTask) tasks.get(position);
                 if(simpleTask.getHeadLine().equals(""))
@@ -177,11 +175,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
              /*        holder.ltFirst.setText(listTask.getUncheckedTask(0));
                     holder.ltSecond.setText(listTask.getUncheckedTask(1));*/
                 if(listTask.getHeadLine().equals("")) {
-                    System.out.println(" EQUALS listTask.getHeadLine() - " + listTask.getHeadLine());
                     holder.listHeadEditText.setVisibility(View.GONE);
                 }
                 else {
-                    System.out.println(" NOT EQUALS listTask.getHeadLine() - " + listTask.getHeadLine());
                     holder.listHeadEditText.setText(listTask.getHeadLine());
                 }
 
@@ -241,12 +237,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     public void dataChanged(List<SuperTask> tasks){
+        Log.d("TAG", "       Adapter --- dataChanged");
         this.tasks = tasks;
         compareTasks();
         notifyDataSetChanged();
     }
 
     private void compareTasks(){
+        Log.d("TAG", "       Adapter --- compareTasks");
         Comparator<SuperTask> comparator = new Comparator<SuperTask>() {
             @Override
             public int compare(SuperTask superTask, SuperTask t1) {
@@ -257,6 +255,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     private void setRightPosition(){
+        Log.d("TAG", "       Adapter --- setRightPosition");
+
         for (int i = 0; i < tasks.size(); i++) {
             tasks.get(i).setPosition(tasks.size()-i-1);
         }

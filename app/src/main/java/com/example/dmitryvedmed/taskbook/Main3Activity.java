@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +41,7 @@ public class Main3Activity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("TAG", "      Main3Activity --- onCreate  ---");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
         mode = Mode.NORMAL;
@@ -91,7 +93,6 @@ public class Main3Activity extends AppCompatActivity
                 System.out.println("qq " );
             }
         });
-        System.out.println("eeeah");
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
@@ -101,6 +102,7 @@ public class Main3Activity extends AppCompatActivity
 
     @Override
     public boolean onLongClick(View view) {
+        Log.d("TAG", "      Main3Activity --- onLongClick  ---");
         toolbar.getMenu().clear();
         toolbar.inflateMenu(R.menu.menu_action_mode);
         counterTextView.setVisibility(View.VISIBLE);
@@ -139,18 +141,21 @@ public class Main3Activity extends AppCompatActivity
     }
 
     public void clearList(View v){
+        Log.d("TAG", "      Main3Activity --- clearList  ---");
         dbHelper.clearDB();
         update();
     }
 
     @Override
     protected void onResume() {
+        Log.d("TAG", "      Main3Activity --- onResume  ---");
         update();
         super.onResume();
     }
 
     @Override
     protected void onPause() {
+        Log.d("TAG", "      Main3Activity --- onPause  ---");
         values = adapter.getTasks();
         for (SuperTask s:values
              ) {
@@ -160,7 +165,7 @@ public class Main3Activity extends AppCompatActivity
     }
 
     void update(){
-        System.out.println("                    UPDATE  !@@@@@@@@@@@@@@!@!@!");
+        Log.d("TAG", "      Main3Activity --- update  ---");
         values = dbHelper.getAllTask();
         if(adapter!=null)
         adapter.dataChanged(values);

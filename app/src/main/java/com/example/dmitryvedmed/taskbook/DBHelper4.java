@@ -31,7 +31,7 @@ class DBHelper4 extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("TAG", "--- onCreate database ---");
+        Log.d("TAG", "      DBHelper--- onCreate database ---");
         // создаем таблицу с полями
         db.execSQL("create table mytable4 ("
                 + "id integer primary key autoincrement,"
@@ -76,8 +76,8 @@ class DBHelper4 extends SQLiteOpenHelper {
         long id = db.insert(TABLE, null, values);
         // 4. close
         db.close();
-        Log.d("TAG", "  addTask "  + task.toString());
-        Log.d("TAG", "  ID "  + id);
+        Log.d("TAG", "      DBHelper  addTask "  + task.toString());
+        Log.d("TAG", "      DBHelper  ID "  + id);
 
         return (int) id;
     }
@@ -113,8 +113,8 @@ class DBHelper4 extends SQLiteOpenHelper {
         long id = db.insert(DELETED_TASKS, null, values);
         // 4. close
         db.close();
-        Log.d("TAG", "  addDeletedTask "  + task.toString());
-        Log.d("TAG", "  ID "  + id);
+        Log.d("TAG", "      DBHelper  addDeletedTask "  + task.toString());
+        Log.d("TAG", "      DBHelper  ID "  + id);
 
         return (int) id;
     }
@@ -130,7 +130,7 @@ class DBHelper4 extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        Log.d("TAG", " DB - getAllTask"  );
+        Log.d("TAG", "      DBHelper - getAllTask"  );
         // 3. go over each row, build book and add it to list
         SuperTask task = null;
         if (cursor.moveToFirst()) {
@@ -162,7 +162,7 @@ class DBHelper4 extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
-        Log.d("TAG", "getAllTask"  + tasks.toString());
+        Log.d("TAG", "      DBHelper    getAllTask"  + tasks.toString());
 
         return tasks;
     }
@@ -177,7 +177,7 @@ class DBHelper4 extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        Log.d("TAG", " DB - getDeletedTasks"  );
+        Log.d("TAG", "      DBHelper - getDeletedTasks"  );
         // 3. go over each row, build book and add it to list
         SuperTask task = null;
         if (cursor.moveToFirst()) {
@@ -208,7 +208,7 @@ class DBHelper4 extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
-        Log.d("TAG", "getDeletedTask"  + tasks.toString());
+        Log.d("TAG", "      DBHelper getDeletedTask"  + tasks.toString());
 
         return tasks;
     }
@@ -249,7 +249,7 @@ class DBHelper4 extends SQLiteOpenHelper {
 
         // 4. close
         db.close();
-        Log.d("TAG", "Update " + task.toString());
+        Log.d("TAG", "      DBHelper Update " + task.toString());
         return i;
     }
     public void deleteBook(SuperTask task) {
@@ -267,7 +267,7 @@ class DBHelper4 extends SQLiteOpenHelper {
         // 3. close
         db.close();
 
-        Log.d("TAG", "Delate " + task.toString());
+        Log.d("TAG", "      DBHelper Delate " + task.toString());
     }
 
     public void clearDB(){
