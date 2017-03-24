@@ -217,7 +217,8 @@ public class Main3Activity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-
+            values = dbHelper.getDeletedTasks();
+            adapter.dataChanged(values);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

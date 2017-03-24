@@ -37,15 +37,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private SimpleTask simpleTask;
     private ListTask listTask;
     private TextView textView;
-    Typeface typeFace;
-    Typeface boldTypeFace ;
-    Main3Activity main3Activity;
+    private Typeface typeFace;
+    private Typeface boldTypeFace ;
+    private Main3Activity main3Activity;
     boolean wasSelected;
 
     public List<SuperTask> getTasks() {
         return tasks;
     }
-
 
     public MainRecyclerAdapter(List<SuperTask> tasks, Context context) {
         System.out.println("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
@@ -89,7 +88,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements
-            ItemTouchHelperViewHolder {
+            ItemTouchHelperViewHolder, View.OnClickListener {
         private TextView stHeadLine, stContent, listHeadEditText, ltFirst, ltSecond;
         private LinearLayout layout;
         private CardView cardView;
@@ -127,6 +126,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorCardView));
         }
 
+        @Override
+        public void onClick(View view) {
+
+        }
     }
 
     @Override
