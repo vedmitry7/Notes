@@ -76,7 +76,7 @@ public class ListTaskActivity extends AppCompatActivity {
         listTask.setHeadLine(headList.getText().toString());
         if(listTask.getId() == -1)
             dbHelper.addTask(listTask);
-        else dbHelper.updateTask(listTask);
+        else dbHelper.updateTask(listTask, Constants.UNDEFINED);
         super.onPause();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.dmitryvedmed.taskbook;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,7 +30,7 @@ public class Main3Activity extends AppCompatActivity
     MenuItem menuItemDelete;
     List<SuperTask> values;
     List<SuperTask> selectedTasks;
-    public static DBHelper4 dbHelper;
+    public static DBHelper5 dbHelper;
     public static RecyclerView recyclerView;
     private MainRecyclerAdapter adapter;
     private ItemTouchHelper mItemTouchHelper;
@@ -37,7 +38,8 @@ public class Main3Activity extends AppCompatActivity
     boolean is_in_action_mode = false;
     TextView counterTextView;
     Toolbar toolbar;
-
+    SharedPreferences preferences;
+    String currentKind = Constants.UNDEFINED;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +47,9 @@ public class Main3Activity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
         mode = Mode.NORMAL;
-        dbHelper = new DBHelper4(this);
+        dbHelper = new DBHelper5(this);
         update();
         initView();
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -157,16 +158,17 @@ public class Main3Activity extends AppCompatActivity
     protected void onPause() {
         Log.d("TAG", "      Main3Activity --- onPause  ---");
         values = adapter.getTasks();
+        // save because positions could change
         for (SuperTask s:values
              ) {
-            dbHelper.updateTask(s);
+            dbHelper.updateTask(s, currentKind);
         }
         super.onPause();
     }
 
     void update(){
         Log.d("TAG", "      Main3Activity --- update  ---");
-        values = dbHelper.getAllTask();
+        values = dbHelper.getTasks(currentKind);
         if(adapter!=null)
         adapter.dataChanged(values);
     }
@@ -219,11 +221,17 @@ public class Main3Activity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-            values = dbHelper.getDeletedTasks();
+        } else if (id == R.id.undefined) {
+            currentKind = Constants.UNDEFINED;
+            values = dbHelper.getTasks(currentKind);
             adapter.dataChanged(values);
+
+        } else if (id == R.id.deleted) {
+            currentKind = Constants.DELETED;
+            values = dbHelper.getTasks(Constants.DELETED);
+            adapter.dataChanged(values);
+        } else if (id == R.id.settings) {
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

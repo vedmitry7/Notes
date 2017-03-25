@@ -68,7 +68,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public void onItemDismiss(int position) {
         Log.d("TAG", "       Adapter --- onItemDismiss, position = " + position);
-        main3Activity.dbHelper.deleteBook(tasks.get(position));
+        main3Activity.dbHelper.updateTask(tasks.get(position), Constants.DELETED);
         tasks.remove(position);
         notifyItemRemoved(position);
         setRightPosition();

@@ -154,7 +154,7 @@ public class TaskActivity extends AppCompatActivity {
         }
         else{
             Log.d("TAG", "UPDATE id = " + id);
-            dbHelper.updateTask(task);
+            dbHelper.updateTask(task, Constants.UNDEFINED);
         }
     }
 
