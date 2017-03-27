@@ -61,8 +61,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         Log.d("TAG", "       Adapter, tasksSize = " + tasks.size());
         textView = new TextView(context);
         textView.setText("1234we5r");
-         typeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Regular.ttf");
-         boldTypeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Bold.ttf");
+        typeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Regular.ttf");
+        boldTypeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Bold.ttf");
     }
 
     @Override

@@ -17,7 +17,6 @@ public class TaskActivity extends AppCompatActivity {
     private int id;
     private EditText head,text;
     private SimpleTask task;
-    private boolean wasChange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +32,6 @@ public class TaskActivity extends AppCompatActivity {
 
         Typeface typeFace = Typeface.createFromAsset(getAssets(), "font/Roboto-Regular.ttf");
         Typeface boldTypeFace = Typeface.createFromAsset(getAssets(), "font/Roboto-Bold.ttf");
-
 
         text.setTypeface(typeFace);
         head.setTypeface(boldTypeFace);
@@ -60,7 +58,6 @@ public class TaskActivity extends AppCompatActivity {
             task.setId(id);
             return;
         }*/
-
        // task = dbHelper.getTask(id);
         head.setText(task.getHeadLine());
         text.setText(task.getContext());

@@ -231,7 +231,8 @@ public class Main3Activity extends AppCompatActivity
             values = dbHelper.getTasks(Constants.DELETED);
             adapter.dataChanged(values);
         } else if (id == R.id.settings) {
-
+            Intent intent = new Intent(this, SettingsActivity.class);
+            this.startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -42,7 +42,6 @@ class DBHelper5 extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
     }
 
     public int addTask(SuperTask task, String kind) {
