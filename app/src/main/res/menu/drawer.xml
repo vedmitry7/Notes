@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/undefined"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Заметки" />
-        <item
-            android:id="@+id/deleted"
-            android:icon="@drawable/delete"
-            android:title="Удаленные" />
 
+    <item android:title="Разделы">
+        <menu>
+            <item
+                android:id="@+id/undefined"
+                android:icon="@drawable/ic_menu_camera"
+                android:title="Заметки" />
+            <item
+                android:id="@+id/deleted"
+                android:icon="@drawable/delete"
+                android:title="Удаленные" />
+        </menu>
+    </item>
+
+
+
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/settings"
             android:icon="@drawable/ic_menu_manage"

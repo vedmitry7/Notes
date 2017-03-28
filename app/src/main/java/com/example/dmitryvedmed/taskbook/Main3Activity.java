@@ -74,6 +74,9 @@ public class Main3Activity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Menu menu = navigationView.getMenu();
+        menu.add("Мой пункт");
     }
 
     private void initView() {
@@ -233,7 +236,10 @@ public class Main3Activity extends AppCompatActivity
         } else if (id == R.id.settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             this.startActivity(intent);
+        } else if (id == R.id.exit) {
+            this.finish();
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
