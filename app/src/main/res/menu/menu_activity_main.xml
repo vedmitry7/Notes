@@ -6,6 +6,6 @@
         android:id="@+id/item_change_view"
         android:orderInCategory="100"
         android:title="Change view"
-        app:showAsAction="always"
-        android:icon="@android:drawable/btn_star"/>
+        app:showAsAction="never"
+        />
 </menu>

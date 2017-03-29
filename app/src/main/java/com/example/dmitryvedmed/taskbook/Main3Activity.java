@@ -69,14 +69,14 @@ public class Main3Activity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         Menu menu = navigationView.getMenu();
-        menu.add("Мой пункт");
+        menu.add(Menu.NONE,Menu.FIRST,Menu.NONE,"My пункт");
     }
 
     private void initView() {
@@ -238,6 +238,9 @@ public class Main3Activity extends AppCompatActivity
             this.startActivity(intent);
         } else if (id == R.id.exit) {
             this.finish();
+        } else if (id == Menu.FIRST){
+            Log.d("TAG", "      Main3Activity --- my пункт  ---");
+
         }
 
 

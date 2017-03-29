@@ -10,20 +10,26 @@
         <activity
             android:name=".Main3Activity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ListTaskActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".TaskActivity"
-            android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".SettingsActivity"></activity>
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".DrawerTestActivity"
+            android:theme="@style/AppTheme"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>
