@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Разделы">
-        <menu>
+    <item android:title="Разделы"
+        android:id="@+id/sections">
+        <menu >
             <item
                 android:id="@+id/undefined"
                 android:icon="@drawable/ic_menu_camera"
@@ -14,9 +15,15 @@
         </menu>
     </item>
 
+        <item
+            android:id="@+id/add"
+            android:icon="@drawable/ic_add"
+            android:title="Добавить раздел" />
 
 
-    <group android:checkableBehavior="single">
+
+
+    <group android:checkableBehavior="none">
         <item
             android:id="@+id/settings"
             android:icon="@drawable/ic_menu_manage"
