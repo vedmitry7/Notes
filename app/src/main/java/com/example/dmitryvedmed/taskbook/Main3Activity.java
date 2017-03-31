@@ -1,14 +1,12 @@
 package com.example.dmitryvedmed.taskbook;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -26,10 +24,7 @@ import java.util.List;
 public class Main3Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnLongClickListener {
 
-    ActionMode actionMode;
-    MenuItem menuItemDelete;
     List<SuperTask> values;
-    List<SuperTask> selectedTasks;
     public static DBHelper5 dbHelper;
     public static RecyclerView recyclerView;
     private MainRecyclerAdapter adapter;
@@ -38,7 +33,6 @@ public class Main3Activity extends AppCompatActivity
     boolean is_in_action_mode = false;
     TextView counterTextView;
     Toolbar toolbar;
-    SharedPreferences preferences;
     String currentKind = Constants.UNDEFINED;
 
     @Override
@@ -46,7 +40,6 @@ public class Main3Activity extends AppCompatActivity
         Log.d("TAG", "      Main3Activity --- onCreate  ---");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
-        mode = Mode.NORMAL;
         dbHelper = new DBHelper5(this);
         update();
         initView();
@@ -242,7 +235,6 @@ public class Main3Activity extends AppCompatActivity
             Log.d("TAG", "      Main3Activity --- my пункт  ---");
 
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

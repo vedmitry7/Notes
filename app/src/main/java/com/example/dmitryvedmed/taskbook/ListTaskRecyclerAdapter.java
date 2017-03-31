@@ -82,7 +82,6 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
         }
     }
 
-
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerViewHolder recyclerViewHolder = null;

@@ -40,7 +40,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private TextView textView;
     private Typeface typeFace;
     private Typeface boldTypeFace ;
-    private Main3Activity main3Activity;
+    private DrawerTestActivity activity;
     boolean wasSelected;
 
     public List<SuperTask> getTasks() {
@@ -57,7 +57,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
         this.context = context;
         selectedTasks = new ArrayList<>();
-        main3Activity = (Main3Activity) context;
+        activity = (DrawerTestActivity) context;
         Log.d("TAG", "       Adapter, tasksSize = " + tasks.size());
         textView = new TextView(context);
         textView.setText("1234we5r");
@@ -68,7 +68,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public void onItemDismiss(int position) {
         Log.d("TAG", "       Adapter --- onItemDismiss, position = " + position);
-        main3Activity.dbHelper.updateTask(tasks.get(position), Constants.DELETED);
+        activity.dbHelper.updateTask(tasks.get(position), Constants.DELETED);
         tasks.remove(position);
         notifyItemRemoved(position);
         setRightPosition();
@@ -103,7 +103,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
                     layout = (LinearLayout) itemView.findViewById(R.id.card_view_list_layout);
                     cardView = (CardView) itemView.findViewById(R.id.card_view);
-                    cardView.setOnLongClickListener((Main3Activity)context);
+                    //cardView.setOnLongClickListener((DrawerTestActivity)context);
         }
 
         @Override

@@ -10,8 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import static com.example.dmitryvedmed.taskbook.Main3Activity.dbHelper;
-
 
 public class ListTaskActivity extends AppCompatActivity {
 
@@ -73,7 +71,18 @@ public class ListTaskActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         listTask = listTaskRecyclerAdapter.getListTask();
+        System.out.println("UN");
+        for (String s:listTask.getUncheckedTasks()
+                ) {
+            System.out.println(s);
+        }
+        System.out.println("CHECK");
+        for (String s:listTask.getCheckedTasks()
+                ) {
+            System.out.println(s);
+        }
         listTask.setHeadLine(headList.getText().toString());
+        DBHelper5 dbHelper = new DBHelper5(this);
         if(listTask.getId() == -1)
             dbHelper.addTask(listTask);
         else dbHelper.updateTask(listTask, Constants.UNDEFINED);

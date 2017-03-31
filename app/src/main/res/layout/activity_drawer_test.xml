@@ -11,14 +11,17 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#EEE">
 
 
-        <TextView
-            android:text="Pa-pa-pa-ra-pa,pa,pa,ra,pa"
-            android:layout_width="wrap_content"
-            android:gravity="center"
-            android:layout_height="wrap_content" />
+        <android.support.v7.widget.RecyclerView
+            android:paddingTop="6dp"
+            android:id="@+id/recycler_view_common"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
 
     </RelativeLayout>
 

@@ -10,8 +10,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import static com.example.dmitryvedmed.taskbook.Main3Activity.dbHelper;
-
 public class TaskActivity extends AppCompatActivity {
 
     private int id;
@@ -144,6 +142,7 @@ public class TaskActivity extends AppCompatActivity {
         task.setHeadLine(headline);
         task.setContext(content);
 
+        DBHelper5 dbHelper = new DBHelper5(this);
         if(task.getId()==-1) {
             id = dbHelper.addTask(task);
             task.setId(id);
