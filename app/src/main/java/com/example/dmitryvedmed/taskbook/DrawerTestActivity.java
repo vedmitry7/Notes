@@ -18,7 +18,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -166,9 +165,9 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                     NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
                     Menu menu = navigationView.getMenu();
+                    Menu submenu = menu.getItem(0).getSubMenu();
                     //MenuItem sections =  menu.getItem(R.id.sections);
-                    menu.add(R.id.sections,Menu.FIRST,Menu.NONE, value);
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    submenu.add(R.id.sections,Menu.FIRST,Menu.NONE, value);
 
                 }
             });
@@ -176,12 +175,10 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     // Canceled.
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 }
             });
 
             alert.show();
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

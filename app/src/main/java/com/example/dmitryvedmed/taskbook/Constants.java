@@ -5,5 +5,7 @@ public class Constants {
 
     public static final String UNDEFINED = "undefined";
     public static final String DELETED = "deleted";
+    public static final String DELIVER = "7413";
+
 
 }
