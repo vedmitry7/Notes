@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorCardView">#FFF</color>
+    <color name="colorYellow">#ffc107</color>
+
     <color name="colorCardViewPressed">#999</color>
 </resources>

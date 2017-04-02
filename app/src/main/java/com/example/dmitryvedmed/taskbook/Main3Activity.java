@@ -181,7 +181,9 @@ public class Main3Activity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        System.out.println("MENUUUUUUUUUU");
         // Inflate the menu; this adds items to the action bar if it is present.
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_activity_main, menu);
       //  menuItemDelete = menu.findItem(R.id.delete);
       //  menuItemDelete.setVisible(false);

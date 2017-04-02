@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,9 +16,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -41,10 +44,17 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     Toolbar toolbar;
     String currentKind = Constants.UNDEFINED;
     Context context;
+    Menu menu;
+
+    @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        return super.onCreateView(parent, name, context, attrs);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_drawer_test);
 
         context = this;
@@ -55,6 +65,11 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     }
 
     private void initView() {
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_common);
         adapter = new MainRecyclerAdapter(values, DrawerTestActivity.this);
 
@@ -74,12 +89,17 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("1 item selected");
 
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.colorYellow)));
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         ActionBar toolbar = getActionBar();
+
     }
 
 
@@ -116,17 +136,36 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_activity_main, menu);
         //  menuItemDelete = menu.findItem(R.id.delete);
         //  menuItemDelete.setVisible(false);
+
+        /*ArrayList<Section> sections = dbHelper.getAllSections();
+        System.out.println("ssssssssssssssssss");
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu navmenu = navigationView.getMenu();
+        Menu submenu = navmenu.getItem(0).getSubMenu();
+        submenu.clear();
+
+        for (Section s:sections
+             ) {
+            System.out.println(s.getName());
+            //MenuItem sections =  menu.getItem(R.id.sections);
+            submenu.add(R.id.sections,Menu.FIRST,Menu.NONE, s.getName());
+        }*/
+
         return true;
     }
 
     public boolean onNavigationItemSelected(MenuItem item) {
+        System.out.println(item.getTitle());
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        System.out.println("ID = " + id);
         if (id == R.id.nav_manage) {
 
         } else if (id == R.id.undefined) {
@@ -145,7 +184,6 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             this.finish();
         } else if (id == Menu.FIRST){
         } else if (id == R.id.add){
-
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
             alert.setTitle("Добавить раздел");
@@ -164,10 +202,15 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
 
                     NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-                    Menu menu = navigationView.getMenu();
+                    Section section = new Section();
+                    section.setName(value);
+                    dbHelper.addSection(section);
+                    menu.clear();
+                    onCreateOptionsMenu(menu);
+          /*          Menu menu = navigationView.getMenu();
                     Menu submenu = menu.getItem(0).getSubMenu();
                     //MenuItem sections =  menu.getItem(R.id.sections);
-                    submenu.add(R.id.sections,Menu.FIRST,Menu.NONE, value);
+                    submenu.add(R.id.sections,Menu.FIRST,Menu.NONE, value);*/
 
                 }
             });

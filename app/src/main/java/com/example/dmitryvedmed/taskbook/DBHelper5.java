@@ -38,10 +38,90 @@ class DBHelper5 extends SQLiteOpenHelper {
                 + "kind text,"
                 + "task blob" + ");");
 
+        db.execSQL("create table sections ("
+                + "id integer primary key autoincrement,"
+                + "kind text" + ");");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    }
+
+
+    public void addSection(Section section){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        byte[] bytes = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutput out = null;
+        try {
+            out = new ObjectOutputStream(bos);
+            out.writeObject(section);
+            out.flush();
+            bytes = bos.toByteArray();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bos.close();
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_KIND, bytes);
+        // 3. insert
+        long id = db.insert("sections", null, values);
+        // 4. close
+        db.close();
+        Log.d("TAG", "      DBHelper  add Section"  + id);
+    }
+
+    public ArrayList<Section> getAllSections() {
+        ArrayList<Section> sections = new ArrayList<>();
+
+        // 1. build the query
+        String query = "SELECT  * FROM " + "sections";
+
+        // 2. get reference to writable DB
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        Log.d("TAG", "      DBHelper - getAllsections"  );
+        // 3. go over each row, build book and add it to list
+        Section section = null;
+        if (cursor.moveToFirst()) {
+            do {
+                byte[] bytes = cursor.getBlob(1);
+                ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+                ObjectInput in = null;
+                try {
+                    in = new ObjectInputStream(bis);
+                    section = (Section) in.readObject();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (in != null) {
+                            in.close();
+                        }
+                    } catch (IOException ex) {
+                        // ignore close exception
+                    }
+                }
+
+                // Add book to books
+                sections.add(section);
+            } while (cursor.moveToNext());
+        }
+
+
+        return sections;
     }
 
     public int addTask(SuperTask task, String kind) {

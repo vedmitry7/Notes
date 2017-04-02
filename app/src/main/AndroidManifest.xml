@@ -9,9 +9,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Main3Activity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".ListTaskActivity"
             android:windowSoftInputMode="stateHidden" />
@@ -19,17 +17,20 @@
             android:name=".TaskActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".DrawerTestActivity"
-            android:theme="@style/AppTheme"
-            >
+        <activity
+            android:name=".SettingsActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
+        <activity
+            android:name=".DrawerTestActivity"
+            android:label="Заметки"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+
     </application>
 
 </manifest>
