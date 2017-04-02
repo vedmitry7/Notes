@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -65,10 +64,11 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     }
 
     private void initView() {
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        counterTextView = (TextView) findViewById(R.id.counter_text);
+        counterTextView.setVisibility(View.GONE);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_common);
         adapter = new MainRecyclerAdapter(values, DrawerTestActivity.this);
@@ -84,19 +84,21 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
+      //  drawerLayout.setScrimColor(Color.TRANSPARENT);
+
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        getSupportActionBar().setTitle("1 item selected");
-
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.colorYellow)));
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //getSupportActionBar().setTitle("1 item selected");
+
+       // getSupportActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.colorYellow)));
+
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ActionBar toolbar = getActionBar();
 
@@ -131,6 +133,12 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     public boolean onOptionsItemSelected(MenuItem item) {
         if(toggle.onOptionsItemSelected(item))
             return true;
+
+        if(item.getItemId() == R.id.delete_selection_items){
+            Log.d("TAG", "       Adapter --- delete_selection_items");
+            adapter.deleteSelectedTasks();
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -159,6 +167,18 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         }*/
 
         return true;
+    }
+
+    public void newSimpleTask(View v){
+        Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
+        intent.putExtra("position", adapter.getTasks().size());
+        startActivity(intent);
+    }
+
+    public void newListTask(View v){
+        Intent intent = new Intent(getApplicationContext(), ListTaskActivity.class);
+        intent.putExtra("position", adapter.getTasks().size());
+        startActivity(intent);
     }
 
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -228,5 +248,6 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 }

@@ -8,8 +8,8 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
-        android:id="@+id/ne_action_settings"
+        android:id="@+id/delete_selection_items"
         android:orderInCategory="100"
-        android:title="ne_action_settings"
+        android:title="Удалить"
         app:showAsAction="never" />
 </menu>

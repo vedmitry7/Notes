@@ -2,7 +2,6 @@ package com.example.dmitryvedmed.taskbook;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperAdapter;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperViewHolder;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,6 +72,19 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         setRightPosition();
     }
 
+    public void deleteSelectedTasks(){
+
+        for (SuperTask t:selectedTasks
+             ) {
+            Log.d("TAG", "       Adapter --- selected task " + ((SimpleTask)t).getHeadLine());
+            activity.dbHelper.updateTask(tasks.get(t.getPosition()), Constants.DELETED);
+            tasks.remove(t);
+            notifyItemRemoved(t.getPosition());
+            setRightPosition();
+        }
+        selectedTasks.clear();
+    }
+
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
         Log.d("TAG", "       Adapter --- onItemMove, FROM - " + fromPosition + ", TO - " + toPosition);
@@ -104,6 +115,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     layout = (LinearLayout) itemView.findViewById(R.id.card_view_list_layout);
                     cardView = (CardView) itemView.findViewById(R.id.card_view);
                     //cardView.setOnLongClickListener((DrawerTestActivity)context);
+                    cardView.setOnClickListener(this);
         }
 
         @Override
@@ -125,6 +137,22 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public void onClick(View view) {
+            int position = getAdapterPosition();
+            Log.d("TAG", "       Adapter --- onClick " + position);
+            /*Intent intent = new Intent(context, TaskActivity.class);
+            // intent.putExtra("id", tasks.get(position).getId());
+            intent.putExtra("Task", (Serializable) tasks.get(position));
+            context.startActivity(intent);*/
+
+            if (cardView.isSelected()){
+                cardView.setCardBackgroundColor(Color.WHITE);
+            cardView.setSelected(false);
+            }
+            else {
+                cardView.setCardBackgroundColor(Color.LTGRAY);
+                cardView.setSelected(true);
+                selectedTasks.add(tasks.get(position));
+            }
         }
     }
 
@@ -159,7 +187,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 if(simpleTask.getContext().equals(""))
                     holder.stContent.setVisibility(View.GONE);
                 holder.stContent.setText(simpleTask.getContext());
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
+           /*     holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -168,7 +196,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         intent.putExtra("Task", (Serializable) tasks.get(position));
                         context.startActivity(intent);
                     }
-                });
+                });*/
                 break;
             case 1:
                listTask = (ListTask) tasks.get(position);
@@ -208,14 +236,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.layout.addView(view);
                 }
 
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
+          /*      holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(context, ListTaskActivity.class);
                         intent.putExtra("ListTask", tasks.get(position));
                         context.startActivity(intent);
                     }
-                });
+                });*/
                 break;
         }
     }
