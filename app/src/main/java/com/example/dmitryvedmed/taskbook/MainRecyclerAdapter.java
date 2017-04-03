@@ -76,7 +76,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         for (SuperTask t:selectedTasks
              ) {
-            Log.d("TAG", "       Adapter --- selected task " + ((SimpleTask)t).getHeadLine());
+            Log.d("TAG", "       Adapter --- selected task " + t.toString());
+            Log.d("TAG", "       Adapter --- selected task position " + t.getPosition());
             activity.dbHelper.updateTask(tasks.get(t.getPosition()), Constants.DELETED);
             tasks.remove(t);
             notifyItemRemoved(t.getPosition());
@@ -139,6 +140,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         public void onClick(View view) {
             int position = getAdapterPosition();
             Log.d("TAG", "       Adapter --- onClick " + position);
+
             /*Intent intent = new Intent(context, TaskActivity.class);
             // intent.putExtra("id", tasks.get(position).getId());
             intent.putExtra("Task", (Serializable) tasks.get(position));
@@ -146,13 +148,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
             if (cardView.isSelected()){
                 cardView.setCardBackgroundColor(Color.WHITE);
-            cardView.setSelected(false);
+                selectedTasks.remove(tasks.get(position));
+                cardView.setSelected(false);
             }
             else {
                 cardView.setCardBackgroundColor(Color.LTGRAY);
                 cardView.setSelected(true);
                 selectedTasks.add(tasks.get(position));
             }
+            Log.d("TAG", "       Adapter --- sel. size" + selectedTasks.size());
         }
     }
 
@@ -272,6 +276,16 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     private void compareTasks(){
+        Log.d("TAG", "       Adapter --- compareTasks");
+        Comparator<SuperTask> comparator = new Comparator<SuperTask>() {
+            @Override
+            public int compare(SuperTask superTask, SuperTask t1) {
+                return superTask.getPosition() < t1.getPosition() ? 1 : -1;
+            }
+        };
+        Collections.sort(tasks, comparator);
+    }
+    private void compareSelectionTasks(){
         Log.d("TAG", "       Adapter --- compareTasks");
         Comparator<SuperTask> comparator = new Comparator<SuperTask>() {
             @Override
