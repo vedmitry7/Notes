@@ -66,6 +66,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public void onItemDismiss(int position) {
         Log.d("TAG", "       Adapter --- onItemDismiss, position = " + position);
+        tasks.get(position).setPosition(0);                 //?
         activity.dbHelper.updateTask(tasks.get(position), Constants.DELETED);
         tasks.remove(position);
         notifyItemRemoved(position);
@@ -73,17 +74,17 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     public void deleteSelectedTasks(){
-
+        compareSelectionTasks();
         for (SuperTask t:selectedTasks
              ) {
-            Log.d("TAG", "       Adapter --- selected task " + t.toString());
-            Log.d("TAG", "       Adapter --- selected task position " + t.getPosition());
-            activity.dbHelper.updateTask(tasks.get(t.getPosition()), Constants.DELETED);
-            tasks.remove(t);
-            notifyItemRemoved(t.getPosition());
-            setRightPosition();
+            activity.dbHelper.updateTask(t, Constants.DELETED);
         }
+
+        tasks.removeAll(selectedTasks);
         selectedTasks.clear();
+        setRightPosition();
+        notifyDataSetChanged();
+
     }
 
     @Override
@@ -117,6 +118,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     cardView = (CardView) itemView.findViewById(R.id.card_view);
                     //cardView.setOnLongClickListener((DrawerTestActivity)context);
                     cardView.setOnClickListener(this);
+
         }
 
         @Override
@@ -180,6 +182,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
         Log.d("TAG", "       Adapter --- onBindViewHolder");
+        holder.cardView.setSelected(false);
+        holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorCardView));
 
         switch (getItemViewType(position)){
             case 0:
