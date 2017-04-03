@@ -137,6 +137,9 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         if(item.getItemId() == R.id.delete_selection_items){
             Log.d("TAG", "       Adapter --- delete_selection_items");
             adapter.deleteSelectedTasks();
+        } else if (item.getItemId() == R.id.select_item) {
+            Log.d("TAG", "       Adapter --- set selection mode");
+            adapter.setSelectionMode();
         }
 
         return super.onOptionsItemSelected(item);

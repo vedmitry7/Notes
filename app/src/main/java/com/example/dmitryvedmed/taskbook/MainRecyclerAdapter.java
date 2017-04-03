@@ -2,6 +2,7 @@ package com.example.dmitryvedmed.taskbook;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperAdapter;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperViewHolder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,6 +42,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private Typeface boldTypeFace ;
     private DrawerTestActivity activity;
     boolean wasSelected;
+    Mode mode;
+
+    public static enum Mode {
+        NORMAL, SELECTION_MODE;
+
+    }
+    public void setSelectionMode(){
+        mode = Mode.SELECTION_MODE;
+    }
 
     public List<SuperTask> getTasks() {
         return tasks;
@@ -61,6 +72,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         textView.setText("1234we5r");
         typeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Regular.ttf");
         boldTypeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Bold.ttf");
+        mode = Mode.NORMAL;
     }
 
     @Override
@@ -76,7 +88,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public void deleteSelectedTasks(){
         compareSelectionTasks();
         for (SuperTask t:selectedTasks
-             ) {
+                ) {
             activity.dbHelper.updateTask(t, Constants.DELETED);
         }
 
@@ -104,20 +116,20 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
-                    stHeadLine = (TextView) itemView.findViewById(headTextView);
-                    stContent = (TextView) itemView.findViewById(taskTextView);
+            stHeadLine = (TextView) itemView.findViewById(headTextView);
+            stContent = (TextView) itemView.findViewById(taskTextView);
 
-                   if(stContent!=null) {
-                        stHeadLine.setTypeface(boldTypeFace);
-                        stContent.setTypeface(typeFace);
-                   }
+            if(stContent!=null) {
+                stHeadLine.setTypeface(boldTypeFace);
+                stContent.setTypeface(typeFace);
+            }
 
-                    listHeadEditText = (TextView) itemView.findViewById(R.id.mainRecListItemHead);
+            listHeadEditText = (TextView) itemView.findViewById(R.id.mainRecListItemHead);
 
-                    layout = (LinearLayout) itemView.findViewById(R.id.card_view_list_layout);
-                    cardView = (CardView) itemView.findViewById(R.id.card_view);
-                    //cardView.setOnLongClickListener((DrawerTestActivity)context);
-                    cardView.setOnClickListener(this);
+            layout = (LinearLayout) itemView.findViewById(R.id.card_view_list_layout);
+            cardView = (CardView) itemView.findViewById(R.id.card_view);
+            //cardView.setOnLongClickListener((DrawerTestActivity)context);
+            cardView.setOnClickListener(this);
 
         }
 
@@ -140,25 +152,48 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public void onClick(View view) {
-            int position = getAdapterPosition();
+            final int position = getAdapterPosition();
             Log.d("TAG", "       Adapter --- onClick " + position);
+            Log.d("TAG", "       Adapter --- onClick " + view.toString());
 
             /*Intent intent = new Intent(context, TaskActivity.class);
             // intent.putExtra("id", tasks.get(position).getId());
             intent.putExtra("Task", (Serializable) tasks.get(position));
             context.startActivity(intent);*/
 
-            if (cardView.isSelected()){
-                cardView.setCardBackgroundColor(Color.WHITE);
-                selectedTasks.remove(tasks.get(position));
-                cardView.setSelected(false);
+
+            if(mode == Mode.NORMAL) {
+                Log.d("TAG", "       Adapter --- MODE NORMAL " + MainRecyclerAdapter.this.getItemViewType(position) );
+                switch (MainRecyclerAdapter.this.getItemViewType(position)) {
+                    case 0:
+                        Intent intent = new Intent(context, TaskActivity.class);
+                        intent.putExtra("Task", (Serializable) tasks.get(position));
+                        context.startActivity(intent);
+
+                        break;
+                    case 1:
+
+                        Intent intent1 = new Intent(context, ListTaskActivity.class);
+                        intent1.putExtra("ListTask", tasks.get(position));
+                        context.startActivity(intent1);
+
+                        break;
+                }
             }
-            else {
-                cardView.setCardBackgroundColor(Color.LTGRAY);
-                cardView.setSelected(true);
-                selectedTasks.add(tasks.get(position));
+            else if (mode == Mode.SELECTION_MODE) {
+                Log.d("TAG", "       Adapter --- MODE NE NORMAL " );
+
+                if (cardView.isSelected()) {
+                    cardView.setCardBackgroundColor(Color.WHITE);
+                    selectedTasks.remove(tasks.get(position));
+                    cardView.setSelected(false);
+                } else {
+                    cardView.setCardBackgroundColor(Color.LTGRAY);
+                    cardView.setSelected(true);
+                    selectedTasks.add(tasks.get(position));
+                }
+                Log.d("TAG", "       Adapter --- sel. size" + selectedTasks.size());
             }
-            Log.d("TAG", "       Adapter --- sel. size" + selectedTasks.size());
         }
     }
 
@@ -191,11 +226,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 if(simpleTask.getHeadLine().equals(""))
                     holder.stHeadLine.setVisibility(View.GONE);
                 else
-                holder.stHeadLine.setText(simpleTask.getHeadLine());
+                    holder.stHeadLine.setText(simpleTask.getHeadLine());
                 if(simpleTask.getContext().equals(""))
                     holder.stContent.setVisibility(View.GONE);
                 holder.stContent.setText(simpleTask.getContext());
-           /*     holder.itemView.setOnClickListener(new View.OnClickListener() {
+     /*           holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -207,7 +242,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 });*/
                 break;
             case 1:
-               listTask = (ListTask) tasks.get(position);
+                listTask = (ListTask) tasks.get(position);
              /*        holder.ltFirst.setText(listTask.getUncheckedTask(0));
                     holder.ltSecond.setText(listTask.getUncheckedTask(1));*/
                 if(listTask.getHeadLine().equals("")) {
@@ -223,11 +258,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
                 holder.layout.removeAllViews();
                 for (String s:listTask.getUncheckedTasks()
-                     ) {
+                        ) {
                     View view = inflater.inflate(R.layout.card_view_list_item, null, false);
                     TextView t = (TextView) view.findViewById(R.id.textView3);
                     ImageButton c = (ImageButton) view.findViewById(R.id.checkBox);
-                   // c.setPressed(true);
+                    // c.setPressed(true);
                     t.setTypeface(typeFace);
                     t.setText(s);
                     holder.layout.addView(view);
@@ -244,7 +279,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.layout.addView(view);
                 }
 
-          /*      holder.itemView.setOnClickListener(new View.OnClickListener() {
+        /*       holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(context, ListTaskActivity.class);
