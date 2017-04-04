@@ -16,9 +16,9 @@ public class ListTaskActivity extends AppCompatActivity {
     private ListTask listTask;
     public static RecyclerView recyclerView;
     private ListTaskRecyclerAdapter listTaskRecyclerAdapter;
-    Context context;
-    EditText headList;
-    String currentKind;
+    private Context context;
+    private EditText headList;
+    private String currentKind;
 
 
     @Override

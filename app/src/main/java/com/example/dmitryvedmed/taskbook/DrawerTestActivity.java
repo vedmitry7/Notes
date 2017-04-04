@@ -32,18 +32,18 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
 
-    List<SuperTask> values;
+    private List<SuperTask> values;
     public static DBHelper5 dbHelper;
     public static RecyclerView recyclerView;
     private MainRecyclerAdapter adapter;
     private ItemTouchHelper mItemTouchHelper;
     private ItemTouchHelper.Callback callback;
     boolean is_in_action_mode = false;
-    TextView counterTextView;
-    Toolbar toolbar;
-    String currentKind = Constants.UNDEFINED;
-    Context context;
-    Menu menu;
+    private  TextView counterTextView;
+    private Toolbar toolbar;
+    private String currentKind = Constants.UNDEFINED;
+    private Context context;
+    private Menu menu;
 
     public String getCurrentKind() {
         return currentKind;

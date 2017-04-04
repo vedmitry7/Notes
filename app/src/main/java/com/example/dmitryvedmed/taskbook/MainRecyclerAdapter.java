@@ -3,7 +3,6 @@ package com.example.dmitryvedmed.taskbook;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -32,10 +31,9 @@ import static com.example.dmitryvedmed.taskbook.R.id.taskTextView;
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.RecyclerViewHolder>
         implements ItemTouchHelperAdapter {
+
     private List<SuperTask> tasks;
     private List<SuperTask> selectedTasks;
-    private SharedPreferences sharedPreferences;
-
     private Context context;
     private SimpleTask simpleTask;
     private ListTask listTask;
