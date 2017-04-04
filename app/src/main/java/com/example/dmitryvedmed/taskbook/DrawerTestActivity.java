@@ -37,13 +37,17 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     public static RecyclerView recyclerView;
     private MainRecyclerAdapter adapter;
     private ItemTouchHelper mItemTouchHelper;
-    public static Main3Activity.Mode mode;
+    private ItemTouchHelper.Callback callback;
     boolean is_in_action_mode = false;
     TextView counterTextView;
     Toolbar toolbar;
     String currentKind = Constants.UNDEFINED;
     Context context;
     Menu menu;
+
+    public String getCurrentKind() {
+        return currentKind;
+    }
 
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
@@ -55,9 +59,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_drawer_test);
-
         context = this;
-
         dbHelper = new DBHelper5(this);
         update();
         initView();
@@ -79,9 +81,10 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        callback = new SimpleItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
+
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -139,7 +142,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             adapter.deleteSelectedTasks();
         } else if (item.getItemId() == R.id.select_item) {
             Log.d("TAG", "       Adapter --- set selection mode");
-            adapter.setSelectionMode();
+            adapter.setSelectionMode(MainRecyclerAdapter.Mode.SELECTION_MODE);
         }
 
         return super.onOptionsItemSelected(item);
@@ -253,4 +256,14 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     }
 
 
+    public void selectedItemCount(int selectedTasksCounter) {
+        if(selectedTasksCounter == 0) {
+            counterTextView.setVisibility(View.GONE);
+            ((SimpleItemTouchHelperCallback)callback).setCanMovement(true);
+        } else {
+            ((SimpleItemTouchHelperCallback)callback).setCanMovement(false);
+            counterTextView.setVisibility(View.VISIBLE);
+            counterTextView.setText(selectedTasksCounter + " item selected");
+        }
+    }
 }

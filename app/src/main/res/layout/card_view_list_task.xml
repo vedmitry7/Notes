@@ -23,6 +23,7 @@
         <TextView
             android:text="TextView"
             android:paddingTop="2dp"
+            android:paddingBottom="2dp"
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
             android:textSize="16sp"

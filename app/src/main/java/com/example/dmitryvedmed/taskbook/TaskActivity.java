@@ -15,6 +15,7 @@ public class TaskActivity extends AppCompatActivity {
     private int id;
     private EditText head,text;
     private SimpleTask task;
+    private String currentKind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,10 @@ public class TaskActivity extends AppCompatActivity {
         }
         else
             Log.d("TAG", "TAAAAAAASK EST'!!!!!!!!");
+
+        currentKind = getIntent().getStringExtra("kind");
+        if(currentKind==null)
+            currentKind = Constants.UNDEFINED;
 
         // Log.d("TAG", "Eah, I've get task - " + String.valueOf(id));
 
@@ -144,14 +149,17 @@ public class TaskActivity extends AppCompatActivity {
 
         DBHelper5 dbHelper = new DBHelper5(this);
         if(task.getId()==-1) {
+            if(head.getText().length()==0&&text.getText().length()==0)
+                return;
             id = dbHelper.addTask(task);
             task.setId(id);
             Log.d("TAG", "NEW TASK ID = " + id);
         }
         else{
             Log.d("TAG", "UPDATE id = " + id);
-            dbHelper.updateTask(task, Constants.UNDEFINED);
+            dbHelper.updateTask(task, currentKind);
         }
+
     }
 
     @Override

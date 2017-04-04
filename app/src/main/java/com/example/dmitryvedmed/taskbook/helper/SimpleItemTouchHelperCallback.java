@@ -16,7 +16,16 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperAdapter mAdapter;
-    private boolean wasMoved = true;
+    private boolean wasMoved = false;
+    private boolean canMovement = true;
+
+    public boolean isCanMovement() {
+        return canMovement;
+    }
+
+    public void setCanMovement(boolean canMovement) {
+        this.canMovement = canMovement;
+    }
 
     public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
@@ -34,11 +43,14 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-        final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-        System.out.println("    getMovementFlags ");
-            return makeMovementFlags(dragFlags, swipeFlags);
-
+            if(isCanMovement()) {
+                final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+                final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+                System.out.println("    getMovementFlags ");
+                return makeMovementFlags(dragFlags, swipeFlags);
+            } else {
+                return 0;
+            }
     }
 
     @Override
@@ -70,6 +82,5 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         System.out.println(" clearView ");
         ItemTouchHelperViewHolder itemViewHolder = (ItemTouchHelperViewHolder) viewHolder;
             itemViewHolder.onItemClear();
-
     }
 }

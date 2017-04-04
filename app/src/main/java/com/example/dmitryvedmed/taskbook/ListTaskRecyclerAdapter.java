@@ -16,12 +16,16 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecyclerAdapter.RecyclerViewHolder>  {
 
     private Context context;
     private ListTask listTask;
     private boolean onBind;
+    private List<EditText> editTexts;
 
 
     public ListTaskRecyclerAdapter(ListTask listTask, Context context) {
@@ -29,6 +33,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
         this.listTask = listTask;
         if(listTask.getId() == -1)
             listTask.getUncheckedTasks().add("");
+        editTexts = new ArrayList<>();
     }
 
     public ListTask getListTask() {
@@ -61,12 +66,14 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                         if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
                                 && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
                             listTask.getUncheckedTasks().add("");
-                            update();
+                            //update();
+                            notifyItemChanged(listTask.getUncheckedTasks().size()-1);
                             return true;
                         }
                         return false;
                     }
                 });
+                editText.requestFocus();
 
             }
 
@@ -98,8 +105,8 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                     @Override
                     public void onClick(View view) {
                         listTask.getUncheckedTasks().add("");
-                        update();
-
+                       // update();
+                        notifyItemChanged(listTask.getUncheckedTasks().size()-1);
                         System.out.println("                    CLiCK");
                     }
                 });
@@ -110,9 +117,9 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
 
     @Override
     public void onBindViewHolder(final RecyclerViewHolder holder, final int position) {
+        System.out.println("ON BIND VIEW HOLDER");
 
-
-        System.out.println(position + "-" +  holder.getItemViewType());
+        System.out.println("POSITION -" + position + "," +" TYPE -"+  holder.getItemViewType());
 
         if(position < listTask.getUncheckedTasks().size()) {
             holder.editTextListener.updatePosition(holder.getAdapterPosition());
@@ -122,7 +129,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             onBind = true;
             holder.checkBox.setChecked(false);
             onBind = false;
-            System.out.println(position + " - " + listTask.getUncheckedTasks().get(position));
+            System.out.println("DATE " + " - " + listTask.getUncheckedTasks().get(position));
 
             holder.editText.setPaintFlags(Paint.ANTI_ALIAS_FLAG);
             holder.editText.setAlpha(1f);
@@ -142,13 +149,11 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                     System.out.println(position + " BUTTON          CLICK");
                     listTask.getUncheckedTasks().remove(position);
                     update();
-
                 }
             });
         }
         if(position > listTask.getUncheckedTasks().size())
         {
-            System.out.println("POSITION = " + position);
             holder.editTextListener.updatePosition(holder.getAdapterPosition());
             String s = (listTask.getCheckedTasks().get(position - (listTask.getUncheckedTasks().size()+1)));
             holder.editText.setText(s);

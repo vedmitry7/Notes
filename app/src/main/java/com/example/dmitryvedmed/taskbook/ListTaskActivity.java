@@ -18,6 +18,7 @@ public class ListTaskActivity extends AppCompatActivity {
     private ListTaskRecyclerAdapter listTaskRecyclerAdapter;
     Context context;
     EditText headList;
+    String currentKind;
 
 
     @Override
@@ -60,6 +61,9 @@ public class ListTaskActivity extends AppCompatActivity {
         }
         else
             System.out.println("LIST TASK != NULL, id = " + listTask.getHeadLine());
+        currentKind = getIntent().getStringExtra("kind");
+        if(currentKind==null)
+            currentKind = Constants.UNDEFINED;
     }
 
 
@@ -85,7 +89,7 @@ public class ListTaskActivity extends AppCompatActivity {
         DBHelper5 dbHelper = new DBHelper5(this);
         if(listTask.getId() == -1)
             dbHelper.addTask(listTask);
-        else dbHelper.updateTask(listTask, Constants.UNDEFINED);
+        else dbHelper.updateTask(listTask, currentKind);
         super.onPause();
     }
 }
