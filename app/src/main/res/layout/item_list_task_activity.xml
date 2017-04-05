@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:weightSum="1">
+    android:weightSum="1"
+    >
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -31,7 +32,7 @@
         android:layout_gravity="center"
         android:layout_toRightOf="@+id/checkBox"
         android:layout_toLeftOf="@+id/delButton"
-        android:layout_toStartOf="@+id/delButton"
+
 
         />
 
@@ -44,5 +45,7 @@
         android:background="@drawable/close_circle_outline"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="12dp"
+        android:layout_marginEnd="12dp" />
 </RelativeLayout>
