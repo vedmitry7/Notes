@@ -105,9 +105,9 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                     @Override
                     public void onClick(View view) {
                         listTask.getUncheckedTasks().add("");
-                        //update();
-                        notifyItemChanged(listTask.getUncheckedTasks().size());
-                        notifyItemChanged(listTask.getUncheckedTasks().size()-1);
+                        update();
+                        //notifyItemChanged(listTask.getUncheckedTasks().size());
+                        //notifyItemChanged(listTask.getUncheckedTasks().size()-1);
                         System.out.println("                    CLiCK");
                     }
                 });
@@ -119,8 +119,8 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
     @Override
     public void onBindViewHolder(final RecyclerViewHolder holder, final int position) {
         //Log.d("TAG", "ON BIND VIEW HOLDER" );
-
-        Log.d("TAG", "POSITION -" + position + "," +" TYPE -"+  holder.getItemViewType() );
+        String type = holder.getItemViewType() == 0 ? "editText":"button";
+        Log.d("TAG", "POSITION -" + position + "," +" TYPE -" +  type );
 
         if(position < listTask.getUncheckedTasks().size()) {
             holder.editTextListener.updatePosition(holder.getAdapterPosition());
@@ -146,20 +146,14 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                     }
                 }
             });
-            Log.d("TAG",  "Pos - " + position );
 
-            if(hasInsertInside!=-1&&position==hasInsertInside){
-                holder.editText.requestFocus();
-                holder.button.setVisibility(View.VISIBLE);
-                hasInsertInside=-1;
-            }
-            if(position==listTask.getUncheckedTasks().size()-1 && hasInsertInside==-1) {
-                Log.d("TAG", "ET " + position + " LIST " + (listTask.getUncheckedTasks().size()-1) );
+            if(position==listTask.getUncheckedTasks().size()-1) {
+
+                Log.d("TAG", "ET requestFocus for " + position  );
                 holder.editText.requestFocus();
                 holder.button.setVisibility(View.VISIBLE);
             } else {
                 holder.button.setVisibility(View.INVISIBLE);
-
             }
 
             holder.button.setOnClickListener(new View.OnClickListener() {
@@ -168,7 +162,6 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                     listTask.getUncheckedTasks().remove(position);
                     update();
                     //notifyItemChanged(position);
-                    //notifyItemRangeChanged(position,2);
                 }
             });
         }
@@ -180,9 +173,6 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                         && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
                     listTask.getUncheckedTasks().add(position + 1, "");
                     update();
-                    if(position<listTask.getUncheckedTasks().size()-1)
-                        hasInsertInside = position;
-
                     //notifyItemChanged(position+1);
                     return true;
                 }
