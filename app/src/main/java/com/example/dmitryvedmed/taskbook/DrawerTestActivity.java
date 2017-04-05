@@ -41,7 +41,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     boolean is_in_action_mode = false;
     private  TextView counterTextView;
     private Toolbar toolbar;
-    private String currentKind = Constants.UNDEFINED;
+    public String currentKind = Constants.UNDEFINED;
     private Context context;
     private Menu menu;
 
@@ -185,6 +185,12 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         Intent intent = new Intent(getApplicationContext(), ListTaskActivity.class);
         intent.putExtra("position", adapter.getTasks().size());
         startActivity(intent);
+    }
+
+    public void clearList(View v){
+        Log.d("TAG", "      Main3Activity --- clearList  ---");
+        dbHelper.clearDB();
+        update();
     }
 
     public boolean onNavigationItemSelected(MenuItem item) {

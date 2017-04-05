@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
     private ListTask listTask;
     private boolean onBind;
     private List<EditText> editTexts;
+    private int hasInsertInside = -1;
 
 
     public ListTaskRecyclerAdapter(ListTask listTask, Context context) {
@@ -59,8 +61,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             if(editText != null) {
                 editText.setTypeface(typeFace);
                 editText.addTextChangedListener(editTextListener);
-                //editText.setOnFocusChangeListener(editTextListener);
-                editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+               /* editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                         if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
@@ -72,9 +73,8 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                         }
                         return false;
                     }
-                });
-                editText.requestFocus();
-
+                });*/
+                //editText.requestFocus();
             }
 
 
@@ -96,8 +96,8 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
         {
             case 0:
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_task_activity, parent,false);
-                recyclerViewHolder = new RecyclerViewHolder(view);
-                break;
+            recyclerViewHolder = new RecyclerViewHolder(view);
+            break;
             case 1:
                 View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.add_list_task_button, parent,false);
                 recyclerViewHolder = new RecyclerViewHolder(view1);
@@ -105,7 +105,8 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                     @Override
                     public void onClick(View view) {
                         listTask.getUncheckedTasks().add("");
-                       // update();
+                        //update();
+                        notifyItemChanged(listTask.getUncheckedTasks().size());
                         notifyItemChanged(listTask.getUncheckedTasks().size()-1);
                         System.out.println("                    CLiCK");
                     }
@@ -117,9 +118,9 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
 
     @Override
     public void onBindViewHolder(final RecyclerViewHolder holder, final int position) {
-        System.out.println("ON BIND VIEW HOLDER");
+        //Log.d("TAG", "ON BIND VIEW HOLDER" );
 
-        System.out.println("POSITION -" + position + "," +" TYPE -"+  holder.getItemViewType());
+        Log.d("TAG", "POSITION -" + position + "," +" TYPE -"+  holder.getItemViewType() );
 
         if(position < listTask.getUncheckedTasks().size()) {
             holder.editTextListener.updatePosition(holder.getAdapterPosition());
@@ -129,7 +130,6 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             onBind = true;
             holder.checkBox.setChecked(false);
             onBind = false;
-            System.out.println("DATE " + " - " + listTask.getUncheckedTasks().get(position));
 
             holder.editText.setPaintFlags(Paint.ANTI_ALIAS_FLAG);
             holder.editText.setAlpha(1f);
@@ -137,21 +137,59 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
-                    if(b)
+                    Log.d("TAG", "ET " + position + " FOCUS " + b );
+                    if(b) {
                         holder.button.setVisibility(View.VISIBLE);
-                    else
+                    }
+                    else {
                         holder.button.setVisibility(View.INVISIBLE);
+                    }
                 }
             });
+            Log.d("TAG",  "Pos - " + position );
+
+            if(hasInsertInside!=-1&&position==hasInsertInside){
+                holder.editText.requestFocus();
+                holder.button.setVisibility(View.VISIBLE);
+                hasInsertInside=-1;
+            }
+            if(position==listTask.getUncheckedTasks().size()-1 && hasInsertInside==-1) {
+                Log.d("TAG", "ET " + position + " LIST " + (listTask.getUncheckedTasks().size()-1) );
+                holder.editText.requestFocus();
+                holder.button.setVisibility(View.VISIBLE);
+            } else {
+                holder.button.setVisibility(View.INVISIBLE);
+
+            }
+
             holder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    System.out.println(position + " BUTTON          CLICK");
                     listTask.getUncheckedTasks().remove(position);
                     update();
+                    //notifyItemChanged(position);
+                    //notifyItemRangeChanged(position,2);
                 }
             });
         }
+        if(holder.editText!=null)
+        holder.editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
+                        && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
+                    listTask.getUncheckedTasks().add(position + 1, "");
+                    update();
+                    if(position<listTask.getUncheckedTasks().size()-1)
+                        hasInsertInside = position;
+
+                    //notifyItemChanged(position+1);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         if(position > listTask.getUncheckedTasks().size())
         {
             holder.editTextListener.updatePosition(holder.getAdapterPosition());
@@ -173,7 +211,9 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                 public void onClick(View view) {
                     System.out.println(position + " BUTTON          CLICK");
                     listTask.getCheckedTasks().remove(position - (listTask.getUncheckedTasks().size()+1));
-                    update();
+                    //update();
+                    notifyItemChanged(position);
+
                 }
             });
             holder.checkBoxListener.updatePosition(position);
