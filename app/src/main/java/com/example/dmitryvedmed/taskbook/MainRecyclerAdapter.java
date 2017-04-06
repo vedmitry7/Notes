@@ -367,6 +367,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         for (int i = 0; i < tasks.size(); i++) {
             tasks.get(i).setPosition(tasks.size()-i-1);
         }
+        Log.d("TAG", "       Adapter --- setRightPosition  2");
+
+        for (SuperTask s:tasks
+             ) {
+            Log.d("TAG", ((SimpleTask) s).getHeadLine()+" " + s.getPosition());
+        }
+        Log.d("TAG", "       Adapter --- setRightPosition 3");
+
     }
+
 
 }
