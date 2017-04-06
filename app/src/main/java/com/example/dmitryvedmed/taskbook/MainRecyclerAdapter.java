@@ -63,7 +63,17 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public MainRecyclerAdapter(List<SuperTask> tasks, Context context) {
         Log.d("TAG", "       Adapter --- constructor  ---");
         this.tasks = tasks;
+        Log.d("TAG", "       Adapter --- come>");
+        for (SuperTask s:tasks
+                ) {
+            Log.d("TAG", ((SimpleTask) s).getHeadLine()+" " + s.getPosition());
+        }
         compareTasks();
+        Log.d("TAG", "       Adapter --- compare>");
+        for (SuperTask s:tasks
+                ) {
+            Log.d("TAG", ((SimpleTask) s).getHeadLine()+" " + s.getPosition());
+        }
         for (SuperTask s:tasks
                 ) {
             System.out.println(s.getPosition());

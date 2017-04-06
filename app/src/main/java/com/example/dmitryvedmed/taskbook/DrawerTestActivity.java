@@ -272,4 +272,16 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             counterTextView.setText(selectedTasksCounter + " item selected");
         }
     }
+
+    @Override
+    protected void onPause() {
+        Log.d("TAG", "      Activity --- onPause  ---");
+        values = adapter.getTasks();
+        // save because positions could change
+        for (SuperTask s:values
+                ) {
+            dbHelper.updateTask(s, currentKind);
+        }
+        super.onPause();
+    }
 }
