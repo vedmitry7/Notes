@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -44,6 +47,10 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     public String currentKind = Constants.UNDEFINED;
     private Context context;
     private Menu menu;
+    private FloatingActionButton fab;
+    private FloatingActionButton fab2;
+    private FloatingActionButton fab3;
+    CoordinatorLayout coordinatorLayout;
 
     public String getCurrentKind() {
         return currentKind;
@@ -66,9 +73,30 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     }
 
     private void initView() {
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab3 = (FloatingActionButton) findViewById(R.id.fab3);
+        fab2.hide();
+        fab3.hide();
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (fab2.isShown()){
+                    fab2.hide();
+                    fab3.hide();
+                } else  {
+                    fab2.show();
+                    fab3.show();
+                }
+            }
+        });
+
+
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cl);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         counterTextView = (TextView) findViewById(R.id.counter_text);
         counterTextView.setVisibility(View.GONE);
 
@@ -139,6 +167,15 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
 
         if(item.getItemId() == R.id.delete_selection_items){
             Log.d("TAG", "       Adapter --- delete_selection_items");
+            Snackbar.make(coordinatorLayout, adapter.getSelectedTasksCounter() + " заметкок добавлена в корзину!", Snackbar.LENGTH_SHORT)
+                    .setAction("Отмена", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Snackbar.make(coordinatorLayout,"HUI!", Snackbar.LENGTH_LONG)
+                                    .show();
+                        }
+                    })
+                    .show();
             adapter.deleteSelectedTasks();
         } else if (item.getItemId() == R.id.select_item) {
             Log.d("TAG", "       Adapter --- set selection mode");
@@ -188,9 +225,13 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     }
 
     public void clearList(View v){
-        Log.d("TAG", "      Main3Activity --- clearList  ---");
+        if(fab.isShown())
+        fab.hide();
+        else fab.show();
+
+        /*   Log.d("TAG", "      Main3Activity --- clearList  ---");
         dbHelper.clearDB();
-        update();
+        update();*/
     }
 
     public boolean onNavigationItemSelected(MenuItem item) {

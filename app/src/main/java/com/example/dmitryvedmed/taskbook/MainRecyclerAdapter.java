@@ -45,6 +45,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private Mode mode;
     private int selectedTasksCounter;
 
+    public int getSelectedTasksCounter() {
+        return selectedTasksCounter;
+    }
+
     public static enum Mode {
         NORMAL, SELECTION_MODE;
     }
@@ -63,21 +67,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public MainRecyclerAdapter(List<SuperTask> tasks, Context context) {
         Log.d("TAG", "       Adapter --- constructor  ---");
         this.tasks = tasks;
-        Log.d("TAG", "       Adapter --- come>");
-        for (SuperTask s:tasks
-                ) {
-            Log.d("TAG", ((SimpleTask) s).getHeadLine()+" " + s.getPosition());
-        }
+
         compareTasks();
-        Log.d("TAG", "       Adapter --- compare>");
-        for (SuperTask s:tasks
-                ) {
-            Log.d("TAG", ((SimpleTask) s).getHeadLine()+" " + s.getPosition());
-        }
-        for (SuperTask s:tasks
-                ) {
-            System.out.println(s.getPosition());
-        }
+
         this.context = context;
         selectedTasks = new ArrayList<>();
         activity = (DrawerTestActivity) context;
@@ -373,19 +365,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     private void setRightPosition(){
         Log.d("TAG", "       Adapter --- setRightPosition");
-
         for (int i = 0; i < tasks.size(); i++) {
             tasks.get(i).setPosition(tasks.size()-i-1);
         }
-        Log.d("TAG", "       Adapter --- setRightPosition  2");
-
-        for (SuperTask s:tasks
-             ) {
-            Log.d("TAG", ((SimpleTask) s).getHeadLine()+" " + s.getPosition());
-        }
-        Log.d("TAG", "       Adapter --- setRightPosition 3");
-
     }
-
-
 }

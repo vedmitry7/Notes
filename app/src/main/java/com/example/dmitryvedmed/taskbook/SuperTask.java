@@ -6,6 +6,7 @@ import java.io.Serializable;
 public class SuperTask implements Serializable {
     private int id;
     private int position;
+    private int color;
 
     public int getId() {
         return id;
