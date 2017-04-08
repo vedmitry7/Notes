@@ -44,6 +44,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     boolean wasSelected;
     private Mode mode;
     private int selectedTasksCounter;
+    int color;
 
     public int getSelectedTasksCounter() {
         return selectedTasksCounter;
@@ -89,6 +90,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         tasks.remove(position);
         notifyItemRemoved(position);
         setRightPosition();
+        activity.showSnackBar(1);
     }
 
 
@@ -107,6 +109,18 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mode = Mode.NORMAL;
         selectedTasksCounter = 0;
 
+    }
+
+    public void setColorSelectionTasks(int color){
+        for (SuperTask s:selectedTasks
+             ) {
+            s.setColor(color);
+        }
+        notifyDataSetChanged();
+        selectedTasks.clear();
+        activity.selectedItemCount(0);
+        mode = Mode.NORMAL;
+        selectedTasksCounter = 0;
     }
 
     @Override
@@ -157,8 +171,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             Log.d("TAG", "       Adapter --- onItemClear");
             wasSelected = false;
             selectedTasks.clear();
-            cardView.setCardBackgroundColor(Color.YELLOW);
-            cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorCardView));
+            if(getAdapterPosition() != -1)
+            setColorCardView(cardView, getAdapterPosition());
         }
 
         @Override
@@ -167,26 +181,23 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             Log.d("TAG", "       Adapter --- onClick " + position);
             Log.d("TAG", "       Adapter --- onClick " + view.toString());
 
-            /*Intent intent = new Intent(context, TaskActivity.class);
-            // intent.putExtra("id", tasks.get(position).getId());
-            intent.putExtra("Task", (Serializable) tasks.get(position));
-            context.startActivity(intent);*/
-
-
             if(mode == Mode.NORMAL) {
                 Log.d("TAG", "       Adapter --- MODE NORMAL " + MainRecyclerAdapter.this.getItemViewType(position) );
+
                 switch (MainRecyclerAdapter.this.getItemViewType(position)) {
                     case 0:
                         Intent intent = new Intent(context, TaskActivity.class);
                         intent.putExtra("Task", (Serializable) tasks.get(position));
                         intent.putExtra("kind", activity.currentKind);
                         context.startActivity(intent);
+                       // activity.overridePendingTransition(R.anim.diagonaltranslate, R.anim.alpha);
                         break;
                     case 1:
                         Intent intent1 = new Intent(context, ListTaskActivity.class);
                         intent1.putExtra("ListTask", tasks.get(position));
                         intent1.putExtra("kind", activity.currentKind);
                         context.startActivity(intent1);
+                      //  activity.overridePendingTransition(R.anim.diagonaltranslate, R.anim.alpha);
                         break;
                 }
             }
@@ -236,12 +247,39 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return recyclerViewHolder;
     }
 
+    private void setColorCardView(CardView cardView, int position){
+
+        if(position >= tasks.size())
+            return;
+
+        switch (tasks.get(position).getColor()){
+            case Constants.GREEN:
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorLightGreen));
+                break;
+            case Constants.RED:
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorLightRed));
+                break;
+            case Constants.YELLOW:
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorLightYellow));
+                break;
+            case Constants.BLUE:
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorLightLightBlue));
+                break;
+            case 0:
+                cardView.setCardBackgroundColor(Color.WHITE);
+                break;
+        }
+    }
+
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
         Log.d("TAG", "       Adapter --- onBindViewHolder");
         holder.cardView.setSelected(false);
-       // holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorCardView));
-         holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorLightGreen));
+       // holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorRed));
+        // holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,tasks.get(position).getColor()));
+        // holder.cardView.setCardBackgroundColor(tasks.get(position).getColor());
+
+       setColorCardView(holder.cardView, position);
 
         switch (getItemViewType(position)){
             case 0:
@@ -258,16 +296,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.stContent.setVisibility(View.VISIBLE);
                     holder.stContent.setText(simpleTask.getContext());
                 }
-     /*           holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        Intent intent = new Intent(context, TaskActivity.class);
-                        // intent.putExtra("id", tasks.get(position).getId());
-                        intent.putExtra("Task", (Serializable) tasks.get(position));
-                        context.startActivity(intent);
-                    }
-                });*/
                 break;
             case 1:
                 listTask = (ListTask) tasks.get(position);

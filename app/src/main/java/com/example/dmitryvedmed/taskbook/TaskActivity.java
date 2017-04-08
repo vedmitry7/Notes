@@ -3,6 +3,7 @@ package com.example.dmitryvedmed.taskbook;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,7 +22,7 @@ public class TaskActivity extends AppCompatActivity {
     private SimpleTask task;
     private String currentKind;
     Color color;
-    Toolbar toolbar;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +30,14 @@ public class TaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_simple_task);
 
         initView();
+        initTask();
     }
 
     private void initView() {
         toolbar = (Toolbar) findViewById(R.id.st_toolbar);
         toolbar.setTitle("");
-       setSupportActionBar(toolbar);
+        toolbar.setBackgroundColor(Color.WHITE);
+        setSupportActionBar(toolbar);
         //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.taskColorGreen)));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -46,10 +49,9 @@ public class TaskActivity extends AppCompatActivity {
 
         text.setTypeface(typeFace);
         head.setTypeface(boldTypeFace);
-       // Intent intent = getIntent();
-       // id = intent.getIntExtra("id", -1);
-       // Log.d("TAG", String.valueOf(id));
 
+    }
+    private void initTask() {
         task = (SimpleTask) getIntent().getSerializableExtra("Task");
         if(task == null){
             task = new SimpleTask();
@@ -63,6 +65,8 @@ public class TaskActivity extends AppCompatActivity {
         else {
             Log.d("TAG", "TAAAAAAASK EST'!!!!!!!!");
             Log.d("TAG", "ID = " + task.getId());
+            if(task.getColor() != 0)
+                toolbar.setBackgroundColor(task.getColor());
         }
 
         currentKind = getIntent().getStringExtra("kind");
@@ -76,7 +80,7 @@ public class TaskActivity extends AppCompatActivity {
             task.setId(id);
             return;
         }*/
-       // task = dbHelper.getTask(id);
+        // task = dbHelper.getTask(id);
         head.setText(task.getHeadLine());
         text.setText(task.getContext());
 
@@ -97,7 +101,7 @@ public class TaskActivity extends AppCompatActivity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction()==KeyEvent.ACTION_DOWN){
-                        text.requestFocus();
+                    text.requestFocus();
                 }
                 return false;
             }
@@ -152,27 +156,53 @@ public class TaskActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int color;
         switch (item.getItemId()){
             case android.R.id.home:
                 finish();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            case R.id.green:
+                color = ContextCompat.getColor(this, R.color.taskColorGreen);
+                toolbar.setBackgroundColor(color);
+                task.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.red:
+                color = ContextCompat.getColor(this, R.color.taskColorRed);
+                toolbar.setBackgroundColor(color);
+                task.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.blue:
+                color = ContextCompat.getColor(this, R.color.taskColorBlue);
+                toolbar.setBackgroundColor(color);
+                task.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.yellow:
+                color = ContextCompat.getColor(this, R.color.taskColorYellow);
+                toolbar.setBackgroundColor(color);
+                task.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.white:
+                toolbar.setBackgroundColor(Color.WHITE);
+                task.setColor(0);
+                break;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void saveTask() {
         String headline = String.valueOf(head.getText());
         String content = String.valueOf(text.getText());
 
-
         Log.d("TAG", "SAVE  !!! " +  headline + " " + content);
-
         Log.d("TAG", "SAVE id = " + id + "???");
 
         task.setHeadLine(headline);
         task.setContext(content);
-        task.setColor(Color.BLUE);
+
 
         DBHelper5 dbHelper = new DBHelper5(this);
         if(task.getId()==-1) {

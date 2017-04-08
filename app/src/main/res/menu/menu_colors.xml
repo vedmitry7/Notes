@@ -10,6 +10,12 @@
     >
 
     <menu>
+        <item android:id="@+id/white"
+            android:showAsAction="withText"
+            android:title="Без цвета">
+
+        </item>
+
         <item android:id="@+id/red"
             android:icon="@drawable/red_block"
             android:showAsAction="withText"

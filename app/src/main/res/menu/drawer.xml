@@ -12,7 +12,7 @@
             <item
                 android:id="@+id/deleted"
                 android:icon="@drawable/delete"
-                android:title="Удаленные" />
+                android:title="Корзина" />
         </menu>
     </item>
         <item

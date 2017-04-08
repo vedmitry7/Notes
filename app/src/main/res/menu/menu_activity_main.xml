@@ -2,11 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.dmitryvedmed.taskbook.SettingsActivity">
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+
     <item
         android:id="@+id/select_item"
         android:orderInCategory="100"
@@ -17,4 +13,43 @@
         android:orderInCategory="100"
         android:title="Удалить"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/set_color"
+        android:orderInCategory="100"
+        android:title="Установить цвет"
+        app:showAsAction="never" >
+        <menu>
+            <item android:id="@+id/white"
+                android:showAsAction="withText"
+                android:title="Без цвета">
+
+            </item>
+
+            <item android:id="@+id/red"
+                android:icon="@drawable/red_block"
+                android:showAsAction="withText"
+                android:title="">
+
+            </item>
+
+            <item android:id="@+id/green"
+                android:icon="@drawable/green_block"
+                android:title=""
+                android:showAsAction="ifRoom">
+
+            </item>
+
+            <item android:id="@+id/yellow"
+                android:icon="@drawable/yellow_block"
+                android:title=""
+                android:showAsAction="ifRoom">
+            </item>
+            <item android:id="@+id/blue"
+                android:icon="@drawable/blue_block"
+                android:title=""
+                android:showAsAction="ifRoom">
+            </item>
+
+        </menu>
+        </item>
 </menu>

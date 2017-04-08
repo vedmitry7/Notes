@@ -2,12 +2,15 @@ package com.example.dmitryvedmed.taskbook;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -22,7 +25,7 @@ public class ListTaskActivity extends AppCompatActivity {
     private Context context;
     private EditText headList;
     private String currentKind;
-    Toolbar toolbar;
+    private Toolbar toolbar;
 
 
     @Override
@@ -37,8 +40,10 @@ public class ListTaskActivity extends AppCompatActivity {
     private void initView() {
         toolbar = (Toolbar) findViewById(R.id.lt_toolbar);
         toolbar.setTitle("");
+        toolbar.setBackgroundColor(Color.WHITE);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         headList = (EditText) findViewById(R.id.listHeadEditText);
         Typeface boldTypeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Bold.ttf");
         headList.setTypeface(boldTypeFace);
@@ -54,20 +59,24 @@ public class ListTaskActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(listTaskRecyclerAdapter);
 
+        if(listTask.getColor() != 0)
+            toolbar.setBackgroundColor(listTask.getColor());
+
     }
 
     private void initTask() {
         listTask = (ListTask) getIntent().getSerializableExtra("ListTask");
-        if(listTask==null) {
+        if(listTask == null) {
             System.out.println("LIST TASK = NULL!");
             listTask = new ListTask();
-            listTask.setHeadLine("");
             listTask.setId(-1);
             listTask.setPosition(getIntent().getIntExtra("position", 0));
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
-        else
+        else{
             System.out.println("LIST TASK != NULL, id = " + listTask.getHeadLine());
+            Log.d("TAG", "COLOR - " + listTask.getColor());
+        }
         currentKind = getIntent().getStringExtra("kind");
         if(currentKind==null)
             currentKind = Constants.UNDEFINED;
@@ -82,13 +91,41 @@ public class ListTaskActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int color;
         switch (item.getItemId()){
             case android.R.id.home:
                 finish();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            case R.id.green:
+                color = ContextCompat.getColor(this, R.color.taskColorGreen);
+                toolbar.setBackgroundColor(color);
+                listTask.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.red:
+                color = ContextCompat.getColor(this, R.color.taskColorRed);
+                toolbar.setBackgroundColor(color);
+                listTask.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.blue:
+                color = ContextCompat.getColor(this, R.color.taskColorBlue);
+                toolbar.setBackgroundColor(color);
+                listTask.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.yellow:
+                color = ContextCompat.getColor(this, R.color.taskColorYellow);
+                toolbar.setBackgroundColor(color);
+                listTask.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.white:
+                toolbar.setBackgroundColor(Color.WHITE);
+                listTask.setColor(0);
+                break;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -98,8 +135,8 @@ public class ListTaskActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onPause() {
+
+    private void saveTask() {
         listTask = listTaskRecyclerAdapter.getListTask();
         System.out.println("UN");
         for (String s:listTask.getUncheckedTasks()
@@ -114,8 +151,13 @@ public class ListTaskActivity extends AppCompatActivity {
         listTask.setHeadLine(headList.getText().toString());
         DBHelper5 dbHelper = new DBHelper5(this);
         if(listTask.getId() == -1)
-           listTask.setId(dbHelper.addTask(listTask));
+            listTask.setId(dbHelper.addTask(listTask));
         else dbHelper.updateTask(listTask, currentKind);
+    }
+
+    @Override
+    protected void onPause() {
+       saveTask();
         super.onPause();
     }
 }

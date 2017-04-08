@@ -10,8 +10,17 @@
 
 
 
-    <color name="taskColorGreen">#388e3c</color>
-    <color name="taskColorLightGreen">#fffde7</color>
+    <color name="taskColorGreen">#4CAF50</color>
+    <color name="taskColorLightGreen">#C8E6C9</color>
+
+    <color name="taskColorRed">#F44336</color>
+    <color name="taskColorLightRed">#FFCDD2</color>
+
+    <color name="taskColorYellow">#FFEB3B</color>
+    <color name="taskColorLightYellow">#FFF9C4</color>
+
+    <color name="taskColorBlue">#2196F3</color>
+    <color name="taskColorLightLightBlue">#BBDEFB</color>
 
 
 

@@ -51,6 +51,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     private FloatingActionButton fab2;
     private FloatingActionButton fab3;
     CoordinatorLayout coordinatorLayout;
+    MenuItem setColor;
 
     public String getCurrentKind() {
         return currentKind;
@@ -160,26 +161,53 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         }
     }
 
+
+    public void showSnackBar(int i){
+        Snackbar.make(coordinatorLayout, i + " заметкок добавлено в корзину!", Snackbar.LENGTH_SHORT)
+                .setAction("Отмена", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Snackbar.make(coordinatorLayout,"Отменено! или нет...", Snackbar.LENGTH_LONG)
+                                .show();
+                    }
+                })
+                .show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(toggle.onOptionsItemSelected(item))
             return true;
 
-        if(item.getItemId() == R.id.delete_selection_items){
-            Log.d("TAG", "       Adapter --- delete_selection_items");
-            Snackbar.make(coordinatorLayout, adapter.getSelectedTasksCounter() + " заметкок добавлена в корзину!", Snackbar.LENGTH_SHORT)
-                    .setAction("Отмена", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Snackbar.make(coordinatorLayout,"HUI!", Snackbar.LENGTH_LONG)
-                                    .show();
-                        }
-                    })
-                    .show();
-            adapter.deleteSelectedTasks();
-        } else if (item.getItemId() == R.id.select_item) {
-            Log.d("TAG", "       Adapter --- set selection mode");
-            adapter.setSelectionMode(MainRecyclerAdapter.Mode.SELECTION_MODE);
+
+        switch (item.getItemId()){
+            case R.id.delete_selection_items:
+                Log.d("TAG", "       Adapter --- delete_selection_items");
+                showSnackBar(adapter.getSelectedTasksCounter());
+                adapter.deleteSelectedTasks();
+                break;
+            case R.id.select_item:
+                Log.d("TAG", "       Adapter --- set selection mode");
+                adapter.setSelectionMode(MainRecyclerAdapter.Mode.SELECTION_MODE);
+                break;
+            case R.id.green:
+                adapter.setColorSelectionTasks(Constants.GREEN);
+                break;
+            case R.id.red:
+                adapter.setColorSelectionTasks(Constants.RED);
+
+                break;
+            case R.id.blue:
+                adapter.setColorSelectionTasks(Constants.BLUE);
+
+                break;
+            case R.id.yellow:
+                adapter.setColorSelectionTasks(Constants.YELLOW);
+                break;
+            case R.id.white:
+                adapter.setColorSelectionTasks(0);
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -191,6 +219,10 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         // Inflate the menu; this adds items to the action bar if it is present.
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_activity_main, menu);
+
+
+        setColor = menu.findItem(R.id.set_color);
+        setColor.setVisible(false);
         //  menuItemDelete = menu.findItem(R.id.delete);
         //  menuItemDelete.setVisible(false);
 
@@ -306,10 +338,12 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     public void selectedItemCount(int selectedTasksCounter) {
         if(selectedTasksCounter == 0) {
             counterTextView.setVisibility(View.GONE);
+            setColor.setVisible(false);
             ((SimpleItemTouchHelperCallback)callback).setCanMovement(true);
         } else {
             ((SimpleItemTouchHelperCallback)callback).setCanMovement(false);
             counterTextView.setVisibility(View.VISIBLE);
+            setColor.setVisible(true);
             counterTextView.setText(selectedTasksCounter + " item selected");
         }
     }

@@ -3,6 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -16,7 +17,7 @@
         android:id="@+id/st_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:popupTheme="@style/AppTheme.PopupOverlay">
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
     </android.support.v7.widget.Toolbar>
 
@@ -34,7 +35,6 @@
             android:id="@+id/activity_task"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00000000"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:orientation="vertical"
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 android:textSize="17sp"
-                android:background="#00000000"
+                android:background="#FFFFFF"
                 android:ems="10"
                 android:id="@+id/headEditText"
                 android:textStyle="normal|bold"
@@ -62,7 +62,7 @@
                 android:inputType="textMultiLine"
                 android:textSize="17sp"
                 android:ems="10"
-                android:background="#00000000"
+                android:background="#FFFFFF"
                 android:id="@+id/taskEditText"
                 android:textStyle="normal"
                 android:hint="Текст" />
