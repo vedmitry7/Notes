@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<item
+    android:id="@+id/sgfdsf"
+    android:icon="@drawable/format_color_fill"
+    android:title="set_color"
+    android:showAsAction="ifRoom"
+    app:showAsAction="ifRoom|withText"
+    >
+
+    <menu>
+        <item android:id="@+id/red"
+            android:icon="@drawable/red_block"
+            android:showAsAction="withText"
+            android:title="">
+
+        </item>
+
+        <item android:id="@+id/green"
+            android:icon="@drawable/green_block"
+            android:title=""
+            android:showAsAction="ifRoom">
+
+        </item>
+
+        <item android:id="@+id/yellow"
+            android:icon="@drawable/yellow_block"
+            android:title=""
+            android:showAsAction="ifRoom">
+            </item>
+        <item android:id="@+id/blue"
+            android:icon="@drawable/blue_block"
+            android:title=""
+            android:showAsAction="ifRoom">
+        </item>
+
+    </menu>
+</item>
+</menu>

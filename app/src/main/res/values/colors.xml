@@ -5,6 +5,15 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorCardView">#FFF</color>
     <color name="colorYellow">#ffc107</color>
-
     <color name="colorCardViewPressed">#999</color>
+
+
+
+
+    <color name="taskColorGreen">#388e3c</color>
+    <color name="taskColorLightGreen">#fffde7</color>
+
+
+
+
 </resources>

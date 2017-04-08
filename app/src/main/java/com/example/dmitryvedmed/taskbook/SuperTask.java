@@ -8,6 +8,14 @@ public class SuperTask implements Serializable {
     private int position;
     private int color;
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
     public int getId() {
         return id;
     }

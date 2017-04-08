@@ -1,10 +1,13 @@
 package com.example.dmitryvedmed.taskbook;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -16,6 +19,8 @@ public class TaskActivity extends AppCompatActivity {
     private EditText head,text;
     private SimpleTask task;
     private String currentKind;
+    Color color;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +31,12 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        toolbar = (Toolbar) findViewById(R.id.st_toolbar);
+        toolbar.setTitle("");
+       setSupportActionBar(toolbar);
+        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.taskColorGreen)));
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         head = ( EditText) findViewById(R.id.headEditText);
         text = ( EditText) findViewById(R.id.taskEditText);
 
@@ -44,11 +55,14 @@ public class TaskActivity extends AppCompatActivity {
             task.setId(-1);
             task.setPosition(getIntent().getIntExtra("position", 0));
             Log.d("TAG", "TAAAAAAASKA  NEEEET");
+            Log.d("TAG", "ID = " + task.getId());
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             head.requestFocus();
         }
-        else
+        else {
             Log.d("TAG", "TAAAAAAASK EST'!!!!!!!!");
+            Log.d("TAG", "ID = " + task.getId());
+        }
 
         currentKind = getIntent().getStringExtra("kind");
         if(currentKind==null)
@@ -146,6 +160,7 @@ public class TaskActivity extends AppCompatActivity {
 
         task.setHeadLine(headline);
         task.setContext(content);
+        task.setColor(Color.BLUE);
 
         DBHelper5 dbHelper = new DBHelper5(this);
         if(task.getId()==-1) {
@@ -160,6 +175,12 @@ public class TaskActivity extends AppCompatActivity {
             dbHelper.updateTask(task, currentKind);
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_colors, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

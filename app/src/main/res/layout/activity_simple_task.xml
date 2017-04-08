@@ -1,46 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/activity_task"
+
+     <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+         android:id="@+id/appBarLayout">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/st_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:popupTheme="@style/AppTheme.PopupOverlay">
+
+    </android.support.v7.widget.Toolbar>
+
+</android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#00000000"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:orientation="vertical"
-        android:descendantFocusability="beforeDescendants"
-        android:focusableInTouchMode="true"
-        >
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/appBarLayout">
 
-        <EditText
-            android:paddingTop="14dp"
-            android:paddingBottom="14dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:textSize="17sp"
-            android:background="#00000000"
-            android:ems="10"
-            android:id="@+id/headEditText"
-            android:textStyle="normal|bold"
-            android:hint="Заголовок"
-            android:focusableInTouchMode="true"/>
-
-        <EditText
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/activity_task"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="textMultiLine"
-            android:textSize="17sp"
-            android:ems="10"
             android:background="#00000000"
-            android:id="@+id/taskEditText"
-            android:textStyle="normal"
-            android:hint="Текст" />
-    </LinearLayout>
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:orientation="vertical"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
+            >
 
-</ScrollView>
+            <EditText
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:textSize="17sp"
+                android:background="#00000000"
+                android:ems="10"
+                android:id="@+id/headEditText"
+                android:textStyle="normal|bold"
+                android:hint="Заголовок"
+                android:focusableInTouchMode="true"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textMultiLine"
+                android:textSize="17sp"
+                android:ems="10"
+                android:background="#00000000"
+                android:id="@+id/taskEditText"
+                android:textStyle="normal"
+                android:hint="Текст" />
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</RelativeLayout>
+
 

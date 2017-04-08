@@ -280,8 +280,14 @@ class DBHelper5 extends SQLiteOpenHelper {
                     }
                 }
 
-                task.setId(Integer.parseInt(cursor.getString(0)));
-
+                int id = cursor.getInt(0);
+                System.out.println("DB          ID - " + id);
+                System.out.println(task==null);
+                if(task==null) {
+                    Log.d("TAG", "      DBHelper    getAllTask, task with id = "  + cursor.getInt(0) + " - null");
+                    continue;
+                }
+                task.setId(cursor.getInt(0));
                 // Add book to books
                 tasks.add(task);
             } while (cursor.moveToNext());
@@ -294,6 +300,7 @@ class DBHelper5 extends SQLiteOpenHelper {
 
     public int updateTask(SuperTask task, String kind) {
         // 1. get reference to writable DB
+
         SQLiteDatabase db = this.getWritableDatabase();
 
         byte[] bytes = null;

@@ -76,10 +76,10 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab2 = (FloatingActionButton) findViewById(R.id.fab2);
         fab3 = (FloatingActionButton) findViewById(R.id.fab3);
-        fab2.hide();
-        fab3.hide();
+    /*    fab2.hide();
+        fab3.hide();*/
 
-        fab.setOnClickListener(new View.OnClickListener() {
+  /*      fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (fab2.isShown()){
@@ -90,7 +90,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                     fab3.show();
                 }
             }
-        });
+        });*/
 
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cl);
@@ -225,13 +225,13 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     }
 
     public void clearList(View v){
-        if(fab.isShown())
+        /*if(fab.isShown())
         fab.hide();
-        else fab.show();
+        else fab.show();*/
 
-        /*   Log.d("TAG", "      Main3Activity --- clearList  ---");
+           Log.d("TAG", "      Main3Activity --- clearList  ---");
         dbHelper.clearDB();
-        update();*/
+        update();
     }
 
     public boolean onNavigationItemSelected(MenuItem item) {

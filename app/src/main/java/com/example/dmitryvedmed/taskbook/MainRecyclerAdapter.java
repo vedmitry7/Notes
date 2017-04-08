@@ -240,7 +240,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
         Log.d("TAG", "       Adapter --- onBindViewHolder");
         holder.cardView.setSelected(false);
-        holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorCardView));
+       // holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.colorCardView));
+         holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorLightGreen));
 
         switch (getItemViewType(position)){
             case 0:
