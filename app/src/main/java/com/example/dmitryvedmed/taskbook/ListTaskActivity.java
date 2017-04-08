@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.EditText;
 
@@ -19,6 +22,7 @@ public class ListTaskActivity extends AppCompatActivity {
     private Context context;
     private EditText headList;
     private String currentKind;
+    Toolbar toolbar;
 
 
     @Override
@@ -31,7 +35,10 @@ public class ListTaskActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
+        toolbar = (Toolbar) findViewById(R.id.lt_toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         headList = (EditText) findViewById(R.id.listHeadEditText);
         Typeface boldTypeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Bold.ttf");
         headList.setTypeface(boldTypeFace);
@@ -71,6 +78,25 @@ public class ListTaskActivity extends AppCompatActivity {
         Activity activity = (Activity) context;
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);//u have got lot of methods here
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_colors, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
 
     @Override
     protected void onPause() {
