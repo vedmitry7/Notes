@@ -68,7 +68,6 @@
         android:layout_marginRight="@dimen/activity_vertical_margin"
         app:fabSize="mini"
         app:srcCompat="@drawable/format_list"
-        app:fab_colorNormal="@color/taskColorBlue"
         android:visibility="invisible"
         />
     <android.support.design.widget.FloatingActionButton
@@ -83,7 +82,6 @@
         android:layout_marginRight="@dimen/activity_vertical_margin"
         app:fabSize="mini"
         app:srcCompat="@drawable/format_list_checks"
-        android:backgroundTint="@color/taskColorGreen"
          />
 
     <android.support.design.widget.FloatingActionButton
@@ -93,7 +91,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
         android:layout_margin="@dimen/fab_margin"
-        app:fab_colorNormal="@color/colorYellow"
         app:srcCompat="@android:drawable/ic_delete" />
 
 

@@ -7,8 +7,12 @@
         <menu android:checkableBehavior="single" >
             <item
                 android:id="@+id/undefined"
-                android:icon="@drawable/ic_menu_camera"
+                android:icon="@drawable/note_multiple"
                 android:title="Заметки" />
+            <item
+                android:id="@+id/archive"
+                android:icon="@drawable/archive"
+                android:title="Архив"/>
             <item
                 android:id="@+id/deleted"
                 android:icon="@drawable/delete"
@@ -18,18 +22,19 @@
         <item
             android:id="@+id/add"
             android:icon="@drawable/ic_add"
-            android:title="Добавить раздел" />
+            android:title="Добавить раздел"
+            android:showAsAction="never"/>
 
 
     <group android:checkableBehavior="none">
         <item
             android:id="@+id/settings"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Settings" />
+            android:icon="@drawable/settings"
+            android:title="Настройки" />
 
         <item
             android:id="@+id/exit"
-            android:icon="@android:drawable/ic_lock_power_off"
+            android:icon="@drawable/exit_to_app"
             android:title="Exit" />
     </group>
 </menu>

@@ -29,6 +29,7 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:orientation="vertical"
+       android:background="#FFFFFF"
        tools:context="com.example.dmitryvedmed.taskbook.ListTaskActivity">
 
       <EditText
@@ -36,7 +37,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:inputType="textMultiLine"
-          android:background="#00000000"
+          android:background="#FFFFFF"
           android:textSize="16sp"
           android:paddingBottom="14dp"
           android:paddingTop="14dp"

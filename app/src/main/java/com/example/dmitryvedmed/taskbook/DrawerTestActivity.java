@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
@@ -102,6 +103,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_common);
         adapter = new MainRecyclerAdapter(values, DrawerTestActivity.this);
 
+        //RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2,1);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -205,6 +207,12 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 break;
             case R.id.white:
                 adapter.setColorSelectionTasks(0);
+                break;
+            case R.id.change_view:
+                RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2,1);
+                //RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+                recyclerView.setLayoutManager(layoutManager);
+                adapter.notifyDataSetChanged();
                 break;
 
         }

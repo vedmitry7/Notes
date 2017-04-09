@@ -9,6 +9,11 @@
         android:title="Выделить"
         app:showAsAction="never" />
     <item
+        android:id="@+id/change_view"
+        android:orderInCategory="101"
+        android:title="Сменить вид"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/delete_selection_items"
         android:orderInCategory="100"
         android:title="Удалить"
