@@ -23,10 +23,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.dmitryvedmed.taskbook.helper.SimpleItemTouchHelperCallback;
+import com.example.dmitryvedmed.taskbook.helper.SpacesItemDecoration;
 
 import java.util.List;
 
@@ -48,11 +51,12 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     private Context context;
     private Menu menu;
     private FloatingActionButton fab;
-    private FloatingActionButton fab2;
-    private FloatingActionButton fab3;
+    private FloatingActionButton fabAddST;
+    private FloatingActionButton fabAddLT;
     CoordinatorLayout coordinatorLayout;
     MenuItem setColor;
-
+    Animation fabAddAnimetion, fabCancelAnimation, fabOpen, fabClose;
+    private boolean fabPressed;
     public String getCurrentKind() {
         return currentKind;
     }
@@ -71,28 +75,22 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         dbHelper = new DBHelper5(this);
         update();
         initView();
+        initAnimation();
+    }
+
+    private void initAnimation() {
+        fabAddAnimetion = AnimationUtils.loadAnimation(this,R.anim.fab_add_rotation);
+        fabCancelAnimation = AnimationUtils.loadAnimation(this,R.anim.fab_cancel_rotation);
+
+        fabOpen = AnimationUtils.loadAnimation(this,R.anim.fab_open);
+        fabClose = AnimationUtils.loadAnimation(this,R.anim.fab_close);
     }
 
     private void initView() {
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
-        fab3 = (FloatingActionButton) findViewById(R.id.fab3);
-    /*    fab2.hide();
-        fab3.hide();*/
-
-  /*      fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (fab2.isShown()){
-                    fab2.hide();
-                    fab3.hide();
-                } else  {
-                    fab2.show();
-                    fab3.show();
-                }
-            }
-        });*/
-
+        fabAddST = (FloatingActionButton) findViewById(R.id.fabAddST);
+        fabAddLT = (FloatingActionButton) findViewById(R.id.fabAddLT);
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cl);
 
@@ -110,6 +108,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
+        recyclerView.addItemDecoration(new SpacesItemDecoration(15));
         callback = new SimpleItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
@@ -248,6 +247,24 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
         intent.putExtra("position", adapter.getTasks().size());
         startActivity(intent);
+    }
+
+    public void add(View v){
+        if(fabPressed){
+            fab.startAnimation(fabCancelAnimation);
+            fabAddST.startAnimation(fabClose);
+            fabAddLT.startAnimation(fabClose);
+            fabAddST.setClickable(false);
+            fabAddLT.setClickable(false);
+            fabPressed = false;
+        } else {
+            fab.startAnimation(fabAddAnimetion);
+            fabAddST.startAnimation(fabOpen);
+            fabAddLT.startAnimation(fabOpen);
+            fabAddST.setClickable(true);
+            fabAddLT.setClickable(true);
+            fabPressed = true;
+        }
     }
 
     public void newListTask(View v){

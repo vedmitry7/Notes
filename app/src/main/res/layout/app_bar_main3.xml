@@ -43,29 +43,48 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main3" />
+    <include layout="@layout/content_main3"
+        android:id="@+id/include" />
 
    <android.support.design.widget.FloatingActionButton
        app:layout_behavior="com.example.dmitryvedmed.taskbook.FABScrollBehavior"
        android:id="@+id/fab"
-        android:onClick="newSimpleTask"
+        android:onClick="add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/ic_add"
+       android:elevation="6dp"/>
 
     <android.support.design.widget.FloatingActionButton
         app:layout_behavior="com.example.dmitryvedmed.taskbook.FABScrollBehavior"
-        android:id="@+id/fab2"
+        android:id="@+id/fabAddST"
+        android:onClick="newSimpleTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="125dp"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/format_list"
+        app:fab_colorNormal="@color/taskColorBlue"
+        android:visibility="invisible"
+        />
+    <android.support.design.widget.FloatingActionButton
+        app:layout_behavior="com.example.dmitryvedmed.taskbook.FABScrollBehavior"
+        android:id="@+id/fabAddLT"
         android:onClick="newListTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_gravity="bottom|end"
+        android:visibility="invisible"
+        android:layout_marginBottom="85dp"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
         app:fabSize="mini"
-
-        app:srcCompat="@drawable/format_list_checks" />
+        app:srcCompat="@drawable/format_list_checks"
+        android:backgroundTint="@color/taskColorGreen"
+         />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab3"
@@ -74,15 +93,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:fab_colorNormal="@color/colorYellow"
+        app:srcCompat="@android:drawable/ic_delete" />
 
 
 
- <!--   <include layout="@layout/fab_layout"
-        android:layout_gravity="bottom|end"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
-        </include>-->
+    <!--   <include layout="@layout/fab_layout"
+           android:layout_gravity="bottom|end"
+           android:layout_height="wrap_content"
+           android:layout_width="wrap_content">
+           </include>-->
 <!--    <RelativeLayout
         android:background="#EEE"
         android:elevation="10dp"
