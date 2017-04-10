@@ -9,7 +9,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Main3Activity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ListTaskActivity"
             android:windowSoftInputMode="stateHidden" />
@@ -31,7 +31,21 @@
             </intent-filter>
         </activity>
 
-    </application>
+        <receiver android:name=".AppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
 
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:enabled="true"
+            android:exported="true"></service>
+    </application>
 
 </manifest>
