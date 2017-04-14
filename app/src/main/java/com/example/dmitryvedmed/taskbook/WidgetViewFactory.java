@@ -35,7 +35,6 @@ public class WidgetViewFactory implements RemoteViewsService.RemoteViewsFactory 
     @Override
     public RemoteViews getViewAt(int position) {
         Log.d("TAG", "       WidgetViewFactory --- getViewAt ");
-
         RemoteViews rv = null;
 
 /*
@@ -45,6 +44,7 @@ public class WidgetViewFactory implements RemoteViewsService.RemoteViewsFactory 
         rv = new RemoteViews(context.getPackageName(), R.layout.row_layout_simple_task);
         rv.setTextViewText(R.id.rlstHeadLine, task.getHeadLine());
         rv.setTextViewText(R.id.rlstText, task.getContext());
+
 */
 
        if(tasks.get(position) instanceof SimpleTask){
@@ -52,20 +52,25 @@ public class WidgetViewFactory implements RemoteViewsService.RemoteViewsFactory 
             SimpleTask task = (SimpleTask) tasks.get(position);
 
             rv = new RemoteViews(context.getPackageName(), R.layout.row_layout_simple_task);
+            rv.removeAllViews(mAppWidgetId);
             rv.setTextViewText(R.id.rlstHeadLine, (task.getHeadLine()));
             rv.setTextViewText(R.id.rlstText, task.getContext());
             //rv.setBoolean(R.id.rlstText, "visibility", false);
-        }  else
+        } else
 
         if(tasks.get(position) instanceof ListTask){
 
             ListTask task = (ListTask) tasks.get(position);
 
-            rv = new RemoteViews(context.getPackageName(), R.layout.row_layout_list_task);
+            rv = new RemoteViews(context.getPackageName(), R.layout.row_layout_simple_task);
 
-            rv.setTextViewText(R.id.rlltHeadLine, task.getHeadLine());
+            rv.setTextViewText(R.id.rlstHeadLine, task.getHeadLine());
 
-            for (String s:task.getUncheckedTasks()
+            RemoteViews innerRemoteView = new RemoteViews(context.getPackageName(),R.layout.row_layout_list_item);
+            innerRemoteView.setTextViewText(R.id.textView33, "22");
+            rv.addView(R.id.container2, innerRemoteView);
+
+           /*for (String s:task.getUncheckedTasks()
                  ) {
                 RemoteViews innerRemoteView = new RemoteViews(context.getPackageName(),R.layout.row_layout_list_item);
                 innerRemoteView.setTextViewText(R.id.textView33, s);
@@ -76,9 +81,17 @@ public class WidgetViewFactory implements RemoteViewsService.RemoteViewsFactory 
                 RemoteViews innerRemoteView = new RemoteViews(context.getPackageName(),R.layout.row_layout_list_item);
                 innerRemoteView.setTextViewText(R.id.textView33, s);
                 rv.addView(R.id.container, innerRemoteView);
-            }
+            }*/
         }
-        //if(tasks.get(position).getColor()!=0)
+
+
+
+        RemoteViews update = new RemoteViews(context.getPackageName(), R.layout.row_layout_list_task);
+        for (int i = 0; i < 5; i++) {
+            RemoteViews textView = new RemoteViews(context.getPackageName(), R.layout.row_layout_list_item);
+            textView.setTextViewText(R.id.textView33, "TextView number " + String.valueOf(i));
+            update.addView(R.id.container, textView);
+        }
 
         return rv;
     }

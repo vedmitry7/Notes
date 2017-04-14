@@ -1,6 +1,5 @@
 package com.example.dmitryvedmed.taskbook;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -20,9 +19,10 @@ public class AppWidget extends AppWidgetProvider {
 
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.app_widget);
 
-            Intent openIntent = new Intent(context,MainActivity.class);
+            /*Intent openIntent = new Intent(context,MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context,0,openIntent,0);
-            rv.setOnClickPendingIntent(R.id.linear,pendingIntent);
+            rv.setOnClickPendingIntent(R.id.linear,pendingIntent);*/
+
 
 
             rv.setRemoteAdapter(appWidgetIds[i], R.id.listView, intent);
