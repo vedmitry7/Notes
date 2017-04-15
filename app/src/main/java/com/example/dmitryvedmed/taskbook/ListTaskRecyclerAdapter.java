@@ -3,6 +3,7 @@ package com.example.dmitryvedmed.taskbook;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -104,11 +105,14 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                 view1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Log.d("TAG", "click!!!!!!!!!!!!!!!!!" );
+
                         listTask.getUncheckedTasks().add("");
                         update();
                         //notifyItemChanged(listTask.getUncheckedTasks().size());
                         //notifyItemChanged(listTask.getUncheckedTasks().size()-1);
-                        System.out.println("                    CLiCK");
+                        Log.d("TAG", "Edit texts size = " + editTexts.size() );
+                      requestFocusLast();
                     }
                 });
                 break;
@@ -121,6 +125,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
         //Log.d("TAG", "ON BIND VIEW HOLDER" );
         String type = holder.getItemViewType() == 0 ? "editText":"button";
         Log.d("TAG", "POSITION -" + position + "," +" TYPE -" +  type );
+
 
         if(position < listTask.getUncheckedTasks().size()) {
             holder.editTextListener.updatePosition(holder.getAdapterPosition());
@@ -140,6 +145,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                     Log.d("TAG", "ET " + position + " FOCUS " + b );
                     if(b) {
                         holder.button.setVisibility(View.VISIBLE);
+                        holder.editText.setSelection(holder.editText.getText().length());
                     }
                     else {
                         holder.button.setVisibility(View.INVISIBLE);
@@ -147,23 +153,43 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                 }
             });
 
-            if(position==listTask.getUncheckedTasks().size()-1) {
+        /*    if(position==listTask.getUncheckedTasks().size()-1) {
 
-                Log.d("TAG", "ET requestFocus for " + position  );
-                holder.editText.requestFocus();
+              //  Log.d("TAG", "ET requestFocus for " + position  );
+        //        holder.editText.requestFocus();
                 holder.button.setVisibility(View.VISIBLE);
             } else {
                 holder.button.setVisibility(View.INVISIBLE);
             }
-
+*/
             holder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     listTask.getUncheckedTasks().remove(position);
+                    editTexts.remove(position);
+                    Log.d("TAG", "Edit texts remove = " + position );
+                    Log.d("TAG", "Edit texts size = " + editTexts.size() );
                     update();
+                    if(position==0)
+                        requestFocusTo(position);
+                    else
+                        requestFocusTo(position-1);
+
                     //notifyItemChanged(position);
                 }
             });
+
+            if(editTexts.size()==position) {
+                editTexts.add(position, holder.editText);
+                Log.d("TAG", "Edit texts add = " + position );
+            }
+            else {
+                editTexts.remove(position);
+                editTexts.add(position,holder.editText);
+                Log.d("TAG", "Edit texts remove and add = " + position );
+            }
+            Log.d("TAG", "Edit texts size = " + editTexts.size() );
+
         }
         if(holder.editText!=null)
         holder.editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
@@ -171,9 +197,11 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
                         && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
+                    Log.d("TAG", "click ENTER Add " + position );
                     listTask.getUncheckedTasks().add(position + 1, "");
                     update();
                     //notifyItemChanged(position+1);
+                    requestFocusTo(position+1);
                     return true;
                 }
                 return false;
@@ -204,6 +232,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                     //update();
                     notifyItemChanged(position);
 
+
                 }
             });
             holder.checkBoxListener.updatePosition(position);
@@ -211,7 +240,44 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             holder.checkBox.setChecked(true);
             onBind = false;
             System.out.println(position + " - " + listTask.getCheckedTasks().get(position - (listTask.getUncheckedTasks().size()+1)));
+            if(editTexts.size()==position) {
+                editTexts.add(position, holder.editText);
+                Log.d("TAG", "Edit texts add = " + position );
+            }
+            else {
+                editTexts.remove(position);
+                editTexts.add(position,holder.editText);
+                Log.d("TAG", "Edit texts remove and add = " + position );
+            }
+
+            Log.d("TAG", "Edit texts size = " + editTexts.size() );
         }
+    }
+
+    public void requestFocusLast(){
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                Log.d("TAG", "delay " );
+                Log.d("TAG", "requestLastFocus" );
+                Log.d("TAG", "focus to " + (editTexts.size()-1) );
+                editTexts.get(editTexts.size()-1).requestFocus();
+            }
+        }, 20);
+    }
+
+    public void requestFocusTo(final int position){
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                Log.d("TAG", "delay " );
+                Log.d("TAG", "requestLastTo " + position );
+                if(editTexts.size()>0)
+                editTexts.get(position).requestFocus();
+            }
+        }, 100);
     }
 
     private void update(){

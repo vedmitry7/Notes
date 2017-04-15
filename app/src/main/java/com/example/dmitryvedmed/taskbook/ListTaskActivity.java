@@ -27,7 +27,6 @@ public class ListTaskActivity extends AppCompatActivity {
     private String currentKind;
     private Toolbar toolbar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
