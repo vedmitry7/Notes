@@ -10,11 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.EditText;
+
+import com.example.dmitryvedmed.taskbook.helper.ListTaskItemTouchHelperCallback;
 
 
 public class ListTaskActivity extends AppCompatActivity {
@@ -26,6 +29,8 @@ public class ListTaskActivity extends AppCompatActivity {
     private EditText headList;
     private String currentKind;
     private Toolbar toolbar;
+    private ItemTouchHelper mItemTouchHelper;
+    private ItemTouchHelper.Callback callback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +63,15 @@ public class ListTaskActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(listTaskRecyclerAdapter);
 
+
+        callback = new ListTaskItemTouchHelperCallback(listTaskRecyclerAdapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
+
         if(listTask.getColor() != 0)
             toolbar.setBackgroundColor(listTask.getColor());
 
+        setItemMovement(false);
     }
 
     private void initTask() {
@@ -152,6 +163,11 @@ public class ListTaskActivity extends AppCompatActivity {
         if(listTask.getId() == -1)
             listTask.setId(dbHelper.addTask(listTask));
         else dbHelper.updateTask(listTask, currentKind);
+    }
+
+    public void setItemMovement(boolean b){
+        Log.d("TAG", "MOVEMENT  " + b);
+        ((ListTaskItemTouchHelperCallback)callback).setCanMovement(b);
     }
 
     @Override

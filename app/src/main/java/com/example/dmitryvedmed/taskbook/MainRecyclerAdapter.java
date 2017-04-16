@@ -11,7 +11,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -32,6 +31,7 @@ import static com.example.dmitryvedmed.taskbook.R.id.taskTextView;
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.RecyclerViewHolder>
         implements ItemTouchHelperAdapter {
+
 
     private List<SuperTask> tasks;
     private List<SuperTask> selectedTasks;
@@ -135,7 +135,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements
-            ItemTouchHelperViewHolder, View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
+            ItemTouchHelperViewHolder, View.OnClickListener, View.OnLongClickListener {
         private TextView stHeadLine, stContent, listHeadEditText, ltFirst, ltSecond;
         private LinearLayout layout;
         private CardView cardView;
@@ -157,7 +157,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             //cardView.setOnLongClickListener((DrawerTestActivity)context);
             cardView.setOnClickListener(this);
             cardView.setOnLongClickListener(this);
-            itemView.setOnTouchListener(this);
 
         }
 
@@ -233,26 +232,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             return true;
         }
 
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            Log.d("TAG", "      ON TOUCH" );
-            x = (int) motionEvent.getX();
-            y = (int) motionEvent.getY();
-            switch (motionEvent.getAction()){
-                case MotionEvent.ACTION_DOWN:
-                    int x = (int) motionEvent.getX();
-                    int y = (int) motionEvent.getY();
-                    Log.d("TAG", "      PRESS " );
-                    Log.d("TAG", " X = " + x );
-                    Log.d("TAG", " Y = " + y );
-                    if(x<100)
-                        activity.setItemMovement(true);
-                    else
-                        activity.setItemMovement(false);
-                    break;
-            }
-            return false;
-        }
     }
 
     @Override
