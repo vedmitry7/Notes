@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +24,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -54,9 +56,9 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     private FloatingActionButton fab;
     private FloatingActionButton fabAddST;
     private FloatingActionButton fabAddLT;
-    CoordinatorLayout coordinatorLayout;
-    MenuItem setColor, delete, choose;
-    Animation fabAddAnimetion, fabCancelAnimation, fabOpen, fabClose;
+    private CoordinatorLayout coordinatorLayout;
+    private MenuItem setColor, delete, choose, clearBascet, delateForever, cancelSelection;
+    private Animation fabAddAnimetion, fabCancelAnimation, fabOpen, fabClose;
     private boolean fabPressed;
     public String getCurrentKind() {
         return currentKind;
@@ -85,14 +87,6 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         initAnimation();
     }
 
-    private void initAnimation() {
-        fabAddAnimetion = AnimationUtils.loadAnimation(this,R.anim.fab_add_rotation);
-        fabCancelAnimation = AnimationUtils.loadAnimation(this,R.anim.fab_cancel_rotation);
-
-        fabOpen = AnimationUtils.loadAnimation(this,R.anim.fab_open);
-        fabClose = AnimationUtils.loadAnimation(this,R.anim.fab_close);
-    }
-
     private void initView() {
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -104,12 +98,23 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar.setOnClickListener(new View.OnClickListener() {
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("TAG", "                       GAMBURGER)");
                 hideFabs();
             }
         });
+        toolbar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.d("TAG", "                  touch toolbar)");
+
+                hideFabs();
+                return false;
+            }
+        });
+
         counterTextView = (TextView) findViewById(R.id.counter_text);
         counterTextView.setVisibility(View.GONE);
 
@@ -131,18 +136,26 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-      //  drawerLayout.setScrimColor(Color.TRANSPARENT);
+        //  drawerLayout.setScrimColor(Color.TRANSPARENT);
 
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("TAG", "      TOOOOOGLE CLICK ---");
+                hideFabs();
+            }
+        });
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         //getSupportActionBar().setTitle("1 item selected");
 
-       // getSupportActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.colorYellow)));
+        // getSupportActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.colorYellow)));
 
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -150,19 +163,44 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
 
     }
 
-
-    void update(){
-        Log.d("TAG", "      Activity --- update  ---");
-        values = dbHelper.getTasks(currentKind);
-        if(adapter!=null)
-            adapter.dataChanged(values);
-    }
-
     @Override
-    protected void onResume() {
-        Log.d("TAG", "      Activity --- onResume  ---");
-        update();
-        super.onResume();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        // Inflate the menu; this adds items to the action bar if it is present.
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_activity_main, menu);
+
+
+        setColor = menu.findItem(R.id.set_color);
+        setColor.setVisible(false);
+        delete = menu.findItem(R.id.delete_selection_items);
+        delete.setVisible(false);
+        choose = menu.findItem(R.id.select_item);
+        clearBascet = menu.findItem(R.id.clear_basket);
+        clearBascet.setVisible(false);
+        delateForever = menu.findItem(R.id.delete_forever);
+        delateForever.setVisible(false);
+        cancelSelection = menu.findItem(R.id.cancel_selection);
+        cancelSelection.setVisible(false);
+        //  menuItemDelete = menu.findItem(R.id.delete);
+        //  menuItemDelete.setVisible(false);
+
+        /*ArrayList<Section> sections = dbHelper.getAllSections();
+        System.out.println("ssssssssssssssssss");
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu navmenu = navigationView.getMenu();
+        Menu submenu = navmenu.getItem(0).getSubMenu();
+        submenu.clear();
+
+        for (Section s:sections
+             ) {
+            System.out.println(s.getName());
+            //MenuItem sections =  menu.getItem(R.id.sections);
+            submenu.add(R.id.sections,Menu.FIRST,Menu.NONE, s.getName());
+        }*/
+
+        return true;
     }
 
     @Override
@@ -209,6 +247,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             case R.id.select_item:
                 Log.d("TAG", "       Adapter --- set selection mode");
                 adapter.setSelectionMode(MainRecyclerAdapter.Mode.SELECTION_MODE);
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.colorCardViewPressed)));
                 break;
             case R.id.green:
                 adapter.setColorSelectionTasks(Constants.GREEN);
@@ -233,94 +272,43 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 recyclerView.setLayoutManager(layoutManager);
                 adapter.notifyDataSetChanged();
                 break;
+            case R.id.delete_forever:
+                Log.d("TAG", "      Main3Activity           RRR delete_forever");
+                adapter.deleteSelectedTasksForever();
+                delateForever.setVisible(false);
+                clearBascet.setVisible(true);
+                break;
+            case R.id.clear_basket:
+                Log.d("TAG", "      Main3Activity           RRR CLEAR BASKET");
+                final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle("Очистить корзину?");
+                alert.setMessage("Вы действительно хотите удалить все заметки из корзины навсегда?");
+                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        for (SuperTask t:dbHelper.getTasks(Constants.DELETED)
+                                ) {
+                            dbHelper.deleteBook(t);
+                        }
+                        adapter.getTasks().clear();
+                        adapter.notifyDataSetChanged();
+                        clearBascet.setVisible(false);
+                    }
+                });
+                alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+              alert.show();
+
+                break;
+            case R.id.cancel_selection:
+                adapter.cancelSelection();
 
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
-        // Inflate the menu; this adds items to the action bar if it is present.
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_activity_main, menu);
-
-
-        setColor = menu.findItem(R.id.set_color);
-        setColor.setVisible(false);
-        delete = menu.findItem(R.id.delete_selection_items);
-        delete.setVisible(false);
-        choose = menu.findItem(R.id.select_item);
-        //  menuItemDelete = menu.findItem(R.id.delete);
-        //  menuItemDelete.setVisible(false);
-
-        /*ArrayList<Section> sections = dbHelper.getAllSections();
-        System.out.println("ssssssssssssssssss");
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        Menu navmenu = navigationView.getMenu();
-        Menu submenu = navmenu.getItem(0).getSubMenu();
-        submenu.clear();
-
-        for (Section s:sections
-             ) {
-            System.out.println(s.getName());
-            //MenuItem sections =  menu.getItem(R.id.sections);
-            submenu.add(R.id.sections,Menu.FIRST,Menu.NONE, s.getName());
-        }*/
-
-        return true;
-    }
-
-    public void newSimpleTask(View v){
-        hideFabs();
-        Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
-        intent.putExtra("position", adapter.getTasks().size());
-        startActivity(intent);
-    }
-
-
-    public void hideFabs(){
-        Log.d("TAG", "      Main3Activity --- HIDE FABS  ---");
-        if(!fabPressed)
-            return;
-        fab.startAnimation(fabCancelAnimation);
-        fabAddST.startAnimation(fabClose);
-        fabAddLT.startAnimation(fabClose);
-        fabAddST.setClickable(false);
-        fabAddLT.setClickable(false);
-        fabPressed = false;
-    }
-
-    public void add(View v){
-        if(fabPressed){
-            hideFabs();
-        } else {
-            fab.startAnimation(fabAddAnimetion);
-            fabAddST.startAnimation(fabOpen);
-            fabAddLT.startAnimation(fabOpen);
-            fabAddST.setClickable(true);
-            fabAddLT.setClickable(true);
-            fabPressed = true;
-        }
-    }
-
-    public void newListTask(View v){
-        hideFabs();
-        Intent intent = new Intent(getApplicationContext(), ListTaskActivity.class);
-        intent.putExtra("position", adapter.getTasks().size());
-        startActivity(intent);
-    }
-
-    public void clearList(View v){
-        /*if(fab.isShown())
-        fab.hide();
-        else fab.show();*/
-
-           Log.d("TAG", "      Main3Activity --- clearList  ---");
-        dbHelper.clearDB();
-        update();
     }
 
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -329,29 +317,38 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         hideFabs();
         int id = item.getItemId();
         System.out.println("ID = " + id);
-        if (id == R.id.nav_manage) {
+        switch (item.getItemId()){
+            case R.id.undefined:
+                currentKind = Constants.UNDEFINED;
+                values = dbHelper.getTasks(currentKind);
+                adapter.dataChanged(values);
+                delateForever.setVisible(false);
+                fab.show();
+                clearBascet.setVisible(false);
+                break;
+            case R.id.deleted:
+                currentKind = Constants.DELETED;
+                values = dbHelper.getTasks(Constants.DELETED);
+                adapter.dataChanged(values);
+                setColor.setVisible(false);
+                delete.setVisible(false);
+                clearBascet.setVisible(true);
+                fab.hide();
+                break;
 
-        } else if (id == R.id.undefined) {
-            currentKind = Constants.UNDEFINED;
-            values = dbHelper.getTasks(currentKind);
-            adapter.dataChanged(values);
+            case R.id.settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                this.startActivity(intent);
+                break;
+            case R.id.exit:
+                this.finish();
+                break;
+        }
 
-        } else if (id == R.id.deleted) {
-            currentKind = Constants.DELETED;
-            values = dbHelper.getTasks(Constants.DELETED);
-            adapter.dataChanged(values);
-        } else if (id == R.id.settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            this.startActivity(intent);
-        } else if (id == R.id.exit) {
-            this.finish();
-        } else if (id == Menu.FIRST){
-        } else if (id == R.id.add){
+      if (id == R.id.add){
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
             alert.setTitle("Добавить раздел");
             //alert.setMessage("Message");
-
             // Set an EditText view to get user input
             final EditText input = new EditText(this);
             input.setBackgroundColor(0);
@@ -361,10 +358,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 public void onClick(DialogInterface dialog, int whichButton) {
                     String value = String.valueOf(input.getText());
                     // Do something with value!
-
-
                     NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
                     Section section = new Section();
                     section.setName(value);
                     dbHelper.addSection(section);
@@ -392,7 +386,6 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         return true;
     }
 
-
     public void selectedItemCount(int selectedTasksCounter) {
         if(selectedTasksCounter == 0) {
             counterTextView.setVisibility(View.GONE);
@@ -400,6 +393,8 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             delete.setVisible(false);
             choose.setVisible(true);
             setItemMovement(true);
+            cancelSelection.setVisible(false);
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.colorYellow)));
         } else {
             setItemMovement(false);
             counterTextView.setVisibility(View.VISIBLE);
@@ -407,12 +402,76 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             delete.setVisible(true);
             choose.setVisible(false);
             counterTextView.setText(selectedTasksCounter + " item selected");
+            cancelSelection.setVisible(true);
+            if(currentKind==Constants.DELETED) {
+                delateForever.setVisible(true);
+                delete.setVisible(false);
+                clearBascet.setVisible(false);
+            }
         }
+    }
+
+    public void hideFabs(){
+        Log.d("TAG", "      Main3Activity --- HIDE FABS  ---");
+        if(!fabPressed)
+            return;
+        fab.startAnimation(fabCancelAnimation);
+        fabAddST.startAnimation(fabClose);
+        fabAddLT.startAnimation(fabClose);
+        fabAddST.setClickable(false);
+        fabAddLT.setClickable(false);
+        fabPressed = false;
+    }
+
+    public void add(View v){
+        if(fabPressed){
+            hideFabs();
+        } else {
+            fab.startAnimation(fabAddAnimetion);
+            fabAddST.startAnimation(fabOpen);
+            fabAddLT.startAnimation(fabOpen);
+            fabAddST.setClickable(true);
+            fabAddLT.setClickable(true);
+            fabPressed = true;
+        }
+    }
+
+
+    public void newListTask(View v){
+        hideFabs();
+        Intent intent = new Intent(getApplicationContext(), ListTaskActivity.class);
+        intent.putExtra("position", adapter.getTasks().size());
+        startActivity(intent);
+    }
+
+    public void newSimpleTask(View v){
+        hideFabs();
+        Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
+        intent.putExtra("position", adapter.getTasks().size());
+        startActivity(intent);
+    }
+
+    public void clearList(View v){
+        /*if(fab.isShown())
+        fab.hide();
+        else fab.show();*/
+
+        Log.d("TAG", "      Main3Activity --- clearList  ---");
+        dbHelper.clearDB();
+        update();
+    }
+
+
+    private void initAnimation() {
+        fabAddAnimetion = AnimationUtils.loadAnimation(this,R.anim.fab_add_rotation);
+        fabCancelAnimation = AnimationUtils.loadAnimation(this,R.anim.fab_cancel_rotation);
+
+        fabOpen = AnimationUtils.loadAnimation(this,R.anim.fab_open);
+        fabClose = AnimationUtils.loadAnimation(this,R.anim.fab_close);
     }
 
     public void setItemMovement(boolean b){
         ((SimpleItemTouchHelperCallback)callback).setCanMovement(b);
-
     }
 
     @Override
@@ -425,5 +484,20 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             dbHelper.updateTask(s, currentKind);
         }
         super.onPause();
+    }
+
+
+    void update(){
+        Log.d("TAG", "      Activity --- update  ---");
+        values = dbHelper.getTasks(currentKind);
+        if(adapter!=null)
+            adapter.dataChanged(values);
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d("TAG", "      Activity --- onResume  ---");
+        update();
+        super.onResume();
     }
 }

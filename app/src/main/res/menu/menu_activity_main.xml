@@ -3,10 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.dmitryvedmed.taskbook.SettingsActivity">
 
+
+    <item
+        android:id="@+id/cancel_selection"
+        android:orderInCategory="100"
+        android:title="Отмена"
+        app:showAsAction="never" />
     <item
         android:id="@+id/select_item"
         android:orderInCategory="100"
         android:title="Выделить"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/delete_forever"
+        android:orderInCategory="100"
+        android:title="Удалить навсегда"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/clear_basket"
+        android:orderInCategory="100"
+        android:title="Очистить корзину"
         app:showAsAction="never" />
     <item
         android:id="@+id/change_view"

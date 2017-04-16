@@ -50,6 +50,10 @@ public class TaskActivity extends AppCompatActivity {
         text.setTypeface(typeFace);
         head.setTypeface(boldTypeFace);
 
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+
+
+
     }
     private void initTask() {
         task = (SimpleTask) getIntent().getSerializableExtra("Task");

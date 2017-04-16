@@ -72,6 +72,9 @@ public class ListTaskActivity extends AppCompatActivity {
             toolbar.setBackgroundColor(listTask.getColor());
 
         setItemMovement(false);
+
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+
     }
 
     private void initTask() {

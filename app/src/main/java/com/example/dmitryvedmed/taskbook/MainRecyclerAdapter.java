@@ -55,11 +55,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public static enum Mode {
         NORMAL, SELECTION_MODE;
+
     }
     public Mode getMode() {
         return mode;
     }
-
     public void setSelectionMode(Mode mode){
         this.mode = mode;
     }
@@ -96,7 +96,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         activity.showSnackBar(1);
     }
 
-
     public void deleteSelectedTasks(){
         compareSelectionTasks();
         for (SuperTask t:selectedTasks
@@ -113,6 +112,30 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         selectedTasksCounter = 0;
 
     }
+
+    public void cancelSelection() {
+        selectedTasks.clear();
+        activity.selectedItemCount(0);
+        mode = Mode.NORMAL;
+        notifyDataSetChanged();
+        selectedTasksCounter = 0;
+    }
+
+    public void deleteSelectedTasksForever() {
+        compareSelectionTasks();
+        for (SuperTask t : selectedTasks
+                ) {
+            activity.dbHelper.deleteBook(t);
+        }
+        tasks.removeAll(selectedTasks);
+        selectedTasks.clear();
+        setRightPosition();
+        notifyDataSetChanged();
+        activity.selectedItemCount(0);
+        mode = Mode.NORMAL;
+        selectedTasksCounter = 0;
+    }
+
 
     public void setColorSelectionTasks(int color){
         for (SuperTask s:selectedTasks
@@ -237,20 +260,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
             Log.d("TAG", "      ON TOUCH" );
-            x = (int) motionEvent.getX();
-            y = (int) motionEvent.getY();
             switch (motionEvent.getAction()){
                 case MotionEvent.ACTION_DOWN:
                     activity.hideFabs();
-                    int x = (int) motionEvent.getX();
-                    int y = (int) motionEvent.getY();
-                    Log.d("TAG", "      PRESS " );
-                    Log.d("TAG", " X = " + x );
-                    Log.d("TAG", " Y = " + y );
-                    if(x<100)
-                        activity.setItemMovement(true);
-                    else
-                        activity.setItemMovement(false);
                     break;
             }
             return false;
