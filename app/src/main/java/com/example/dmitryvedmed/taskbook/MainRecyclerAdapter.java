@@ -11,6 +11,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -45,6 +46,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private Mode mode;
     private int selectedTasksCounter;
     int color;
+    int x,y;
 
     public int getSelectedTasksCounter() {
         return selectedTasksCounter;
@@ -113,7 +115,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public void setColorSelectionTasks(int color){
         for (SuperTask s:selectedTasks
-             ) {
+                ) {
             s.setColor(color);
         }
         notifyDataSetChanged();
@@ -133,7 +135,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements
-            ItemTouchHelperViewHolder, View.OnClickListener, View.OnLongClickListener {
+            ItemTouchHelperViewHolder, View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
         private TextView stHeadLine, stContent, listHeadEditText, ltFirst, ltSecond;
         private LinearLayout layout;
         private CardView cardView;
@@ -155,6 +157,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             //cardView.setOnLongClickListener((DrawerTestActivity)context);
             cardView.setOnClickListener(this);
             cardView.setOnLongClickListener(this);
+            itemView.setOnTouchListener(this);
 
         }
 
@@ -172,7 +175,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             wasSelected = false;
             selectedTasks.clear();
             if(getAdapterPosition() != -1)
-            setColorCardView(cardView, getAdapterPosition());
+                setColorCardView(cardView, getAdapterPosition());
         }
 
         @Override
@@ -190,14 +193,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         intent.putExtra("Task", (Serializable) tasks.get(position));
                         intent.putExtra("kind", activity.currentKind);
                         context.startActivity(intent);
-                       // activity.overridePendingTransition(R.anim.diagonaltranslate, R.anim.alpha);
+                        // activity.overridePendingTransition(R.anim.diagonaltranslate, R.anim.alpha);
                         break;
                     case 1:
                         Intent intent1 = new Intent(context, ListTaskActivity.class);
                         intent1.putExtra("ListTask", tasks.get(position));
                         intent1.putExtra("kind", activity.currentKind);
                         context.startActivity(intent1);
-                      //  activity.overridePendingTransition(R.anim.diagonaltranslate, R.anim.alpha);
+                        //  activity.overridePendingTransition(R.anim.diagonaltranslate, R.anim.alpha);
                         break;
                 }
             }
@@ -225,8 +228,30 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public boolean onLongClick(View view) {
-            System.out.println("LOOOONG CLICK");
+            Log.d("TAG", "      LOOOOONG CLICK " );
+
             return true;
+        }
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            Log.d("TAG", "      ON TOUCH" );
+            x = (int) motionEvent.getX();
+            y = (int) motionEvent.getY();
+            switch (motionEvent.getAction()){
+                case MotionEvent.ACTION_DOWN:
+                    int x = (int) motionEvent.getX();
+                    int y = (int) motionEvent.getY();
+                    Log.d("TAG", "      PRESS " );
+                    Log.d("TAG", " X = " + x );
+                    Log.d("TAG", " Y = " + y );
+                    if(x<100)
+                        activity.setItemMovement(true);
+                    else
+                        activity.setItemMovement(false);
+                    break;
+            }
+            return false;
         }
     }
 
@@ -275,11 +300,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
         Log.d("TAG", "       Adapter --- onBindViewHolder");
         holder.cardView.setSelected(false);
-       // holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorRed));
+        // holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorRed));
         // holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,tasks.get(position).getColor()));
         // holder.cardView.setCardBackgroundColor(tasks.get(position).getColor());
 
-       setColorCardView(holder.cardView, position);
+        setColorCardView(holder.cardView, position);
 
         switch (getItemViewType(position)){
             case 0:

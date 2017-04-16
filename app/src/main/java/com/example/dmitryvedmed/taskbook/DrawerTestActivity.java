@@ -370,13 +370,18 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         if(selectedTasksCounter == 0) {
             counterTextView.setVisibility(View.GONE);
             setColor.setVisible(false);
-            ((SimpleItemTouchHelperCallback)callback).setCanMovement(true);
+            setItemMovement(true);
         } else {
-            ((SimpleItemTouchHelperCallback)callback).setCanMovement(false);
+            setItemMovement(false);
             counterTextView.setVisibility(View.VISIBLE);
             setColor.setVisible(true);
             counterTextView.setText(selectedTasksCounter + " item selected");
         }
+    }
+
+    public void setItemMovement(boolean b){
+        ((SimpleItemTouchHelperCallback)callback).setCanMovement(b);
+
     }
 
     @Override
