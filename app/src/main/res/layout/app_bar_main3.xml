@@ -47,7 +47,6 @@
         android:id="@+id/include" />
 
    <android.support.design.widget.FloatingActionButton
-       app:layout_behavior="com.example.dmitryvedmed.taskbook.FABScrollBehavior"
        android:id="@+id/fab"
         android:onClick="add"
         android:layout_width="wrap_content"
@@ -57,8 +56,8 @@
         app:srcCompat="@drawable/ic_add"
        android:elevation="6dp"/>
 
+    <!--app:layout_behavior="com.example.dmitryvedmed.taskbook.FABScrollBehavior"-->
     <android.support.design.widget.FloatingActionButton
-        app:layout_behavior="com.example.dmitryvedmed.taskbook.FABScrollBehavior"
         android:id="@+id/fabAddST"
         android:onClick="newSimpleTask"
         android:layout_width="wrap_content"
@@ -71,7 +70,6 @@
         android:visibility="invisible"
         />
     <android.support.design.widget.FloatingActionButton
-        app:layout_behavior="com.example.dmitryvedmed.taskbook.FABScrollBehavior"
         android:id="@+id/fabAddLT"
         android:onClick="newListTask"
         android:layout_width="wrap_content"

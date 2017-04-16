@@ -55,7 +55,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     private FloatingActionButton fabAddST;
     private FloatingActionButton fabAddLT;
     CoordinatorLayout coordinatorLayout;
-    MenuItem setColor;
+    MenuItem setColor, delete, choose;
     Animation fabAddAnimetion, fabCancelAnimation, fabOpen, fabClose;
     private boolean fabPressed;
     public String getCurrentKind() {
@@ -103,6 +103,13 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideFabs();
+            }
+        });
         counterTextView = (TextView) findViewById(R.id.counter_text);
         counterTextView.setVisibility(View.GONE);
 
@@ -183,9 +190,15 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d("TAG", "        onOptionsItemSelected  onOptionsItemSelected  onOptionsItemSelected");
+
+
         if(toggle.onOptionsItemSelected(item))
             return true;
 
+
+
+        hideFabs();
 
         switch (item.getItemId()){
             case R.id.delete_selection_items:
@@ -236,6 +249,9 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
 
         setColor = menu.findItem(R.id.set_color);
         setColor.setVisible(false);
+        delete = menu.findItem(R.id.delete_selection_items);
+        delete.setVisible(false);
+        choose = menu.findItem(R.id.select_item);
         //  menuItemDelete = menu.findItem(R.id.delete);
         //  menuItemDelete.setVisible(false);
 
@@ -258,19 +274,28 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     }
 
     public void newSimpleTask(View v){
+        hideFabs();
         Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
         intent.putExtra("position", adapter.getTasks().size());
         startActivity(intent);
     }
 
+
+    public void hideFabs(){
+        Log.d("TAG", "      Main3Activity --- HIDE FABS  ---");
+        if(!fabPressed)
+            return;
+        fab.startAnimation(fabCancelAnimation);
+        fabAddST.startAnimation(fabClose);
+        fabAddLT.startAnimation(fabClose);
+        fabAddST.setClickable(false);
+        fabAddLT.setClickable(false);
+        fabPressed = false;
+    }
+
     public void add(View v){
         if(fabPressed){
-            fab.startAnimation(fabCancelAnimation);
-            fabAddST.startAnimation(fabClose);
-            fabAddLT.startAnimation(fabClose);
-            fabAddST.setClickable(false);
-            fabAddLT.setClickable(false);
-            fabPressed = false;
+            hideFabs();
         } else {
             fab.startAnimation(fabAddAnimetion);
             fabAddST.startAnimation(fabOpen);
@@ -282,6 +307,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     }
 
     public void newListTask(View v){
+        hideFabs();
         Intent intent = new Intent(getApplicationContext(), ListTaskActivity.class);
         intent.putExtra("position", adapter.getTasks().size());
         startActivity(intent);
@@ -300,6 +326,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     public boolean onNavigationItemSelected(MenuItem item) {
         System.out.println(item.getTitle());
         // Handle navigation view item clicks here.
+        hideFabs();
         int id = item.getItemId();
         System.out.println("ID = " + id);
         if (id == R.id.nav_manage) {
@@ -370,11 +397,15 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         if(selectedTasksCounter == 0) {
             counterTextView.setVisibility(View.GONE);
             setColor.setVisible(false);
+            delete.setVisible(false);
+            choose.setVisible(true);
             setItemMovement(true);
         } else {
             setItemMovement(false);
             counterTextView.setVisibility(View.VISIBLE);
             setColor.setVisible(true);
+            delete.setVisible(true);
+            choose.setVisible(false);
             counterTextView.setText(selectedTasksCounter + " item selected");
         }
     }
