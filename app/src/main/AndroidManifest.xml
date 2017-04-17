@@ -22,7 +22,7 @@
         <activity android:name=".MainActivity" />
         <activity
             android:name=".SettingsActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".DrawerTestActivity"
             android:label="Заметки"

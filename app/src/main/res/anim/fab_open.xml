@@ -19,4 +19,9 @@
         android:toAlpha="1.0"
         android:interpolator="@android:anim/linear_interpolator"
     />
+    <translate
+        android:duration="300"
+        android:fillAfter="true"
+        android:toYDelta="0"
+        android:fromYDelta="50"/>
 </set>

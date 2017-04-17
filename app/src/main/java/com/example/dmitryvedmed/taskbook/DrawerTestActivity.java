@@ -74,6 +74,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         setContentView(R.layout.activity_drawer_test);
         context = this;
         dbHelper = new DBHelper5(this);
+        loadPreferences();
         update();
         initView();
         initAnimation();

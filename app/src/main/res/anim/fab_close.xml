@@ -21,5 +21,10 @@
         android:toAlpha="0.0"
         android:interpolator="@android:anim/linear_interpolator"
         />
+    <translate
+        android:duration="300"
+        android:fillAfter="true"
+        android:toYDelta="50"
+        android:fromYDelta="0"/>
 
 </set>
