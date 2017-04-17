@@ -2,7 +2,6 @@ package com.example.dmitryvedmed.taskbook;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -75,19 +74,33 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
         private ImageView imageView;
         private CheckBoxListener checkBoxListener;
         private CheckBox checkBox;
+        private TextView newPoint;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
-            ///????
+            System.out.println("ViewHolder constructor");
             System.out.println("TYPE = " + this.getItemViewType());
-            editText = (EditText) itemView.findViewById(R.id.itemListEditText);
-
-            Typeface typeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Regular.ttf");
-
+            ///????
             editTextListener = new EditTextListener();
-            if(editText != null) {
-                editText.setTypeface(typeFace);
+            checkBoxListener = new CheckBoxListener();
+
+            switch (getItemViewType()){
+                case 0:
+
+
+                    break;
+                case 1:
+                    break;
+            }
+
+
+            editText = (EditText) itemView.findViewById(R.id.itemListEditText);
+            if(editText!=null) {
+                editText.setTypeface(SingletonFonts.getInstance(context).getRobotoRegular());
                 editText.addTextChangedListener(editTextListener);
+            }
+
+            if(editText != null) {
                /* editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -106,18 +119,23 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
 
 
             checkBox = (CheckBox) itemView.findViewById(R.id.checkBox);
-            checkBoxListener = new CheckBoxListener();
-            if(checkBox != null)
+            if(checkBox != null) {
                 checkBox.setOnCheckedChangeListener(checkBoxListener);
+            }
+
 
             button = (Button) itemView.findViewById(R.id.delButton);
-
-            System.out.println("ViewHolder constructor");
 
 
             imageView = (ImageView) itemView.findViewById(R.id.drag);
             if(imageView!=null)
-            imageView.setOnTouchListener(this);
+                imageView.setOnTouchListener(this);
+
+            newPoint = (TextView)itemView.findViewById(R.id.newPoint);
+            if(newPoint!=null)
+            newPoint.setTypeface(SingletonFonts.getInstance(context).getRobotoRegular());
+
+
         }
 
         @Override
@@ -184,6 +202,12 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
         Log.d("TAG", "POSITION -" + position + "," +" TYPE -" +  type );
 
 
+        switch (holder.getItemViewType()){
+            case 0:
+                break;
+            case 1:
+                break;
+        }
         if(position < listTask.getUncheckedTasks().size()) {
             holder.editTextListener.updatePosition(holder.getAdapterPosition());
             holder.editText.setText(listTask.getUncheckedTasks().get(position));

@@ -10,6 +10,7 @@
                 android:icon="@drawable/note_multiple"
                 android:title="Заметки" />
             <item
+                android:textStyle="bold"
                 android:id="@+id/archive"
                 android:icon="@drawable/archive"
                 android:title="Архив"/>
@@ -33,6 +34,7 @@
             android:title="Настройки" />
 
         <item
+            android:textStyle="bold"
             android:id="@+id/exit"
             android:icon="@drawable/exit_to_app"
             android:title="Exit" />

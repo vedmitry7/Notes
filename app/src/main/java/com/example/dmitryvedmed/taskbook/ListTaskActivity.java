@@ -3,7 +3,6 @@ package com.example.dmitryvedmed.taskbook;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -50,8 +49,8 @@ public class ListTaskActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         headList = (EditText) findViewById(R.id.listHeadEditText);
-        Typeface boldTypeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Bold.ttf");
-        headList.setTypeface(boldTypeFace);
+
+        headList.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
         headList.setText(listTask.getHeadLine());
 
         recyclerView = (RecyclerView) findViewById(R.id.list_activity_recycler_view);

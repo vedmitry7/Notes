@@ -1,7 +1,6 @@
 package com.example.dmitryvedmed.taskbook;
 
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -58,11 +57,10 @@ public class TaskActivity extends AppCompatActivity {
         head = (EditText) findViewById(R.id.headEditText);
         text = (EditText) findViewById(R.id.taskEditText);
 
-        Typeface typeFace = Typeface.createFromAsset(getAssets(), "font/Roboto-Regular.ttf");
-        Typeface boldTypeFace = Typeface.createFromAsset(getAssets(), "font/Roboto-Bold.ttf");
 
-        text.setTypeface(typeFace);
-        head.setTypeface(boldTypeFace);
+
+        text.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());
+        head.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
 
         toolbar.setNavigationIcon(R.drawable.ic_back);
 

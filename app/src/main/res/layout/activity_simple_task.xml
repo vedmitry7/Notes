@@ -42,30 +42,63 @@
             android:focusableInTouchMode="true"
             >
 
-            <EditText
+           <!-- <EditText
                 android:paddingTop="14dp"
                 android:paddingBottom="14dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
+                android:inputType="textCapWords"
                 android:textSize="17sp"
                 android:background="#FFFFFF"
                 android:ems="10"
                 android:id="@+id/headEditText"
                 android:textStyle="normal|bold"
                 android:hint="Заголовок"
-                android:focusableInTouchMode="true"/>
+                android:focusableInTouchMode="true"/>-->
 
-            <EditText
+            <com.example.dmitryvedmed.taskbook.RobotoFontEditText
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:textSize="17sp"
+                android:background="#FFFFFF"
+                android:ems="10"
+                android:id="@+id/headEditText"
+                android:textStyle="normal|bold"
+                android:hint="Заголовок"
+                android:focusableInTouchMode="true"
+                app:fonts="robotoBold"
+                android:alpha="0.5"
+
+                />
+
+ <!--           <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textMultiLine"
+                android:inputType="textCapWords"
                 android:textSize="17sp"
                 android:ems="10"
                 android:background="#FFFFFF"
                 android:id="@+id/taskEditText"
                 android:textStyle="normal"
-                android:hint="Текст" />
+                android:hint="Текст" />-->
+
+            <com.example.dmitryvedmed.taskbook.RobotoFontEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textCapWords"
+                android:textSize="17sp"
+                android:ems="10"
+                android:background="#FFFFFF"
+                android:id="@+id/taskEditText"
+                android:textStyle="normal"
+                android:hint="Текст"
+                app:fonts="robotoRegular"
+                android:alpha="0.5"
+                />
+
         </LinearLayout>
 
     </ScrollView>
