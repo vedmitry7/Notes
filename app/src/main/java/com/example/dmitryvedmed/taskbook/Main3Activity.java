@@ -46,8 +46,8 @@ public class Main3Activity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        counterTextView = (TextView) findViewById(R.id.counter_text);
-        counterTextView.setVisibility(View.GONE);
+        counterTextView = (TextView) findViewById(R.id.counter_text2);
+       // counterTextView.setVisibility(View.GONE);
 
 
        /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

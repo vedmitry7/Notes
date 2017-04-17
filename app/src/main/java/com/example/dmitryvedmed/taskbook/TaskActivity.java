@@ -2,6 +2,7 @@ package com.example.dmitryvedmed.taskbook;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,14 +16,24 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 public class TaskActivity extends AppCompatActivity {
 
     private int id;
-    private EditText head,text;
+    private EditText head, text;
     private SimpleTask task;
     private String currentKind;
     Color color;
     private Toolbar toolbar;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +42,9 @@ public class TaskActivity extends AppCompatActivity {
 
         initView();
         initTask();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void initView() {
@@ -41,8 +55,8 @@ public class TaskActivity extends AppCompatActivity {
         //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.taskColorGreen)));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        head = ( EditText) findViewById(R.id.headEditText);
-        text = ( EditText) findViewById(R.id.taskEditText);
+        head = (EditText) findViewById(R.id.headEditText);
+        text = (EditText) findViewById(R.id.taskEditText);
 
         Typeface typeFace = Typeface.createFromAsset(getAssets(), "font/Roboto-Regular.ttf");
         Typeface boldTypeFace = Typeface.createFromAsset(getAssets(), "font/Roboto-Bold.ttf");
@@ -53,11 +67,18 @@ public class TaskActivity extends AppCompatActivity {
         toolbar.setNavigationIcon(R.drawable.ic_back);
 
 
-
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("cek", "home selected");
+                finish();
+            }
+        });
     }
+
     private void initTask() {
         task = (SimpleTask) getIntent().getSerializableExtra("Task");
-        if(task == null){
+        if (task == null) {
             task = new SimpleTask();
             task.setId(-1);
             task.setPosition(getIntent().getIntExtra("position", 0));
@@ -65,16 +86,15 @@ public class TaskActivity extends AppCompatActivity {
             Log.d("TAG", "ID = " + task.getId());
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             head.requestFocus();
-        }
-        else {
+        } else {
             Log.d("TAG", "TAAAAAAASK EST'!!!!!!!!");
             Log.d("TAG", "ID = " + task.getId());
-            if(task.getColor() != 0)
+            if (task.getColor() != 0)
                 toolbar.setBackgroundColor(task.getColor());
         }
 
         currentKind = getIntent().getStringExtra("kind");
-        if(currentKind==null)
+        if (currentKind == null)
             currentKind = Constants.UNDEFINED;
 
         // Log.d("TAG", "Eah, I've get task - " + String.valueOf(id));
@@ -91,8 +111,8 @@ public class TaskActivity extends AppCompatActivity {
         head.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
-                        && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
+                if (keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
+                        && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
                     Log.d("TAG", "                                  ENTER!");
                     text.requestFocus();
                     return true;
@@ -104,7 +124,7 @@ public class TaskActivity extends AppCompatActivity {
         head.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction()==KeyEvent.ACTION_DOWN){
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
                     text.requestFocus();
                 }
                 return false;
@@ -129,8 +149,8 @@ public class TaskActivity extends AppCompatActivity {
         text.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_DEL && event.getAction()==KeyEvent.ACTION_DOWN){
-                    if(text.getText().toString().equals(""))
+                if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (text.getText().toString().equals(""))
                         head.requestFocus();
                 }
                 return false;
@@ -161,7 +181,7 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int color;
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
@@ -201,7 +221,7 @@ public class TaskActivity extends AppCompatActivity {
         String headline = String.valueOf(head.getText());
         String content = String.valueOf(text.getText());
 
-        Log.d("TAG", "SAVE  !!! " +  headline + " " + content);
+        Log.d("TAG", "SAVE  !!! " + headline + " " + content);
         Log.d("TAG", "SAVE id = " + id + "???");
 
         task.setHeadLine(headline);
@@ -209,14 +229,13 @@ public class TaskActivity extends AppCompatActivity {
 
 
         DBHelper5 dbHelper = new DBHelper5(this);
-        if(task.getId()==-1) {
-            if(head.getText().length()==0&&text.getText().length()==0)
+        if (task.getId() == -1) {
+            if (head.getText().length() == 0 && text.getText().length() == 0)
                 return;
             id = dbHelper.addTask(task);
             task.setId(id);
             Log.d("TAG", "NEW TASK ID = " + id);
-        }
-        else{
+        } else {
             Log.d("TAG", "UPDATE id = " + id);
             dbHelper.updateTask(task, currentKind);
         }
@@ -233,5 +252,41 @@ public class TaskActivity extends AppCompatActivity {
     protected void onPause() {
         saveTask();
         super.onPause();
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Task Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 }
