@@ -1,4 +1,4 @@
-package com.example.dmitryvedmed.taskbook;
+package com.example.dmitryvedmed.taskbook.widget;
 
 import android.content.Intent;
 import android.util.Log;

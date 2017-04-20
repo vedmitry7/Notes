@@ -79,7 +79,7 @@
         app:srcCompat="@drawable/ic_add"
        android:elevation="6dp"/>
 
-    <!--app:layout_behavior="com.example.dmitryvedmed.taskbook.FABScrollBehavior"-->
+    <!--app:layout_behavior="com.example.dmitryvedmed.taskbook.helper.FABScrollBehavior"-->
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabAddST"
         android:onClick="newSimpleTask"
