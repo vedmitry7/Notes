@@ -7,6 +7,12 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
+import com.example.dmitryvedmed.taskbook.logic.ListTask;
+import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
+import com.example.dmitryvedmed.taskbook.logic.SuperTask;
+import com.example.dmitryvedmed.taskbook.untils.Constants;
+
 import java.util.List;
 
 public class WidgetViewFactory implements RemoteViewsService.RemoteViewsFactory {

@@ -11,8 +11,14 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-public class NotifyTask extends BroadcastReceiver {
-    public NotifyTask() {
+import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
+import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
+import com.example.dmitryvedmed.taskbook.logic.SuperTask;
+import com.example.dmitryvedmed.taskbook.ui.ListTaskActivity;
+import com.example.dmitryvedmed.taskbook.ui.SimpleTaskActivity;
+
+public class NotifyTaskReceiver extends BroadcastReceiver {
+    public NotifyTaskReceiver() {
     }
 
     @Override

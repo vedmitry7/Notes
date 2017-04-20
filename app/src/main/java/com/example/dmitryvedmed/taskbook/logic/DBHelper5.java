@@ -1,4 +1,4 @@
-package com.example.dmitryvedmed.taskbook;
+package com.example.dmitryvedmed.taskbook.logic;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.example.dmitryvedmed.taskbook.untils.Constants;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,7 +18,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-class DBHelper5 extends SQLiteOpenHelper {
+public class DBHelper5 extends SQLiteOpenHelper {
 
     private static final String TABLE = "mytable5";
     private static final String KEY_ID = "id";

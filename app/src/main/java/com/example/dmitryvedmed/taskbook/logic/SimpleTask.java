@@ -1,4 +1,4 @@
-package com.example.dmitryvedmed.taskbook;
+package com.example.dmitryvedmed.taskbook.logic;
 
 
 import java.io.Serializable;

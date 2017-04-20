@@ -1,4 +1,4 @@
-package com.example.dmitryvedmed.taskbook;
+package com.example.dmitryvedmed.taskbook.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +17,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.helper.SimpleItemTouchHelperCallback;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
+import com.example.dmitryvedmed.taskbook.logic.SuperTask;
+import com.example.dmitryvedmed.taskbook.untils.Constants;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.dmitryvedmed.taskbook;
+package com.example.dmitryvedmed.taskbook.ui;
 
 
 import android.content.Context;
@@ -18,8 +18,13 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperAdapter;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperViewHolder;
+import com.example.dmitryvedmed.taskbook.logic.ListTask;
+import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
+import com.example.dmitryvedmed.taskbook.logic.SuperTask;
+import com.example.dmitryvedmed.taskbook.untils.Constants;
 
 import java.io.Serializable;
 import java.util.ArrayList;

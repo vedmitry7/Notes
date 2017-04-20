@@ -1,9 +1,11 @@
-package com.example.dmitryvedmed.taskbook;
+package com.example.dmitryvedmed.taskbook.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+
+import com.example.dmitryvedmed.taskbook.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

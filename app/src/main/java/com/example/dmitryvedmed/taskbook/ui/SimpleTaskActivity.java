@@ -1,4 +1,4 @@
-package com.example.dmitryvedmed.taskbook;
+package com.example.dmitryvedmed.taskbook.ui;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,6 +16,11 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
+import com.example.dmitryvedmed.taskbook.R;
+import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
+import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
+import com.example.dmitryvedmed.taskbook.untils.Constants;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;

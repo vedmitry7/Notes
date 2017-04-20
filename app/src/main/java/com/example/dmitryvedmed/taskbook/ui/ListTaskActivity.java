@@ -1,4 +1,4 @@
-package com.example.dmitryvedmed.taskbook;
+package com.example.dmitryvedmed.taskbook.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,7 +18,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
+import com.example.dmitryvedmed.taskbook.logic.ListTask;
+import com.example.dmitryvedmed.taskbook.R;
+import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
 import com.example.dmitryvedmed.taskbook.helper.ListTaskItemTouchHelperCallback;
+import com.example.dmitryvedmed.taskbook.untils.Constants;
 
 
 public class ListTaskActivity extends AppCompatActivity {

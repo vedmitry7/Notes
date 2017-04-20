@@ -30,7 +30,7 @@
        android:layout_height="match_parent"
        android:orientation="vertical"
        android:background="#FFFFFF"
-       tools:context="com.example.dmitryvedmed.taskbook.ListTaskActivity">
+       tools:context="com.example.dmitryvedmed.taskbook.ui.ListTaskActivity">
 
       <EditText
           android:paddingLeft="@dimen/activity_horizontal_margin"

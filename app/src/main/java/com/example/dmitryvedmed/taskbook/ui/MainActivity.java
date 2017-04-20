@@ -1,4 +1,4 @@
-package com.example.dmitryvedmed.taskbook;
+package com.example.dmitryvedmed.taskbook.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
+import com.example.dmitryvedmed.taskbook.logic.DBHelper4;
+import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.helper.SimpleItemTouchHelperCallback;
+import com.example.dmitryvedmed.taskbook.logic.SuperTask;
 
 import java.util.List;
 

@@ -9,20 +9,20 @@
         android:theme="@style/AppTheme"
         android:windowSoftInputMode="adjustPan">
         <activity
-            android:name=".Main3Activity"
+            android:name=".ui.Main3Activity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ListTaskActivity"
+            android:name=".ui.ListTaskActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
-            android:name=".SimpleTaskActivity"
+            android:name=".ui.SimpleTaskActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".ui.MainActivity" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".ui.SettingsActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".DrawerTestActivity"
+            android:name=".ui.DrawerTestActivity"
             android:label="Заметки"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -54,7 +54,7 @@
             android:value="@integer/google_play_services_version" />
 
         <receiver
-            android:name=".NotifyTask"
+            android:name=".NotifyTaskReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

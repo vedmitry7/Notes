@@ -1,4 +1,4 @@
-package com.example.dmitryvedmed.taskbook;
+package com.example.dmitryvedmed.taskbook.ui;
 
 
 import android.content.Context;
@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.dmitryvedmed.taskbook.R;
+import com.example.dmitryvedmed.taskbook.logic.ListTask;
 
 import java.io.Serializable;
 import java.util.List;
