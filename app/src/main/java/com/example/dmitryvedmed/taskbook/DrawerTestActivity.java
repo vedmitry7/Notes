@@ -161,8 +161,6 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-
     }
 
     @Override
@@ -399,6 +397,12 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                     String value = String.valueOf(input.getText());
                     // Do something with value!
                     NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                    navigationView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.d("TAG", "                   NavigationView CLICK");
+                        }
+                    });
                     Section section = new Section();
                     section.setName(value);
                     dbHelper.addSection(section);
@@ -489,7 +493,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
 
     public void newSimpleTask(View v){
         hideFabs();
-        Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SimpleTaskActivity.class);
         intent.putExtra("position", adapter.getTasks().size());
         startActivity(intent);
     }

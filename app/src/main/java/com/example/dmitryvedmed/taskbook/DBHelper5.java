@@ -245,6 +245,38 @@ class DBHelper5 extends SQLiteOpenHelper {
         return tasks;
     }
 
+    public SuperTask getTask(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT  * FROM " + TABLE + " WHERE id = '" + id + "'";
+        Cursor cursor = db.rawQuery(query, null);
+        SuperTask task = null;
+        if (cursor.moveToFirst()) {
+            byte[] bytes = cursor.getBlob(2);
+            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+            ObjectInput in = null;
+            try {
+                in = new ObjectInputStream(bis);
+                task = (SuperTask) in.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                } catch (IOException ex) {
+                    // ignore close exception
+                }
+            }
+
+            task.setId(id);
+
+        }
+        return task;
+    }
+
     public ArrayList<SuperTask> getTasks(String kind) {
         ArrayList<SuperTask> tasks = new ArrayList<>();
 

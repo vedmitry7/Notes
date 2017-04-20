@@ -2,6 +2,7 @@ package com.example.dmitryvedmed.taskbook;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -145,6 +146,11 @@ public class ListTaskActivity extends AppCompatActivity {
                 toolbar.setBackgroundColor(Color.WHITE);
                 listTask.setColor(0);
                 break;
+            case R.id.notify:
+                Intent intent = new Intent("TASK_NOTIFICATION");
+                saveTask();
+                intent.putExtra("id", listTask.getId());
+                sendBroadcast(intent);
         }
         return super.onOptionsItemSelected(item);
     }

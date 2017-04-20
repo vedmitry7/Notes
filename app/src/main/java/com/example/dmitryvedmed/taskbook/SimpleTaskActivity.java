@@ -1,5 +1,6 @@
 package com.example.dmitryvedmed.taskbook;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-public class TaskActivity extends AppCompatActivity {
+public class SimpleTaskActivity extends AppCompatActivity {
 
     private int id;
     private EditText head, text;
@@ -211,6 +212,11 @@ public class TaskActivity extends AppCompatActivity {
                 toolbar.setBackgroundColor(Color.WHITE);
                 task.setColor(0);
                 break;
+            case R.id.notify:
+                Intent intent = new Intent("TASK_NOTIFICATION");
+                saveTask();
+                intent.putExtra("id", task.getId());
+                sendBroadcast(intent);
         }
         return super.onOptionsItemSelected(item);
     }

@@ -213,7 +213,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
                 switch (MainRecyclerAdapter.this.getItemViewType(position)) {
                     case 0:
-                        Intent intent = new Intent(context, TaskActivity.class);
+                        Intent intent = new Intent(context, SimpleTaskActivity.class);
                         intent.putExtra("Task", (Serializable) tasks.get(position));
                         intent.putExtra("kind", activity.currentKind);
                         context.startActivity(intent);

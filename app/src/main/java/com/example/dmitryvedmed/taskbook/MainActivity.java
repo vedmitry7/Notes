@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void newSimpleTask(View v){
-        Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SimpleTaskActivity.class);
         startActivity(intent);
     }
 
