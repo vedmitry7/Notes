@@ -20,25 +20,28 @@ import java.util.ArrayList;
 
 public class DBHelper5 extends SQLiteOpenHelper {
 
-    private static final String TABLE = "mytable5";
+    private static final String TABLE = "mytable7";
     private static final String KEY_ID = "id";
     private static final String KEY_TASK = "task";
     private static final String KEY_KIND = "kind";
+    private static final String KEY_REMIND = "remind";
     private static final String[] COLUMNS = {KEY_ID, KEY_TASK};
 
     public DBHelper5(Context context) {
         // конструктор суперкласса
-        super(context, "myDB6", null, 1);
+        super(context, "myDB8", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d("TAG", "      DBHelper--- onCreate database ---");
         // создаем таблицу с полями
-        db.execSQL("create table mytable5 ("
+        db.execSQL("create table mytable7 ("
                 + "id integer primary key autoincrement,"
                 + "kind text,"
-                + "task blob" + ");");
+                + "task blob,"
+                + "remind integer default 0" + ");");
+
 
         db.execSQL("create table sections ("
                 + "id integer primary key autoincrement,"
@@ -322,6 +325,9 @@ public class DBHelper5 extends SQLiteOpenHelper {
                     continue;
                 }
                 task.setId(cursor.getInt(0));
+
+                Log.d("TAG", "     remind " + cursor.getInt(3));
+
                 // Add book to books
                 tasks.add(task);
             } while (cursor.moveToNext());
@@ -385,6 +391,6 @@ public class DBHelper5 extends SQLiteOpenHelper {
 
     public void clearDB(){
         SQLiteDatabase db = this.getWritableDatabase();
-        int clearCount = db.delete("mytable5", null, null);
+        int clearCount = db.delete("mytable7", null, null);
     }
 }

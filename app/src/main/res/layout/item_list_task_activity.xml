@@ -34,7 +34,7 @@
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textCapWords"
+        android:inputType="textMultiLine"
         android:textSize="16sp"
         android:ems="10"
         android:id="@+id/itemListEditText"

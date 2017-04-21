@@ -7,6 +7,8 @@ public class SuperTask implements Serializable {
     private int id;
     private int position;
     private int color;
+    private long reminderTime;
+    private boolean remind;
 
     public int getColor() {
         return color;
@@ -30,5 +32,21 @@ public class SuperTask implements Serializable {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public long getReminderTime() {
+        return reminderTime;
+    }
+
+    public void setReminderTime(long reminderTime) {
+        this.reminderTime = reminderTime;
+    }
+
+    public boolean isRemind() {
+        return remind;
+    }
+
+    public void setRemind(boolean remind) {
+        this.remind = remind;
     }
 }

@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -51,8 +52,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     boolean wasSelected;
     private Mode mode;
     private int selectedTasksCounter;
-    int color;
-    int x,y;
 
     public int getSelectedTasksCounter() {
         return selectedTasksCounter;
@@ -168,11 +167,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         private TextView stHeadLine, stContent, listHeadEditText, ltFirst, ltSecond;
         private LinearLayout layout;
         private CardView cardView;
+        private ImageView alarm;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             stHeadLine = (TextView) itemView.findViewById(headTextView);
             stContent = (TextView) itemView.findViewById(taskTextView);
+            alarm = (ImageView) itemView.findViewById(R.id.alarm_ic);
+            alarm.setVisibility(View.GONE);
+
 
             if(stContent!=null) {
                 stHeadLine.setTypeface(boldTypeFace);
@@ -340,6 +343,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.stContent.setVisibility(View.VISIBLE);
                     holder.stContent.setText(simpleTask.getContext());
                 }
+
+                if(tasks.get(position).isRemind())
+                    holder.alarm.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 listTask = (ListTask) tasks.get(position);
@@ -388,6 +394,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         context.startActivity(intent);
                     }
                 });*/
+                if(tasks.get(position).isRemind())
+                    holder.alarm.setVisibility(View.VISIBLE);
                 break;
         }
     }

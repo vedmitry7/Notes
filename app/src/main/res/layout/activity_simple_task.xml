@@ -61,7 +61,7 @@
                 android:paddingBottom="14dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords"
+                android:inputType="textMultiLine"
                 android:textSize="17sp"
                 android:background="#FFFFFF"
                 android:ems="10"
@@ -88,7 +88,7 @@
             <com.example.dmitryvedmed.taskbook.untils.RobotoFontEditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textCapWords"
+                android:inputType="textMultiLine"
                 android:textSize="17sp"
                 android:ems="10"
                 android:background="#FFFFFF"

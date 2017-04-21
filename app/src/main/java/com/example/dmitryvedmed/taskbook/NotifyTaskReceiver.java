@@ -80,4 +80,8 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
 
         //throw new UnsupportedOperationException("Not yet implemented");
     }
+
+    private void notifyq(){
+
+    }
 }

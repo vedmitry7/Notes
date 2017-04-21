@@ -1,5 +1,9 @@
 package com.example.dmitryvedmed.taskbook.ui;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -15,16 +19,20 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
-import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
+import com.example.dmitryvedmed.taskbook.NotifyTaskReceiver;
 import com.example.dmitryvedmed.taskbook.R;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
 import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
-import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
+import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.util.Calendar;
 
 public class SimpleTaskActivity extends AppCompatActivity {
 
@@ -218,12 +226,63 @@ public class SimpleTaskActivity extends AppCompatActivity {
                 task.setColor(0);
                 break;
             case R.id.notify:
-                Intent intent = new Intent("TASK_NOTIFICATION");
+          /*      Intent intent = new Intent("TASK_NOTIFICATION");
                 saveTask();
                 intent.putExtra("id", task.getId());
                 sendBroadcast(intent);
+                */
+
+                final Calendar calendar = Calendar.getInstance();
+                final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                final int minute = calendar.get(Calendar.MINUTE);
+
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int h, int m) {
+
+                        calendar.set(Calendar.HOUR_OF_DAY, h);
+                        calendar.set(Calendar.MINUTE, m);
+                        calendar.set(Calendar.SECOND, 0);
+
+                        Log.d("TAG", "TIME: " + h + ":" + m);
+
+                        long firstTime = calendar.getTimeInMillis();
+
+                        Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
+                        intent.setAction("TASK_NOTIFICATION");
+                        saveTask();
+                        intent.putExtra("id", task.getId());
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+5000, pendingIntent);
+
+                        //task.setRemind(true);
+                        task.setReminderTime(firstTime);
+                        saveTask();
+
+                       cancelNotification();
+
+                        //alarmManager1.cancel(pendingIntent);
+                    }
+                }, hour, minute, true);
+                timePickerDialog.show();
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void cancelNotification(){
+
+        Intent intent1 = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
+        intent1.setAction("TASK_NOTIFICATION");
+        //intent1.putExtra("id", task.getId());
+        PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), task.getId(), intent1, 0);
+        AlarmManager alarmManager1 = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager1.cancel(sender);
+
+        task.setRemind(false);
     }
 
     private void saveTask() {
