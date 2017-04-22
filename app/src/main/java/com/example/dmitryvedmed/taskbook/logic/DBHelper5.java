@@ -191,6 +191,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_TASK,  bytes);
         values.put(KEY_KIND, Constants.UNDEFINED);
+        values.put(KEY_REMIND,task.isRemind() ? 1 : 0);
         // 3. insert
         long id = db.insert(TABLE, null, values);
         // 4. close
@@ -282,6 +283,30 @@ public class DBHelper5 extends SQLiteOpenHelper {
         return task;
     }
 
+
+
+    public boolean isRemind(SuperTask t){
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT  * FROM " + TABLE + " WHERE id = '" + t.getId()+ "'";
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            Log.d("TAG", "      DBHelper - IS REMIND ID = " + t.getId() + " "  );
+
+            int i = cursor.getInt(3);
+            if(i==0){
+                Log.d("TAG", "      DBHelper - IS REMIND ID = " + t.getId() + " FALSE "  );
+                return false;
+            }
+            else {
+                Log.d("TAG", "      DBHelper - IS REMIND ID = " + t.getId() + " TRUE"  );
+                return true;
+            }
+        }
+        Log.d("TAG", "      DBHelper - IS REMIND NOT HAS THIS TASK " );
+        return false;
+    }
+
     public ArrayList<SuperTask> getTasks(String kind) {
         ArrayList<SuperTask> tasks = new ArrayList<>();
 
@@ -292,7 +317,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        Log.d("TAG", "      DBHelper - getAllTask"  );
+        Log.d("TAG", "      DBHelper - getTasks"  );
         // 3. go over each row, build book and add it to list
         SuperTask task = null;
         if (cursor.moveToFirst()) {
@@ -321,12 +346,13 @@ public class DBHelper5 extends SQLiteOpenHelper {
                 System.out.println("DB          ID - " + id);
                 System.out.println(task==null);
                 if(task==null) {
-                    Log.d("TAG", "      DBHelper    getAllTask, task with id = "  + cursor.getInt(0) + " - null");
+                    Log.d("TAG", "      DBHelper    getTasks, task with id = "  + cursor.getInt(0) + " - null");
                     continue;
                 }
                 task.setId(cursor.getInt(0));
 
-                Log.d("TAG", "     remind " + cursor.getInt(3));
+                //Log.d("TAG", "     remind " + cursor.getInt(3));
+                Log.d("TAG", "     remind " + task.isRemind() + " " + task.getPosition());
 
                 // Add book to books
                 tasks.add(task);
@@ -364,7 +390,9 @@ public class DBHelper5 extends SQLiteOpenHelper {
         // 2. create ContentValues to add key "column"/value
         ContentValues values = new ContentValues(); // get title
         values.put(KEY_TASK, bytes); // get author
+        if(kind!=null)
         values.put(KEY_KIND, kind);
+        values.put(KEY_REMIND,task.isRemind() ? 1 : 0);
 
         // 3. updating row
         int i = db.update(TABLE, //table
@@ -375,8 +403,67 @@ public class DBHelper5 extends SQLiteOpenHelper {
         // 4. close
         db.close();
         Log.d("TAG", "      DBHelper Update " + task.toString());
+        Log.d("TAG", "      DBHelper Update remaind " + task.isRemind());
         return i;
     }
+
+    public ArrayList<SuperTask> getNotificationTasks() {
+        ArrayList<SuperTask> tasks = new ArrayList<>();
+
+        // 1. build the query
+        String query = "SELECT  * FROM " + TABLE + " WHERE remind = '" + 1 + "'";
+
+        // 2. get reference to writable DB
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        Log.d("TAG", "      DBHelper - getTasks"  );
+        // 3. go over each row, build book and add it to list
+        SuperTask task = null;
+        if (cursor.moveToFirst()) {
+            do {
+                byte[] bytes = cursor.getBlob(2);
+                ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+                ObjectInput in = null;
+                try {
+                    in = new ObjectInputStream(bis);
+                    task = (SuperTask) in.readObject();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (in != null) {
+                            in.close();
+                        }
+                    } catch (IOException ex) {
+                        // ignore close exception
+                    }
+                }
+
+                int id = cursor.getInt(0);
+                System.out.println("DB          ID - " + id);
+                System.out.println(task==null);
+                if(task==null) {
+                    Log.d("TAG", "      DBHelper    getTasks, task with id = "  + cursor.getInt(0) + " - null");
+                    continue;
+                }
+                task.setId(cursor.getInt(0));
+
+                //Log.d("TAG", "     remind " + cursor.getInt(3));
+                Log.d("TAG", "     remind " + task.isRemind() + " " + task.getPosition());
+
+                // Add book to books
+                tasks.add(task);
+            } while (cursor.moveToNext());
+        }
+
+        Log.d("TAG", "      DBHelper    getAllTask"  + tasks.toString());
+
+        return tasks;
+    }
+
 
     public void deleteBook(SuperTask task) {
 

@@ -10,6 +10,10 @@
                 android:icon="@drawable/note_multiple"
                 android:title="Заметки" />
             <item
+                android:id="@+id/notifications"
+                android:icon="@drawable/alarm"
+                android:title="Напоминания" />
+            <item
                 android:textStyle="bold"
                 android:id="@+id/archive"
                 android:icon="@drawable/archive"
@@ -24,7 +28,7 @@
             android:id="@+id/add"
             android:icon="@drawable/ic_add"
             android:title="Добавить раздел"
-            android:showAsAction="never"/>
+            />
 
 
     <group android:checkableBehavior="none">

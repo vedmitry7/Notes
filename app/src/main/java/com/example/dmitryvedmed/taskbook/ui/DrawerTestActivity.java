@@ -378,6 +378,12 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 Log.d("TAG", "                      CCCCCLLLLLLLLIIIIIIRRRRRRRRR ++++++");
                 fab.hide();
                 break;
+            case R.id.notifications:
+                mainToolbarText.setText("Напоминания");
+                //currentKind = Constants.NOTIFICATIONS;
+                values = dbHelper.getNotificationTasks();
+                adapter.dataChanged(values);
+                break;
 
             case R.id.settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
@@ -529,6 +535,8 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         // save because positions could change
         for (SuperTask s:values
                 ) {
+            if(!dbHelper.isRemind(s))
+                s.setRemind(false);
             dbHelper.updateTask(s, currentKind);
         }
         super.onPause();

@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
+import com.example.dmitryvedmed.taskbook.logic.ListTask;
 import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
 import com.example.dmitryvedmed.taskbook.logic.SuperTask;
 import com.example.dmitryvedmed.taskbook.ui.ListTaskActivity;
@@ -38,46 +39,79 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
         if(superTask==null)
             return;
         Log.d("TAG", "ST != null" );
-        SimpleTask task = (SimpleTask) superTask;
         Intent notificationIntent;
 
-        if(superTask instanceof SimpleTask)
+        if(superTask instanceof SimpleTask){
+            SimpleTask task = (SimpleTask) superTask;
+            task.setRemind(false);
             notificationIntent = new Intent(context, SimpleTaskActivity.class);
-        else
+            notificationIntent.putExtra("Task", task);
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            PendingIntent contentIntent = PendingIntent.getActivity(context,
+                    0, notificationIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT);
+
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            Resources res = context.getResources();
+
+            builder.setContentIntent(contentIntent)
+                    .setSmallIcon(R.drawable.note_multiple_outline)
+                    // большая картинка
+                    .setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.note_multiple_outline))
+                    .setTicker(String.valueOf(task.getId()))
+                    .setWhen(System.currentTimeMillis())
+                    .setAutoCancel(true)
+                    .addAction(R.drawable.note_multiple_outline, "Открыть", contentIntent)
+                    .setContentTitle(task.getHeadLine())
+                    .setContentText(task.getContext()); // Текст уведомления
+
+            // Notification notification = builder.getNotification(); // до API 16
+
+            Notification notification = builder.build();
+
+            notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
+
+            NotificationManager notificationManager = (NotificationManager) context
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(id, notification);
+            dbHelper5.updateTask(task, null);
+        }
+        else{
             notificationIntent = new Intent(context, ListTaskActivity.class);
+            ListTask task = (ListTask) superTask;
+            task.setRemind(false);
+            notificationIntent.putExtra("ListTask", task);
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            PendingIntent contentIntent = PendingIntent.getActivity(context,
+                    0, notificationIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT);
 
 
-        notificationIntent.putExtra("Task", task);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent contentIntent = PendingIntent.getActivity(context,
-                0, notificationIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            Resources res = context.getResources();
 
+            builder.setContentIntent(contentIntent)
+                    .setSmallIcon(R.drawable.note_multiple_outline)
+                    // большая картинка
+                    .setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.note_multiple_outline))
+                    .setTicker(String.valueOf(task.getId()))
+                    .setWhen(System.currentTimeMillis())
+                    .setAutoCancel(true)
+                    .addAction(R.drawable.note_multiple_outline, "Открыть", contentIntent)
+                    .setContentTitle(task.getHeadLine())
+                    .setContentText(task.getUncheckedTask(0));
+            // Notification notification = builder.getNotification(); // до API 16
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        Resources res = context.getResources();
+            Notification notification = builder.build();
 
-        builder.setContentIntent(contentIntent)
-                .setSmallIcon(R.drawable.note_multiple_outline)
-                // большая картинка
-                .setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.note_multiple_outline))
-                .setTicker(String.valueOf(task.getId()))
-                .setWhen(System.currentTimeMillis())
-                .setAutoCancel(true)
-                .addAction(R.drawable.note_multiple_outline, "Открыть", contentIntent)
-                .setContentTitle(task.getHeadLine())
-                .setContentText(task.getContext()); // Текст уведомления
+            notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
 
-        // Notification notification = builder.getNotification(); // до API 16
-
-        Notification notification = builder.build();
-
-        notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
-
-        NotificationManager notificationManager = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(id, notification);
-
+            NotificationManager notificationManager = (NotificationManager) context
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(id, notification);
+            dbHelper5.updateTask(task, null);
+        }
         //throw new UnsupportedOperationException("Not yet implemented");
     }
 

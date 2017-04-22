@@ -42,10 +42,7 @@ public class SimpleTaskActivity extends AppCompatActivity {
     private String currentKind;
     Color color;
     private Toolbar toolbar;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+
     private GoogleApiClient client;
 
     @Override
@@ -251,23 +248,23 @@ public class SimpleTaskActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
                         intent.setAction("TASK_NOTIFICATION");
-                        saveTask();
+                        saveTask(true);
                         intent.putExtra("id", task.getId());
                         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
                         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+5000, pendingIntent);
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, firstTime, pendingIntent);
 
-                        //task.setRemind(true);
+                        task.setRemind(true);
                         task.setReminderTime(firstTime);
-                        saveTask();
+                        saveTask(false);
 
-                       cancelNotification();
+                       //cancelNotification();
 
                         //alarmManager1.cancel(pendingIntent);
                     }
                 }, hour, minute, true);
                 timePickerDialog.show();
-
+                    break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -285,7 +282,7 @@ public class SimpleTaskActivity extends AppCompatActivity {
         task.setRemind(false);
     }
 
-    private void saveTask() {
+    private void saveTask(boolean check) {
         String headline = String.valueOf(head.getText());
         String content = String.valueOf(text.getText());
 
@@ -305,6 +302,9 @@ public class SimpleTaskActivity extends AppCompatActivity {
             Log.d("TAG", "NEW TASK ID = " + id);
         } else {
             Log.d("TAG", "UPDATE id = " + id);
+            if(check)
+                if(!dbHelper.isRemind(task))
+                    task.setRemind(false);
             dbHelper.updateTask(task, currentKind);
         }
 
@@ -318,7 +318,7 @@ public class SimpleTaskActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        saveTask();
+        saveTask(true);
         super.onPause();
     }
 

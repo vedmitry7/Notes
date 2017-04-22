@@ -1,6 +1,9 @@
 package com.example.dmitryvedmed.taskbook.ui;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,7 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
+import com.example.dmitryvedmed.taskbook.NotifyTaskReceiver;
 import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
 import com.example.dmitryvedmed.taskbook.logic.ListTask;
 import com.example.dmitryvedmed.taskbook.R;
@@ -25,10 +30,12 @@ import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
 import com.example.dmitryvedmed.taskbook.helper.ListTaskItemTouchHelperCallback;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 
+import java.util.Calendar;
+
 
 public class ListTaskActivity extends AppCompatActivity {
 
-    private ListTask listTask;
+    private ListTask task;
     public static RecyclerView recyclerView;
     private ListTaskRecyclerAdapter listTaskRecyclerAdapter;
     private Context context;
@@ -57,11 +64,11 @@ public class ListTaskActivity extends AppCompatActivity {
         headList = (EditText) findViewById(R.id.listHeadEditText);
 
         headList.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
-        headList.setText(listTask.getHeadLine());
+        headList.setText(task.getHeadLine());
 
         recyclerView = (RecyclerView) findViewById(R.id.list_activity_recycler_view);
 
-        listTaskRecyclerAdapter = new ListTaskRecyclerAdapter(listTask, ListTaskActivity.this);
+        listTaskRecyclerAdapter = new ListTaskRecyclerAdapter(task, ListTaskActivity.this);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
@@ -74,8 +81,8 @@ public class ListTaskActivity extends AppCompatActivity {
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
-        if(listTask.getColor() != 0)
-            toolbar.setBackgroundColor(listTask.getColor());
+        if(task.getColor() != 0)
+            toolbar.setBackgroundColor(task.getColor());
 
         setItemMovement(false);
 
@@ -92,17 +99,17 @@ public class ListTaskActivity extends AppCompatActivity {
     }
 
     private void initTask() {
-        listTask = (ListTask) getIntent().getSerializableExtra("ListTask");
-        if(listTask == null) {
+        task = (ListTask) getIntent().getSerializableExtra("ListTask");
+        if(task == null) {
             System.out.println("LIST TASK = NULL!");
-            listTask = new ListTask();
-            listTask.setId(-1);
-            listTask.setPosition(getIntent().getIntExtra("position", 0));
+            task = new ListTask();
+            task.setId(-1);
+            task.setPosition(getIntent().getIntExtra("position", 0));
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
         else{
-            System.out.println("LIST TASK != NULL, id = " + listTask.getHeadLine());
-            Log.d("TAG", "COLOR - " + listTask.getColor());
+            System.out.println("LIST TASK != NULL, id = " + task.getHeadLine());
+            Log.d("TAG", "COLOR - " + task.getColor());
         }
         currentKind = getIntent().getStringExtra("kind");
         if(currentKind==null)
@@ -126,36 +133,74 @@ public class ListTaskActivity extends AppCompatActivity {
             case R.id.green:
                 color = ContextCompat.getColor(this, R.color.taskColorGreen);
                 toolbar.setBackgroundColor(color);
-                listTask.setColor(color);
+                task.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.red:
                 color = ContextCompat.getColor(this, R.color.taskColorRed);
                 toolbar.setBackgroundColor(color);
-                listTask.setColor(color);
+                task.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.blue:
                 color = ContextCompat.getColor(this, R.color.taskColorBlue);
                 toolbar.setBackgroundColor(color);
-                listTask.setColor(color);
+                task.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.yellow:
                 color = ContextCompat.getColor(this, R.color.taskColorYellow);
                 toolbar.setBackgroundColor(color);
-                listTask.setColor(color);
+                task.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.white:
                 toolbar.setBackgroundColor(Color.WHITE);
-                listTask.setColor(0);
+                task.setColor(0);
                 break;
             case R.id.notify:
-                Intent intent = new Intent("TASK_NOTIFICATION");
+          /*      Intent intent = new Intent("TASK_NOTIFICATION");
                 saveTask();
-                intent.putExtra("id", listTask.getId());
+                intent.putExtra("id", task.getId());
                 sendBroadcast(intent);
+                */
+
+                final Calendar calendar = Calendar.getInstance();
+                final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                final int minute = calendar.get(Calendar.MINUTE);
+
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int h, int m) {
+
+                        calendar.set(Calendar.HOUR_OF_DAY, h);
+                        calendar.set(Calendar.MINUTE, m);
+                        calendar.set(Calendar.SECOND, 0);
+
+                        Log.d("TAG", "TIME: " + h + ":" + m);
+
+                        long firstTime = calendar.getTimeInMillis();
+
+                        Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
+                        intent.setAction("TASK_NOTIFICATION");
+                        saveTask(true);
+                        intent.putExtra("id", task.getId());
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, firstTime, pendingIntent);
+
+                        task.setRemind(true);
+                        task.setReminderTime(firstTime);
+                        saveTask(false);
+
+                       // cancelNotification();
+
+                        //alarmManager1.cancel(pendingIntent);
+                    }
+                }, hour, minute, true);
+                timePickerDialog.show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -167,24 +212,33 @@ public class ListTaskActivity extends AppCompatActivity {
     }
 
 
+    private void cancelNotification(){
 
-    private void saveTask() {
-        listTask = listTaskRecyclerAdapter.getListTask();
-        System.out.println("UN");
-        for (String s:listTask.getUncheckedTasks()
-                ) {
-            System.out.println(s);
-        }
-        System.out.println("CHECK");
-        for (String s:listTask.getCheckedTasks()
-                ) {
-            System.out.println(s);
-        }
-        listTask.setHeadLine(headList.getText().toString());
+        Intent intent1 = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
+        intent1.setAction("TASK_NOTIFICATION");
+        //intent1.putExtra("id", task.getId());
+        PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), task.getId(), intent1, 0);
+        AlarmManager alarmManager1 = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager1.cancel(sender);
+
+        task.setRemind(false);
+    }
+
+    private void saveTask(boolean check) {
+        task = listTaskRecyclerAdapter.getListTask();
+
+        task.setHeadLine(headList.getText().toString());
+
         DBHelper5 dbHelper = new DBHelper5(this);
-        if(listTask.getId() == -1)
-            listTask.setId(dbHelper.addTask(listTask));
-        else dbHelper.updateTask(listTask, currentKind);
+        if(task.getId() == -1){
+            task.setId(dbHelper.addTask(task));
+        }
+        else {
+            if(check)
+                if(!dbHelper.isRemind(task))
+                    task.setRemind(false);
+            dbHelper.updateTask(task, currentKind);
+        }
     }
 
     public void setItemMovement(boolean b){
@@ -194,7 +248,7 @@ public class ListTaskActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-       saveTask();
+       saveTask(true);
         super.onPause();
     }
 }

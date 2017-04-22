@@ -1,6 +1,8 @@
 package com.example.dmitryvedmed.taskbook.ui;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.dmitryvedmed.taskbook.NotifyTaskReceiver;
 import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperAdapter;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperViewHolder;
@@ -89,11 +92,24 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mode = Mode.NORMAL;
     }
 
+    private void cancelNotification(int requestCode){
+
+        Intent intent = new Intent(context, NotifyTaskReceiver.class);
+        intent.setAction("TASK_NOTIFICATION");
+        //intent1.putExtra("id", task.getId());
+        PendingIntent sender = PendingIntent.getBroadcast(context, requestCode, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(sender);
+
+    }
+
     @Override
     public void onItemDismiss(int position) {
         Log.d("TAG", "       Adapter --- onItemDismiss, position = " + position);
         tasks.get(position).setPosition(0);                 //?
+        tasks.get(position).setRemind(false);                 //?
         activity.dbHelper.updateTask(tasks.get(position), Constants.DELETED);
+        cancelNotification(tasks.get(position).getId());
         tasks.remove(position);
         notifyItemRemoved(position);
         setRightPosition();
@@ -344,8 +360,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.stContent.setText(simpleTask.getContext());
                 }
 
-                if(tasks.get(position).isRemind())
+                if(tasks.get(position).isRemind()){
+                    Log.d("TAG", "       Adapter --- onBindViewHolder TASK " + position + "REMIND IS TRUE" );
                     holder.alarm.setVisibility(View.VISIBLE);
+                } else
+                    holder.alarm.setVisibility(View.GONE);
                 break;
             case 1:
                 listTask = (ListTask) tasks.get(position);
@@ -394,8 +413,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         context.startActivity(intent);
                     }
                 });*/
-                if(tasks.get(position).isRemind())
+                if(tasks.get(position).isRemind()){
                     holder.alarm.setVisibility(View.VISIBLE);
+
+                    Log.d("TAG", "       Adapter --- onBindViewHolder TASK " + position + "REMIND IS TRUE" );
+
+                } else
+                    holder.alarm.setVisibility(View.GONE);
                 break;
         }
     }
