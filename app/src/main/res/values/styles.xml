@@ -38,4 +38,9 @@
         <item name="android:background">@android:color/darker_gray</item>
     </style>
 
+    <style name="Theme.MyDialog" parent="@style/Theme.AppCompat.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
 </resources>

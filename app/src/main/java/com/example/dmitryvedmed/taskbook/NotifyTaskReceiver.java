@@ -15,8 +15,8 @@ import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
 import com.example.dmitryvedmed.taskbook.logic.ListTask;
 import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
 import com.example.dmitryvedmed.taskbook.logic.SuperTask;
+import com.example.dmitryvedmed.taskbook.ui.DialogActivity;
 import com.example.dmitryvedmed.taskbook.ui.ListTaskActivity;
-import com.example.dmitryvedmed.taskbook.ui.SimpleTaskActivity;
 
 public class NotifyTaskReceiver extends BroadcastReceiver {
     public NotifyTaskReceiver() {
@@ -44,7 +44,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
         if(superTask instanceof SimpleTask){
             SimpleTask task = (SimpleTask) superTask;
             task.setRemind(false);
-            notificationIntent = new Intent(context, SimpleTaskActivity.class);
+            notificationIntent = new Intent(context, DialogActivity.class);
             notificationIntent.putExtra("Task", task);
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent contentIntent = PendingIntent.getActivity(context,
