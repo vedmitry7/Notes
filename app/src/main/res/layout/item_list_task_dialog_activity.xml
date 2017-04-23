@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_list_task_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="#FFFFFF"
+    android:paddingRight="16dp"
+    >
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBoxDialog"
+        android:layout_gravity="top|left"
+        android:button="@drawable/checkbox_selector"
+        />
+
+    <TextView
+        android:id="@+id/text_item_list_task_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:focusable="true"
+        android:textSize="16sp"
+        android:ems="10"
+        android:textStyle="normal"
+        android:hint="Пункт списка"
+        android:focusableInTouchMode="true"
+        android:layout_gravity="center"
+        android:layout_toRightOf="@id/checkBoxDialog"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

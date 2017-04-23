@@ -8,7 +8,7 @@
         android:textColor="#000"
         android:layout_height="16dp"
         android:layout_width="16dp"
-        android:id="@+id/checkBox"
+        android:id="@+id/checkBoxDialog"
         android:background="@drawable/image_button_selector"
         />
 

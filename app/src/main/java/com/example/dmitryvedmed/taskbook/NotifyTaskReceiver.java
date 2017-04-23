@@ -15,8 +15,8 @@ import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
 import com.example.dmitryvedmed.taskbook.logic.ListTask;
 import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
 import com.example.dmitryvedmed.taskbook.logic.SuperTask;
-import com.example.dmitryvedmed.taskbook.ui.DialogActivity;
-import com.example.dmitryvedmed.taskbook.ui.ListTaskActivity;
+import com.example.dmitryvedmed.taskbook.ui.ListTaskDialogActivity;
+import com.example.dmitryvedmed.taskbook.ui.SimpleTaskDialogActivity;
 
 public class NotifyTaskReceiver extends BroadcastReceiver {
     public NotifyTaskReceiver() {
@@ -44,7 +44,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
         if(superTask instanceof SimpleTask){
             SimpleTask task = (SimpleTask) superTask;
             task.setRemind(false);
-            notificationIntent = new Intent(context, DialogActivity.class);
+            notificationIntent = new Intent(context, SimpleTaskDialogActivity.class);
             notificationIntent.putExtra("Task", task);
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent contentIntent = PendingIntent.getActivity(context,
@@ -61,7 +61,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
                     .setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.note_multiple_outline))
                     .setTicker(String.valueOf(task.getId()))
                     .setWhen(System.currentTimeMillis())
-                    .setAutoCancel(true)
+                    .setAutoCancel(false)
                     .addAction(R.drawable.note_multiple_outline, "Открыть", contentIntent)
                     .setContentTitle(task.getHeadLine())
                     .setContentText(task.getContext()); // Текст уведомления
@@ -78,7 +78,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             dbHelper5.updateTask(task, null);
         }
         else{
-            notificationIntent = new Intent(context, ListTaskActivity.class);
+            notificationIntent = new Intent(context, ListTaskDialogActivity.class);
             ListTask task = (ListTask) superTask;
             task.setRemind(false);
             notificationIntent.putExtra("ListTask", task);
@@ -97,7 +97,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
                     .setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.note_multiple_outline))
                     .setTicker(String.valueOf(task.getId()))
                     .setWhen(System.currentTimeMillis())
-                    .setAutoCancel(true)
+                    .setAutoCancel(false)
                     .addAction(R.drawable.note_multiple_outline, "Открыть", contentIntent)
                     .setContentTitle(task.getHeadLine())
                     .setContentText(task.getUncheckedTask(0));

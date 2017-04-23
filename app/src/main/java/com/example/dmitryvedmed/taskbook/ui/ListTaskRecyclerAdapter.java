@@ -20,13 +20,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dmitryvedmed.taskbook.R;
-import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperAdapter;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperViewHolder;
 import com.example.dmitryvedmed.taskbook.logic.ListTask;
+import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 
 public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecyclerAdapter.RecyclerViewHolder>
@@ -73,11 +76,12 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             ItemTouchHelperViewHolder, View.OnTouchListener {
         private EditText editText;
         private EditTextListener editTextListener;
+        private CheckBoxListener checkBoxListener;
         private Button button;
         private ImageView imageView;
-        private CheckBoxListener checkBoxListener;
         private CheckBox checkBox;
         private TextView newPoint;
+        private View deliver;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
@@ -87,15 +91,23 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             editTextListener = new EditTextListener();
             checkBoxListener = new CheckBoxListener();
 
+            deliver =  itemView.findViewById(R.id.deliver_rec);
+            if(deliver == null)
+                Log.d("TAG", "      DELIVER NUUUUUL" );
+            else{
+                Log.d("TAG", "      DELIVER NOT NUUUUUL" );
+
+
+            }
+
+
+
             switch (getItemViewType()){
                 case 0:
-
-
                     break;
                 case 1:
                     break;
             }
-
 
             editText = (EditText) itemView.findViewById(R.id.itemListEditText);
             if(editText!=null) {
@@ -204,38 +216,33 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
         String type = holder.getItemViewType() == 0 ? "editText":"button";
         Log.d("TAG", "POSITION -" + position + "," +" TYPE -" +  type );
 
-
         switch (holder.getItemViewType()){
             case 0:
-                break;
-            case 1:
-                break;
-        }
-        if(position < listTask.getUncheckedTasks().size()) {
-            holder.editTextListener.updatePosition(holder.getAdapterPosition());
-            holder.editText.setText(listTask.getUncheckedTasks().get(position));
-            holder.checkBoxListener.updatePosition(position);
+                if(position < listTask.getUncheckedTasks().size()) {
+                    holder.editTextListener.updatePosition(holder.getAdapterPosition());
+                    holder.editText.setText(listTask.getUncheckedTasks().get(position));
+                    holder.checkBoxListener.updatePosition(position);
 
-            onBind = true;
-            holder.checkBox.setChecked(false);
-            onBind = false;
+                    onBind = true;
+                    holder.checkBox.setChecked(false);
+                    onBind = false;
 
-            holder.editText.setPaintFlags(Paint.ANTI_ALIAS_FLAG);
-            holder.editText.setAlpha(1f);
+                    holder.editText.setPaintFlags(Paint.ANTI_ALIAS_FLAG);
+                    holder.editText.setAlpha(1f);
 
-            holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean b) {
-                    Log.d("TAG", "ET " + position + " FOCUS " + b );
-                    if(b) {
-                        holder.button.setVisibility(View.VISIBLE);
-                        holder.editText.setSelection(holder.editText.getText().length());
-                    }
-                    else {
-                        holder.button.setVisibility(View.INVISIBLE);
-                    }
-                }
-            });
+                    holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View view, boolean b) {
+                            Log.d("TAG", "ET " + position + " FOCUS " + b );
+                            if(b) {
+                                holder.button.setVisibility(VISIBLE);
+                                holder.editText.setSelection(holder.editText.getText().length());
+                            }
+                            else {
+                                holder.button.setVisibility(View.INVISIBLE);
+                            }
+                        }
+                    });
 
         /*    if(position==listTask.getUncheckedTasks().size()-1) {
 
@@ -246,96 +253,114 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                 holder.button.setVisibility(View.INVISIBLE);
             }
 */
-            holder.button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listTask.getUncheckedTasks().remove(position);
-                    editTexts.remove(position);
-                    Log.d("TAG", "Edit texts remove = " + position );
-                    Log.d("TAG", "Edit texts size = " + editTexts.size() );
-                    update();
-                    if(position==0)
-                        requestFocusTo(position);
-                    else
-                        requestFocusTo(position-1);
+                    holder.button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            listTask.getUncheckedTasks().remove(position);
+                            editTexts.remove(position);
+                            Log.d("TAG", "Edit texts remove = " + position );
+                            Log.d("TAG", "Edit texts size = " + editTexts.size() );
+                            update();
+                            if(position==0)
+                                requestFocusTo(position);
+                            else
+                                requestFocusTo(position-1);
 
-                    //notifyItemChanged(position);
-                }
-            });
+                            //notifyItemChanged(position);
+                        }
+                    });
 
-            if(editTexts.size()==position) {
-                editTexts.add(position, holder.editText);
-                Log.d("TAG", "Edit texts add = " + position );
-            }
-            else {
-                editTexts.remove(position);
-                editTexts.add(position,holder.editText);
-                Log.d("TAG", "Edit texts remove and add = " + position );
-            }
-            Log.d("TAG", "Edit texts size = " + editTexts.size() );
-
-        }
-        if(holder.editText!=null)
-            holder.editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                    if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
-                            && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
-                        Log.d("TAG", "click ENTER Add " + position );
-                        listTask.getUncheckedTasks().add(position + 1, "");
-                        update();
-                        //notifyItemChanged(position+1);
-                        requestFocusTo(position+1);
-                        return true;
+                    if(editTexts.size()==position) {
+                        editTexts.add(position, holder.editText);
+                        Log.d("TAG", "Edit texts add = " + position );
                     }
-                    return false;
-                }
-            });
-
-        if(position > listTask.getUncheckedTasks().size())
-        {
-            holder.editTextListener.updatePosition(holder.getAdapterPosition());
-            String s = (listTask.getCheckedTasks().get(position - (listTask.getUncheckedTasks().size()+1)));
-            holder.editText.setText(s);
-            holder.editText.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.editText.setAlpha(0.5f);
-            holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean b) {
-                    if(b)
-                        holder.button.setVisibility(View.VISIBLE);
-                    else
-                        holder.button.setVisibility(View.INVISIBLE);
-                }
-            });
-            holder.button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    System.out.println(position + " BUTTON          CLICK");
-                    listTask.getCheckedTasks().remove(position - (listTask.getUncheckedTasks().size()+1));
-                    //update();
-                    notifyItemChanged(position);
-
+                    else {
+                        editTexts.remove(position);
+                        editTexts.add(position,holder.editText);
+                        Log.d("TAG", "Edit texts remove and add = " + position );
+                    }
+                    Log.d("TAG", "Edit texts size = " + editTexts.size() );
 
                 }
-            });
-            holder.checkBoxListener.updatePosition(position);
-            onBind = true;
-            holder.checkBox.setChecked(true);
-            onBind = false;
-            System.out.println(position + " - " + listTask.getCheckedTasks().get(position - (listTask.getUncheckedTasks().size()+1)));
-            if(editTexts.size()==position) {
-                editTexts.add(position, holder.editText);
-                Log.d("TAG", "Edit texts add = " + position );
-            }
-            else {
-                editTexts.remove(position);
-                editTexts.add(position,holder.editText);
-                Log.d("TAG", "Edit texts remove and add = " + position );
-            }
+                if(holder.editText!=null)
+                    holder.editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+                        @Override
+                        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                            if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
+                                    && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
+                                Log.d("TAG", "click ENTER Add " + position );
+                                listTask.getUncheckedTasks().add(position + 1, "");
+                                update();
+                                //notifyItemChanged(position+1);
+                                requestFocusTo(position+1);
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
 
-            Log.d("TAG", "Edit texts size = " + editTexts.size() );
+                if(position > listTask.getUncheckedTasks().size())
+                {
+                    holder.editTextListener.updatePosition(holder.getAdapterPosition());
+                    String s = (listTask.getCheckedTasks().get(position - (listTask.getUncheckedTasks().size()+1)));
+                    holder.editText.setText(s);
+                    holder.editText.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                    holder.editText.setAlpha(0.5f);
+                    holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View view, boolean b) {
+                            if(b)
+                                holder.button.setVisibility(VISIBLE);
+                            else
+                                holder.button.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                    holder.button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            System.out.println(position + " BUTTON          CLICK");
+                            listTask.getCheckedTasks().remove(position - (listTask.getUncheckedTasks().size()+1));
+                            //update();
+                            notifyItemChanged(position);
+                        }
+                    });
+                    holder.checkBoxListener.updatePosition(position);
+                    onBind = true;
+                    holder.checkBox.setChecked(true);
+                    onBind = false;
+                    System.out.println(position + " - " + listTask.getCheckedTasks().get(position - (listTask.getUncheckedTasks().size()+1)));
+                    if(position>editTexts.size())
+                        return;
+                    if(editTexts.size() == position) {
+                        editTexts.add(position, holder.editText);
+                        Log.d("TAG", "Edit texts add = " + position );
+                    }
+                    else {
+                        editTexts.remove(position);
+                        editTexts.add(position, holder.editText);
+                        Log.d("TAG", "Edit texts remove and add = " + position );
+                    }
+
+                    Log.d("TAG", "Edit texts size = " + editTexts.size() );
+                }
+
+
+                break;
+            case 1:
+                Log.d("TAG", "BUTTTON AND DELIVER" );
+                if(listTask.getCheckedTasks().size()==0){
+                    holder.deliver.setVisibility(GONE);
+                    Log.d("TAG", "UNC = 0" );
+                    Log.d("TAG", "VISIBLE GONE" );
+                }
+                else{
+                    holder.deliver.setVisibility(VISIBLE);
+                    Log.d("TAG", "UNC != 0" );
+                    Log.d("TAG", "VISIBLE TRUE" );
+                }
+                break;
         }
+
     }
 
     public void requestFocusLast(){

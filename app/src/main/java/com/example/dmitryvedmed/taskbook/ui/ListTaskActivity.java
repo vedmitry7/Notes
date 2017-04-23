@@ -188,7 +188,7 @@ public class ListTaskActivity extends AppCompatActivity {
                         intent.putExtra("id", task.getId());
                         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
                         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, firstTime, pendingIntent);
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+1000, pendingIntent);
 
                         task.setRemind(true);
                         task.setReminderTime(firstTime);

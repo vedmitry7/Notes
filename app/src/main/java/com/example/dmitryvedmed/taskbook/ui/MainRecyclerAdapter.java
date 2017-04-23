@@ -387,7 +387,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         ) {
                     View view = inflater.inflate(R.layout.card_view_list_item, null, false);
                     TextView t = (TextView) view.findViewById(R.id.textView3);
-                    ImageButton c = (ImageButton) view.findViewById(R.id.checkBox);
+                    ImageButton c = (ImageButton) view.findViewById(R.id.checkBoxDialog);
                     // c.setPressed(true);
                     t.setTypeface(typeFace);
                     t.setText(s);
@@ -397,7 +397,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         ) {
                     View view = inflater.inflate(R.layout.card_view_list_item, null, false);
                     TextView t = (TextView) view.findViewById(R.id.textView3);
-                    ImageButton c = (ImageButton) view.findViewById(R.id.checkBox);
+                    ImageButton c = (ImageButton) view.findViewById(R.id.checkBoxDialog);
                     c.setPressed(true);
                     t.setTypeface(typeFace);
                     t.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);

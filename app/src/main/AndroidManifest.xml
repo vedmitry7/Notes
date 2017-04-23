@@ -19,7 +19,7 @@
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".ui.SimpleTaskActivity"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ui.MainActivity" />
         <activity
             android:name=".ui.SettingsActivity"
@@ -76,9 +76,15 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.DialogActivity"
-            android:theme="@style/Theme.MyDialog" >
+        <activity
+            android:name=".ui.SimpleTaskDialogActivity"
+            android:theme="@style/Theme.MyDialog"></activity>
+
+
+        <activity android:name=".ui.ListTaskDialogActivity"
+            android:theme="@style/Theme.MyDialog">
         </activity>
+
     </application>
 
 </manifest>

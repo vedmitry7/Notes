@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_list_task_dialog"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.dmitryvedmed.taskbook.ui.ListTaskDialogActivity">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="12dp"
+        android:paddingTop="12dp"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        tools:context="com.example.dmitryvedmed.taskbook.ui.ListTaskActivity">
+
+        <TextView
+            android:paddingLeft="5dp"
+            android:text="Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:id="@+id/listTaskDialogHeadTextView"
+            android:textSize="17sp"
+            android:textStyle="normal|bold" />
+
+
+        <android.support.v7.widget.RecyclerView
+            android:paddingTop="5dp"
+            android:id="@+id/list_dialog_activity_recycler_view"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="3dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingBottom="5dp"
+        android:paddingRight="5dp"
+        android:layout_gravity="right"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:text="Оставить"
+            android:onClick="leave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dialog_button_selector"
+            android:textColor="#000000"
+            android:id="@+id/dialogBtnLeave"
+            />
+
+        <Button
+            android:text="Убрать"
+            android:onClick="ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dialog_button_selector"
+            android:textColor="#000000"
+            android:id="@+id/dialogBtnOK"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
