@@ -15,11 +15,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.dmitryvedmed.taskbook.NotifyTaskReceiver;
@@ -65,6 +67,17 @@ public class ListTaskActivity extends AppCompatActivity {
 
         headList.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
         headList.setText(task.getHeadLine());
+        headList.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
+                        && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
+                   listTaskRecyclerAdapter.setFocusToEditText();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         recyclerView = (RecyclerView) findViewById(R.id.list_activity_recycler_view);
 
@@ -239,6 +252,18 @@ public class ListTaskActivity extends AppCompatActivity {
                     task.setRemind(false);
             dbHelper.updateTask(task, currentKind);
         }
+    }
+
+    public void scroll(final int position){
+       /* recyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("TAG", "SCROLL  " + position);
+                recyclerView.scrollToPosition(position);
+            }
+        }, 100);
+        //recyclerView.scrollToPosition(position);
+        //recyclerView.smoothScrollToPosition(position+5);*/
     }
 
     public void setItemMovement(boolean b){

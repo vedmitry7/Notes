@@ -288,8 +288,21 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 adapter.setColorSelectionTasks(0);
                 break;
             case R.id.change_view:
-                RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2,1);
-                //RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+                String s = sharedPreferences.getString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_LIST);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                RecyclerView.LayoutManager layoutManager;
+
+                if(s.equals(Constants.LAYOUT_LIST)) {
+                    layoutManager = new StaggeredGridLayoutManager(2, 1);
+                    editor.putString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_GRID);
+
+                } else {
+                    layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+                    editor.putString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_LIST);
+                }
+                editor.commit();
                 recyclerView.setLayoutManager(layoutManager);
                 adapter.notifyDataSetChanged();
                 break;

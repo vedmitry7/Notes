@@ -16,7 +16,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.ListTaskActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".ui.SimpleTaskActivity"
             android:windowSoftInputMode="stateHidden" />
