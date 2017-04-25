@@ -60,4 +60,11 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="12dp"
         android:layout_marginEnd="12dp" />
+
+    <View style="@style/Divider"
+        android:alpha="0.1"
+        android:layout_alignBottom="@id/drag"
+        android:layout_toRightOf="@+id/checkBox"
+        android:layout_toLeftOf="@+id/delButton"
+        android:layout_toStartOf="@+id/delButton"></View>
 </RelativeLayout>

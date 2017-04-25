@@ -10,18 +10,21 @@
      <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+         android:elevation="10dp"
         android:theme="@style/AppTheme.AppBarOverlay"
-         android:id="@+id/appBarLayout">
+         android:id="@+id/appBarLayout"
+         app:elevation="10dp">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/st_toolbar"
+        android:elevation="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
     </android.support.v7.widget.Toolbar>
 
-</android.support.design.widget.AppBarLayout>
+     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
 
