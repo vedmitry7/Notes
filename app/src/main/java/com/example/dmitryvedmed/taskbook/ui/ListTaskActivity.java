@@ -15,21 +15,18 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.dmitryvedmed.taskbook.NotifyTaskReceiver;
+import com.example.dmitryvedmed.taskbook.R;
+import com.example.dmitryvedmed.taskbook.helper.ListTaskItemTouchHelperCallback;
 import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
 import com.example.dmitryvedmed.taskbook.logic.ListTask;
-import com.example.dmitryvedmed.taskbook.R;
-import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
-import com.example.dmitryvedmed.taskbook.helper.ListTaskItemTouchHelperCallback;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 
 import java.util.Calendar;
@@ -63,7 +60,7 @@ public class ListTaskActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        headList = (EditText) findViewById(R.id.listHeadEditText);
+ /*       headList = (EditText) findViewById(R.id.listHeadEditText);
 
         headList.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
         headList.setText(task.getHeadLine());
@@ -77,7 +74,7 @@ public class ListTaskActivity extends AppCompatActivity {
                 }
                 return false;
             }
-        });
+        });*/
 
         recyclerView = (RecyclerView) findViewById(R.id.list_activity_recycler_view);
 
@@ -240,7 +237,7 @@ public class ListTaskActivity extends AppCompatActivity {
     private void saveTask(boolean check) {
         task = listTaskRecyclerAdapter.getListTask();
 
-        task.setHeadLine(headList.getText().toString());
+       // task.setHeadLine(headList.getText().toString());
 
         DBHelper5 dbHelper = new DBHelper5(this);
         if(task.getId() == -1){

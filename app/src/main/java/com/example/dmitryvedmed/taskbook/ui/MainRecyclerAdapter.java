@@ -370,7 +370,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 listTask = (ListTask) tasks.get(position);
              /*        holder.ltFirst.setText(listTask.getUncheckedTask(0));
                     holder.ltSecond.setText(listTask.getUncheckedTask(1));*/
-                if(listTask.getHeadLine().length()==0) {
+                if(listTask.getHeadLine()!=null && listTask.getHeadLine().length()==0) {
                     holder.listHeadEditText.setVisibility(View.GONE);
                 }
                 else {
