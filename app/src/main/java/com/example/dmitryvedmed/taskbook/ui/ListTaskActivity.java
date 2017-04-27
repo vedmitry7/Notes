@@ -103,6 +103,7 @@ public class ListTaskActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("cek", "home selected");
                 finish();
+                overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
             }
         });
 
@@ -139,6 +140,7 @@ public class ListTaskActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case android.R.id.home:
                 finish();
+                overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
                 return true;
             case R.id.green:
                 color = ContextCompat.getColor(this, R.color.taskColorGreen);
@@ -270,7 +272,11 @@ public class ListTaskActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-       saveTask(true);
+        if(!(task.getHeadLine().length() == 0 &&
+                task.getCheckedTasks().size() == 0 &&
+                task.getUncheckedTasks().size() == 1 &&
+                task.getUncheckedTasks().get(0).length() == 0))
+            saveTask(true);
         super.onPause();
     }
 }

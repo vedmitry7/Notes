@@ -48,8 +48,10 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
         this.context = context;
         activity = (ListTaskActivity)context;
         this.listTask = listTask;
-        if(listTask.getId() == -1)
+        if(listTask.getId() == -1) {
+            listTask.setHeadLine("");
             listTask.getUncheckedTasks().add("");
+        }
         editTexts = new ArrayList<>();
         checkedTaskEditTexts = new ArrayList<>();
     }
@@ -62,18 +64,20 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
     public void onItemMove(final int fromPosition, final int toPosition) {
         Log.d("TAG", " FROM P - " + fromPosition + " TO P - " + toPosition);
         activity.setItemMovement(false);
+
+        int realFromPos = fromPosition-1;
+        int realToPos = toPosition -1;
+
         if(toPosition==0)
             return;
-        fromPos = fromPosition;
-        toPos = toPosition;
-        if(fromPosition>=listTask.getUncheckedTasks().size()) {
-            int fromP = fromPosition - (listTask.getUncheckedTasks().size()+1);
-            int toP = toPosition - (listTask.getUncheckedTasks().size()+1);
-            fromPos = fromP;
-            toPos = toP;
-            Log.d("TAG", " NEW       FROM P - " + fromPosition + " TO P - " + toPosition);
-            if(toP<0)
+
+        if(fromPosition>listTask.getUncheckedTasks().size()+1){
+            int fromP = realFromPos - (listTask.getUncheckedTasks().size()+1);
+            int toP = realToPos - (listTask.getUncheckedTasks().size()+1);
+            Log.d("TAG", " NEW       FROM P - " + fromP + " TO P - " + toP);
+            if(toP<0) {
                 return;
+            }
             String prev = listTask.getCheckedTasks().remove(fromP);
             listTask.getCheckedTasks().add(toP, prev);
             notifyItemMoved(fromPosition, toPosition);
@@ -81,12 +85,15 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             notifyItemChanged(toPosition);
             return;
         }
-        if(toPosition>=listTask.getUncheckedTasks().size()) {
+
+        if(toPosition>=listTask.getUncheckedTasks().size()+1)
             return;
-        }
-        String prev = listTask.getUncheckedTasks().remove(fromPosition);
-        listTask.getUncheckedTasks().add(toPosition, prev);
+
+        String prev = listTask.getUncheckedTasks().remove(realFromPos);
+        listTask.getUncheckedTasks().add(realToPos, prev);
         notifyItemMoved(fromPosition, toPosition);
+        notifyItemChanged(fromPosition);
+        notifyItemChanged(toPosition);
     }
 
     @Override
@@ -149,24 +156,34 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             }
 
             headLineEditText = (EditText) itemView.findViewById(R.id.listHeadEditText2);
-            if(headLineEditText!=null)
+            if(headLineEditText!=null) {
+                headLineEditText.clearFocus();
                 headLineEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                        if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
-                                && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
+                        if (keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
+                                && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
                             setFocusToEditText();
+                            headLineEditText.clearFocus();
                             return true;
                         }
                         return false;
                     }
                 });
-
+                headLineEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View view, boolean b) {
+                        Log.d("TAG", "      HEAD FOCUS CHANGED " + b );
+                        if (!b) {
+                            listTask.setHeadLine(headLineEditText.getText().toString());
+                        }
+                    }
+                });
+            }
         }
 
         @Override
         public void onItemSelected() {
-
         }
 
         @Override
@@ -213,7 +230,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
 
                         listTask.getUncheckedTasks().add("");
                         Log.d("TAG", "Edit texts size = " + editTexts.size() );
-                        activity.scroll(listTask.getUncheckedTasks().size()-1);
+                        //activity.scroll(listTask.getUncheckedTasks().size()-1);
                         update();
                         //requestFocusTo(listTask.getUncheckedTasks().size()-1);
                         requestFocusLast();
@@ -248,6 +265,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
 
         if(holder.headLineEditText!=null) {
             holder.headLineEditText.setText(listTask.getHeadLine());
+            holder.headLineEditText.setSelection(holder.headLineEditText.getText().length());
         }
 
         switch (holder.getItemViewType()){
@@ -298,10 +316,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                             Log.d("TAG", "Edit texts remove = " + position );
                             Log.d("TAG", "Edit texts size = " + editTexts.size() );
                             update();
-                            if(position==0)
-                                requestFocusTo(realPosition);
-                            else
-                                requestFocusTo(realPosition);
+                            requestFocusTo(realPosition-1);
                             //notifyItemChanged(position);
                         }
                     });
@@ -314,7 +329,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                     }
                     else {
                         editTexts.remove(realPosition);
-                        editTexts.add(realPosition,holder.editText);
+                        editTexts.add(realPosition, holder.editText);
                         Log.d("TAG", "Edit texts remove and add = " + position );
                     }
 
@@ -350,8 +365,8 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                             {
                                 if(listTask.getUncheckedTasks().size() < position)
                                     return false;
-                                if(listTask.getUncheckedTasks().get(position).length()==0){
-                                    listTask.getUncheckedTasks().remove(position);
+                                if(listTask.getUncheckedTasks().get(realPosition).length()==0){
+                                    listTask.getUncheckedTasks().remove(realPosition);
                                     //notifyItemRemoved(position);
                                     update();
                                     requestFocusTo(realPosition-1);
@@ -364,40 +379,41 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                     );
                 }
 
-                if(position-1 > listTask.getUncheckedTasks().size())
+                if(realPosition > listTask.getUncheckedTasks().size())
                 {
-                    holder.editTextListener.updatePosition(holder.getAdapterPosition()-1);
-                    String s = (listTask.getCheckedTasks().get(position - (listTask.getUncheckedTasks().size()+1)));
+                    holder.editTextListener.updatePosition(realPosition);
+                    String s = (listTask.getCheckedTasks().get(realPosition - (listTask.getUncheckedTasks().size()+1)));
                     holder.editText.setText(s);
                     holder.editText.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                     holder.editText.setAlpha(0.5f);
                     holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                         @Override
                         public void onFocusChange(View view, boolean b) {
-                            if(b)
+                            if(b) {
                                 holder.button.setVisibility(VISIBLE);
-
+                                holder.editText.setSelection(holder.editText.getText().length());
+                            }
                             else
                                 holder.button.setVisibility(View.INVISIBLE);
                         }
                     });
 
 
+
                     holder.button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             Log.d("TAG", " BUTTON          CLICK    " + position );
-                            listTask.getCheckedTasks().remove(position - (listTask.getUncheckedTasks().size()+1));
+                            listTask.getCheckedTasks().remove(realPosition - (listTask.getUncheckedTasks().size()+1));
                             update();
-                            //requestFocusTo(position-1);
-                            //notifyItemRemoved(position);
+                            requestFocusLast();
                         }
                     });
-                    holder.checkBoxListener.updatePosition(position);
+                    holder.checkBoxListener.updatePosition(realPosition);
                     onBind = true;
                     holder.checkBox.setChecked(true);
                     onBind = false;
-                    System.out.println(position + " - " + listTask.getCheckedTasks().get(position - (listTask.getUncheckedTasks().size()+1)));
+                    System.out.println(position + " - " + listTask.getCheckedTasks().get(realPosition - (listTask.getUncheckedTasks().size()+1)));
                /*     if(position>editTexts.size())
                         return;
                     if(editTexts.size() < position) {
@@ -540,11 +556,14 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                 if (b) {
                     listTask.getCheckedTasks().add(listTask.getUncheckedTask(position));
                     listTask.getUncheckedTasks().remove(position);
+                    editTexts.remove(position);
+                    requestFocusTo(position-1);
                     update();
                 } else {
                     listTask.getUncheckedTasks().add(listTask.getCheckedTask(position - (listTask.getUncheckedTasks().size() + 1)));
                     listTask.getCheckedTasks().remove(position - (listTask.getUncheckedTasks().size()));
                     update();
+                    requestFocusLast();
                 }
             }
         }

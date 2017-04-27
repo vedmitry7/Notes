@@ -40,7 +40,7 @@ public class SimpleTaskActivity extends AppCompatActivity {
     private EditText head, text;
     private SimpleTask task;
     private String currentKind;
-    Color color;
+    private Color color;
     private Toolbar toolbar;
 
     private GoogleApiClient client;
@@ -81,6 +81,7 @@ public class SimpleTaskActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("cek", "home selected");
                 finish();
+                overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
             }
         });
     }
@@ -193,6 +194,7 @@ public class SimpleTaskActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
                 return true;
             case R.id.green:
                 color = ContextCompat.getColor(this, R.color.taskColorGreen);

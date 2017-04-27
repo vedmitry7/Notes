@@ -10,7 +10,6 @@
     android:layout_marginLeft="6dp"
     android:layout_marginRight="6dp"
     card_view:cardElevation="2dp"
-    card_view:cardBackgroundColor="@color/colorCardView"
     android:minHeight="48dp"
     >
 

@@ -46,7 +46,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private List<SuperTask> tasks;
     private List<SuperTask> selectedTasks;
     private Context context;
-    private SimpleTask simpleTask;
     private ListTask listTask;
     private TextView textView;
     private Typeface typeFace;
@@ -55,27 +54,26 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     boolean wasSelected;
     private Mode mode;
     private int selectedTasksCounter;
-
-    public int getSelectedTasksCounter() {
+    private boolean[] selects;
+    int getSelectedTasksCounter() {
         return selectedTasksCounter;
     }
 
-    public static enum Mode {
-        NORMAL, SELECTION_MODE;
-
+    enum Mode {
+        NORMAL, SELECTION_MODE
     }
-    public Mode getMode() {
+    Mode getMode() {
         return mode;
     }
-    public void setSelectionMode(Mode mode){
+    void setSelectionMode(Mode mode){
         this.mode = mode;
     }
 
-    public List<SuperTask> getTasks() {
+    List<SuperTask> getTasks() {
         return tasks;
     }
 
-    public MainRecyclerAdapter(List<SuperTask> tasks, Context context) {
+    MainRecyclerAdapter(List<SuperTask> tasks, Context context) {
         Log.d("TAG", "       Adapter --- constructor  ---");
         this.tasks = tasks;
 
@@ -90,6 +88,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         typeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Regular.ttf");
         boldTypeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Bold.ttf");
         mode = Mode.NORMAL;
+        selects = new boolean[tasks.size()];
+
     }
 
     private void cancelNotification(int requestCode){
@@ -130,7 +130,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         activity.selectedItemCount(0);
         mode = Mode.NORMAL;
         selectedTasksCounter = 0;
-
     }
 
     public void cancelSelection() {
@@ -241,43 +240,46 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         intent.putExtra("Task", (Serializable) tasks.get(position));
                         intent.putExtra("kind", activity.currentKind);
                         context.startActivity(intent);
-                        // activity.overridePendingTransition(R.anim.diagonaltranslate, R.anim.alpha);
+                        activity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                         break;
                     case 1:
                         Intent intent1 = new Intent(context, ListTaskActivity.class);
                         intent1.putExtra("ListTask", tasks.get(position));
                         intent1.putExtra("kind", activity.currentKind);
                         context.startActivity(intent1);
-                        //  activity.overridePendingTransition(R.anim.diagonaltranslate, R.anim.alpha);
+                        activity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                         break;
                 }
             }
             else if (mode == Mode.SELECTION_MODE) {
                 Log.d("TAG", "       Adapter --- MODE NE NORMAL " );
 
-                if (cardView.isSelected()) {
-                    cardView.setCardBackgroundColor(Color.WHITE);
+                if (selects[position]) {
+                   // cardView.setCardBackgroundColor(Color.WHITE);
                     selectedTasks.remove(tasks.get(position));
-                    cardView.setSelected(false);
+                   // cardView.setSelected(false);
+                    selects[position] = false;
                     selectedTasksCounter--;
                     activity.selectedItemCount(selectedTasksCounter);
                     if(selectedTasksCounter==0)
                         setSelectionMode(Mode.NORMAL);
                 } else {
-                    cardView.setCardBackgroundColor(Color.LTGRAY);
-                    cardView.setSelected(true);
+                   // cardView.setCardBackgroundColor(Color.LTGRAY);
+                 //   cardView.setSelected(true);
+                    Log.d("TAG", "                                                                                                   setSelected(true) " );
                     selectedTasks.add(tasks.get(position));
                     selectedTasksCounter++;
                     activity.selectedItemCount(selectedTasksCounter);
+                    selects[position] = true;
                 }
                 Log.d("TAG", "       Adapter --- sel. size" + selectedTasks.size());
             }
+            notifyItemChanged(getAdapterPosition());
         }
 
         @Override
         public boolean onLongClick(View view) {
             Log.d("TAG", "      LOOOOONG CLICK " );
-
             return true;
         }
 
@@ -311,22 +313,53 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     private void setColorCardView(CardView cardView, int position){
+        Log.d("TAG", "       setColorCardView");
+        if(mode == Mode.SELECTION_MODE) {
+            Log.d("TAG", "       Adapter --- setColorCardView SELECTION MODE ON ");
+            Log.d("TAG", "       SelectedTasks Size = " + selectedTasks.size() + " position = " + position);
 
-        if(position >= tasks.size())
+            if (selectedTasks.contains(tasks.get(position))) {
+                Log.d("TAG", "       SelectedTasks contains = " + position);
+                cardView.setCardBackgroundColor(Color.LTGRAY);
+            } else {
+
+                Log.d("TAG", "       Adapter --- NOT SELECTION");
+                if (position >= tasks.size())
+                    return;
+                switch (tasks.get(position).getColor()) {
+                    case Constants.GREEN:
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightGreen));
+                        break;
+                    case Constants.RED:
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightRed));
+                        break;
+                    case Constants.YELLOW:
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightYellow));
+                        break;
+                    case Constants.BLUE:
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightLightBlue));
+                        break;
+                    case 0:
+                        cardView.setCardBackgroundColor(Color.WHITE);
+                        break;
+                }
+            }
             return;
-
-        switch (tasks.get(position).getColor()){
+        }
+        if (position >= tasks.size())
+            return;
+        switch (tasks.get(position).getColor()) {
             case Constants.GREEN:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorLightGreen));
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightGreen));
                 break;
             case Constants.RED:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorLightRed));
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightRed));
                 break;
             case Constants.YELLOW:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorLightYellow));
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightYellow));
                 break;
             case Constants.BLUE:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorLightLightBlue));
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightLightBlue));
                 break;
             case 0:
                 cardView.setCardBackgroundColor(Color.WHITE);
@@ -337,7 +370,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
         Log.d("TAG", "       Adapter --- onBindViewHolder");
-        holder.cardView.setSelected(false);
+        Log.d("TAG", "       POS = " + position + " CV selected - " + holder.cardView.isSelected());
+
+        //holder.cardView.setSelected(false);
         // holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorRed));
         // holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,tasks.get(position).getColor()));
         // holder.cardView.setCardBackgroundColor(tasks.get(position).getColor());
@@ -346,7 +381,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         switch (getItemViewType(position)){
             case 0:
-                simpleTask = (SimpleTask) tasks.get(position);
+                SimpleTask simpleTask = (SimpleTask) tasks.get(position);
                 if(simpleTask.getHeadLine().length()==0)
                     holder.stHeadLine.setVisibility(View.GONE);
                 else {
@@ -443,6 +478,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public void dataChanged(List<SuperTask> tasks){
         Log.d("TAG", "       Adapter --- dataChanged");
         this.tasks = tasks;
+        selects = new boolean[tasks.size()];
         compareTasks();
         notifyDataSetChanged();
     }
