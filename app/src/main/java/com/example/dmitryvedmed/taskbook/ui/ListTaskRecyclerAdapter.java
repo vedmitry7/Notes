@@ -170,15 +170,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                         return false;
                     }
                 });
-                headLineEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View view, boolean b) {
-                        Log.d("TAG", "      HEAD FOCUS CHANGED " + b );
-                        if (!b) {
-                            listTask.setHeadLine(headLineEditText.getText().toString());
-                        }
-                    }
-                });
+                headLineEditText.addTextChangedListener(new HeadLineEditTextListener());
             }
         }
 
@@ -510,7 +502,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
         return listTask.getUncheckedTasks().size() + listTask.getCheckedTasks().size()+2;
     }
 
-    private class EditTextListener implements TextWatcher, View.OnFocusChangeListener {
+    private class EditTextListener implements TextWatcher  {
         private int position;
 
         public void updatePosition(int position) {
@@ -534,12 +526,28 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
         public void afterTextChanged(Editable editable) {
 
         }
+    }
 
+    private class HeadLineEditTextListener implements TextWatcher  {
+        private int position;
+
+        public void updatePosition(int position) {
+            this.position = position;
+        }
 
         @Override
-        public void onFocusChange(View view, boolean b) {
-            if(b)
-                System.out.println("EDIT TEXT _  " + position + "Has focus");
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            listTask.setHeadLine(charSequence.toString());
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
         }
     }
 
