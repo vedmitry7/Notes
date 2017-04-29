@@ -36,12 +36,13 @@
 
         </menu>
     </item>
+
     <item
         android:orderInCategory="101"
         android:title="Напомнить"
         android:menuCategory="secondary"
         android:id="@+id/notify"
         app:showAsAction="never">
-
     </item>
+
 </menu>

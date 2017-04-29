@@ -211,7 +211,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         @Override
         public void onItemSelected() {
             Log.d("TAG", "       Adapter --- onItemSelected");
-            cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorCardViewPressed));
+            if(getAdapterPosition() == -1)
+                return;
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorCardViewPressed));
             wasSelected = true;
             selectedTasks.add(tasks.get(getAdapterPosition()));
         }

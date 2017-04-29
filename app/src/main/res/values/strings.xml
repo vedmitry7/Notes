@@ -16,4 +16,18 @@
         <item>1</item>
         <item>0</item>
     </string-array>
+
+    <string-array name="dates">
+        <item>Сегодня</item>
+        <item>Завтра</item>
+        <item>Через неделю</item>
+        <item>Выбрать дату</item>
+    </string-array>
+
+    <string-array name="times">
+        <item>Утро</item>
+        <item>День</item>
+        <item>Вечер</item>
+        <item>Выбрать время</item>
+    </string-array>
 </resources>
