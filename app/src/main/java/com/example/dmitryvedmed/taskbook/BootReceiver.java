@@ -19,7 +19,6 @@ public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-
         Toast.makeText(context, "УРРРРРРАААААААА", Toast.LENGTH_LONG).show();
         DBHelper5 dbHelper5 = new DBHelper5(context);
 
@@ -28,8 +27,9 @@ public class BootReceiver extends BroadcastReceiver {
         for (SuperTask task:tasks
              ) {
 
-            if(task.getReminderTime()<System.currentTimeMillis())
-                continue;
+            if(task.getReminderTime()<System.currentTimeMillis()){
+                return;
+            }
 
             Intent i = new Intent(context, NotifyTaskReceiver.class);
             intent.setAction("TASK_NOTIFICATION");

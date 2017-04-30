@@ -9,10 +9,17 @@
         android:id="@+id/item_every_day"
         android:showAsAction="ifRoom|withText"
         android:title="Каждый день"
-        android:visible="true"/>
+        android:textStyle="bold"
+        android:visible="true"
+        />
     <item
         android:id="@+id/item_every_week"
         android:showAsAction="ifRoom|withText"
         android:title="Каждую неделю"
+        android:visible="true"/>
+    <item
+        android:id="@+id/item_every_month"
+        android:showAsAction="ifRoom|withText"
+        android:title="Каждый месяц"
         android:visible="true"/>
 </menu>

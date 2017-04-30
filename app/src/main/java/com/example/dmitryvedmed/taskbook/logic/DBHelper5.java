@@ -392,7 +392,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
         values.put(KEY_TASK, bytes); // get author
         if(kind!=null)
         values.put(KEY_KIND, kind);
-        values.put(KEY_REMIND,task.isRemind() ? 1 : 0);
+        values.put(KEY_REMIND, task.isRemind() ? 1 : 0);
 
         // 3. updating row
         int i = db.update(TABLE, //table

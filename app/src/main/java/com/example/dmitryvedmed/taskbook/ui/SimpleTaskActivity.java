@@ -259,6 +259,9 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             case R.id.notify:
                 createDialog();
                     break;
+            case R.id.cancel_notification:
+                cancelNotification();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

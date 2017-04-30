@@ -57,6 +57,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
     private SharedPreferences sharedPreferences;
     int hours;
     int minutes;
+    String repeating;
 
 
     @Override
@@ -68,6 +69,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
         initView();
         initDate();
         loadPreferences();
+        repeating = "";
     }
 
     private void initDate() {
@@ -204,6 +206,9 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 createDialog();
                 //showTimePickerDialog();
                 break;
+            case R.id.cancel_notification:
+                cancelNotification();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -266,11 +271,26 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 intent.setAction("TASK_NOTIFICATION");
                 saveTask(true);
                 intent.putExtra("id", task.getId());
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+
+
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-                alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
-
+                if(repeating.equals("")) {
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
+                }
+                if(repeating.equals("Каждый день")) {
+                    intent.putExtra("repeating", true);
+                    intent.putExtra("period", 3*60*1000);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), 3*60*1000, pendingIntent);
+                }
+                if(repeating.equals("Каждую неделю")) {
+                    intent.putExtra("repeating", true);
+                    intent.putExtra("period", 3*60*1000);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), 3*60*1000, pendingIntent);
+                }
 
                 task.setRemind(true);
                 task.setReminderTime(notificationTime.getTimeInMillis());
@@ -424,17 +444,19 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 spinnerButtonDate.setText(getResources().getString(R.string.tomorrow));
 
                 break;
+            case R.id.item_newer:
+                repeating = "";
+                break;
             case R.id.item_chose_date:
                 showDatePickerDialog();
                 break;
             case R.id.item_every_day:
-
+                repeating = "Каждый день";
+                spinnerButtonRepeat.setText("Каждый день");
                 break;
             case R.id.item_every_week:
-
-                break;
-            case R.id.item_newer:
-
+                repeating = "Кажддую неделю";
+                spinnerButtonRepeat.setText("Кажддую неделю");
                 break;
         }
         return false;

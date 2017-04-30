@@ -29,6 +29,11 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
 
         Log.d("TAG", "NOTIFYYYYYYYYYYY");
 
+        if(intent.getBooleanExtra("repeating", false))
+            Log.d("TAG", "REPEATING DAAAAAA");
+        int period2 = intent.getIntExtra("period", 0);
+        Log.d("TAG", "REPIOD " + period2);
+
         int id = intent.getIntExtra("id",-2);
         Log.d("TAG", "ID = " + id);
         if(id==-2) {
@@ -43,7 +48,12 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
 
         if(superTask instanceof SimpleTask){
             SimpleTask task = (SimpleTask) superTask;
+            if(!intent.getBooleanExtra("repeating", false))
             task.setRemind(false);
+            else {
+                int period = intent.getIntExtra("period", 0);
+                task.setReminderTime(task.getReminderTime() + period);
+            }
             notificationIntent = new Intent(context, SimpleTaskDialogActivity.class);
             notificationIntent.putExtra("Task", task);
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -80,7 +90,12 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
         else{
             notificationIntent = new Intent(context, ListTaskDialogActivity.class);
             ListTask task = (ListTask) superTask;
-            task.setRemind(false);
+            if(!intent.getBooleanExtra("repeating", false))
+                task.setRemind(false);
+            else {
+                int period = intent.getIntExtra("period", 0);
+                task.setReminderTime(task.getReminderTime() + period);
+            }
             notificationIntent.putExtra("ListTask", task);
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent contentIntent = PendingIntent.getActivity(context,

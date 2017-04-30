@@ -45,4 +45,10 @@
         app:showAsAction="never">
     </item>
 
+    <item
+        android:orderInCategory="100"
+        android:id="@+id/cancel_notification"
+        android:title="Убрать напоминание"
+        app:showAsAction="never" />
+
 </menu>
