@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/item_newer"
+        android:showAsAction="ifRoom|withText"
+        android:title="Никогда"
+        android:visible="true"/>
+    <item
+        android:id="@+id/item_every_day"
+        android:showAsAction="ifRoom|withText"
+        android:title="Каждый день"
+        android:visible="true"/>
+    <item
+        android:id="@+id/item_every_week"
+        android:showAsAction="ifRoom|withText"
+        android:title="Каждую неделю"
+        android:visible="true"/>
+</menu>

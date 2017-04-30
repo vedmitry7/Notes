@@ -8,6 +8,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -18,21 +19,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.PopupMenu;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.example.dmitryvedmed.taskbook.NotifyTaskReceiver;
 import com.example.dmitryvedmed.taskbook.R;
@@ -46,26 +40,23 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class ListTaskActivity extends AppCompatActivity {
+
+public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     private ListTask task;
     public static RecyclerView recyclerView;
     private ListTaskRecyclerAdapter listTaskRecyclerAdapter;
     private Context context;
-    private EditText headList;
     private String currentKind;
     private Toolbar toolbar;
     private ItemTouchHelper mItemTouchHelper;
     private ItemTouchHelper.Callback callback;
-    List<String> entries = new ArrayList<>();
-    String time;
-    boolean isSetTime;
-    MyAdapter  myAdapter;
-    int lastChose;
-
-    String[] cities = new String[]{"Утром", "Днем", "Вечером", "Другое время"};
-    String[] exactTimes = new String[]{"7:01", "14:00", "19:00", ""};
-
+    private Button spinnerButtonTime, spinnerButtonDate, spinnerButtonRepeat;
+    private List<String> entries = new ArrayList<>();
+    private Calendar notificationTime;
+    private SharedPreferences sharedPreferences;
+    int hours;
+    int minutes;
 
 
     @Override
@@ -75,10 +66,32 @@ public class ListTaskActivity extends AppCompatActivity {
         context = this;
         initTask();
         initView();
-        entries.add("now");
-        entries.add("tomorrow");
-        entries.add("Выбрать время");
-        myAdapter = new MyAdapter(context);
+        initDate();
+        loadPreferences();
+    }
+
+    private void initDate() {
+        notificationTime = Calendar.getInstance();
+        notificationTime.add(Calendar.DAY_OF_MONTH, 1);
+        notificationTime.set(Calendar.HOUR_OF_DAY, hours);
+        notificationTime.set(Calendar.MINUTE, minutes);
+        notificationTime.set(Calendar.SECOND, 0);
+    }
+
+    private void loadPreferences(){
+        sharedPreferences = this.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if(sharedPreferences.getString("123","321").equals("321")) {
+            editor.putInt("morning_time_hours", 7);
+            editor.putInt("morning_time_minutes", 0);
+            editor.putInt("afternoon_time_hours", 13);
+            editor.putInt("afternoon_time_minutes", 0);
+            editor.putInt("evening_time_hours", 19);
+            editor.putInt("evening_time_minutes", 0);
+        }
+
+        hours = sharedPreferences.getInt("morning_time_hours", 8);
+        minutes = sharedPreferences.getInt("morning_time_minutes", 15);
     }
 
     private void initView() {
@@ -87,22 +100,6 @@ public class ListTaskActivity extends AppCompatActivity {
         toolbar.setBackgroundColor(Color.WHITE);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
- /*       headList = (EditText) findViewById(R.id.listHeadEditText);
-
-        headList.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
-        headList.setText(task.getHeadLine());
-        headList.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
-                        && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
-                   listTaskRecyclerAdapter.setFocusToEditText();
-                    return true;
-                }
-                return false;
-            }
-        });*/
 
         recyclerView = (RecyclerView) findViewById(R.id.list_activity_recycler_view);
 
@@ -198,293 +195,101 @@ public class ListTaskActivity extends AppCompatActivity {
                 task.setColor(0);
                 break;
             case R.id.notify:
-          /*      Intent intent = new Intent("TASK_NOTIFICATION");
-                saveTask();
+           /*     Intent intent = new Intent("TASK_NOTIFICATION");
+                saveTask(true);
                 intent.putExtra("id", task.getId());
                 sendBroadcast(intent);
-                */
-/*
-                final Calendar calendar = Calendar.getInstance();
-                final int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                final int minute = calendar.get(Calendar.MINUTE);
+*/
 
-
-                TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int h, int m) {
-
-                        calendar.set(Calendar.HOUR_OF_DAY, h);
-                        calendar.set(Calendar.MINUTE, m);
-                        calendar.set(Calendar.SECOND, 0);
-
-                        Log.d("TAG", "TIME: " + h + ":" + m);
-
-                        long firstTime = calendar.getTimeInMillis();
-
-                        Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
-                        intent.setAction("TASK_NOTIFICATION");
-                        saveTask(true);
-                        intent.putExtra("id", task.getId());
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+1000, pendingIntent);
-
-                        task.setRemind(true);
-                        task.setReminderTime(firstTime);
-                        saveTask(false);
-
-                       // cancelNotification();
-
-                        //alarmManager1.cancel(pendingIntent);
-                    }
-                }, hour, minute, true);
-                timePickerDialog.show();*/
-                showDialog();
+                createDialog();
+                //showTimePickerDialog();
                 break;
-
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void createDialog() {
+
+        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
+
+        View mViewe = getLayoutInflater().inflate(R.layout.dialog_spiner, null);
+
+        spinnerButtonTime = (Button) mViewe.findViewById(R.id.spinnerButtonTime);
+        spinnerButtonTime.setText(getResources().getString(R.string.morning));
+        spinnerButtonTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(context, view);
+                popupMenu.inflate(R.menu.popup_time);
+                popupMenu.show();
+                popupMenu.setOnMenuItemClickListener(ListTaskActivity.this);
+            }
+        });
+
+        spinnerButtonDate = (Button) mViewe.findViewById(R.id.spinnerButtonDate);
+        spinnerButtonDate.setText(getResources().getString(R.string.tomorrow));
+        spinnerButtonDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(context, view);
+                popupMenu.inflate(R.menu.popup_date);
+                popupMenu.show();
+                popupMenu.setOnMenuItemClickListener(ListTaskActivity.this);
+            }
+        });
+
+
+        spinnerButtonRepeat = (Button) mViewe.findViewById(R.id.spinnerButtonRepeat);
+        spinnerButtonRepeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(context, view);
+                popupMenu.inflate(R.menu.popup_repeat);
+                popupMenu.show();
+                popupMenu.setOnMenuItemClickListener(ListTaskActivity.this);
+            }
+        });
+
+
+        mBuilder.setTitle("Напоминание");
+        mBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d("TAG", "----------------------OK");
+                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.YEAR)));
+                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.MONTH)));
+                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.DAY_OF_MONTH)));
+                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.HOUR_OF_DAY)));
+                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.MINUTE)));
+                Log.d("TAG", "----------------------");
+
+                Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
+                intent.setAction("TASK_NOTIFICATION");
+                saveTask(true);
+                intent.putExtra("id", task.getId());
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+                alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
+            }
+        });
+
+        mBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        mBuilder.setView(mViewe);
+        AlertDialog dialog = mBuilder.create();
+        dialog.show();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_colors, menu);
         return super.onCreateOptionsMenu(menu);
-    }
-
-    private class MyAdapter extends ArrayAdapter<String> {
-
-        Context context;
-
-
-
-        public MyAdapter(Context context) {
-            super(context, R.layout.adapter_item, ListTaskActivity.this.cities);
-            this.context = context;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return getCustomView(position, convertView, parent);
-
-        }
-
-        @Override
-        public View getDropDownView(int position, View cnvtView, ViewGroup prnt) {
-            return getCustomView(position, cnvtView, prnt);
-        }
-
-        public View getCustomView(int position, View convertView, ViewGroup parent)
-        {  LayoutInflater inflater = getLayoutInflater();
-            convertView = inflater.inflate(R.layout.adapter_item, parent, false);
-
-            TextView time = (TextView) convertView.findViewById(R.id.timeText);
-            time.setText(cities[position]);
-
-
-            TextView exactTime = (TextView) convertView.findViewById(R.id.exactTimeText);
-            Log.d("TAG", "exactTime TEXT do =  " + exactTime.getText());
-            exactTime.setText(exactTimes[position]);
-            Log.d("TAG", "exactTime TEXT posle =  " + exactTime.getText());
-
-            return convertView;}
-    }
-
-    private void showDialog(){
-
-        AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
-        View mView = getLayoutInflater().inflate(R.layout.dialog_spiners, null);
-        mBuilder.setTitle("Напоминание");
-
-        final Spinner mSpinner = (Spinner) mView.findViewById(R.id.spinnerDate);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
-                android.R.layout.simple_spinner_item,
-                getResources().getStringArray(R.array.dates));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(adapter);
-
-        final Spinner mSpinner2 = (Spinner) mView.findViewById(R.id.spinnerTime);
-        final ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(context,
-                android.R.layout.simple_spinner_item,
-                entries);
-        // getResources().getStringArray(R.array.times));
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner2.setAdapter(myAdapter);
-        mSpinner2.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(motionEvent.getAction()==MotionEvent.ACTION_DOWN){
-                    Log.d("TAG", "DOWNNNNNN");
-                /*        if(entries.size()==1){
-                            entries.clear();
-                            entries.add("now");
-                            entries.add("tomorrow");
-                            entries.add("Выбрать время");
-                            adapter2.notifyDataSetChanged();
-                        }*/
-                }
-                return false;
-            }
-        });
-
-
-        AdapterView.OnItemSelectedListener itemSelectedListener2 = new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                // Получаем выбранный объект
-                final String item = (String)parent.getItemAtPosition(position);
-                Log.d("TAG", "ID " + id);
-                Log.d("TAG",  item);
-                if(item.equals("Другое время")){
-                    final Calendar calendar = Calendar.getInstance();
-                    final int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                    final int minute = calendar.get(Calendar.MINUTE);
-
-
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
-                        @Override
-                        public void onTimeSet(TimePicker timePicker, int h, int m) {
-
-                            calendar.set(Calendar.HOUR_OF_DAY, h);
-                            calendar.set(Calendar.MINUTE, m);
-                            calendar.set(Calendar.SECOND, 0);
-                            Log.d("TAG", "TIME: " + h + ":" + m);
-
-                            long firstTime = calendar.getTimeInMillis();
-
-                            /*Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
-                            intent.setAction("TASK_NOTIFICATION");
-                            saveTask(true);
-                            intent.putExtra("id", task.getId());
-                            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+1000, pendingIntent);
-
-                            task.setRemind(true);
-                            task.setReminderTime(firstTime);
-                            saveTask(false);
-*/
-                            // cancelNotification();
-
-                            //alarmManager1.cancel(pendingIntent);
-                            if(entries.size()>3)
-                                entries.remove(0);
-                            // entries.clear();
-                            entries.add(0, calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
-                            time = calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
-                            exactTimes[3] = time;
-                            myAdapter.notifyDataSetChanged();
-                            adapter2.notifyDataSetChanged();
-                            isSetTime = true;
-                        }
-                    }, hour, minute, true);
-                    timePickerDialog.setCancelable(false);
-                    timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialogInterface) {
-                            mSpinner2.setSelection(0);
-                            Log.d("TAG", "CANCEL TIME PICKER");
-
-                        }
-                    });
-                    timePickerDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialogInterface) {
-
-                            Log.d("TAG", "DISMISS TIME PICKER");
-                            if(!isSetTime)
-                            mSpinner2.setSelection(lastChose);
-
-
-                            if(dialogInterface.equals(DialogInterface.BUTTON_NEGATIVE)) {
-                                Log.d("TAG", "DISMISS TIME PICKER");
-                            }
-                            if(dialogInterface.equals(DialogInterface.BUTTON_POSITIVE)) {
-                                Log.d("TAG", "SET TIME PICKER");
-                            }
-                            if(dialogInterface.equals(DialogInterface.BUTTON_NEUTRAL)) {
-                                Log.d("TAG", "NEUTRAL TIME PICKER");
-                            }
-                        }
-                    });
-                    timePickerDialog.setCanceledOnTouchOutside(false);
-                    timePickerDialog.show();
-                }
-
-                else {
-                    isSetTime = false;
-                    lastChose = position;
-                    exactTimes[3]="";
-                    myAdapter.notifyDataSetChanged();
-                }
-
-            }
-
-
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.d("TAG", "NOTHING SELECTED");
-         /*       if(time!=null&&!time.equals("")) {
-                    entries.clear();
-                    entries.add(time);
-                    adapter2.notifyDataSetChanged();
-                }*/
-
-            }
-        };
-        AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
-
-            Calendar calendar = Calendar.getInstance();
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                String item = (String)adapterView.getItemAtPosition(position);
-                if(item.equals("Выбрать дату")) {
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-
-                        }
-                    }, calendar.get(Calendar.YEAR), 4, 25);
-                    datePickerDialog.show();
-                } else {
-                    myAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        };
-
-      //  mSpinner.setOnItemSelectedListener(itemSelectedListener);
-        mSpinner2.setOnItemSelectedListener(itemSelectedListener2);
-
-        mBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if(mSpinner.getSelectedItem().toString().equals("Сегодня")){
-                    Toast.makeText(context,"Ctujlyz", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-        mBuilder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if(mSpinner.getSelectedItem().toString().equals("Сегодня")){
-                    Toast.makeText(context,"Ctujlyz", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-        mBuilder.setView(mView);
-        mBuilder.setCancelable(false);
-        AlertDialog dialog = mBuilder.create();
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
     }
 
     private void cancelNotification(){
@@ -516,18 +321,6 @@ public class ListTaskActivity extends AppCompatActivity {
         }
     }
 
-    public void scroll(final int position){
-       /* recyclerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("TAG", "SCROLL  " + position);
-                recyclerView.scrollToPosition(position);
-            }
-        }, 100);
-        //recyclerView.scrollToPosition(position);
-        //recyclerView.smoothScrollToPosition(position+5);*/
-    }
-
     public void setItemMovement(boolean b){
         Log.d("TAG", "MOVEMENT  " + b);
         ((ListTaskItemTouchHelperCallback)callback).setCanMovement(b);
@@ -541,5 +334,109 @@ public class ListTaskActivity extends AppCompatActivity {
                 task.getUncheckedTasks().get(0).length() == 0))
             saveTask(true);
         super.onPause();
+    }
+
+    private void showTimePickerDialog(){
+
+        final Calendar calendar = Calendar.getInstance();
+        final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        final int minute = calendar.get(Calendar.MINUTE);
+
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int h, int m) {
+
+                notificationTime.set(Calendar.HOUR_OF_DAY, h);
+                notificationTime.set(Calendar.MINUTE, m);
+                notificationTime.set(Calendar.SECOND, 0);
+
+                Log.d("TAG", "TIME: " + h + ":" + m);
+
+                long firstTime = calendar.getTimeInMillis();
+
+
+                task.setRemind(true);
+                task.setReminderTime(firstTime);
+                saveTask(false);
+
+
+                String time = notificationTime.get(Calendar.HOUR_OF_DAY) + ":" + notificationTime.get(Calendar.MINUTE);
+
+                spinnerButtonTime.setText(time);
+                // cancelNotification();
+
+                //alarmManager1.cancel(pendingIntent);
+            }
+        }, hour, minute, true);
+        timePickerDialog.show();
+
+    }
+
+    private void showDatePickerDialog() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+
+                notificationTime.set(year,month,day);
+                spinnerButtonDate.setText(day+":"+month+";"+year);
+            }
+        },notificationTime.get(Calendar.YEAR),notificationTime.get(Calendar.MONTH), notificationTime.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+
+        switch (menuItem.getItemId()){
+
+            case R.id.item_morning:
+                spinnerButtonTime.setText(getResources().getString(R.string.morning));
+
+                break;
+            case R.id.item_afternoon:
+                spinnerButtonTime.setText(getResources().getString(R.string.afternoon));
+                hours = sharedPreferences.getInt("afternoon_time_hours", 14);
+                minutes = sharedPreferences.getInt("afternoon_time_minutes", 15);
+                break;
+            case R.id.item_evening:
+                spinnerButtonTime.setText(getResources().getString(R.string.evening));
+                hours = sharedPreferences.getInt("evening_time_hours", 20);
+                minutes = sharedPreferences.getInt("evening_time_minutes", 15);
+                break;
+            case R.id.item_chose_time:
+                showTimePickerDialog();
+                break;
+            case R.id.item_yesterday:
+                notificationTime = Calendar.getInstance();
+                notificationTime.set(Calendar.HOUR_OF_DAY, hours);
+                notificationTime.set(Calendar.MINUTE, minutes);
+                Log.d("TAG", "DAY - " + String.valueOf(notificationTime.get(Calendar.DAY_OF_MONTH)));
+                spinnerButtonDate.setText(getResources().getString(R.string.testerday));
+
+                break;
+
+            case R.id.item_tomorrow:
+                notificationTime = Calendar.getInstance();
+                notificationTime.set(Calendar.HOUR_OF_DAY, hours);
+                notificationTime.set(Calendar.MINUTE, minutes);
+                notificationTime.add(Calendar.DAY_OF_MONTH, 1);
+                spinnerButtonDate.setText(getResources().getString(R.string.tomorrow));
+
+                break;
+            case R.id.item_chose_date:
+                showDatePickerDialog();
+                break;
+            case R.id.item_every_day:
+
+                break;
+            case R.id.item_every_week:
+
+                break;
+            case R.id.item_newer:
+
+                break;
+        }
+        return false;
     }
 }

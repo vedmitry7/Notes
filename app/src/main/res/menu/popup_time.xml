@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/item_morning"
+        android:showAsAction="ifRoom|withText"
+        android:title="Утро"
+        android:visible="true"/>
+    <item
+        android:id="@+id/item_afternoon"
+        android:showAsAction="ifRoom|withText"
+        android:title="День"
+        android:visible="true"/>
+    <item
+        android:id="@+id/item_evening"
+        android:showAsAction="ifRoom|withText"
+        android:title="Вечер"
+        android:visible="true"/>
+    <item
+        android:id="@+id/item_chose_time"
+        android:showAsAction="ifRoom|withText"
+        android:title="Другое время"
+        android:visible="true"/>
+</menu>

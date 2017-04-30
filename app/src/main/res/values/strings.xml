@@ -30,4 +30,12 @@
         <item>Вечер</item>
         <item>Выбрать время</item>
     </string-array>
+
+
+    <string name="morning">Утро</string>
+    <string name="afternoon">День</string>
+    <string name="evening">Вечер</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="testerday">Сегодня</string>
+
 </resources>
