@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TimePicker;
 
@@ -39,9 +40,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-
-
-public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+public class CommonTaskActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     private ListTask task;
     public static RecyclerView recyclerView;
@@ -57,6 +56,11 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
     private SharedPreferences sharedPreferences;
     int hours;
     int minutes;
+
+    //SimpleTask
+    private EditText head, text;
+    //private SimpleTask task;
+
 
 
     @Override
@@ -103,7 +107,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
 
         recyclerView = (RecyclerView) findViewById(R.id.list_activity_recycler_view);
 
-        listTaskRecyclerAdapter = new ListTaskRecyclerAdapter(task, ListTaskActivity.this);
+        listTaskRecyclerAdapter = new ListTaskRecyclerAdapter(task, CommonTaskActivity.this);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
@@ -222,7 +226,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 PopupMenu popupMenu = new PopupMenu(context, view);
                 popupMenu.inflate(R.menu.popup_time);
                 popupMenu.show();
-                popupMenu.setOnMenuItemClickListener(ListTaskActivity.this);
+                popupMenu.setOnMenuItemClickListener(CommonTaskActivity.this);
             }
         });
 
@@ -234,7 +238,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 PopupMenu popupMenu = new PopupMenu(context, view);
                 popupMenu.inflate(R.menu.popup_date);
                 popupMenu.show();
-                popupMenu.setOnMenuItemClickListener(ListTaskActivity.this);
+                popupMenu.setOnMenuItemClickListener(CommonTaskActivity.this);
             }
         });
 
@@ -246,9 +250,10 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 PopupMenu popupMenu = new PopupMenu(context, view);
                 popupMenu.inflate(R.menu.popup_repeat);
                 popupMenu.show();
-                popupMenu.setOnMenuItemClickListener(ListTaskActivity.this);
+                popupMenu.setOnMenuItemClickListener(CommonTaskActivity.this);
             }
         });
+
 
         mBuilder.setTitle("Напоминание");
         mBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -270,11 +275,6 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
                 alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
-
-
-                task.setRemind(true);
-                task.setReminderTime(notificationTime.getTimeInMillis());
-                saveTask(false);
             }
         });
 
@@ -359,6 +359,10 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
 
                 long firstTime = calendar.getTimeInMillis();
 
+
+                task.setRemind(true);
+                task.setReminderTime(firstTime);
+                saveTask(false);
 
 
                 String time = notificationTime.get(Calendar.HOUR_OF_DAY) + ":" + notificationTime.get(Calendar.MINUTE);
