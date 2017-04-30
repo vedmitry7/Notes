@@ -48,11 +48,10 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
 
         if(superTask instanceof SimpleTask){
             SimpleTask task = (SimpleTask) superTask;
-            if(!intent.getBooleanExtra("repeating", false))
+            if(!task.isRepeating())
             task.setRemind(false);
             else {
-                int period = intent.getIntExtra("period", 0);
-                task.setReminderTime(task.getReminderTime() + period);
+                task.setReminderTime(task.getReminderTime() + task.getRepeatingPeriod());
             }
             notificationIntent = new Intent(context, SimpleTaskDialogActivity.class);
             notificationIntent.putExtra("Task", task);
@@ -90,11 +89,10 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
         else{
             notificationIntent = new Intent(context, ListTaskDialogActivity.class);
             ListTask task = (ListTask) superTask;
-            if(!intent.getBooleanExtra("repeating", false))
+            if(!task.isRepeating())
                 task.setRemind(false);
             else {
-                int period = intent.getIntExtra("period", 0);
-                task.setReminderTime(task.getReminderTime() + period);
+                task.setReminderTime(task.getReminderTime() + task.getRepeatingPeriod());
             }
             notificationIntent.putExtra("ListTask", task);
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

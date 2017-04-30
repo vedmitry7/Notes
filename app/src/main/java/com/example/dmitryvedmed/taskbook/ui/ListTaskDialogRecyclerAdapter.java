@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.dmitryvedmed.taskbook.R;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
 import com.example.dmitryvedmed.taskbook.logic.ListTask;
 import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
 
@@ -20,11 +21,13 @@ public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTask
     private ListTaskDialogActivity activity;
     private boolean onBind;
     private ListTask listTask;
+    private DBHelper5 dbHelper;
 
 
     public ListTaskDialogRecyclerAdapter(ListTask task, ListTaskDialogActivity listTaskDialogActivity) {
         activity = listTaskDialogActivity;
         this.listTask = task;
+        dbHelper = new DBHelper5(activity);
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
@@ -36,7 +39,7 @@ public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTask
         public RecyclerViewHolder(View itemView) {
             super(itemView);
 
-            System.out.println("ViewHolder constructor");
+            System.out.println("ViewHolder constructor ");
             System.out.println("TYPE = " + this.getItemViewType());
             ///????
             checkBoxListener = new CheckBoxListener();
@@ -159,6 +162,7 @@ public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTask
 
     private void update(){
         Log.d("TAG", "update " );
+        dbHelper.updateTask(listTask, null);
         notifyDataSetChanged();
     }
 

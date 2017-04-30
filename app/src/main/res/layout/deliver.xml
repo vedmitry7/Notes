@@ -5,6 +5,7 @@
 
     android:paddingTop="8dp">
     <View
+
         style="@style/Divider">
 
     </View>

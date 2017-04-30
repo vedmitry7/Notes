@@ -9,6 +9,24 @@ public class SuperTask implements Serializable {
     private int color;
     private long reminderTime;
     private boolean remind;
+    private int repeatingPeriod;
+    private boolean repeating;
+
+    public boolean isRepeating() {
+        return repeating;
+    }
+
+    public void setRepeating(boolean repeating) {
+        this.repeating = repeating;
+    }
+
+    public int getRepeatingPeriod() {
+        return repeatingPeriod;
+    }
+
+    public void setRepeatingPeriod(int repeatingPeriod) {
+        this.repeatingPeriod = repeatingPeriod;
+    }
 
     public int getColor() {
         return color;

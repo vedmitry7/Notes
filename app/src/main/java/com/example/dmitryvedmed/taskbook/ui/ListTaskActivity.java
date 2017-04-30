@@ -282,12 +282,16 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 if(repeating.equals("Каждый день")) {
                     intent.putExtra("repeating", true);
                     intent.putExtra("period", 3*60*1000);
+                    task.setRepeatingPeriod(3*60*1000);
+                    task.setRepeating(true);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), 3*60*1000, pendingIntent);
                 }
                 if(repeating.equals("Каждую неделю")) {
                     intent.putExtra("repeating", true);
                     intent.putExtra("period", 3*60*1000);
+                    task.setRepeatingPeriod(3*60*1000);
+                    task.setRepeating(true);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), 3*60*1000, pendingIntent);
                 }
