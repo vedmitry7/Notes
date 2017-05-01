@@ -257,7 +257,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 Log.d("TAG", "       Adapter --- MODE NE NORMAL " );
 
                 if (selects[position]) {
-                   // cardView.setCardBackgroundColor(Color.WHITE);
+                    Log.d("TAG", "       SELECTED POSITION " + position +" теперь False" );
+                    // cardView.setCardBackgroundColor(Color.WHITE);
                     selectedTasks.remove(tasks.get(position));
                    // cardView.setSelected(false);
                     selects[position] = false;
@@ -265,14 +266,16 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     activity.selectedItemCount(selectedTasksCounter);
                     if(selectedTasksCounter==0)
                         setSelectionMode(Mode.NORMAL);
+                    Log.d("TAG", "       selectedTasksCounter " + selectedTasksCounter);
                 } else {
                    // cardView.setCardBackgroundColor(Color.LTGRAY);
                  //   cardView.setSelected(true);
-                    Log.d("TAG", "                                                                                                   setSelected(true) " );
+                    Log.d("TAG", "       SELECTED POSITION " + position +" теперь True" );
                     selectedTasks.add(tasks.get(position));
                     selectedTasksCounter++;
                     activity.selectedItemCount(selectedTasksCounter);
                     selects[position] = true;
+                    Log.d("TAG", "       selectedTasksCounter " + selectedTasksCounter);
                 }
                 Log.d("TAG", "       Adapter --- sel. size" + selectedTasks.size());
             }
