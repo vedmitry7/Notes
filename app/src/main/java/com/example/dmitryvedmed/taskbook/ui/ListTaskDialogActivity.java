@@ -51,7 +51,8 @@ public class ListTaskDialogActivity extends AppCompatActivity {
         Window window = this.getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();
 
-        wlp.gravity = Gravity.TOP;
+        wlp.gravity = Gravity.CENTER;
+
         wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
         wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;

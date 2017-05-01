@@ -476,6 +476,10 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             public void run() {
                 Log.d("TAG", "delay " );
                 Log.d("TAG", "requestLastTo " + position );
+         /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!      if(position>=editTexts.size()){
+                    requestFocusLast();
+                    return;
+                }*/
                 if(editTexts.size()>0)
                     editTexts.get(position).requestFocus();
             }
