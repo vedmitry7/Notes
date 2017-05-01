@@ -4,8 +4,7 @@
     android:layout_height="wrap_content"
 
     android:paddingTop="8dp">
-    <View
-
+    <View android:id="@+id/deliver"
         style="@style/Divider">
 
     </View>

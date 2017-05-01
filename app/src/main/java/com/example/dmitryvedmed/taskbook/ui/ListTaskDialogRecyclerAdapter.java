@@ -22,6 +22,7 @@ public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTask
     private boolean onBind;
     private ListTask listTask;
     private DBHelper5 dbHelper;
+    private View view;
 
 
     public ListTaskDialogRecyclerAdapter(ListTask task, ListTaskDialogActivity listTaskDialogActivity) {
@@ -42,6 +43,10 @@ public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTask
             System.out.println("ViewHolder constructor ");
             System.out.println("TYPE = " + this.getItemViewType());
             ///????
+
+            view = itemView.findViewById(R.id.deliver);
+            if(view!=null && listTask.getCheckedTasks().size()==0)
+            view.setVisibility(View.GONE);
             checkBoxListener = new CheckBoxListener();
 
             switch (getItemViewType()){
@@ -145,10 +150,14 @@ public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTask
                 if (b) {
                     listTask.getCheckedTasks().add(listTask.getUncheckedTask(position));
                     listTask.getUncheckedTasks().remove(position);
+                    if(view!=null)
+                        view.setVisibility(View.VISIBLE);
                     update();
                 } else {
                     listTask.getUncheckedTasks().add(listTask.getCheckedTask(position - (listTask.getUncheckedTasks().size() + 1)));
                     listTask.getCheckedTasks().remove(position - (listTask.getUncheckedTasks().size()));
+                    if(view!=null && listTask.getCheckedTasks().size()==0)
+                        view.setVisibility(View.GONE);
                     update();
                 }
             }
