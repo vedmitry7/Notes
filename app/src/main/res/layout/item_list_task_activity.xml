@@ -31,6 +31,7 @@
     <EditText
         android:background="#FFFFFF"
         android:focusable="true"
+        android:focusableInTouchMode="true"
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,7 +41,6 @@
         android:id="@+id/itemListEditText"
         android:textStyle="normal"
         android:hint="Пункт списка"
-        android:focusableInTouchMode="true"
         android:layout_gravity="center"
         android:layout_toRightOf="@+id/checkBox"
         android:layout_toLeftOf="@+id/delButton"

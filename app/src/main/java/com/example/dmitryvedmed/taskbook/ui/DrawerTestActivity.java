@@ -218,6 +218,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             drawer.closeDrawer(GravityCompat.START);
         } else if (adapter.getMode()== MainRecyclerAdapter.Mode.SELECTION_MODE){
             adapter.cancelSelection();
+            fab.show();
         } else {
             super.onBackPressed();
         }
@@ -273,17 +274,19 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 break;
             case R.id.green:
                 adapter.setColorSelectionTasks(Constants.GREEN);
+                fab.show();
                 break;
             case R.id.red:
                 adapter.setColorSelectionTasks(Constants.RED);
-
+                fab.show();
                 break;
             case R.id.blue:
                 adapter.setColorSelectionTasks(Constants.BLUE);
-
+                fab.show();
                 break;
             case R.id.yellow:
                 adapter.setColorSelectionTasks(Constants.YELLOW);
+                fab.show();
                 break;
             case R.id.white:
                 adapter.setColorSelectionTasks(0);
@@ -467,6 +470,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             setSupportActionBar(toolbar);
             toolbar2.setVisibility(View.GONE);
             toolbar.setVisibility(View.VISIBLE);
+            fab.show();
         } else {
             setItemMovement(false);
             counterTextView.setVisibility(View.VISIBLE);
