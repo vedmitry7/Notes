@@ -269,6 +269,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                         // toggle.setDrawerIndicatorEnabled(true);
                     }
                 });
+                fab.hide();
                 break;
             case R.id.green:
                 adapter.setColorSelectionTasks(Constants.GREEN);
@@ -357,6 +358,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 break;
             case R.id.cancel_selection:
                 adapter.cancelSelection();
+                fab.show();
 
         }
 

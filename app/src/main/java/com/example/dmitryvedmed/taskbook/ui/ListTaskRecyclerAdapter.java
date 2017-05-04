@@ -101,6 +101,12 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
 
     }
 
+    public void deleteCheckedTasks() {
+        listTask.getCheckedTasks().clear();
+        update();
+        requestFocusLast();
+    }
+
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder, View.OnTouchListener {
         private EditText editText;
@@ -334,7 +340,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                         @Override
                         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                             if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
-                                    && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
+                                    && keyEvent.getAction() == KeyEvent.ACTION_DOWN){
                                 if(listTask.getUncheckedTasks().size() < realPosition)
                                     return true;
                                 Log.d("TAG", "click ENTER Add " + position );
@@ -453,7 +459,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                 if(editTexts.size()>0)
                 editTexts.get(editTexts.size()-1).requestFocus();
             }
-        }, 1);
+        }, 10);
     }
 
     public void setFocusToEditText(){
@@ -475,7 +481,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
         handler.postDelayed(new Runnable() {
             public void run() {
                 Log.d("TAG", "delay " );
-                Log.d("TAG", "requestLastTo " + position );
+                Log.d("TAG", "requestLastTo " + position + " eDIT TEXT SIZE = " + editTexts.size());
          /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!      if(position>=editTexts.size()){
                     requestFocusLast();
                     return;
@@ -570,11 +576,13 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
                     listTask.getUncheckedTasks().remove(position);
                     editTexts.remove(position);
                     requestFocusTo(position-1);
+                    activity.changeMenuItemVisibility(listTask.getCheckedTasks().size());
                     update();
                 } else {
                     listTask.getUncheckedTasks().add(listTask.getCheckedTask(position - (listTask.getUncheckedTasks().size() + 1)));
                     listTask.getCheckedTasks().remove(position - (listTask.getUncheckedTasks().size()));
                     update();
+                    activity.changeMenuItemVisibility(listTask.getCheckedTasks().size());
                     requestFocusLast();
                 }
             }

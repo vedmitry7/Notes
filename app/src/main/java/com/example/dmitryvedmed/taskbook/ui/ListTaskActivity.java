@@ -58,6 +58,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
     int hours;
     int minutes;
     String repeating;
+    MenuItem deleteCheckedTasks;
 
 
     @Override
@@ -209,6 +210,10 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
             case R.id.cancel_notification:
                 cancelNotification();
                 break;
+            case R.id.delete_checked_tasks:
+                listTaskRecyclerAdapter.deleteCheckedTasks();
+                changeMenuItemVisibility(0);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -317,6 +322,8 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_colors, menu);
+        deleteCheckedTasks = menu.findItem(R.id.delete_checked_tasks);
+        changeMenuItemVisibility(task.getCheckedTasks().size());
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -464,5 +471,12 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 break;
         }
         return false;
+    }
+
+    public void changeMenuItemVisibility(int size) {
+        if(size==0)
+            deleteCheckedTasks.setVisible(false);
+        else
+            deleteCheckedTasks.setVisible(true);
     }
 }

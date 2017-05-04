@@ -130,6 +130,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         activity.selectedItemCount(0);
         mode = Mode.NORMAL;
         selectedTasksCounter = 0;
+        selects = new boolean[tasks.size()];
     }
 
     public void cancelSelection() {
@@ -138,6 +139,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mode = Mode.NORMAL;
         notifyDataSetChanged();
         selectedTasksCounter = 0;
+        selects = new boolean[tasks.size()];
     }
 
     public void deleteSelectedTasksForever() {
@@ -166,6 +168,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         activity.selectedItemCount(0);
         mode = Mode.NORMAL;
         selectedTasksCounter = 0;
+        selects = new boolean[tasks.size()];
     }
 
     @Override

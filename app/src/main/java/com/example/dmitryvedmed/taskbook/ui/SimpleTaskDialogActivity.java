@@ -12,16 +12,20 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.dmitryvedmed.taskbook.R;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
 import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
 
 public class SimpleTaskDialogActivity extends AppCompatActivity {
 
     private TextView head, context;
     private SimpleTask task;
+    private DBHelper5 dbHelper5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        dbHelper5 = new DBHelper5(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_simple_task_dialog);
         initView();
@@ -36,7 +40,9 @@ public class SimpleTaskDialogActivity extends AppCompatActivity {
         context = (TextView) findViewById(R.id.contextTextView);
 
 
-        task = (SimpleTask) getIntent().getSerializableExtra("Task");
+        //task = (SimpleTask) getIntent().getSerializableExtra("Task");
+
+        task = (SimpleTask) dbHelper5.getTask(getIntent().getIntExtra("TaskId",0));
         head.setText(task.getHeadLine());
         context.setText(task.getContext());
 

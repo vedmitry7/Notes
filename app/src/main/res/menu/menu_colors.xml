@@ -51,4 +51,11 @@
         android:title="Убрать напоминание"
         app:showAsAction="never" />
 
+    <item
+        android:orderInCategory="100"
+        android:id="@+id/delete_checked_tasks"
+        android:title="Удалить отмеченные"
+        android:visible="false"
+        app:showAsAction="never" />
+
 </menu>

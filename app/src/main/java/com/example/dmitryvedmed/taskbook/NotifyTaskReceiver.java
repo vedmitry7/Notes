@@ -54,7 +54,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
                 task.setReminderTime(task.getReminderTime() + task.getRepeatingPeriod());
             }
             notificationIntent = new Intent(context, SimpleTaskDialogActivity.class);
-            notificationIntent.putExtra("Task", task);
+            notificationIntent.putExtra("TaskId", task.getId());
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent contentIntent = PendingIntent.getActivity(context,
                     0, notificationIntent,
@@ -94,7 +94,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             else {
                 task.setReminderTime(task.getReminderTime() + task.getRepeatingPeriod());
             }
-            notificationIntent.putExtra("ListTask", task);
+            notificationIntent.putExtra("ListTaskId", task.getId());
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent contentIntent = PendingIntent.getActivity(context,
                     0, notificationIntent,

@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.dmitryvedmed.taskbook.R;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
 import com.example.dmitryvedmed.taskbook.logic.ListTask;
 
 public class ListTaskDialogActivity extends AppCompatActivity {
@@ -22,20 +23,24 @@ public class ListTaskDialogActivity extends AppCompatActivity {
     private ListTaskDialogRecyclerAdapter listTaskDialogRecyclerAdapter;
     private TextView head;
     private ListTask task;
+    private DBHelper5 dbHelper5;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_task_dialog);
-
+        dbHelper5 = new DBHelper5(this);
         initView();
 
     }
 
     private void initView() {
 
-        task = (ListTask) getIntent().getSerializableExtra("ListTask");
+
+        //task = (ListTask) getIntent().getSerializableExtra("ListTask");
+
+        task = (ListTask) dbHelper5.getTask(getIntent().getIntExtra("ListTaskId", 0));
 
         head = (TextView) findViewById(R.id.listTaskDialogHeadTextView);
         if(task.getHeadLine()==null||task.getHeadLine().length()==0)
