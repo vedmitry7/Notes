@@ -2,6 +2,7 @@ package com.example.dmitryvedmed.taskbook.ui;
 
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -52,6 +53,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
     private SharedPreferences sharedPreferences;
     int hours;
     int minutes;
+    MenuItem deleteCheckedTasks, cancelNotification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -262,6 +264,27 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             case R.id.cancel_notification:
                 cancelNotification();
                 break;
+            case R.id.cancel_notif:
+                final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                // alert.setTitle("Очистить корзину?");
+                alert.setMessage("Удалить напоминание?");
+
+                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        cancelNotification();
+                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        notificationManager.cancel(task.getId());
+                        cancelNotification.setVisible(false);
+                    }
+                });
+                alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                alert.show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -344,7 +367,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 task.setRemind(true);
                 task.setReminderTime(notificationTime.getTimeInMillis());
                 saveTask(false);
-
+                cancelNotification.setVisible(true);
 
             }
         });
@@ -392,6 +415,14 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_colors, menu);
+        cancelNotification = menu.findItem(R.id.cancel_notif);
+        if(task.isRemind()){
+            Log.d("TAG", "is REMIND FALSE");
+            cancelNotification.setVisible(true);
+        } else {
+            Log.d("TAG", "is REMIND TRUE");
+            cancelNotification.setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

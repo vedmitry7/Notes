@@ -3,6 +3,7 @@ package com.example.dmitryvedmed.taskbook.ui;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -58,7 +59,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
     int hours;
     int minutes;
     String repeating;
-    MenuItem deleteCheckedTasks;
+    MenuItem deleteCheckedTasks, cancelNotification;
 
 
     @Override
@@ -135,6 +136,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
             }
         });
 
+
     }
 
     private void initTask() {
@@ -146,7 +148,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
             task.setPosition(getIntent().getIntExtra("position", 0));
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
-        else{
+        else {
             System.out.println("LIST TASK != NULL, id = " + task.getHeadLine());
             Log.d("TAG", "COLOR - " + task.getColor());
         }
@@ -213,6 +215,27 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
             case R.id.delete_checked_tasks:
                 listTaskRecyclerAdapter.deleteCheckedTasks();
                 changeMenuItemVisibility(0);
+                break;
+            case R.id.cancel_notif:
+                final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                // alert.setTitle("Очистить корзину?");
+                alert.setMessage("Удалить напоминание?");
+
+                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        cancelNotification();
+                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        notificationManager.cancel(task.getId());
+                        cancelNotification.setVisible(false);
+                    }
+                });
+                alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                alert.show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -304,6 +327,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 task.setRemind(true);
                 task.setReminderTime(notificationTime.getTimeInMillis());
                 saveTask(false);
+                cancelNotification.setVisible(true);
             }
         });
 
@@ -323,6 +347,14 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_colors, menu);
         deleteCheckedTasks = menu.findItem(R.id.delete_checked_tasks);
+        cancelNotification = menu.findItem(R.id.cancel_notif);
+        if(task.isRemind()){
+            Log.d("TAG", "is REMIND FALSE");
+            cancelNotification.setVisible(true);
+        } else {
+            Log.d("TAG", "is REMIND TRUE");
+            cancelNotification.setVisible(false);
+        }
         changeMenuItemVisibility(task.getCheckedTasks().size());
         return super.onCreateOptionsMenu(menu);
     }
