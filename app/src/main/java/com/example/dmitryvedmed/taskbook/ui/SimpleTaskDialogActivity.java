@@ -27,7 +27,7 @@ public class SimpleTaskDialogActivity extends AppCompatActivity {
 
         dbHelper5 = new DBHelper5(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_simple_task_dialog);
+        setContentView(R.layout.new_simple_task_dialog);
         initView();
         WindowManager.LayoutParams lp = this.getWindow().getAttributes();
         lp.dimAmount = 0.7f;
@@ -43,7 +43,10 @@ public class SimpleTaskDialogActivity extends AppCompatActivity {
         //task = (SimpleTask) getIntent().getSerializableExtra("Task");
 
         task = (SimpleTask) dbHelper5.getTask(getIntent().getIntExtra("TaskId",0));
-        head.setText(task.getHeadLine());
+        if(task.getHeadLine().length()>0)
+            head.setText(task.getHeadLine());
+        else
+            head.setVisibility(View.GONE);
         context.setText(task.getContext());
 
 

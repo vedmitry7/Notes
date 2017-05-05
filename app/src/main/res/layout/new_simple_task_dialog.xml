@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="10dp"
+    android:paddingTop="2dp"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+            <TextView
+                android:layout_marginTop="6dp"
+                android:paddingRight="16dp"
+                android:text="ert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:alpha="67"
+                android:id="@+id/headTextView"
+                android:textSize="17sp"
+                android:textStyle="normal|bold" />
+
+            <TextView
+                android:paddingRight="16dp"
+                android:paddingTop="4dp"
+                android:text="fd ff df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:alpha="67"
+                android:id="@+id/contextTextView"
+                android:textSize="17sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout style="?android:attr/buttonBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:measureWithLargestChild="true"
+        android:layout_gravity="end"
+        android:paddingRight="0dp"
+        >
+        <Button style="?android:attr/buttonBarButtonStyle"
+            android:text="Убрать"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/dialogBtnOK"
+            android:onClick="ok"
+            />
+        <Button style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/dialogBtnLeave"
+            android:onClick="leave"
+            android:text="Оставить"
+            android:layout_marginRight="2dp"/>
+    </LinearLayout>
+</LinearLayout>

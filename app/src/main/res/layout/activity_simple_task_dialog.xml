@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
            >
             <TextView
-                android:text="http://livelinks.online/go.php?u=http://kyc.pm/mXcboj4zN/Lint_PDF.7z http://livelinks.online/go.php?u=http://kyc.pm/mXcboj4zN/Lint_PDF.7z http://livelinks.online/go.php?u=http://kyc.pm/mXcboj4zN/Lint_PDF.7z http://livelinks.online/go.php?u=http://kyc.pm/mXcboj4zN/Lint_PDF.7z"
+                android:text="ert"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
@@ -37,7 +37,7 @@
 
             <TextView
                 android:paddingTop="5dp"
-                android:text="http://livelinks.online/go.php?u=http://kyc.pm/mXcboj4zN/Lint_PDF.7z http://livelinks.online/go.php?u=http://kyc.pm/mXcboj4zN/Lint_PDF.7z http://livelinks.online/go.php?u=http://kyc.pm/mXcboj4zN/Lint_PDF.7z"
+                android:text="rey"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
@@ -50,7 +50,7 @@
 
     </ScrollView>
 
-    <LinearLayout
+   <!-- <LinearLayout
         android:paddingBottom="5dp"
         android:paddingRight="5dp"
         android:layout_gravity="right"
@@ -79,7 +79,26 @@
       />
 
     </LinearLayout>
+-->
 
+    <LinearLayout style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:measureWithLargestChild="true">
+        <Button style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/dialogBtnOK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="cancel" />
+        <Button style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/dialogBtnLeave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="ok" />
+    </LinearLayout>
 
 </LinearLayout>
 
