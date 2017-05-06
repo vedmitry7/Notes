@@ -29,10 +29,14 @@ public class ListTaskDialogActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_task_dialog);
+        setContentView(R.layout.new_list_task_dialog);
+        WindowManager.LayoutParams lp = this.getWindow().getAttributes();
+        lp.dimAmount = 0.7f;
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        getWindow().setAttributes(lp);
+
         dbHelper5 = new DBHelper5(this);
         initView();
-
     }
 
     private void initView() {

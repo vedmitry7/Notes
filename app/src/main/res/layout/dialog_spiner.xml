@@ -21,8 +21,10 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
             android:text="Сегодня"
             android:textSize="16dp"
+            android:paddingRight="10dp"
             android:id="@+id/spinnerButtonDate"
             style="?android:attr/spinnerStyle"
             android:layout_weight="1"
