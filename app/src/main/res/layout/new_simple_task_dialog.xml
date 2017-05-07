@@ -55,6 +55,8 @@
         android:layout_gravity="end"
         android:paddingRight="0dp"
         >
+
+
         <Button style="?android:attr/buttonBarButtonStyle"
             android:text="Убрать"
             android:layout_width="wrap_content"
@@ -71,5 +73,7 @@
             android:onClick="leave"
             android:text="Оставить"
             android:layout_marginRight="2dp"/>
+
+
     </LinearLayout>
 </LinearLayout>

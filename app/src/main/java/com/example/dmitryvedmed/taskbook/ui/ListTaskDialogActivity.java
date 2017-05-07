@@ -2,6 +2,7 @@ package com.example.dmitryvedmed.taskbook.ui;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,6 +38,16 @@ public class ListTaskDialogActivity extends AppCompatActivity {
 
         dbHelper5 = new DBHelper5(this);
         initView();
+
+
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.d("TAG", "onNewIntent    action: " + intent.getAction()+" category: "+intent.getCategories());
+
+        super.onNewIntent(intent);
     }
 
     private void initView() {

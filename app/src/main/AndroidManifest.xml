@@ -78,11 +78,18 @@
 
         <activity
             android:name=".ui.SimpleTaskDialogActivity"
+            android:clearTaskOnLaunch="true"
+            android:noHistory="true"
             android:theme="@style/Theme.MyDialog" />
         <activity
+            android:label="dialogList"
             android:name=".ui.ListTaskDialogActivity"
-            android:theme="@style/Theme.MyDialog"></activity>
-        <activity android:name=".ui.CommonTaskActivity"></activity>
+            android:noHistory="true"
+            android:theme="@style/Theme.MyDialog">
+        </activity>
+        <activity android:name=".ui.CommonTaskActivity">
+
+        </activity>
     </application>
 
 </manifest>
