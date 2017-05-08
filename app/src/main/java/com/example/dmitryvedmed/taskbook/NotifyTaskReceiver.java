@@ -120,7 +120,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
                     .setAutoCancel(false)
                     .addAction(R.drawable.note_multiple_outline, "Открыть", contentIntent)
                     .setContentTitle(task.getHeadLine())
-                    .setContentText(task.getUncheckedTask(0));
+                    .setContentText("324");
             // Notification notification = builder.getNotification(); // до API 16
 
             Notification notification = builder.build();

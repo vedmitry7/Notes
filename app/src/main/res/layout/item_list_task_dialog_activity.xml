@@ -5,10 +5,10 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="#FFFFFF"
-    android:paddingRight="16dp"
     >
 
     <CheckBox
+        android:paddingRight="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/checkBoxDialog"

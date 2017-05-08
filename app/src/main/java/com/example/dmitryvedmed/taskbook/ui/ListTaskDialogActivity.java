@@ -30,15 +30,22 @@ public class ListTaskDialogActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.new_list_task_dialog);
+        dbHelper5 = new DBHelper5(this);
+        Window window = this.getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+
+        wlp.gravity = Gravity.CENTER;
+        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(wlp);
+        initView();
         WindowManager.LayoutParams lp = this.getWindow().getAttributes();
         lp.dimAmount = 0.7f;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         getWindow().setAttributes(lp);
-
-        dbHelper5 = new DBHelper5(this);
-        initView();
-
 
     }
 
@@ -63,20 +70,7 @@ public class ListTaskDialogActivity extends AppCompatActivity {
         else
             head.setText(task.getHeadLine());
 
-        WindowManager.LayoutParams lp = this.getWindow().getAttributes();
-        lp.dimAmount = 0.7f;
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        getWindow().setAttributes(lp);
 
-        Window window = this.getWindow();
-        WindowManager.LayoutParams wlp = window.getAttributes();
-
-        wlp.gravity = Gravity.CENTER;
-
-        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-        wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        window.setAttributes(wlp);
 
         recyclerView = (RecyclerView) findViewById(R.id.list_dialog_activity_recycler_view);
         listTaskDialogRecyclerAdapter = new ListTaskDialogRecyclerAdapter(task, ListTaskDialogActivity.this);
