@@ -11,6 +11,7 @@ import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -426,10 +427,47 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         (Context.LAYOUT_INFLATER_SERVICE);
 
                 holder.layout.removeAllViews();
-                for (String s:listTask.getUncheckedTasks()
+
+                int count = 0;
+                String s = null;
+                for (int i = 0; i < 5; i++) {
+                    if(listTask.getUncheckedTasks().size()-1 < i){
+                        break;
+                    }
+                    count++;
+                    s = listTask.getUncheckedTasks().get(i);
+                    View view = inflater.inflate(R.layout.card_view_list_item, null, false);
+                    TextView t = (TextView) view.findViewById(R.id.textView3);
+                    t.setMaxLines(2);
+                    t.setEllipsize(TextUtils.TruncateAt.END);
+                    ImageButton c = (ImageButton) view.findViewById(R.id.checkBoxDialog);
+                    // c.setPressed(true);
+                    t.setTypeface(typeFace);
+                    t.setText(s);
+                    holder.layout.addView(view);
+                }
+                for (int i = 0; i < 5 - count ; i++) {
+                    if(listTask.getCheckedTasks().size()-1 < i){
+                        break;
+                    }
+                    s = listTask.getCheckedTasks().get(i);
+                    View view = inflater.inflate(R.layout.card_view_list_item, null, false);
+                    TextView t = (TextView) view.findViewById(R.id.textView3);
+                    t.setMaxLines(2);
+                    t.setEllipsize(TextUtils.TruncateAt.END);
+                    ImageButton c = (ImageButton) view.findViewById(R.id.checkBoxDialog);
+                    c.setPressed(true);
+                    t.setTypeface(typeFace);
+                    t.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                    t.setText(s);
+                    holder.layout.addView(view);
+
+                }
+         /*       for (String s:listTask.getUncheckedTasks()
                         ) {
                     View view = inflater.inflate(R.layout.card_view_list_item, null, false);
                     TextView t = (TextView) view.findViewById(R.id.textView3);
+                    t.setMaxLines(2);
                     ImageButton c = (ImageButton) view.findViewById(R.id.checkBoxDialog);
                     // c.setPressed(true);
                     t.setTypeface(typeFace);
@@ -447,7 +485,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     t.setText(s);
                     holder.layout.addView(view);
                 }
-
+                */
         /*       holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

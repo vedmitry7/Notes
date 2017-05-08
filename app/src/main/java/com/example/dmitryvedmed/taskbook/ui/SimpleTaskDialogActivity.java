@@ -39,10 +39,9 @@ public class SimpleTaskDialogActivity extends AppCompatActivity {
         head = (TextView) findViewById(R.id.headTextView);
         context = (TextView) findViewById(R.id.contextTextView);
 
-
         //task = (SimpleTask) getIntent().getSerializableExtra("Task");
 
-        task = (SimpleTask) dbHelper5.getTask(getIntent().getIntExtra("TaskId",0));
+        task = (SimpleTask) dbHelper5.getTask(getIntent().getIntExtra("TaskId", 0));
         if(task.getHeadLine().length()>0)
             head.setText(task.getHeadLine());
         else

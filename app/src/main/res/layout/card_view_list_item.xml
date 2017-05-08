@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
-            <ImageButton
-                android:layout_height="16dp"
-                android:layout_width="16dp"
-                android:id="@+id/checkBoxDialog"
-                android:background="@drawable/image_button_selector"
-                />
 
-            <TextView
-                android:paddingLeft="2dp"
-                android:text="TextView TextView View TextView "
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView3"
-                android:textSize="16sp"
-                />
+    <ImageButton
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="2dp"
+        android:layout_height="16dp"
+        android:layout_width="16dp"
+        android:id="@+id/checkBoxDialog"
+        android:background="@drawable/image_button_selector"
 
-</LinearLayout>
+        />
+
+    <TextView
+        android:layout_toRightOf="@+id/checkBoxDialog"
+        android:paddingLeft="2dp"
+        android:text="TextView TextView  dsf sfsd fsd fsd fsdf sd fsd fsdf sdf sView TextView "
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:textSize="16sp"
+        />
+
+</RelativeLayout>

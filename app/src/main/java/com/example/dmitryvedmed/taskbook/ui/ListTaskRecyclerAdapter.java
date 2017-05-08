@@ -449,7 +449,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
     }
 
     public void requestFocusLast(){
-
+        Log.d("TAG", "                                                                                                         requestFocusLast " );
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
@@ -463,6 +463,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
     }
 
     public void setFocusToEditText(){
+        Log.d("TAG", "                                                                                                          setFocusToEditText() " );
         Log.d("TAG", "UNCECKED TASK SIZE = " + listTask.getUncheckedTasks().size() );
         if(listTask.getUncheckedTasks().size()==0){
             listTask.getUncheckedTasks().add("");
@@ -473,6 +474,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
     }
 
     public void requestFocusTo(final int position){
+        Log.d("TAG", "                                                                                                         requestFocusTo " + position );
 
         if(position<0)
             return;

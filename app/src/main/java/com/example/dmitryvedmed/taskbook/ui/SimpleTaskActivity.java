@@ -53,7 +53,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
     private SharedPreferences sharedPreferences;
     int hours;
     int minutes;
-    MenuItem deleteCheckedTasks, cancelNotification;
+    MenuItem cancelNotification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
