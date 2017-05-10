@@ -93,4 +93,14 @@ public class ListTaskDialogActivity extends AppCompatActivity {
         Log.d("TAG", "clicccccccccccccccccccccccccccccck leave");
         finish();
     }
+
+    public void edit(View v){
+        Log.d("TAG", "clicccccccccccccccccccccccccccccck edit");
+
+        Intent intent1 = new Intent(this, ListTaskActivity.class);
+        intent1.putExtra("ListTask", task);
+        this.startActivity(intent1);
+        this.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+
+    }
 }

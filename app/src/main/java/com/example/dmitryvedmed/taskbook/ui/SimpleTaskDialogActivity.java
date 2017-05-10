@@ -2,6 +2,7 @@ package com.example.dmitryvedmed.taskbook.ui;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -70,4 +71,15 @@ public class SimpleTaskDialogActivity extends AppCompatActivity {
         Log.d("TAG", "clicccccccccccccccccccccccccccccck leave");
         finish();
     }
+
+    public void edit(View v){
+        Log.d("TAG", "clicccccccccccccccccccccccccccccck edit");
+
+        Intent intent = new Intent(this, SimpleTaskActivity.class);
+        intent.putExtra("Task", task);
+        this.startActivity(intent);
+        this.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+
+    }
+
 }

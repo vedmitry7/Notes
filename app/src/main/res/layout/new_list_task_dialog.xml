@@ -50,6 +50,17 @@
         android:layout_gravity="end"
         android:paddingRight="0dp"
         >
+
+
+        <Button style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/dialogBtnEdit"
+            android:onClick="edit"
+            android:text="Править"
+            android:layout_marginRight="2dp"/>
+
         <Button style="?android:attr/buttonBarButtonStyle"
             android:text="Убрать"
             android:layout_width="wrap_content"

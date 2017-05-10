@@ -16,9 +16,10 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
+
             <TextView
                 android:layout_marginTop="5dp"
                 android:paddingRight="16dp"
@@ -29,7 +30,9 @@
                 android:alpha="67"
                 android:id="@+id/headTextView"
                 android:textSize="17sp"
-                android:textStyle="normal|bold" />
+                android:textStyle="normal|bold"/>
+
+
 
             <TextView
                 android:paddingRight="16dp"
@@ -52,6 +55,15 @@
         android:measureWithLargestChild="true"
         android:layout_gravity="end"
         >
+
+        <Button style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/dialogBtnEdit"
+            android:onClick="edit"
+            android:text="Править"
+            android:layout_marginRight="2dp"/>
 
 
         <Button style="?android:attr/buttonBarButtonStyle"
