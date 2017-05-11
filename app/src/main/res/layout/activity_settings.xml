@@ -14,9 +14,9 @@
 
     <TextView
         android:paddingLeft="16dp"
-
         android:text="Внешний вид"
         android:layout_width="match_parent"
+        android:textSize="16sp"
         android:layout_height="wrap_content"
         android:id="@+id/textView4"
         android:textStyle="normal|bold" />
@@ -26,13 +26,15 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="48dp">
+        android:layout_height="48dp"
+        android:id="@+id/layout"
+        android:onClick="onClick">
 
         <TextView
             android:paddingLeft="16dp"
-
             android:text="Разметка"
             android:layout_width="match_parent"
+            android:textSize="16sp"
             android:layout_height="wrap_content"
             android:id="@+id/textView43"
             android:textStyle="normal"
@@ -44,71 +46,84 @@
     <View style="@style/Divider"/>
 
     <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:onClick="onClick"
         android:id="@+id/taskFont">
 
-        <TextView
-            android:paddingLeft="16dp"
-
-            android:text="Размер шрифта заметки"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView431"
-            android:textStyle="normal"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/textTaskFontValue"/>
 
         <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="14"
+            android:progress="4"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/textTaskFontValue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_below="@+id/labelTaskFont"
+            android:id="@+id/seekBarTaskFont" />
 
         <TextView
-            android:text="16"
-            android:paddingRight="16dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
+
+            android:paddingLeft="16dp"
+            android:textSize="16sp"
+            android:text="Размер шрифта заметки"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textTaskFontValue"/>
+            android:id="@+id/labelTaskFont"
+            android:textStyle="normal"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:textSize="16sp"
+            android:text="16"
+            android:paddingRight="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textTaskFontValue"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
     <View style="@style/Divider"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:onClick="onClick"
         android:id="@+id/cardFont">
 
-        <TextView
+        <SeekBar
+            android:max="14"
+            android:progress="5"
             android:paddingLeft="16dp"
-            android:text="Размер шрифта карточки"
+            android:paddingRight="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView4313"
-            android:textStyle="normal"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_below="@+id/labelCardFont"
+            android:id="@+id/seekBarCardFont" />
 
         <TextView
-            android:text="16"
+            android:layout_toLeftOf="@+id/labelCardFont"
+            android:text="14"
+            android:textSize="16sp"
             android:paddingRight="16dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textCardFontValue"/>
+            android:id="@+id/textCardFontValue"
+            android:layout_alignParentRight="true"/>
+
+        <TextView
+            android:paddingLeft="16dp"
+            android:textSize="16sp"
+            android:text="Размер шрифта карточки"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/labelCardFont"
+            android:textStyle="normal"/>
 
     </RelativeLayout>
 

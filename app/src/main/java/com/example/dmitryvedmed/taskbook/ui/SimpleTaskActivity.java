@@ -61,10 +61,10 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         setContentView(R.layout.activity_simple_task);
         context = this;
 
+        loadPreferences();
         initView();
         initTask();
         initDate();
-        loadPreferences();
     }
 
     private void initDate() {
@@ -102,10 +102,11 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         head = (EditText) findViewById(R.id.headEditText);
         text = (EditText) findViewById(R.id.taskEditText);
 
-
-
         text.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());
         head.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
+
+        text.setTextSize(sharedPreferences.getInt("taskFontSize", 16));
+        head.setTextSize(sharedPreferences.getInt("taskFontSize", 16));
 
         toolbar.setNavigationIcon(R.drawable.ic_back);
 
@@ -516,7 +517,6 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
 
             case R.id.item_morning:
                 spinnerButtonTime.setText(getResources().getString(R.string.morning));
-
                 break;
             case R.id.item_afternoon:
                 spinnerButtonTime.setText(getResources().getString(R.string.afternoon));
@@ -537,16 +537,13 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 notificationTime.set(Calendar.MINUTE, minutes);
                 Log.d("TAG", "DAY - " + String.valueOf(notificationTime.get(Calendar.DAY_OF_MONTH)));
                 spinnerButtonDate.setText(getResources().getString(R.string.testerday));
-
                 break;
-
             case R.id.item_tomorrow:
                 notificationTime = Calendar.getInstance();
                 notificationTime.set(Calendar.HOUR_OF_DAY, hours);
                 notificationTime.set(Calendar.MINUTE, minutes);
                 notificationTime.add(Calendar.DAY_OF_MONTH, 1);
                 spinnerButtonDate.setText(getResources().getString(R.string.tomorrow));
-
                 break;
             case R.id.item_chose_date:
                 showDatePickerDialog();

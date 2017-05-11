@@ -1,6 +1,7 @@
 package com.example.dmitryvedmed.taskbook.ui;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,7 @@ import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperAdapter;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperViewHolder;
 import com.example.dmitryvedmed.taskbook.logic.ListTask;
+import com.example.dmitryvedmed.taskbook.untils.Constants;
 import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
 
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
     private int hasInsertInside = -1;
     private ListTaskActivity activity;
     private int fromPos, toPos;
+    private SharedPreferences sharedPreferences;
 
     public ListTaskRecyclerAdapter(ListTask listTask, Context context) {
         this.context = context;
@@ -54,6 +57,8 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
         }
         editTexts = new ArrayList<>();
         checkedTaskEditTexts = new ArrayList<>();
+
+        sharedPreferences = activity.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
     }
 
     public ListTask getListTask() {
@@ -111,6 +116,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             ItemTouchHelperViewHolder, View.OnTouchListener {
         private EditText editText;
         private EditText headLineEditText;
+
         private EditTextListener editTextListener;
         private CheckBoxListener checkBoxListener;
         private Button button;
@@ -144,6 +150,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
 
             editText = (EditText) itemView.findViewById(R.id.itemListEditText);
             if(editText!=null) {
+                editText.setTextSize(sharedPreferences.getInt("taskFontSize", 16));
                 editText.setTypeface(SingletonFonts.getInstance(context).getRobotoRegular());
                 editText.addTextChangedListener(editTextListener);
             }
@@ -163,6 +170,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
 
             headLineEditText = (EditText) itemView.findViewById(R.id.listHeadEditText2);
             if(headLineEditText!=null) {
+                headLineEditText.setTextSize(sharedPreferences.getInt("taskFontSize", 16));
                 headLineEditText.clearFocus();
                 headLineEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
                     @Override

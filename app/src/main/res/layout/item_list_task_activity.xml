@@ -63,6 +63,7 @@
 
     <View style="@style/Divider"
         android:layout_marginLeft="10dp"
+        android:layout_alignParentBottom="true"
         android:alpha="0.1"
         android:layout_alignBottom="@id/itemListEditText"
         android:layout_toLeftOf="@+id/delButton"

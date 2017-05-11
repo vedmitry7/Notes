@@ -479,7 +479,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             choose.setVisible(false);
             counterTextView.setText(String.valueOf(selectedTasksCounter));
             cancelSelection.setVisible(true);
-            if(currentKind==Constants.DELETED) {
+            if(currentKind.equals(Constants.DELETED)) {
                 delateForever.setVisible(true);
                 delete.setVisible(false);
                 clearBascet.setVisible(false);
@@ -572,6 +572,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     @Override
     protected void onResume() {
         Log.d("TAG", "      Activity --- onResume  ---");
+
         update();
         super.onResume();
     }

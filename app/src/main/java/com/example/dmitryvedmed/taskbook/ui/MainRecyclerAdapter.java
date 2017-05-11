@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -56,6 +57,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private Mode mode;
     private int selectedTasksCounter;
     private boolean[] selects;
+    private SharedPreferences sharedPreferences;
     int getSelectedTasksCounter() {
         return selectedTasksCounter;
     }
@@ -91,6 +93,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mode = Mode.NORMAL;
         selects = new boolean[tasks.size()];
 
+        sharedPreferences = activity.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
+
+
     }
 
     private void cancelNotification(int requestCode){
@@ -106,6 +111,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public void onItemDismiss(int position) {
+
+
+
         Log.d("TAG", "       Adapter --- onItemDismiss, position = " + position);
         tasks.get(position).setPosition(0);                 //?
         tasks.get(position).setRemind(false);                 //?
@@ -183,13 +191,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder, View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
-        private TextView stHeadLine, stContent, listHeadEditText, ltFirst, ltSecond;
+        private TextView stHeadLine, stContent, listHeadEditText;
         private LinearLayout layout;
         private CardView cardView;
         private ImageView alarm;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
+            Log.d("TAG", "       Adapter --- RECYCLER VIEW Holder");
             stHeadLine = (TextView) itemView.findViewById(headTextView);
             stContent = (TextView) itemView.findViewById(taskTextView);
             alarm = (ImageView) itemView.findViewById(R.id.alarm_ic);
@@ -201,7 +210,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 stContent.setTypeface(typeFace);
             }
 
+
             listHeadEditText = (TextView) itemView.findViewById(R.id.mainRecListItemHead);
+            if(listHeadEditText!=null){
+                listHeadEditText.setTextSize(sharedPreferences.getInt("cardFontSize", 10));
+            }
 
             layout = (LinearLayout) itemView.findViewById(R.id.card_view_list_layout);
             cardView = (CardView) itemView.findViewById(R.id.card_view);
@@ -391,6 +404,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         switch (getItemViewType(position)){
             case 0:
                 SimpleTask simpleTask = (SimpleTask) tasks.get(position);
+                holder.stHeadLine.setTextSize(sharedPreferences.getInt("cardFontSize", 10));
+                holder.stContent.setTextSize(sharedPreferences.getInt("cardFontSize", 10));
+
                 if(simpleTask.getHeadLine().length()==0)
                     holder.stHeadLine.setVisibility(View.GONE);
                 else {
@@ -414,6 +430,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 listTask = (ListTask) tasks.get(position);
              /*        holder.ltFirst.setText(listTask.getUncheckedTask(0));
                     holder.ltSecond.setText(listTask.getUncheckedTask(1));*/
+
+                holder.listHeadEditText.setTextSize(sharedPreferences.getInt("cardFontSize", 10));
                 if(listTask.getHeadLine()!=null && listTask.getHeadLine().length()==0) {
                     holder.listHeadEditText.setVisibility(View.GONE);
                 }
@@ -439,6 +457,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     View view = inflater.inflate(R.layout.card_view_list_item, null, false);
                     TextView t = (TextView) view.findViewById(R.id.textView3);
                     t.setMaxLines(2);
+                    t.setTextSize(sharedPreferences.getInt("cardFontSize", 10));
                     t.setEllipsize(TextUtils.TruncateAt.END);
                     ImageButton c = (ImageButton) view.findViewById(R.id.checkBoxDialog);
                     // c.setPressed(true);
@@ -454,9 +473,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     View view = inflater.inflate(R.layout.card_view_list_item, null, false);
                     TextView t = (TextView) view.findViewById(R.id.textView3);
                     t.setMaxLines(2);
+                    t.setTextSize(sharedPreferences.getInt("cardFontSize", 10));
                     t.setEllipsize(TextUtils.TruncateAt.END);
                     ImageButton c = (ImageButton) view.findViewById(R.id.checkBoxDialog);
-                    c.setPressed(true);
+                    c.setSelected(true);
                     t.setTypeface(typeFace);
                     t.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                     t.setText(s);
