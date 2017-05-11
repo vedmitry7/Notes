@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -18,9 +19,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.dmitryvedmed.taskbook.NotifyTaskReceiver;
@@ -110,19 +113,45 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     @Override
-    public void onItemDismiss(int position) {
-
-
-
+    public void onItemDismiss(final int position) {
         Log.d("TAG", "       Adapter --- onItemDismiss, position = " + position);
+
         tasks.get(position).setPosition(0);                 //?
         tasks.get(position).setRemind(false);                 //?
-        activity.dbHelper.updateTask(tasks.get(position), Constants.DELETED);
-        cancelNotification(tasks.get(position).getId());
+
         tasks.remove(position);
         notifyItemRemoved(position);
         setRightPosition();
-        activity.showSnackBar(1);
+
+
+        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
+        View mViewe = activity.getLayoutInflater().inflate(R.layout.dialog_question_layout, null);
+        mBuilder.setCancelable(false);
+        RelativeLayout archive = (RelativeLayout) mViewe.findViewById(R.id.actionArchive);
+        RelativeLayout delete = (RelativeLayout) mViewe.findViewById(R.id.actionDelete);
+        CheckBox remember = (CheckBox) mViewe.findViewById(R.id.remember);
+
+        mBuilder.setView(mViewe);
+        final AlertDialog dialog = mBuilder.create();
+
+        archive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.dbHelper.updateTask(tasks.get(position), Constants.ARCHIVE);
+                activity.showSnackBar(1);
+                dialog.dismiss();
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.dbHelper.updateTask(tasks.get(position), Constants.DELETED);
+                cancelNotification(tasks.get(position).getId());
+                dialog.dismiss();
+                activity.showSnackBar(1);
+            }
+        });
+        dialog.show();
     }
 
     public void deleteSelectedTasks(){

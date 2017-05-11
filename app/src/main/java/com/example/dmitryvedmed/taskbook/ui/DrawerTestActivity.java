@@ -60,7 +60,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     private FloatingActionButton fab;
     private FloatingActionButton fabAddST;
     private FloatingActionButton fabAddLT;
-    private CoordinatorLayout coordinatorLayout;
+    public static CoordinatorLayout coordinatorLayout;
     private MenuItem setColor, delete, choose, clearBascet, delateForever, cancelSelection;
     private Animation fabAddAnimetion, fabCancelAnimation, fabOpen, fabClose;
     private boolean fabPressed;
@@ -241,11 +241,8 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d("TAG", "        onOptionsItemSelected  onOptionsItemSelected  onOptionsItemSelected");
 
-
         if(toggle.onOptionsItemSelected(item))
             return true;
-
-
 
         hideFabs();
 
@@ -395,6 +392,14 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 clearBascet.setVisible(true);
                 Log.d("TAG", "                      CCCCCLLLLLLLLIIIIIIRRRRRRRRR ++++++");
                 fab.hide();
+                break;
+            case R.id.archive:
+                mainToolbarText.setText("Архив");
+                currentKind = Constants.ARCHIVE;
+                values = dbHelper.getTasks(Constants.ARCHIVE);
+                adapter.dataChanged(values);
+                clearBascet.setVisible(false);
+
                 break;
             case R.id.notifications:
                 mainToolbarText.setText("Напоминания");
