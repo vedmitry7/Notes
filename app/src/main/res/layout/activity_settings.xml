@@ -167,5 +167,33 @@
 
     </RelativeLayout>
 
+    <View style="@style/Divider"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:id="@+id/setDeletionPeriod"
+        android:onClick="onClick">
+
+        <TextView
+            android:paddingLeft="16dp"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:text="Удаление из корзины"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:textSize="16sp"
+            android:paddingRight="16dp"
+            android:text="3 дня"
+            android:id="@+id/deletionPeriodValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
 </LinearLayout>
 

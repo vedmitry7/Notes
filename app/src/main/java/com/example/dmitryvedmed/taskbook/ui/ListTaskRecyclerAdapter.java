@@ -106,13 +106,13 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
 
     }
 
-    public void deleteCheckedTasks() {
+    void deleteCheckedTasks() {
         listTask.getCheckedTasks().clear();
         update();
         requestFocusLast();
     }
 
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements
+    class RecyclerViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder, View.OnTouchListener {
         private EditText editText;
         private EditText headLineEditText;
@@ -142,7 +142,6 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
 
             switch (getItemViewType()){
                 case 0:
-
                     break;
                 case 1:
                     break;
@@ -166,6 +165,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             newPoint = (TextView)itemView.findViewById(R.id.newPoint);
             if(newPoint!=null) {
                 newPoint.setTypeface(SingletonFonts.getInstance(context).getRobotoRegular());
+                newPoint.setTextSize(sharedPreferences.getInt("taskFontSize", 16));
             }
 
             headLineEditText = (EditText) itemView.findViewById(R.id.listHeadEditText2);

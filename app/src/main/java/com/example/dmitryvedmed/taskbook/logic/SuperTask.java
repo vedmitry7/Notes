@@ -8,9 +8,18 @@ public class SuperTask implements Serializable {
     private int position;
     private int color;
     private long reminderTime;
+    private long deletionTime;
     private boolean remind;
     private int repeatingPeriod;
     private boolean repeating;
+
+    public long getDeletionTime() {
+        return deletionTime;
+    }
+
+    public void setDeletionTime(long deletionTime) {
+        this.deletionTime = deletionTime;
+    }
 
     public boolean isRepeating() {
         return repeating;

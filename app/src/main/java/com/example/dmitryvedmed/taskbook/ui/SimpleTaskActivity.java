@@ -105,8 +105,8 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         text.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());
         head.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
 
-        text.setTextSize(sharedPreferences.getInt("taskFontSize", 16));
-        head.setTextSize(sharedPreferences.getInt("taskFontSize", 16));
+        text.setTextSize(sharedPreferences.getInt("taskFontSize", 17));
+        head.setTextSize(sharedPreferences.getInt("taskFontSize", 17));
 
         toolbar.setNavigationIcon(R.drawable.ic_back);
 

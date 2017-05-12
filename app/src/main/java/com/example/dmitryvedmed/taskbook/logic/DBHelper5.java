@@ -367,6 +367,11 @@ public class DBHelper5 extends SQLiteOpenHelper {
     public int updateTask(SuperTask task, String kind) {
         // 1. get reference to writable DB
 
+
+        if(kind.equals(Constants.DELETED)){
+            task.setDeletionTime(System.currentTimeMillis());
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
 
         byte[] bytes = null;
@@ -390,14 +395,14 @@ public class DBHelper5 extends SQLiteOpenHelper {
         // 2. create ContentValues to add key "column"/value
         ContentValues values = new ContentValues(); // get title
         values.put(KEY_TASK, bytes); // get author
-        if(kind!=null)
+        if(kind != null)
         values.put(KEY_KIND, kind);
         values.put(KEY_REMIND, task.isRemind() ? 1 : 0);
 
         // 3. updating row
         int i = db.update(TABLE, //table
                 values, // column/value
-                KEY_ID+" = ?", // selections
+                KEY_ID + " = ?", // selections
                 new String[] { String.valueOf(task.getId()) }); //selection args
 
         // 4. close

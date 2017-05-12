@@ -386,6 +386,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 mainToolbarText.setText("Корзина");
                 currentKind = Constants.DELETED;
                 values = dbHelper.getTasks(Constants.DELETED);
+                checkOldTask();
                 adapter.dataChanged(values);
                 setColor.setVisible(false);
                 delete.setVisible(false);
@@ -462,6 +463,16 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return super.onOptionsItemSelected(item);
+    }
+
+    private void checkOldTask() {
+        long deletionPeriod = sharedPreferences.getLong("deletionPeriod", Constants.PERIOD_WEEK);
+        for (SuperTask task : values
+             ) {
+            if(task.getDeletionTime() + deletionPeriod < System.currentTimeMillis())
+                dbHelper.deleteBook(task);
+        }
+        values = dbHelper.getTasks(Constants.DELETED);
     }
 
     public void selectedItemCount(int selectedTasksCounter) {

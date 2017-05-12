@@ -61,6 +61,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private int selectedTasksCounter;
     private boolean[] selects;
     private SharedPreferences sharedPreferences;
+    private int textSize;
     int getSelectedTasksCounter() {
         return selectedTasksCounter;
     }
@@ -98,7 +99,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         sharedPreferences = activity.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
 
-
+        textSize = sharedPreferences.getInt("cardFontSize", 16);
     }
 
     private void cancelNotification(int requestCode){
@@ -116,12 +117,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public void onItemDismiss(final int position) {
         Log.d("TAG", "       Adapter --- onItemDismiss, position = " + position);
 
-        tasks.get(position).setPosition(0);                 //?
-        tasks.get(position).setRemind(false);                 //?
 
-        tasks.remove(position);
-        notifyItemRemoved(position);
-        setRightPosition();
 
 
         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
@@ -140,6 +136,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 activity.dbHelper.updateTask(tasks.get(position), Constants.ARCHIVE);
                 activity.showSnackBar(1);
                 dialog.dismiss();
+
+                tasks.get(position).setPosition(0);                 //?
+
+                tasks.remove(position);
+                notifyItemRemoved(position);
+                setRightPosition();
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {
@@ -149,6 +151,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 cancelNotification(tasks.get(position).getId());
                 dialog.dismiss();
                 activity.showSnackBar(1);
+
+                tasks.get(position).setPosition(0);                 //?
+                tasks.get(position).setRemind(false);                 //?
+
+                tasks.remove(position);
+                notifyItemRemoved(position);
+                setRightPosition();
             }
         });
         dialog.show();
@@ -373,7 +382,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 Log.d("TAG", "       SelectedTasks contains = " + position);
                 cardView.setCardBackgroundColor(Color.LTGRAY);
             } else {
-
                 Log.d("TAG", "       Adapter --- NOT SELECTION");
                 if (position >= tasks.size())
                     return;
@@ -422,7 +430,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
         Log.d("TAG", "       Adapter --- onBindViewHolder");
         Log.d("TAG", "       POS = " + position + " CV selected - " + holder.cardView.isSelected());
-
         //holder.cardView.setSelected(false);
         // holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorRed));
         // holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,tasks.get(position).getColor()));
@@ -433,8 +440,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         switch (getItemViewType(position)){
             case 0:
                 SimpleTask simpleTask = (SimpleTask) tasks.get(position);
-                holder.stHeadLine.setTextSize(sharedPreferences.getInt("cardFontSize", 10));
-                holder.stContent.setTextSize(sharedPreferences.getInt("cardFontSize", 10));
+                holder.stHeadLine.setTextSize(textSize);
+                holder.stContent.setTextSize(textSize);
 
                 if(simpleTask.getHeadLine().length()==0)
                     holder.stHeadLine.setVisibility(View.GONE);
@@ -460,7 +467,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
              /*        holder.ltFirst.setText(listTask.getUncheckedTask(0));
                     holder.ltSecond.setText(listTask.getUncheckedTask(1));*/
 
-                holder.listHeadEditText.setTextSize(sharedPreferences.getInt("cardFontSize", 10));
+                holder.listHeadEditText.setTextSize(textSize);
                 if(listTask.getHeadLine()!=null && listTask.getHeadLine().length()==0) {
                     holder.listHeadEditText.setVisibility(View.GONE);
                 }
@@ -486,7 +493,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     View view = inflater.inflate(R.layout.card_view_list_item, null, false);
                     TextView t = (TextView) view.findViewById(R.id.textView3);
                     t.setMaxLines(2);
-                    t.setTextSize(sharedPreferences.getInt("cardFontSize", 10));
+                    t.setTextSize(textSize);
                     t.setEllipsize(TextUtils.TruncateAt.END);
                     ImageButton c = (ImageButton) view.findViewById(R.id.checkBoxDialog);
                     // c.setPressed(true);
@@ -502,7 +509,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     View view = inflater.inflate(R.layout.card_view_list_item, null, false);
                     TextView t = (TextView) view.findViewById(R.id.textView3);
                     t.setMaxLines(2);
-                    t.setTextSize(sharedPreferences.getInt("cardFontSize", 10));
+                    t.setTextSize(textSize);
                     t.setEllipsize(TextUtils.TruncateAt.END);
                     ImageButton c = (ImageButton) view.findViewById(R.id.checkBoxDialog);
                     c.setSelected(true);
@@ -574,6 +581,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         Log.d("TAG", "       Adapter --- dataChanged");
         this.tasks = tasks;
         selects = new boolean[tasks.size()];
+        textSize = sharedPreferences.getInt("cardFontSize", 16);
         compareTasks();
         notifyDataSetChanged();
     }
