@@ -30,14 +30,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
 import com.example.dmitryvedmed.taskbook.R;
-import com.example.dmitryvedmed.taskbook.logic.Section;
-import com.example.dmitryvedmed.taskbook.logic.SuperTask;
 import com.example.dmitryvedmed.taskbook.helper.SimpleItemTouchHelperCallback;
 import com.example.dmitryvedmed.taskbook.helper.SpacesItemDecoration;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
+import com.example.dmitryvedmed.taskbook.logic.Section;
+import com.example.dmitryvedmed.taskbook.logic.SuperTask;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DrawerTestActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -193,11 +194,13 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         //  menuItemDelete = menu.findItem(R.id.delete);
         //  menuItemDelete.setVisible(false);
 
-        /*ArrayList<Section> sections = dbHelper.getAllSections();
+        ArrayList<Section> sections = dbHelper.getAllSections();
         System.out.println("ssssssssssssssssss");
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu navmenu = navigationView.getMenu();
+        navmenu.add(Menu.NONE,345,4,"sdf");
+
         Menu submenu = navmenu.getItem(0).getSubMenu();
         submenu.clear();
 
@@ -206,7 +209,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             System.out.println(s.getName());
             //MenuItem sections =  menu.getItem(R.id.sections);
             submenu.add(R.id.sections,Menu.FIRST,Menu.NONE, s.getName());
-        }*/
+        }
 
         return true;
     }
