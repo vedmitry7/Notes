@@ -64,10 +64,9 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:layout_below="@+id/labelTaskFont"
-            android:id="@+id/seekBarTaskFont" />
+            android:id="@+id/seekBarTaskFont"/>
 
         <TextView
-
             android:paddingLeft="16dp"
             android:textSize="16sp"
             android:text="Размер шрифта заметки"
@@ -140,11 +139,10 @@
             android:progress="5"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:layout_toLeftOf="@+id/stringQuantityValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/labelStringQuantity"
-            android:id="@+id/seekBarStringQuantity" />
+            android:id="@+id/stringQuantitySeekBar" />
 
         <TextView
             android:layout_toLeftOf="@+id/labelStringQuantity"

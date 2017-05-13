@@ -27,8 +27,10 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
     TextView taskFontValue;
     TextView cardFontValue;
     TextView deletionPeriodLabel;
+    TextView stringQuantityValue;
     SeekBar taskFontSeekBar;
     SeekBar cardFontSeekBar;
+    SeekBar stringQuantitySeekBar;
     SharedPreferences.Editor editor;
     RelativeLayout setDeletionPeriod;
 
@@ -50,10 +52,15 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         cardFontValue = (TextView) findViewById(R.id.textCardFontValue);
         taskFontValue = (TextView) findViewById(R.id.textTaskFontValue);
 
+        stringQuantityValue = (TextView) findViewById(R.id.stringQuantityValue);
+        stringQuantityValue.setText(String.valueOf(sharedPreferences.getInt("stringQuantity", 5)));
+
         taskFontSeekBar = (SeekBar) findViewById(R.id.seekBarTaskFont);
         taskFontSeekBar.setOnSeekBarChangeListener(this);
         cardFontSeekBar = (SeekBar) findViewById(R.id.seekBarCardFont);
         cardFontSeekBar.setOnSeekBarChangeListener(this);
+        stringQuantitySeekBar = (SeekBar) findViewById(R.id.stringQuantitySeekBar);
+        stringQuantitySeekBar.setOnSeekBarChangeListener(this);
 
         deletionPeriodLabel = (TextView) findViewById(R.id.deletionPeriodValue);
         Long deletionPeriod = sharedPreferences.getLong("deletionPeriod",Constants.PERIOD_WEEK);
@@ -81,6 +88,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
 
         taskFontSeekBar.setProgress(sharedPreferences.getInt("taskFontSize", 16) - 12);
         cardFontSeekBar.setProgress(sharedPreferences.getInt("cardFontSize", 17) - 12);
+        stringQuantitySeekBar.setProgress(sharedPreferences.getInt("stringQuantity", 5));
     }
 
     @Override
@@ -159,6 +167,13 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 }
                 cardFontValue.setText(String.valueOf(i + 12));
                 break;
+            case R.id.stringQuantitySeekBar:
+                stringQuantityValue.setText(String.valueOf(i + 1));
+                if(i==20)
+                    stringQuantityValue.setText("Все");
+                editor.putInt("stringQuantity",i);
+                break;
+
         }
     }
 
