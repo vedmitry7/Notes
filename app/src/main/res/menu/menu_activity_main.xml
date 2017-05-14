@@ -35,6 +35,17 @@
         android:title="Удалить"
         app:showAsAction="never" />
     <item
+
+        android:id="@+id/deleteSection"
+        android:orderInCategory="100"
+        android:title="Удалить раздел"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/translateTo"
+        android:orderInCategory="100"
+        android:title="переместить в"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/set_color"
         android:orderInCategory="100"
         android:title="Установить цвет"

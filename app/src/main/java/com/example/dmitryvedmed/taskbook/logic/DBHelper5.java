@@ -52,8 +52,16 @@ public class DBHelper5 extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
+    public void deleteSection(Section section){
 
-    public void addSection(Section section){
+    }
+
+    public void clearSectionTable(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        int clearCount = db.delete("sections", null, null);
+    }
+
+    public int addSection(Section section){
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -83,6 +91,43 @@ public class DBHelper5 extends SQLiteOpenHelper {
         // 4. close
         db.close();
         Log.d("TAG", "      DBHelper  add Section"  + id);
+        return (int) id;
+    }
+
+    public void updateSection(Section section){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        byte[] bytes = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutput out = null;
+        try {
+            out = new ObjectOutputStream(bos);
+            out.writeObject(section);
+            out.flush();
+            bytes = bos.toByteArray();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bos.close();
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+        }
+        // 2. create ContentValues to add key "column"/value
+        ContentValues values = new ContentValues(); // get title
+        values.put(KEY_KIND, bytes); // get author
+
+        // 3. updating row
+        int i = db.update("sections", //table
+                values, // column/value
+                KEY_ID + " = ?", // selections
+                new String[] { String.valueOf(section.getId()) }); //selection args
+
+        // 4. close
+        db.close();
     }
 
     public ArrayList<Section> getAllSections() {

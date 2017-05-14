@@ -15,12 +15,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -62,12 +64,12 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     private FloatingActionButton fabAddST;
     private FloatingActionButton fabAddLT;
     public static CoordinatorLayout coordinatorLayout;
-    private MenuItem setColor, delete, choose, clearBascet, delateForever, cancelSelection;
+    private MenuItem setColor, delete, choose, clearBascet, delateForever, cancelSelection, deleteSection, translateTo;
     private Animation fabAddAnimetion, fabCancelAnimation, fabOpen, fabClose;
     private boolean fabPressed;
     private SharedPreferences sharedPreferences;
-
-
+    private ArrayList<Section> sections;
+    private Section currentSection;
 
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
@@ -183,7 +185,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         delete.setVisible(false);
         choose = menu.findItem(R.id.select_item);
         clearBascet = menu.findItem(R.id.clear_basket);
-        if(currentKind==Constants.DELETED && adapter.getTasks().size()!=0)
+        if(currentKind==Constants.DELETED && adapter.getTasks().size() !=0)
             clearBascet.setVisible(true);
         else
             clearBascet.setVisible(false);
@@ -191,25 +193,38 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         delateForever.setVisible(false);
         cancelSelection = menu.findItem(R.id.cancel_selection);
         cancelSelection.setVisible(false);
+
+        deleteSection = menu.findItem(R.id.deleteSection);
+        translateTo = menu.findItem(R.id.translateTo);
+
         //  menuItemDelete = menu.findItem(R.id.delete);
         //  menuItemDelete.setVisible(false);
 
-        ArrayList<Section> sections = dbHelper.getAllSections();
+        sections = dbHelper.getAllSections();
         System.out.println("ssssssssssssssssss");
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+       NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
         Menu navmenu = navigationView.getMenu();
-        navmenu.add(Menu.NONE,345,4,"sdf");
+        navmenu.clear();
+        /*     navmenu.add(Menu.NONE,345,4,"sdf");
 
-        Menu submenu = navmenu.getItem(0).getSubMenu();
+          Menu submenu = navmenu.getItem(0).getSubMenu();
         submenu.clear();
-
+        */
         for (Section s:sections
              ) {
-            System.out.println(s.getName());
+            Log.d("TAG", "Section " + s.getName() + " id " + s.getId());
             //MenuItem sections =  menu.getItem(R.id.sections);
-            submenu.add(R.id.sections,Menu.FIRST,Menu.NONE, s.getName());
+            navmenu.add(45, s.getId(), Menu.NONE, s.getName());
         }
+
+        navmenu.add(34, R.id.add, Menu.NONE, "Новый пункт").setIcon(getResources().getDrawable(R.drawable.ic_add));
+        navmenu.add(Menu.NONE,R.id.undefined , Menu.NONE, "Все").setIcon(getResources().getDrawable(R.drawable.note_multiple));
+        navmenu.add(Menu.NONE,R.id.deleted , Menu.NONE,"Корзина").setIcon(getResources().getDrawable(R.drawable.delete));
+        navmenu.add(Menu.NONE,R.id.settings , Menu.NONE,"Settings").setIcon(getResources().getDrawable(R.drawable.settings));
+        navmenu.add(Menu.NONE,R.id.exit , Menu.NONE,"Exit").setIcon(getResources().getDrawable(R.drawable.exit_to_app));
+        navmenu.add(Menu.NONE, 245 , Menu.NONE,"clear sections");
 
         return true;
     }
@@ -357,8 +372,31 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                     }
                 });
                 alert2.show();
-
                 break;
+            case R.id.deleteSection:
+                dbHelper.deleteSection(currentSection);
+                sections.remove(currentSection);
+                currentSection = null;
+                break;
+            case R.id.translateTo:
+                PopupMenu popupMenu = new PopupMenu(this, toolbar, Gravity.TOP);
+
+                sections = dbHelper.getAllSections();
+                for (Section section:sections
+                     ) {
+                    popupMenu.getMenu().add(section.getName());
+                }
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Log.d("TAG", "           click pop up NAME " + item.getItemId());
+                        adapter.translateTo((String) item.getTitle());
+                        return true;
+                    }
+                });
+                popupMenu.show();
+
+
             case R.id.cancel_selection:
                 adapter.cancelSelection();
                 fab.show();
@@ -374,6 +412,21 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         hideFabs();
         int id = item.getItemId();
         System.out.println("ID = " + id);
+        Log.d("TAG", "           CLICK ITEM " + item.getItemId());
+        for (Section s:sections
+             ) {
+            Log.d("TAG", "           SECTIONS NAME " + s.getName() + "id" +  item.getItemId());
+            if(item.getItemId() == s.getId()){
+                values = dbHelper.getTasks(s.getName());
+                currentKind = s.getName();
+                mainToolbarText.setText(s.getName());
+                adapter.dataChanged(values);
+                Log.d("TAG", "         YESSS" + s.getName() + "id" +  item.getItemId());
+                super.onOptionsItemSelected(item);
+                break;
+            }
+        }
+
         switch (item.getItemId()){
             case R.id.undefined:
                 mainToolbarText.setText("");
@@ -403,8 +456,8 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 values = dbHelper.getTasks(Constants.ARCHIVE);
                 adapter.dataChanged(values);
                 clearBascet.setVisible(false);
-
                 break;
+
             case R.id.notifications:
                 mainToolbarText.setText("Напоминания");
                 //currentKind = Constants.NOTIFICATIONS;
@@ -418,6 +471,9 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 break;
             case R.id.exit:
                 this.finish();
+                break;
+            case 245:
+                dbHelper.clearSectionTable();
                 break;
         }
 
@@ -443,8 +499,10 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                     });
                     Section section = new Section();
                     section.setName(value);
-                    dbHelper.addSection(section);
-                    menu.clear();
+                    int sectionId = dbHelper.addSection(section);
+                    section.setId(sectionId);
+                    dbHelper.updateSection(section);
+                    menu.clear(); //!!!!!!!!!!
                     onCreateOptionsMenu(menu);
           /*          Menu menu = navigationView.getMenu();
                     Menu submenu = menu.getItem(0).getSubMenu();

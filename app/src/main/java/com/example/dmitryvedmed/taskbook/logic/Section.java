@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 public class Section implements Serializable {
     String name;
-    int position;
+    int id;
 
     public String getName() {
         return name;
@@ -15,11 +15,11 @@ public class Section implements Serializable {
         this.name = name;
     }
 
-    public int getPosition() {
-        return position;
+    public int getId() {
+        return id;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public void setId(int id) {
+        this.id = id;
     }
 }

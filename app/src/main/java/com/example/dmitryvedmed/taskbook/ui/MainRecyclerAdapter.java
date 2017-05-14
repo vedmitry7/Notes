@@ -205,6 +205,24 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
 
+    public void translateTo(String s){
+        Log.d("TAG", "           adapter translateTo " + s);
+        for (SuperTask t:selectedTasks
+                ) {
+            activity.dbHelper.updateTask(t, s);
+        }
+        tasks.removeAll(selectedTasks);
+        selectedTasks.clear();
+        setRightPosition();
+        notifyDataSetChanged();
+        activity.selectedItemCount(0);
+        mode = Mode.NORMAL;
+        selectedTasksCounter = 0;
+        selects = new boolean[tasks.size()];
+
+    }
+
+
     public void setColorSelectionTasks(int color){
         for (SuperTask s:selectedTasks
                 ) {
