@@ -193,7 +193,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         compareSelectionTasks();
         for (SuperTask t : selectedTasks
                 ) {
-            activity.dbHelper.deleteBook(t);
+            activity.dbHelper.deleteTask(t);
         }
         tasks.removeAll(selectedTasks);
         selectedTasks.clear();
@@ -202,6 +202,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         activity.selectedItemCount(0);
         mode = Mode.NORMAL;
         selectedTasksCounter = 0;
+    }
+
+    public void deleteSection(){
+        selectedTasks.addAll(tasks);
+        deleteSelectedTasks();
     }
 
 

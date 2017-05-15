@@ -53,7 +53,13 @@ public class DBHelper5 extends SQLiteOpenHelper {
     }
 
     public void deleteSection(Section section){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("sections",
+                KEY_ID + " = ?",
+                new String[] { String.valueOf(section.getId()) });
+        db.close();
 
+        Log.d("TAG", "      DBHelper Delate Section " + section.getName());
     }
 
     public void clearSectionTable(){
@@ -362,7 +368,10 @@ public class DBHelper5 extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        Log.d("TAG", "      DBHelper - getTasks"  );
+        Log.d("TAG", "      DBHelper - getTasks KIND - " + kind);
+
+
+        Log.d("TAG", "      DBHelper - getTasks KIND - " + kind!=null?kind:"null");
         // 3. go over each row, build book and add it to list
         SuperTask task = null;
         if (cursor.moveToFirst()) {
@@ -404,7 +413,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
-        Log.d("TAG", "      DBHelper    getAllTask"  + tasks.toString());
+        Log.d("TAG", "      DBHelper    getTasks(kind)"  + tasks.toString());
 
         return tasks;
     }
@@ -412,7 +421,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
     public int updateTask(SuperTask task, String kind) {
         // 1. get reference to writable DB
 
-
+        Log.d("TAG", "      DBHelper - UPDATEtasks KIND - " + kind!=null?kind:"null");
         if(kind.equals(Constants.DELETED)){
             task.setDeletionTime(System.currentTimeMillis());
         }
@@ -515,11 +524,11 @@ public class DBHelper5 extends SQLiteOpenHelper {
     }
 
 
-    public void deleteBook(SuperTask task) {
+    public void deleteTask(SuperTask task) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE,
-                KEY_ID+" = ?",
+                KEY_ID + " = ?",
                 new String[] { String.valueOf(task.getId()) });
         db.close();
 

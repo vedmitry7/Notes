@@ -64,7 +64,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     private FloatingActionButton fabAddST;
     private FloatingActionButton fabAddLT;
     public static CoordinatorLayout coordinatorLayout;
-    private MenuItem setColor, delete, choose, clearBascet, delateForever, cancelSelection, deleteSection, translateTo;
+    private MenuItem setColor, delete, choose, clearBascet, delateForever, cancelSelection, deleteSection, translateTo, undifinedPoint;
     private Animation fabAddAnimetion, fabCancelAnimation, fabOpen, fabClose;
     private boolean fabPressed;
     private SharedPreferences sharedPreferences;
@@ -195,6 +195,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         cancelSelection.setVisible(false);
 
         deleteSection = menu.findItem(R.id.deleteSection);
+        deleteSection.setVisible(false);
         translateTo = menu.findItem(R.id.translateTo);
 
         //  menuItemDelete = menu.findItem(R.id.delete);
@@ -203,9 +204,10 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         sections = dbHelper.getAllSections();
         System.out.println("ssssssssssssssssss");
 
-       NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         Menu navmenu = navigationView.getMenu();
+        undifinedPoint = navmenu.findItem(R.id.undefined);
         navmenu.clear();
         /*     navmenu.add(Menu.NONE,345,4,"sdf");
 
@@ -358,7 +360,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                     public void onClick(DialogInterface dialogInterface, int i) {
                         for (SuperTask t:dbHelper.getTasks(Constants.DELETED)
                                 ) {
-                            dbHelper.deleteBook(t);
+                            dbHelper.deleteTask(t);
                         }
                         adapter.getTasks().clear();
                         adapter.notifyDataSetChanged();
@@ -374,9 +376,32 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 alert2.show();
                 break;
             case R.id.deleteSection:
+                AlertDialog.Builder alert3 = new AlertDialog.Builder(this);
+                alert3.setTitle("Удалить раздел?");
+                alert3.setMessage("Если раздел содержит заметки, то они отправятся в корзину");
+
+
+                alert3.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        adapter.deleteSection();
+                        deleteSection.setVisible(false);
+                        onNavigationItemSelected(undifinedPoint);
+                    }
+                });
+
+                alert3.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Canceled.
+                    }
+                });
+
+                alert3.show();
+
                 dbHelper.deleteSection(currentSection);
                 sections.remove(currentSection);
                 currentSection = null;
+                onCreateOptionsMenu(menu);
                 break;
             case R.id.translateTo:
                 PopupMenu popupMenu = new PopupMenu(this, toolbar, Gravity.TOP);
@@ -389,13 +414,13 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        Log.d("TAG", "           click pop up NAME " + item.getItemId());
+                        Log.d("TAG", "           click pop up NAME " + item.getItemId() + item.getTitle());
                         adapter.translateTo((String) item.getTitle());
                         return true;
                     }
                 });
                 popupMenu.show();
-
+                break;
 
             case R.id.cancel_selection:
                 adapter.cancelSelection();
@@ -419,9 +444,11 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             if(item.getItemId() == s.getId()){
                 values = dbHelper.getTasks(s.getName());
                 currentKind = s.getName();
+                currentSection = s;
                 mainToolbarText.setText(s.getName());
                 adapter.dataChanged(values);
-                Log.d("TAG", "         YESSS" + s.getName() + "id" +  item.getItemId());
+                deleteSection.setVisible(true);
+                Log.d("TAG", "         YESSS " + s.getName() + " id " +  item.getItemId());
                 super.onOptionsItemSelected(item);
                 break;
             }
@@ -531,7 +558,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         for (SuperTask task : values
              ) {
             if(task.getDeletionTime() + deletionPeriod < System.currentTimeMillis())
-                dbHelper.deleteBook(task);
+                dbHelper.deleteTask(task);
         }
         values = dbHelper.getTasks(Constants.DELETED);
     }
