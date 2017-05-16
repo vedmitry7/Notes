@@ -21,7 +21,8 @@
             <item
                 android:id="@+id/deleted"
                 android:icon="@drawable/delete"
-                android:title="Корзина" />
+                android:title="Корзина"
+                android:actionLayout="@layout/deliver"/>
         </menu>
     </item>
         <item

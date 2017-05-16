@@ -35,6 +35,13 @@ public class ListTaskItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         if (isCanMovement()) {
+          /*  if (recyclerView.getLayoutManager() instanceof GridLayoutManager || recyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
+                final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                //不需要滑动
+                final int swipeFlags = 0;
+                return makeMovementFlags(dragFlags, swipeFlags);
+            }*/
+
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
             System.out.println("    getMovementFlags ");
             return makeMovementFlags(dragFlags, 0);
@@ -42,6 +49,12 @@ public class ListTaskItemTouchHelperCallback extends ItemTouchHelper.Callback {
             return 0;
         }
     }
+   /* @Override
+    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            ViewCompat.setElevation(viewHolder.itemView, 10);
+    }*/
+
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder source, RecyclerView.ViewHolder target) {

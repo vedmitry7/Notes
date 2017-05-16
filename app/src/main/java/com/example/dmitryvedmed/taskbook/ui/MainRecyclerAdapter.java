@@ -4,6 +4,7 @@ package com.example.dmitryvedmed.taskbook.ui;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -118,22 +119,35 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         Log.d("TAG", "       Adapter --- onItemDismiss, position = " + position);
 
 
-
-
         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
         View mViewe = activity.getLayoutInflater().inflate(R.layout.dialog_question_layout, null);
-        mBuilder.setCancelable(false);
+        mBuilder.setCancelable(true);
         RelativeLayout archive = (RelativeLayout) mViewe.findViewById(R.id.actionArchive);
         RelativeLayout delete = (RelativeLayout) mViewe.findViewById(R.id.actionDelete);
         CheckBox remember = (CheckBox) mViewe.findViewById(R.id.remember);
+        if(activity.currentKind==Constants.ARCHIVE){
+            TextView textView = (TextView) mViewe.findViewById(R.id.archiveTextView);
+            textView.setText("Разархивировать");
+        }
+
 
         mBuilder.setView(mViewe);
         final AlertDialog dialog = mBuilder.create();
-
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                Log.d("TAG", "       Adapter --- CANCEL LISTENER ");
+                notifyDataSetChanged();
+            }
+        });
         archive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.dbHelper.updateTask(tasks.get(position), Constants.ARCHIVE);
+                if(activity.currentKind == Constants.ARCHIVE){
+                    activity.dbHelper.updateTask(tasks.get(position), Constants.UNDEFINED);
+                } else {
+                    activity.dbHelper.updateTask(tasks.get(position), Constants.ARCHIVE);
+                }
                 activity.showSnackBar(1);
                 dialog.dismiss();
 

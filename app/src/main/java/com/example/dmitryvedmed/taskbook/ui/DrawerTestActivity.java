@@ -14,6 +14,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -197,6 +199,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         deleteSection = menu.findItem(R.id.deleteSection);
         deleteSection.setVisible(false);
         translateTo = menu.findItem(R.id.translateTo);
+        translateTo.setVisible(false);
 
         //  menuItemDelete = menu.findItem(R.id.delete);
         //  menuItemDelete.setVisible(false);
@@ -214,6 +217,9 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
           Menu submenu = navmenu.getItem(0).getSubMenu();
         submenu.clear();
         */
+
+        navmenu.add(Menu.NONE, R.id.undefined , Menu.NONE, "Все").setIcon(getResources().getDrawable(R.drawable.note_multiple));
+        navmenu.add(Menu.NONE, R.id.archive , Menu.NONE, "Архив").setIcon(getResources().getDrawable(R.drawable.archive));
         for (Section s:sections
              ) {
             Log.d("TAG", "Section " + s.getName() + " id " + s.getId());
@@ -221,11 +227,10 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             navmenu.add(45, s.getId(), Menu.NONE, s.getName());
         }
 
-        navmenu.add(34, R.id.add, Menu.NONE, "Новый пункт").setIcon(getResources().getDrawable(R.drawable.ic_add));
-        navmenu.add(Menu.NONE,R.id.undefined , Menu.NONE, "Все").setIcon(getResources().getDrawable(R.drawable.note_multiple));
-        navmenu.add(Menu.NONE,R.id.deleted , Menu.NONE,"Корзина").setIcon(getResources().getDrawable(R.drawable.delete));
-        navmenu.add(Menu.NONE,R.id.settings , Menu.NONE,"Settings").setIcon(getResources().getDrawable(R.drawable.settings));
-        navmenu.add(Menu.NONE,R.id.exit , Menu.NONE,"Exit").setIcon(getResources().getDrawable(R.drawable.exit_to_app));
+        navmenu.add(45, R.id.add, Menu.NONE, "Новый пункт").setIcon(getResources().getDrawable(R.drawable.ic_add));
+        navmenu.add(Menu.NONE, R.id.deleted , Menu.NONE,"Корзина").setIcon(getResources().getDrawable(R.drawable.delete));
+        navmenu.add(Menu.NONE, R.id.settings , Menu.NONE,"Настройки").setIcon(getResources().getDrawable(R.drawable.settings));
+        navmenu.add(Menu.NONE, R.id.exit , Menu.NONE,"Выход").setIcon(getResources().getDrawable(R.drawable.exit_to_app));
         navmenu.add(Menu.NONE, 245 , Menu.NONE,"clear sections");
 
         return true;
@@ -404,22 +409,54 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 onCreateOptionsMenu(menu);
                 break;
             case R.id.translateTo:
+
+                MenuBuilder menuBuilder = new MenuBuilder(this);
+
+                MenuPopupHelper optionsMenu = new MenuPopupHelper(this, menuBuilder, toolbar);
+                optionsMenu.setForceShowIcon(true);
+
+
                 PopupMenu popupMenu = new PopupMenu(this, toolbar, Gravity.TOP);
 
                 sections = dbHelper.getAllSections();
                 for (Section section:sections
                      ) {
-                    popupMenu.getMenu().add(section.getName());
+                    popupMenu.getMenu().add(section.getName()).setIcon(getResources().getDrawable(R.drawable.delete));
                 }
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         Log.d("TAG", "           click pop up NAME " + item.getItemId() + item.getTitle());
                         adapter.translateTo((String) item.getTitle());
+                        onNavigationItemSelected(undifinedPoint);
                         return true;
                     }
                 });
                 popupMenu.show();
+                /*PopupMenu popup = new PopupMenu(this, toolbar);
+                try {
+                    Field[] fields = popup.getClass().getDeclaredFields();
+                    for (Field field : fields) {
+                        if ("mPopup".equals(field.getName())) {
+                            field.setAccessible(true);
+                            Object menuPopupHelper = field.get(popup);
+                            Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                            Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon",boolean.class);
+                            setForceIcons.invoke(menuPopupHelper, true);
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                popup.getMenuInflater().inflate(R.menu.popupmenu, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    public boolean onMenuItemClick(MenuItem item) {
+                        return true;
+                    }
+                });
+                popup.show();*/
                 break;
 
             case R.id.cancel_selection:
@@ -442,6 +479,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
              ) {
             Log.d("TAG", "           SECTIONS NAME " + s.getName() + "id" +  item.getItemId());
             if(item.getItemId() == s.getId()){
+                setItemMovement(false);
                 values = dbHelper.getTasks(s.getName());
                 currentKind = s.getName();
                 currentSection = s;
@@ -456,6 +494,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
 
         switch (item.getItemId()){
             case R.id.undefined:
+                setItemMovement(true);
                 mainToolbarText.setText("");
                 currentKind = Constants.UNDEFINED;
                 values = dbHelper.getTasks(currentKind);
@@ -463,6 +502,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 delateForever.setVisible(false);
                 fab.show();
                 clearBascet.setVisible(false);
+                deleteSection.setVisible(false);
                 Log.d("TAG", "                      CCCCCLLLLLLLLIIIIIIRRRRRRRRR ---------undefined");
                 break;
             case R.id.deleted:
@@ -471,6 +511,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 values = dbHelper.getTasks(Constants.DELETED);
                 checkOldTask();
                 adapter.dataChanged(values);
+                setItemMovement(false);
                 setColor.setVisible(false);
                 delete.setVisible(false);
                 clearBascet.setVisible(true);
@@ -478,16 +519,21 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 fab.hide();
                 break;
             case R.id.archive:
+                setItemMovement(true);
                 mainToolbarText.setText("Архив");
                 currentKind = Constants.ARCHIVE;
                 values = dbHelper.getTasks(Constants.ARCHIVE);
                 adapter.dataChanged(values);
+                deleteSection.setVisible(false);
                 clearBascet.setVisible(false);
                 break;
 
             case R.id.notifications:
                 mainToolbarText.setText("Напоминания");
                 //currentKind = Constants.NOTIFICATIONS;
+                    deleteSection.setVisible(false);
+
+
                 values = dbHelper.getNotificationTasks();
                 adapter.dataChanged(values);
                 break;
@@ -568,6 +614,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             counterTextView.setVisibility(View.GONE);
             setColor.setVisible(false);
             delete.setVisible(false);
+            translateTo.setVisible(false);
             choose.setVisible(true);
             setItemMovement(true);
             cancelSelection.setVisible(false);
@@ -580,6 +627,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             counterTextView.setVisibility(View.VISIBLE);
             setColor.setVisible(true);
             delete.setVisible(true);
+            translateTo.setVisible(true);
             choose.setVisible(false);
             counterTextView.setText(String.valueOf(selectedTasksCounter));
             cancelSelection.setVisible(true);
