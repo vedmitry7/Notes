@@ -58,7 +58,9 @@ public class ListTaskItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder source, RecyclerView.ViewHolder target) {
+        System.out.println("ON Move - ");
         mAdapter.onItemMove(source.getAdapterPosition(), target.getAdapterPosition());
+        wasMoved = true;
         return true;
     }
 
@@ -70,12 +72,24 @@ public class ListTaskItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+        System.out.println(" onSelectedChanged " + actionState);
+        if(actionState==ItemTouchHelper.ACTION_STATE_DRAG){
+            System.out.println("        ItemTouchHelper.ACTION_STATE_DRAG");
+            wasMoved = false;
+        }
+
+        if(actionState==ItemTouchHelper.ACTION_STATE_IDLE){
+            System.out.println("        ItemTouchHelper.ACTION_STATE_DRAG");
+            if(!wasMoved){
+                mAdapter.onItemSelected();
+            }
+        }
+
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
             ItemTouchHelperViewHolder itemViewHolder = (ItemTouchHelperViewHolder) viewHolder;
             itemViewHolder.onItemSelected();
         }
 
-        System.out.println(" onSelectedChanged " + actionState);
         super.onSelectedChanged(viewHolder, actionState);
     }
 

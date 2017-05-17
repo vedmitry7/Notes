@@ -16,6 +16,8 @@ public interface ItemTouchHelperViewHolder {
      */
     void onItemSelected();
 
+    void onItemSelected2();
+
 
     /**
      * Called when the {@link ItemTouchHelper} has completed the move or swipe, and the active item

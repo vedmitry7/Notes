@@ -106,6 +106,11 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
 
     }
 
+    @Override
+    public void onItemSelected() {
+        System.out.println(" onItem SELECTED ");
+    }
+
     void deleteCheckedTasks() {
         listTask.getCheckedTasks().clear();
         update();
@@ -190,6 +195,11 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
 
         @Override
         public void onItemSelected() {
+        }
+
+        @Override
+        public void onItemSelected2() {
+
         }
 
         @Override

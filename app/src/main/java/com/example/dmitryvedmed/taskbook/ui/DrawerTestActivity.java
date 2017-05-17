@@ -279,20 +279,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 break;
             case R.id.select_item:
                 Log.d("TAG", "       Adapter --- set selection mode");
-                toolbar.setVisibility(View.GONE);
-                toolbar2.setVisibility(View.VISIBLE);
-                adapter.setSelectionMode(MainRecyclerAdapter.Mode.SELECTION_MODE);
-                setSupportActionBar(toolbar2);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                toolbar2.setNavigationOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d("TAG", "       TOOLBAR 2 click");
-                        adapter.cancelSelection();
-                        // toggle.setDrawerIndicatorEnabled(true);
-                    }
-                });
-                fab.hide();
+                setSelectionMode();
                 break;
             case R.id.green:
                 adapter.setColorSelectionTasks(Constants.GREEN);
@@ -650,6 +637,23 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         fabAddST.setClickable(false);
         fabAddLT.setClickable(false);
         fabPressed = false;
+    }
+
+    public void setSelectionMode(){
+        toolbar.setVisibility(View.GONE);
+        toolbar2.setVisibility(View.VISIBLE);
+        adapter.setSelectionMode(MainRecyclerAdapter.Mode.SELECTION_MODE);
+        setSupportActionBar(toolbar2);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar2.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("TAG", "       TOOLBAR 2 click");
+                adapter.cancelSelection();
+                // toggle.setDrawerIndicatorEnabled(true);
+            }
+        });
+        fab.hide();
     }
 
     public void add(View v){

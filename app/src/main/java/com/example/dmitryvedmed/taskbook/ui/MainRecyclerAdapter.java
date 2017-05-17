@@ -177,6 +177,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         dialog.show();
     }
 
+    @Override
+    public void onItemSelected() {
+        System.out.println(" onItem SELECTED ");
+
+        activity.setSelectionMode();
+
+    }
+
     public void deleteSelectedTasks(){
         compareSelectionTasks();
         for (SuperTask t:selectedTasks
@@ -305,7 +313,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             Log.d("TAG", "       Adapter --- onItemSelected");
             if(getAdapterPosition() == -1)
                 return;
-                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorCardViewPressed));
+                cardView.setCardBackgroundColor(Color.LTGRAY);
             wasSelected = true;
             selectedTasks.add(tasks.get(getAdapterPosition()));
         }
@@ -372,6 +380,18 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 Log.d("TAG", "       Adapter --- sel. size" + selectedTasks.size());
             }
             notifyItemChanged(getAdapterPosition());
+        }
+
+        @Override
+        public void onItemSelected2() {
+            System.out.println("        ItemSELECTED 2");
+            final int position = getAdapterPosition();
+            Log.d("TAG", "       SELECTED POSITION " + position +" теперь True" );
+            selectedTasks.add(tasks.get(position));
+            selectedTasksCounter++;
+            activity.selectedItemCount(selectedTasksCounter);
+            selects[position] = true;
+            notifyItemChanged(position);
         }
 
         @Override
