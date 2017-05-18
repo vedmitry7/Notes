@@ -402,7 +402,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            Log.d("TAG", "      ON TOUCH" );
             switch (motionEvent.getAction()){
                 case MotionEvent.ACTION_DOWN:
                     activity.hideFabs();

@@ -1,6 +1,7 @@
 package com.example.dmitryvedmed.taskbook.helper;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
 /**
@@ -45,6 +46,12 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
             if(isCanMovement()) {
+                if (recyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
+                    System.out.println("    GridLayoutManager ");
+                    final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                    final int swipeFlags = 0;
+                    return makeMovementFlags(dragFlags, swipeFlags);
+                }
                 final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
                 final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
                 System.out.println("    getMovementFlags ");
@@ -92,6 +99,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
         super.onSelectedChanged(viewHolder, actionState);
     }
+
 
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
