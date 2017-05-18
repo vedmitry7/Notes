@@ -57,7 +57,9 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
                 System.out.println("    getMovementFlags ");
                 return makeMovementFlags(dragFlags, swipeFlags);
             } else {
-                return 0;
+                final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+                final int swipeFlags = 0;
+                return makeMovementFlags(dragFlags, swipeFlags);
             }
     }
 
@@ -99,7 +101,6 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
             ItemTouchHelperViewHolder itemViewHolder = (ItemTouchHelperViewHolder) viewHolder;
             itemViewHolder.onItemSelected();
-            wasMoved = true;
         }
 
         super.onSelectedChanged(viewHolder, actionState);
