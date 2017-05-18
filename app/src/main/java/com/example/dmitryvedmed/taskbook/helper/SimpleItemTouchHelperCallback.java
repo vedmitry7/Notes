@@ -84,6 +84,10 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             wasMoved = false;
         }
 
+        if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+            wasMoved = true;
+        }
+
         if(actionState == ItemTouchHelper.ACTION_STATE_IDLE){
             System.out.println("        ItemTouchHelper.ACTION_STATE_IDLE");
             if(!wasMoved){
@@ -95,6 +99,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
             ItemTouchHelperViewHolder itemViewHolder = (ItemTouchHelperViewHolder) viewHolder;
             itemViewHolder.onItemSelected();
+            wasMoved = true;
         }
 
         super.onSelectedChanged(viewHolder, actionState);
