@@ -178,28 +178,36 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         this.menu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_activity_main, menu);
+
+        if(is_in_action_mode) {
+            getMenuInflater().inflate(R.menu.menu_selection_mode, menu);
+        }
+        else {
+            getMenuInflater().inflate(R.menu.menu_activity_main, menu);
+
+            setColor = menu.findItem(R.id.set_color);
+            setColor.setVisible(false);
+            delete = menu.findItem(R.id.delete_selection_items);
+            delete.setVisible(false);
+            choose = menu.findItem(R.id.select_item);
+            clearBascet = menu.findItem(R.id.clear_basket);
+            if(currentKind==Constants.DELETED && adapter.getTasks().size() !=0)
+                clearBascet.setVisible(true);
+            else
+                clearBascet.setVisible(false);
+            delateForever = menu.findItem(R.id.delete_forever);
+            delateForever.setVisible(false);
+            cancelSelection = menu.findItem(R.id.cancel_selection);
+            cancelSelection.setVisible(false);
+
+            deleteSection = menu.findItem(R.id.deleteSection);
+            deleteSection.setVisible(false);
+            translateTo = menu.findItem(R.id.translateTo);
+            translateTo.setVisible(false);
+        }
 
 
-        setColor = menu.findItem(R.id.set_color);
-        setColor.setVisible(false);
-        delete = menu.findItem(R.id.delete_selection_items);
-        delete.setVisible(false);
-        choose = menu.findItem(R.id.select_item);
-        clearBascet = menu.findItem(R.id.clear_basket);
-        if(currentKind==Constants.DELETED && adapter.getTasks().size() !=0)
-            clearBascet.setVisible(true);
-        else
-            clearBascet.setVisible(false);
-        delateForever = menu.findItem(R.id.delete_forever);
-        delateForever.setVisible(false);
-        cancelSelection = menu.findItem(R.id.cancel_selection);
-        cancelSelection.setVisible(false);
 
-        deleteSection = menu.findItem(R.id.deleteSection);
-        deleteSection.setVisible(false);
-        translateTo = menu.findItem(R.id.translateTo);
-        translateTo.setVisible(false);
 
         //  menuItemDelete = menu.findItem(R.id.delete);
         //  menuItemDelete.setVisible(false);
@@ -446,9 +454,6 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 popup.show();*/
                 break;
 
-            case R.id.cancel_selection:
-                adapter.cancelSelection();
-                fab.show();
 
         }
 
@@ -598,6 +603,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
 
     public void selectedItemCount(int selectedTasksCounter) {
         if(selectedTasksCounter == 0) {
+            is_in_action_mode = false;
             counterTextView.setVisibility(View.GONE);
             setColor.setVisible(false);
             delete.setVisible(false);
@@ -609,6 +615,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             toolbar2.setVisibility(View.GONE);
             toolbar.setVisibility(View.VISIBLE);
             fab.show();
+            onCreateOptionsMenu(menu);
         } else {
             setItemMovement(false);
             counterTextView.setVisibility(View.VISIBLE);
@@ -640,6 +647,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     }
 
     public void setSelectionMode(){
+        is_in_action_mode = true;
         toolbar.setVisibility(View.GONE);
         toolbar2.setVisibility(View.VISIBLE);
         adapter.setSelectionMode(MainRecyclerAdapter.Mode.SELECTION_MODE);
@@ -653,6 +661,9 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 // toggle.setDrawerIndicatorEnabled(true);
             }
         });
+
+        onCreateOptionsMenu(menu);
+
         fab.hide();
     }
 

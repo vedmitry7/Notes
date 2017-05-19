@@ -11,6 +11,7 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/select_item"
+        android:icon="@drawable/selection_w"
         android:orderInCategory="100"
         android:title="Выделить"
         app:showAsAction="never" />
@@ -26,12 +27,14 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/change_view"
+        android:icon="@drawable/format_list"
         android:orderInCategory="101"
         android:title="Сменить вид"
         app:showAsAction="never" />
     <item
         android:id="@+id/delete_selection_items"
         android:orderInCategory="100"
+        android:icon="@drawable/archive"
         android:title="Удалить"
         app:showAsAction="never" />
     <item
@@ -46,6 +49,7 @@
         android:title="переместить в"
         app:showAsAction="never" />
     <item
+        android:icon="@drawable/format_color_fill"
         android:id="@+id/set_color"
         android:orderInCategory="100"
         android:title="Установить цвет"
