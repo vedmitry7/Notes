@@ -30,7 +30,7 @@
         android:icon="@drawable/format_list"
         android:orderInCategory="101"
         android:title="Сменить вид"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/delete_selection_items"
         android:orderInCategory="100"

@@ -39,8 +39,9 @@
 
             </android.support.v7.widget.Toolbar>
 
-        <android.support.v7.widget.Toolbar
+    <!--    <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar2"
+            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways"
@@ -62,7 +63,7 @@
 
             </RelativeLayout>
 
-        </android.support.v7.widget.Toolbar>
+        </android.support.v7.widget.Toolbar>-->
 
     </android.support.design.widget.AppBarLayout>
 

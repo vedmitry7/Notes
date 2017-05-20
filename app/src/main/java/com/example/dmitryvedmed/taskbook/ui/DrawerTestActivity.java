@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,7 +59,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     private ItemTouchHelper.Callback callback;
     boolean is_in_action_mode = false;
     private  TextView counterTextView, mainToolbarText;
-    private Toolbar toolbar, toolbar2;
+    private Toolbar toolbar;
     public String currentKind = Constants.UNDEFINED;
     private Context context;
     private Menu menu;
@@ -73,6 +74,30 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     private ArrayList<Section> sections;
     private Section currentSection;
 
+
+    private ActionMode.Callback actionMode = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            getMenuInflater().inflate(R.menu.menu_selection_mode, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            mode.finish();
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+
+        }
+    };
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
         return super.onCreateView(parent, name, context, attrs);
@@ -114,7 +139,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             }
         });
 
-        toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
+/*        toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
         toolbar2.setVisibility(View.GONE);
         toolbar2.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,10 +147,10 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 Log.d("TAG", "       TOOLBAR 2 click");
                 adapter.cancelSelection();
             }
-        });
+        });*/
 
 
-        counterTextView = (TextView) findViewById(R.id.counter_text2);
+       // counterTextView = (TextView) findViewById(R.id.counter_text2);
         //counterTextView.setVisibility(View.GONE);
 
         mainToolbarText = (TextView) findViewById(R.id.mainToolbarText);
@@ -612,7 +637,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
             setItemMovement(true);
             cancelSelection.setVisible(false);
             setSupportActionBar(toolbar);
-            toolbar2.setVisibility(View.GONE);
+           // toolbar2.setVisibility(View.GONE);
             toolbar.setVisibility(View.VISIBLE);
             fab.show();
             onCreateOptionsMenu(menu);
@@ -647,20 +672,21 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
     }
 
     public void setSelectionMode(){
+        startActionMode(actionMode);
         is_in_action_mode = true;
         toolbar.setVisibility(View.GONE);
-        toolbar2.setVisibility(View.VISIBLE);
+       // toolbar2.setVisibility(View.VISIBLE);
         adapter.setSelectionMode(MainRecyclerAdapter.Mode.SELECTION_MODE);
-        setSupportActionBar(toolbar2);
+      //  setSupportActionBar(toolbar2);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar2.setNavigationOnClickListener(new View.OnClickListener() {
+   /*     toolbar2.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("TAG", "       TOOLBAR 2 click");
                 adapter.cancelSelection();
                 // toggle.setDrawerIndicatorEnabled(true);
             }
-        });
+        });*/
 
         onCreateOptionsMenu(menu);
 

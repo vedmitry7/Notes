@@ -3,19 +3,54 @@
     tools:context="com.example.dmitryvedmed.taskbook.ui.DrawerTestActivity">
 
     <item android:icon="@drawable/archive"
-        android:id="@+id/toArchive2"
+        android:id="@+id/toArchive"
         android:title="toArchive"
         android:showAsAction="always"/>
 
-    <item android:icon="@drawable/format_color_fill"
-        android:id="@+id/set_color2"
-        android:title="setColor"
+    <item android:icon="@drawable/move"
+        android:id="@+id/translateTo"
+        android:title="translateTo"
         android:showAsAction="always"/>
 
+    <item
+        android:id="@+id/set_color"
+        android:icon="@drawable/format_color_fill"
+        android:title="Установить цвет"
+        android:showAsAction="always" >
+        <menu>
+            <item android:id="@+id/white"
+                android:title="Без цвета">
+
+            </item>
+
+            <item android:id="@+id/red"
+                android:icon="@drawable/red_block"
+                android:title="">
+
+            </item>
+
+            <item android:id="@+id/green"
+                android:icon="@drawable/green_block"
+                android:title="">
+
+            </item>
+
+            <item android:id="@+id/yellow"
+                android:icon="@drawable/yellow_block"
+                android:title="">
+            </item>
+            <item android:id="@+id/blue"
+                android:icon="@drawable/blue_block"
+                android:title="">
+            </item>
+
+        </menu>
+    </item>
 
     <item android:icon="@drawable/delete"
-        android:id="@+id/delete_selection_items2"
+        android:id="@+id/delete_selection_items"
         android:title="toBucket"
         android:showAsAction="always"/>
+
 
 </menu>

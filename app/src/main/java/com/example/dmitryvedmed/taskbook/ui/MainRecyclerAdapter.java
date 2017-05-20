@@ -56,7 +56,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private TextView textView;
     private Typeface typeFace;
     private Typeface boldTypeFace ;
-    private DrawerTestActivity activity;
+    private PerfectActivity activity;
     boolean wasSelected;
     private Mode mode;
     private int selectedTasksCounter;
@@ -89,7 +89,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         this.context = context;
         selectedTasks = new ArrayList<>();
-        activity = (DrawerTestActivity) context;
+        activity = (PerfectActivity) context;
         Log.d("TAG", "       Adapter, tasksSize = " + tasks.size());
         textView = new TextView(context);
         textView.setText("1234we5r");
