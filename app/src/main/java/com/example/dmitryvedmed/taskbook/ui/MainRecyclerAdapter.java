@@ -236,6 +236,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         Log.d("TAG", "           adapter translateTo " + s);
         for (SuperTask t:selectedTasks
                 ) {
+            Log.d("TAG", t.getId() +  "       translateTo " + s);
             activity.dbHelper.updateTask(t, s);
         }
         tasks.removeAll(selectedTasks);
@@ -321,10 +322,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         @Override
         public void onItemClear() {
             Log.d("TAG", "       Adapter --- onItemClear");
-            wasSelected = false;
-            selectedTasks.clear();
-            if(getAdapterPosition() != -1)
-                setColorCardView(cardView, getAdapterPosition());
+            if(mode != Mode.SELECTION_MODE) {
+                wasSelected = false;
+                selectedTasks.clear();
+                if (getAdapterPosition() != -1)
+                    setColorCardView(cardView, getAdapterPosition());
+            }
         }
 
         @Override

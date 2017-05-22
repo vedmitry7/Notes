@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/delete_forever"
+        android:visible="true"
+        android:title="Удалить навсегда"
+        android:showAsAction="never" />
+    <item
+        android:id="@+id/clear_basket"
+        android:orderInCategory="100"
+        android:title="Очистить корзину"
+        android:showAsAction="never" />
+</menu>
