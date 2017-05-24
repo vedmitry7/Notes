@@ -421,8 +421,10 @@ public class DBHelper5 extends SQLiteOpenHelper {
     public int updateTask(SuperTask task, String kind) {
         // 1. get reference to writable DB
 
-        Log.d("TAG", "      DBHelper - UPDATEtasks KIND - " + kind!=null?kind:"null");
-        if(kind.equals(Constants.DELETED)){
+
+
+        //Log.d("TAG", "      DBHelper - UPDATEtasks KIND - " + kind!=null?kind:"null");
+        if(kind!=null && kind.equals(Constants.DELETED)){
             task.setDeletionTime(System.currentTimeMillis());
         }
 

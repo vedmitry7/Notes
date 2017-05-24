@@ -63,7 +63,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private boolean[] selects;
     private SharedPreferences sharedPreferences;
     private int textSize;
-    int getSelectedTasksCounter() {
+    public int getSelectedTasksCounter() {
         return selectedTasksCounter;
     }
 
@@ -180,8 +180,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public void onItemSelected() {
         System.out.println(" onItem SELECTED ");
-
-        activity.setSelectionMode();
 
     }
 
@@ -311,12 +309,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public void onItemSelected() {
-            Log.d("TAG", "       Adapter --- onItemSelected");
+            Log.d("TAG", "       Adapter --- onItemSelected POSITION " + getAdapterPosition());
             if(getAdapterPosition() == -1)
                 return;
+            if(mode==Mode.NORMAL) {
                 cardView.setCardBackgroundColor(Color.LTGRAY);
-            wasSelected = true;
-            selectedTasks.add(tasks.get(getAdapterPosition()));
+                wasSelected = true;
+                selectedTasks.add(tasks.get(getAdapterPosition()));
+            }
         }
 
         @Override
@@ -332,7 +332,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public void onClick(View view) {
-            final int position = getAdapterPosition();
+            int position = getAdapterPosition();
             Log.d("TAG", "       Adapter --- onClick " + position);
             Log.d("TAG", "       Adapter --- onClick " + view.toString());
 
@@ -383,18 +383,33 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 Log.d("TAG", "       Adapter --- sel. size" + selectedTasks.size());
             }
             notifyItemChanged(getAdapterPosition());
+            System.out.println("SEL SIZE AAAAAAAAAAAAga - " + selectedTasks.size());
         }
 
         @Override
         public void onItemSelected2() {
             System.out.println("        ItemSELECTED 2");
-            final int position = getAdapterPosition();
-            Log.d("TAG", "       SELECTED POSITION " + position +" теперь True" );
-            selectedTasks.add(tasks.get(position));
-            selectedTasksCounter++;
-            activity.selectedItemCount(selectedTasksCounter);
-            selects[position] = true;
-            notifyItemChanged(position);
+            if(mode == Mode.NORMAL)
+                activity.setSelectionMode();
+            int position = getAdapterPosition();
+            Log.d("TAG", "       SELECTED POSITION " + position + " теперь True Mode normal - " + (mode==Mode.NORMAL));
+
+            onClick(new View(context));
+
+            /* if(getAdapterPosition()!=-1) {
+                Log.d("TAG", "       EAHHH  work");
+                if(selects[position]){
+                    selectedTasksCounter--;
+                    selects[position] = false;
+                    selectedTasks.remove(tasks.get(position));
+                    onClick(new View(context));
+                } else{
+                    selectedTasksCounter++;
+                    selects[position] = true;
+                }
+                activity.selectedItemCount(selectedTasksCounter);
+                notifyItemChanged(position);
+            }*/
         }
 
         @Override
