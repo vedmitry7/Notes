@@ -269,6 +269,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         tasks.add(toPosition, prev);
         notifyItemMoved(fromPosition, toPosition);
         setRightPosition();
+
+        boolean fp = selects[fromPosition];
+        selects[fromPosition] = selects[toPosition];
+        selects[toPosition] = fp;
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements
@@ -313,6 +317,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             if(getAdapterPosition() == -1)
                 return;
             if(mode==Mode.NORMAL) {
+                Log.d("TAG", "                                              COLOR CHANGE  LT GRAY ON ITEM SEl");
                 cardView.setCardBackgroundColor(Color.LTGRAY);
                 wasSelected = true;
                 selectedTasks.add(tasks.get(getAdapterPosition()));
@@ -335,6 +340,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             int position = getAdapterPosition();
             Log.d("TAG", "       Adapter --- onClick " + position);
             Log.d("TAG", "       Adapter --- onClick " + view.toString());
+            Log.d("TAG", "                                          start             ON Click " + selectedTasks.size());
 
             if(mode == Mode.NORMAL) {
                 Log.d("TAG", "       Adapter --- MODE NORMAL " + MainRecyclerAdapter.this.getItemViewType(position) );
@@ -358,7 +364,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             }
             else if (mode == Mode.SELECTION_MODE) {
                 Log.d("TAG", "       Adapter --- MODE NE NORMAL " );
-
                 if (selects[position]) {
                     Log.d("TAG", "       SELECTED POSITION " + position +" теперь False" );
                     // cardView.setCardBackgroundColor(Color.WHITE);
@@ -367,13 +372,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     selects[position] = false;
                     selectedTasksCounter--;
                     activity.selectedItemCount(selectedTasksCounter);
-                    if(selectedTasksCounter==0)
+                    if(selectedTasksCounter==0) {
                         setSelectionMode(Mode.NORMAL);
+                    }
                     Log.d("TAG", "       selectedTasksCounter " + selectedTasksCounter);
                 } else {
                    // cardView.setCardBackgroundColor(Color.LTGRAY);
                  //   cardView.setSelected(true);
                     Log.d("TAG", "       SELECTED POSITION " + position +" теперь True" );
+                    if(!selectedTasks.contains(tasks.get(position)))
                     selectedTasks.add(tasks.get(position));
                     selectedTasksCounter++;
                     activity.selectedItemCount(selectedTasksCounter);
@@ -383,7 +390,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 Log.d("TAG", "       Adapter --- sel. size" + selectedTasks.size());
             }
             notifyItemChanged(getAdapterPosition());
-            System.out.println("SEL SIZE AAAAAAAAAAAAga - " + selectedTasks.size());
+            Log.d("TAG", "                                             end          ON Click " + selectedTasks.size());
         }
 
         @Override
@@ -449,12 +456,17 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private void setColorCardView(CardView cardView, int position){
         Log.d("TAG", "       setColorCardView");
         if(mode == Mode.SELECTION_MODE) {
+            Log.d("TAG", "                          on selection mode");
+
             Log.d("TAG", "       Adapter --- setColorCardView SELECTION MODE ON ");
             Log.d("TAG", "       SelectedTasks Size = " + selectedTasks.size() + " position = " + position);
 
             if (selectedTasks.contains(tasks.get(position))) {
                 Log.d("TAG", "       SelectedTasks contains = " + position);
+                Log.d("TAG", "                                              COLOR CHANGE  LT GRAY ON BIND VH");
+
                 cardView.setCardBackgroundColor(Color.LTGRAY);
+
             } else {
                 Log.d("TAG", "       Adapter --- NOT SELECTION");
                 if (position >= tasks.size())
@@ -473,6 +485,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightLightBlue));
                         break;
                     case 0:
+                        Log.d("TAG", "                                              COLOR CHANGE WHITE!!!!!!!!!  ON BIND VH");
                         cardView.setCardBackgroundColor(Color.WHITE);
                         break;
                 }
@@ -481,6 +494,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
         if (position >= tasks.size())
             return;
+        Log.d("TAG", "                          on normal mode");
         switch (tasks.get(position).getColor()) {
             case Constants.GREEN:
                 cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightGreen));
@@ -495,6 +509,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightLightBlue));
                 break;
             case 0:
+                Log.d("TAG", "                                              COLOR CHANGE WHITE not sel mode  ON BIND VH");
                 cardView.setCardBackgroundColor(Color.WHITE);
                 break;
         }
