@@ -28,6 +28,7 @@ public class BootReceiver extends BroadcastReceiver {
 
         Toast.makeText(context, "УРРРРРРАААААААА", Toast.LENGTH_LONG).show();
         DBHelper5 dbHelper5 = new DBHelper5(context);
+        Log.d("TAG", "BOOT RECEIVER. WORK");
 
         List<SuperTask> tasks = dbHelper5.getNotificationTasks();
 

@@ -124,7 +124,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mBuilder.setCancelable(true);
         RelativeLayout archive = (RelativeLayout) mViewe.findViewById(R.id.actionArchive);
         RelativeLayout delete = (RelativeLayout) mViewe.findViewById(R.id.actionDelete);
-        CheckBox remember = (CheckBox) mViewe.findViewById(R.id.remember);
+        final CheckBox remember = (CheckBox) mViewe.findViewById(R.id.remember);
         if(activity.currentKind==Constants.ARCHIVE){
             TextView textView = (TextView) mViewe.findViewById(R.id.archiveTextView);
             textView.setText("Разархивировать");
@@ -156,6 +156,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 tasks.remove(position);
                 notifyItemRemoved(position);
                 setRightPosition();
+                if(remember.isChecked()){
+
+                }
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {
