@@ -1,8 +1,10 @@
 package com.example.dmitryvedmed.taskbook.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -28,6 +31,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
     TextView cardFontValue;
     TextView deletionPeriodLabel;
     TextView stringQuantityValue;
+    TextView swipeAction;
     SeekBar taskFontSeekBar;
     SeekBar cardFontSeekBar;
     SeekBar stringQuantitySeekBar;
@@ -80,6 +84,21 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         } else if (deletionPeriod.equals(Constants.PERIOD_MONTH)) {
             deletionPeriodLabel.setText("Месяц");
 
+        }
+
+
+        swipeAction = (TextView) findViewById(R.id.swipeAction);
+        String remember = sharedPreferences.getString("mainSwipeRemember","");
+        switch (remember){
+            case Constants.ARCHIVE:
+                swipeAction.setText("Архивировать");
+                break;
+            case Constants.DELETED:
+                swipeAction.setText("Удалить");
+                break;
+            case "":
+                swipeAction.setText("Спрашивать");
+                break;
         }
 
         setDeletionPeriod = (RelativeLayout) findViewById(R.id.setDeletionPeriod);
@@ -135,6 +154,37 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                     }
                 });
                 popupMenu.show();
+                break;
+            case R.id.setSwipeAction:
+
+                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, new String[]{"Удалить", "Архивировать", "Спрашивать"});
+                mBuilder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        switch (i){
+                            case 0:
+                                editor.putString("mainSwipeRemember", Constants.DELETED);
+                                editor.commit();
+                                swipeAction.setText("Удалить");
+                                break;
+                            case 1:
+                                editor.putString("mainSwipeRemember", Constants.ARCHIVE);
+                                editor.commit();
+                                swipeAction.setText("Архивировать");
+                                break;
+                            case 2:
+                                editor.putString("mainSwipeRemember", "");
+                                editor.commit();
+                                swipeAction.setText("Спрашивать");
+                                break;
+                        }
+                    }
+                });
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
+                break;
         }
     }
 

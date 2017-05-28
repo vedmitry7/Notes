@@ -191,6 +191,37 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"/>
 
+
+
+    </RelativeLayout>
+
+    <View style="@style/Divider"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:id="@+id/setSwipeAction"
+        android:onClick="onClick">
+
+        <TextView
+            android:paddingTop="10dp"
+            android:paddingLeft="16dp"
+            android:textSize="16sp"
+            android:text="Действие при свайпе"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:paddingLeft="16dp"
+            android:textSize="16sp"
+            android:paddingRight="16dp"
+            android:text="Спрашивать"
+            android:id="@+id/swipeAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentBottom="true"/>
+
     </RelativeLayout>
 
 </LinearLayout>

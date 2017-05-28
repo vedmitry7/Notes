@@ -116,68 +116,104 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public void onItemDismiss(final int position) {
-        Log.d("TAG", "       Adapter --- onItemDismiss, position = " + position);
 
 
-        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
-        View mViewe = activity.getLayoutInflater().inflate(R.layout.dialog_question_layout, null);
-        mBuilder.setCancelable(true);
-        RelativeLayout archive = (RelativeLayout) mViewe.findViewById(R.id.actionArchive);
-        RelativeLayout delete = (RelativeLayout) mViewe.findViewById(R.id.actionDelete);
-        final CheckBox remember = (CheckBox) mViewe.findViewById(R.id.remember);
-        if(activity.currentKind==Constants.ARCHIVE){
-            TextView textView = (TextView) mViewe.findViewById(R.id.archiveTextView);
-            textView.setText("Разархивировать");
-        }
+        String rem = sharedPreferences.getString("mainSwipeRemember", "");
+        Log.d("TAG", "       Adapter --- onItemDismiss, position = " + position + " " + rem);
 
+        switch (rem){
 
-        mBuilder.setView(mViewe);
-        final AlertDialog dialog = mBuilder.create();
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                Log.d("TAG", "       Adapter --- CANCEL LISTENER ");
-                notifyDataSetChanged();
-            }
-        });
-        archive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            case Constants.ARCHIVE:
                 if(activity.currentKind == Constants.ARCHIVE){
                     activity.dbHelper.updateTask(tasks.get(position), Constants.UNDEFINED);
                 } else {
                     activity.dbHelper.updateTask(tasks.get(position), Constants.ARCHIVE);
                 }
                 activity.showSnackBar(1);
-                dialog.dismiss();
-
                 tasks.get(position).setPosition(0);                 //?
-
                 tasks.remove(position);
                 notifyItemRemoved(position);
                 setRightPosition();
-                if(remember.isChecked()){
-
-                }
-            }
-        });
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                break;
+            case Constants.DELETED:
                 activity.dbHelper.updateTask(tasks.get(position), Constants.DELETED);
                 cancelNotification(tasks.get(position).getId());
-                dialog.dismiss();
                 activity.showSnackBar(1);
-
                 tasks.get(position).setPosition(0);                 //?
                 tasks.get(position).setRemind(false);                 //?
-
                 tasks.remove(position);
                 notifyItemRemoved(position);
                 setRightPosition();
-            }
-        });
-        dialog.show();
+                break;
+            case "" :
+                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
+                View mViewe = activity.getLayoutInflater().inflate(R.layout.dialog_question_layout, null);
+                mBuilder.setCancelable(true);
+                RelativeLayout archive = (RelativeLayout) mViewe.findViewById(R.id.actionArchive);
+                RelativeLayout delete = (RelativeLayout) mViewe.findViewById(R.id.actionDelete);
+                final CheckBox remember = (CheckBox) mViewe.findViewById(R.id.remember);
+                if(activity.currentKind==Constants.ARCHIVE){
+                    TextView textView = (TextView) mViewe.findViewById(R.id.archiveTextView);
+                    textView.setText("Разархивировать");
+                }
+                mBuilder.setView(mViewe);
+                final AlertDialog dialog = mBuilder.create();
+                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        Log.d("TAG", "       Adapter --- CANCEL LISTENER ");
+                        notifyDataSetChanged();
+                    }
+                });
+                archive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(activity.currentKind == Constants.ARCHIVE){
+                            activity.dbHelper.updateTask(tasks.get(position), Constants.UNDEFINED);
+                        } else {
+                            activity.dbHelper.updateTask(tasks.get(position), Constants.ARCHIVE);
+                        }
+                        activity.showSnackBar(1);
+                        dialog.dismiss();
+
+                        tasks.get(position).setPosition(0);                 //?
+
+                        tasks.remove(position);
+                        notifyItemRemoved(position);
+                        setRightPosition();
+                        if(remember.isChecked()){
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("mainSwipeRemember", Constants.ARCHIVE);
+                            editor.commit();
+                        }
+                    }
+                });
+                delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        activity.dbHelper.updateTask(tasks.get(position), Constants.DELETED);
+                        cancelNotification(tasks.get(position).getId());
+                        dialog.dismiss();
+                        activity.showSnackBar(1);
+
+                        tasks.get(position).setPosition(0);                 //?
+                        tasks.get(position).setRemind(false);                 //?
+
+                        tasks.remove(position);
+                        notifyItemRemoved(position);
+                        setRightPosition();
+                        if(remember.isChecked()){
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("mainSwipeRemember", Constants.DELETED);
+                            editor.commit();
+                        }
+                    }
+                });
+                dialog.show();
+                break;
+        }
+
+
     }
 
     @Override
