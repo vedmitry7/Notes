@@ -23,7 +23,6 @@ public class Constants {
     public static final String MORNING_TIME_HOURS = "morning_time_hours";
     public static final String AFTERNOON_TIME_HOURS = "afternoon_time_hours";
     public static final String EVENING_TIME_HOURS = "evening_time_hours";
-
     public static final String MORNING_TIME_MINUTES = "morning_time_minutes";
     public static final String AFTERNOON_TIME_MINUTES = "afternoon_time_minutes";
     public static final String EVENING_TIME_MINUTES = "evening_time_minutes";
