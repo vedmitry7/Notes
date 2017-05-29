@@ -368,10 +368,10 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             navmenu.add(45, s.getId(), Menu.NONE, s.getName());
         }
 
-        navmenu.add(45, R.id.add, Menu.NONE, "Новый пункт").setIcon(getResources().getDrawable(R.drawable.ic_add));
-        navmenu.add(Menu.NONE, R.id.deleted , Menu.NONE,"Корзина").setIcon(getResources().getDrawable(delete));
-        navmenu.add(Menu.NONE, R.id.settings , Menu.NONE,"Настройки").setIcon(getResources().getDrawable(R.drawable.settings));
-        navmenu.add(Menu.NONE, R.id.exit , Menu.NONE,"Выход").setIcon(getResources().getDrawable(R.drawable.exit_to_app));
+        navmenu.add(45, R.id.add, Menu.NONE, R.string.newPoint).setIcon(getResources().getDrawable(R.drawable.ic_add));
+        navmenu.add(Menu.NONE, R.id.deleted , Menu.NONE, R.string.bucket).setIcon(getResources().getDrawable(delete));
+        navmenu.add(Menu.NONE, R.id.settings , Menu.NONE, R.string.settings).setIcon(getResources().getDrawable(R.drawable.settings));
+        navmenu.add(Menu.NONE, R.id.exit , Menu.NONE, R.string.exit).setIcon(getResources().getDrawable(R.drawable.exit_to_app));
         navmenu.add(Menu.NONE, 245 , Menu.NONE,"clear sections");
     }
 
@@ -390,7 +390,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     public void showSnackBar(int i){
         Snackbar.make(coordinatorLayout, i + " заметкок добавлено в корзину!", Snackbar.LENGTH_SHORT)
-                .setAction("Отмена", new View.OnClickListener() {
+                .setAction(R.string.cancel, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Snackbar.make(coordinatorLayout,"Отменено! или нет...", Snackbar.LENGTH_LONG)
@@ -463,7 +463,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
                 final AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 // alert.setTitle("Очистить корзину?");
-                alert.setMessage("Вы действительно хотите удалить выделенные заметки из корзины навсегда?");
+                alert.setMessage(R.string.deleteForeverMassage);
 
                 alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -474,7 +474,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         clearBascet.setVisible(true);
                     }
                 });
-                alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                     }
@@ -486,7 +486,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 final AlertDialog.Builder alert2 = new AlertDialog.Builder(this);
                 alert2.setTitle("Очистить корзину?");
                 alert2.setMessage("Вы действительно хотите удалить все заметки из корзины навсегда?");
-                alert2.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                alert2.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         for (SuperTask t:dbHelper.getTasks(Constants.DELETED)
@@ -499,7 +499,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         clearBascet.setVisible(false);
                     }
                 });
-                alert2.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                alert2.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                     }
@@ -508,11 +508,11 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 break;
             case R.id.deleteSection:
                 AlertDialog.Builder alert3 = new AlertDialog.Builder(this);
-                alert3.setTitle("Удалить раздел?");
-                alert3.setMessage("Если раздел содержит заметки, то они отправятся в корзину");
+                alert3.setTitle(R.string.deletePoint);
+                alert3.setMessage(R.string.deletePointMassage);
 
 
-                alert3.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                alert3.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
 
                         adapter.deleteSection();
@@ -521,7 +521,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                     }
                 });
 
-                alert3.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                alert3.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Canceled.
                     }
@@ -625,7 +625,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 onCreateOptionsMenu(menu);
                 break;
             case R.id.deleted:
-                mainToolbarText.setText("Корзина");
+                mainToolbarText.setText(R.string.bucket);
                 currentKind = Constants.DELETED;
                 values = dbHelper.getTasks(Constants.DELETED);
                 checkOldTask();
@@ -638,7 +638,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 break;
             case R.id.archive:
                 setItemMovement(true);
-                mainToolbarText.setText("Архив");
+                mainToolbarText.setText(R.string.archiv);
                 currentKind = Constants.ARCHIVE;
                 values = dbHelper.getTasks(Constants.ARCHIVE);
                 adapter.dataChanged(values);
@@ -648,7 +648,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 break;
 
             case R.id.notifications:
-                mainToolbarText.setText("Напоминания");
+                mainToolbarText.setText(R.string.notifications);
                 //currentKind = Constants.NOTIFICATIONS;
                 deleteSection.setVisible(false);
 
@@ -671,14 +671,14 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         if (id == R.id.add){
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Добавить раздел");
+            alert.setTitle(R.string.addPoint);
             //alert.setMessage("Message");
             // Set an EditText view to get user input
             final EditText input = new EditText(this);
             input.setBackgroundColor(0);
             alert.setView(input);
 
-            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     String value = String.valueOf(input.getText());
                     // Do something with value!
@@ -781,7 +781,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     public void newListTask(View v){
         hideFabs();
         Intent intent = new Intent(getApplicationContext(), ListTaskActivity.class);
-        intent.putExtra("position", adapter.getTasks().size());
+        intent.putExtra(Constants.POSITION, adapter.getTasks().size());
         startActivity(intent);
     }
 
@@ -789,7 +789,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     public void newSimpleTask(View v){
         hideFabs();
         Intent intent = new Intent(getApplicationContext(), SimpleTaskActivity.class);
-        intent.putExtra("position", adapter.getTasks().size());
+        intent.putExtra(Constants.POSITION, adapter.getTasks().size());
         startActivity(intent);
     }
 

@@ -48,7 +48,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         Toolbar toolbar = (Toolbar) findViewById(R.id.setting_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle("Settings");
+        toolbar.setTitle(R.string.settings);
 
         cardFontLabel = (TextView) findViewById(R.id.labelCardFont);
         taskFontLabel = (TextView) findViewById(R.id.labelTaskFont);
@@ -67,46 +67,46 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         stringQuantitySeekBar.setOnSeekBarChangeListener(this);
 
         deletionPeriodLabel = (TextView) findViewById(R.id.deletionPeriodValue);
-        Long deletionPeriod = sharedPreferences.getLong("deletionPeriod",Constants.PERIOD_WEEK);
+        Long deletionPeriod = sharedPreferences.getLong(Constants.DELETION_PERIOD,Constants.PERIOD_WEEK);
 
         if (deletionPeriod.equals(Constants.PERIOD_AT_ONCE)) {
-            deletionPeriodLabel.setText("Сразу");
+            deletionPeriodLabel.setText(R.string.at_once);
 
         } else if (deletionPeriod.equals(Constants.PERIOD_ONE_DAY)) {
-            deletionPeriodLabel.setText("1 день");
+            deletionPeriodLabel.setText(R.string.one_day);
 
         } else if (deletionPeriod.equals(Constants.PERIOD_TREE_DAY)) {
-            deletionPeriodLabel.setText("3 дня");
+            deletionPeriodLabel.setText(R.string.tree_day);
 
         } else if (deletionPeriod.equals(Constants.PERIOD_WEEK)) {
-            deletionPeriodLabel.setText("7 дней");
+            deletionPeriodLabel.setText(R.string.seven_day);
 
         } else if (deletionPeriod.equals(Constants.PERIOD_MONTH)) {
-            deletionPeriodLabel.setText("Месяц");
+            deletionPeriodLabel.setText(R.string.month);
 
         }
 
 
         swipeAction = (TextView) findViewById(R.id.swipeAction);
-        String remember = sharedPreferences.getString("mainSwipeRemember","");
+        String remember = sharedPreferences.getString(Constants.SWIPE_REMEMBER,"");
         switch (remember){
             case Constants.ARCHIVE:
-                swipeAction.setText("Архивировать");
+                swipeAction.setText(R.string.act_archive);
                 break;
             case Constants.DELETED:
-                swipeAction.setText("Удалить");
+                swipeAction.setText(R.string.act_delete);
                 break;
             case "":
-                swipeAction.setText("Спрашивать");
+                swipeAction.setText(R.string.act_ask);
                 break;
         }
 
         setDeletionPeriod = (RelativeLayout) findViewById(R.id.setDeletionPeriod);
 
-        Log.d("TAG", "FONT SIZE " + sharedPreferences.getInt("taskFontSize", 16));
+        Log.d("TAG", "FONT SIZE " + sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16));
 
-        taskFontSeekBar.setProgress(sharedPreferences.getInt("taskFontSize", 16) - 12);
-        cardFontSeekBar.setProgress(sharedPreferences.getInt("cardFontSize", 17) - 12);
+        taskFontSeekBar.setProgress(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16) - 12);
+        cardFontSeekBar.setProgress(sharedPreferences.getInt(Constants.CARD_FONT_SIZE, 17) - 12);
         stringQuantitySeekBar.setProgress(sharedPreferences.getInt("stringQuantity", 5));
     }
 
@@ -129,24 +129,24 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
                             case R.id.at_once:
-                                deletionPeriodLabel.setText("Сразу");
-                                editor.putLong("deletionPeriod", Constants.PERIOD_AT_ONCE);
+                                deletionPeriodLabel.setText(R.string.at_once);
+                                editor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_AT_ONCE);
                                 break;
                             case R.id.one_day:
-                                deletionPeriodLabel.setText("1 день");
-                                editor.putLong("deletionPeriod", Constants.PERIOD_ONE_DAY);
+                                deletionPeriodLabel.setText(R.string.one_day);
+                                editor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_ONE_DAY);
                                 break;
                             case R.id.tree_days:
-                                deletionPeriodLabel.setText("3 дня");
-                                editor.putLong("deletionPeriod", Constants.PERIOD_TREE_DAY);
+                                deletionPeriodLabel.setText(R.string.tree_day);
+                                editor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_TREE_DAY);
                                 break;
                             case R.id.seven_days:
-                                deletionPeriodLabel.setText("7 дней");
-                                editor.putLong("deletionPeriod", Constants.PERIOD_WEEK);
+                                deletionPeriodLabel.setText(R.string.seven_day);
+                                editor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_WEEK);
                                 break;
                             case R.id.month:
-                                deletionPeriodLabel.setText("Месяц");
-                                editor.putLong("deletionPeriod", Constants.PERIOD_MONTH);
+                                deletionPeriodLabel.setText(R.string.month);
+                                editor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_MONTH);
                                 break;
                         }
                         editor.commit();
@@ -158,26 +158,27 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
             case R.id.setSwipeAction:
 
                 final AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, new String[]{"Удалить", "Архивировать", "Спрашивать"});
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, new String[]{getResources().getString(R.string.act_delete),
+                        getResources().getString(R.string.act_archive), getResources().getString(R.string.act_ask)});
                 mBuilder.setAdapter(adapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         switch (i){
                             case 0:
-                                editor.putString("mainSwipeRemember", Constants.DELETED);
+                                editor.putString(Constants.SWIPE_REMEMBER, Constants.DELETED);
                                 editor.commit();
-                                swipeAction.setText("Удалить");
+                                swipeAction.setText(R.string.act_delete);
                                 break;
                             case 1:
-                                editor.putString("mainSwipeRemember", Constants.ARCHIVE);
+                                editor.putString(Constants.SWIPE_REMEMBER, Constants.ARCHIVE);
                                 editor.commit();
-                                swipeAction.setText("Архивировать");
+                                swipeAction.setText(R.string.act_archive);
                                 break;
                             case 2:
-                                editor.putString("mainSwipeRemember", "");
+                                editor.putString(Constants.SWIPE_REMEMBER, "");
                                 editor.commit();
-                                swipeAction.setText("Спрашивать");
+                                swipeAction.setText(R.string.act_ask);
                                 break;
                         }
                     }
@@ -207,20 +208,20 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 taskFontLabel.setTextSize(i + 12);
                 taskFontValue.setText(String.valueOf(i + 12));
                 if (b) {
-                    editor.putInt("taskFontSize", i + 12);
+                    editor.putInt(Constants.TASK_FONT_SIZE, i + 12);
                 }
                 break;
             case R.id.seekBarCardFont:
                 cardFontLabel.setTextSize(i + 12);
                 if (b) {
-                    editor.putInt("cardFontSize", i + 12);
+                    editor.putInt(Constants.CARD_FONT_SIZE, i + 12);
                 }
                 cardFontValue.setText(String.valueOf(i + 12));
                 break;
             case R.id.stringQuantitySeekBar:
                 stringQuantityValue.setText(String.valueOf(i + 1));
                 if(i==20)
-                    stringQuantityValue.setText("Все");
+                    stringQuantityValue.setText(R.string.all);
                 editor.putInt("stringQuantity",i);
                 break;
 

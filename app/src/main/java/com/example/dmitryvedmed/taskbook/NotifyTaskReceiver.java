@@ -17,6 +17,7 @@ import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
 import com.example.dmitryvedmed.taskbook.logic.SuperTask;
 import com.example.dmitryvedmed.taskbook.ui.ListTaskDialogActivity;
 import com.example.dmitryvedmed.taskbook.ui.SimpleTaskDialogActivity;
+import com.example.dmitryvedmed.taskbook.untils.Constants;
 
 public class NotifyTaskReceiver extends BroadcastReceiver {
     public NotifyTaskReceiver() {
@@ -29,12 +30,12 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
 
         Log.d("TAG", "NOTIFYYYYYYYYYYY");
 
-        if(intent.getBooleanExtra("repeating", false))
+        if(intent.getBooleanExtra(Constants.REPEATING, false))
             Log.d("TAG", "REPEATING DAAAAAA");
-        int period2 = intent.getIntExtra("period", 0);
+        int period2 = intent.getIntExtra(Constants.PERIOD, 0);
         Log.d("TAG", "REPIOD " + period2);
 
-        int id = intent.getIntExtra("id",-2);
+        int id = intent.getIntExtra(Constants.ID, -2);
         Log.d("TAG", "ID = " + id);
         if(id==-2) {
             return;
@@ -73,7 +74,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
                     .setTicker(String.valueOf(task.getId()))
                     .setWhen(System.currentTimeMillis())
                     .setAutoCancel(false)
-                    .addAction(R.drawable.note_multiple_outline, "Открыть", contentIntent)
+                    .addAction(R.drawable.note_multiple_outline, context.getString(R.string.act_open), contentIntent)
                     .setContentTitle(task.getHeadLine())
                     .setContentText(task.getContext()); // Текст уведомления
 

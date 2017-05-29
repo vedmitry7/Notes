@@ -37,5 +37,32 @@
     <string name="evening">Вечер</string>
     <string name="tomorrow">Завтра</string>
     <string name="testerday">Сегодня</string>
+    <string name="newPoint">Новый пункт</string>
+    <string name="bucket">Корзина</string>
+    <string name="settings">Настройки</string>
+    <string name="exit">Выход</string>
+    <string name="cancel">Отмена</string>
+    <string name="deleteForeverMassage">Вы действительно хотите удалить выделенные заметки из корзины навсегда?</string>
+    <string name="deletePoint">Удалить раздел?</string>
+    <string name="deletePointMassage">Если раздел содержит заметки, то они отправятся в корзину</string>
+    <string name="archiv">Архив</string>
+    <string name="notifications">Напоминания</string>
+    <string name="addPoint">Добавить раздел</string>
+    <string name="unarchive">Разархивировать</string>
+    <string name="act_archive">Архивировать</string>
+    <string name="act_delete">Удалить</string>
+    <string name="act_ask">Спрашивать</string>
+    <string name="at_once">Сразу</string>
+    <string name="one_day">1 день</string>
+    <string name="tree_day">3 дня</string>
+    <string name="seven_day">7 дней</string>
+    <string name="month">Месяц</string>
+    <string name="all">Все</string>
+    <string name="notification">Напоминание</string>
+    <string name="question_delete_notification">Удалить напоминание?</string>
+    <string name="ok">OK</string>
+    <string name="every_day">Каждый день</string>
+    <string name="every_week">Кажддую неделю</string>
+    <string name="act_open">Открыть</string>
 
 </resources>

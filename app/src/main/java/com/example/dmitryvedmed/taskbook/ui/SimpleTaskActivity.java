@@ -46,6 +46,8 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
     private SimpleTask task;
     private String currentKind;
     private Toolbar toolbar;
+    private String repeating;
+
     Context context;
 
     private Button spinnerButtonTime, spinnerButtonDate, spinnerButtonRepeat;
@@ -65,6 +67,8 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         initView();
         initTask();
         initDate();
+        repeating = "";
+
     }
 
     private void initDate() {
@@ -79,16 +83,16 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         sharedPreferences = this.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if(sharedPreferences.getString("123","321").equals("321")) {
-            editor.putInt("morning_time_hours", 7);
-            editor.putInt("morning_time_minutes", 0);
-            editor.putInt("afternoon_time_hours", 13);
-            editor.putInt("afternoon_time_minutes", 0);
-            editor.putInt("evening_time_hours", 19);
-            editor.putInt("evening_time_minutes", 0);
+            editor.putInt(Constants.MORNING_TIME_HOURS, 7);
+            editor.putInt(Constants.MORNING_TIME_MINUTES, 0);
+            editor.putInt(Constants.AFTERNOON_TIME_HOURS, 13);
+            editor.putInt(Constants.AFTERNOON_TIME_MINUTES, 0);
+            editor.putInt(Constants.EVENING_TIME_HOURS, 19);
+            editor.putInt(Constants.EVENING_TIME_MINUTES, 0);
         }
 
-        hours = sharedPreferences.getInt("morning_time_hours", 8);
-        minutes = sharedPreferences.getInt("morning_time_minutes", 15);
+        hours = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 8);
+        minutes = sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 15);
     }
 
     private void initView() {
@@ -105,8 +109,8 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         text.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());
         head.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
 
-        text.setTextSize(sharedPreferences.getInt("taskFontSize", 17));
-        head.setTextSize(sharedPreferences.getInt("taskFontSize", 17));
+        text.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 17));
+        head.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 17));
 
         toolbar.setNavigationIcon(R.drawable.ic_back);
 
@@ -122,11 +126,11 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
     }
 
     private void initTask() {
-        task = (SimpleTask) getIntent().getSerializableExtra("Task");
+        task = (SimpleTask) getIntent().getSerializableExtra(Constants.TASK);
         if (task == null) {
             task = new SimpleTask();
             task.setId(-1);
-            task.setPosition(getIntent().getIntExtra("position", 0));
+            task.setPosition(getIntent().getIntExtra(Constants.POSITION, 0));
             Log.d("TAG", "TAAAAAAASKA  NEEEET");
             Log.d("TAG", "ID = " + task.getId());
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -138,7 +142,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 toolbar.setBackgroundColor(task.getColor());
         }
 
-        currentKind = getIntent().getStringExtra("kind");
+        currentKind = getIntent().getStringExtra(Constants.KIND);
         if (currentKind == null)
             currentKind = Constants.UNDEFINED;
 
@@ -268,9 +272,9 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             case R.id.cancel_notif:
                 final AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 // alert.setTitle("Очистить корзину?");
-                alert.setMessage("Удалить напоминание?");
+                alert.setMessage(R.string.question_delete_notification);
 
-                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         cancelNotification();
@@ -279,7 +283,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                         cancelNotification.setVisible(false);
                     }
                 });
-                alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                     }
@@ -294,7 +298,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
     private void cancelNotification(){
 
         Intent intent1 = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
-        intent1.setAction("TASK_NOTIFICATION");
+        intent1.setAction(Constants.ACTION_NOTIFICATION);
         //intent1.putExtra("id", task.getId());
         PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), task.getId(), intent1, 0);
         AlarmManager alarmManager1 = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -345,8 +349,8 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         });
 
 
-        mBuilder.setTitle("Напоминание");
-        mBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        mBuilder.setTitle(R.string.notification);
+        mBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("TAG", "----------------------OK");
@@ -357,8 +361,8 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 Log.d("TAG", String.valueOf(notificationTime.get(Calendar.MINUTE)));
                 Log.d("TAG", "----------------------");
 
-                Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
-                intent.setAction("TASK_NOTIFICATION");
+          /*      Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
+                intent.setAction(Constants.ACTION_NOTIFICATION);
                 saveTask(true);
                 intent.putExtra("id", task.getId());
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
@@ -370,10 +374,45 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 saveTask(false);
                 cancelNotification.setVisible(true);
 
+*/
+
+                Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
+                intent.setAction(Constants.ACTION_NOTIFICATION);
+                saveTask(true);
+                intent.putExtra(Constants.ID, task.getId());
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+                if(repeating.equals("")) {
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
+                }
+                if(repeating.equals(R.string.every_day)) {
+                    intent.putExtra(Constants.REPEATING, true);
+                    intent.putExtra(Constants.PERIOD, 3*60*1000);
+                    task.setRepeatingPeriod(3*60*1000);
+                    task.setRepeating(true);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), 3*60*1000, pendingIntent);
+                }
+                if(repeating.equals(R.string.every_week)) {
+                    intent.putExtra(Constants.REPEATING, true);
+                    intent.putExtra(Constants.PERIOD, 3*60*1000);
+                    task.setRepeatingPeriod(3*60*1000);
+                    task.setRepeating(true);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), 3*60*1000, pendingIntent);
+                }
+
+                task.setRemind(true);
+                task.setReminderTime(notificationTime.getTimeInMillis());
+                saveTask(false);
+                cancelNotification.setVisible(true);
+
             }
         });
 
-        mBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+        mBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -520,13 +559,13 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 break;
             case R.id.item_afternoon:
                 spinnerButtonTime.setText(getResources().getString(R.string.afternoon));
-                hours = sharedPreferences.getInt("afternoon_time_hours", 14);
-                minutes = sharedPreferences.getInt("afternoon_time_minutes", 15);
+                hours = sharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS, 14);
+                minutes = sharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES, 15);
                 break;
             case R.id.item_evening:
                 spinnerButtonTime.setText(getResources().getString(R.string.evening));
-                hours = sharedPreferences.getInt("evening_time_hours", 20);
-                minutes = sharedPreferences.getInt("evening_time_minutes", 15);
+                hours = sharedPreferences.getInt(Constants.EVENING_TIME_HOURS, 20);
+                minutes = sharedPreferences.getInt(Constants.EVENING_TIME_MINUTES, 15);
                 break;
             case R.id.item_chose_time:
                 showTimePickerDialog();
@@ -549,13 +588,15 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 showDatePickerDialog();
                 break;
             case R.id.item_every_day:
-
+                repeating = getString(R.string.every_day);
+                spinnerButtonRepeat.setText(R.string.every_day);
                 break;
             case R.id.item_every_week:
-
+                repeating = getString(R.string.every_week);
+                spinnerButtonRepeat.setText(R.string.every_week);
                 break;
             case R.id.item_newer:
-
+                repeating = "";
                 break;
         }
         return false;

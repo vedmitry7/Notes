@@ -154,7 +154,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 final CheckBox remember = (CheckBox) mViewe.findViewById(R.id.remember);
                 if(activity.currentKind==Constants.ARCHIVE){
                     TextView textView = (TextView) mViewe.findViewById(R.id.archiveTextView);
-                    textView.setText("Разархивировать");
+                    textView.setText(R.string.unarchive);
                 }
                 mBuilder.setView(mViewe);
                 final AlertDialog dialog = mBuilder.create();
@@ -183,7 +183,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         setRightPosition();
                         if(remember.isChecked()){
                             SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("mainSwipeRemember", Constants.ARCHIVE);
+                            editor.putString(Constants.SWIPE_REMEMBER, Constants.ARCHIVE);
                             editor.commit();
                         }
                     }
@@ -204,7 +204,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         setRightPosition();
                         if(remember.isChecked()){
                             SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("mainSwipeRemember", Constants.DELETED);
+                            editor.putString(Constants.SWIPE_REMEMBER, Constants.DELETED);
                             editor.commit();
                         }
                     }
@@ -387,15 +387,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 switch (MainRecyclerAdapter.this.getItemViewType(position)) {
                     case 0:
                         Intent intent = new Intent(context, SimpleTaskActivity.class);
-                        intent.putExtra("Task", (Serializable) tasks.get(position));
-                        intent.putExtra("kind", activity.currentKind);
+                        intent.putExtra(Constants.TASK, (Serializable) tasks.get(position));
+                        intent.putExtra(Constants.KIND, activity.currentKind);
                         context.startActivity(intent);
                         activity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                         break;
                     case 1:
                         Intent intent1 = new Intent(context, ListTaskActivity.class);
-                        intent1.putExtra("ListTask", tasks.get(position));
-                        intent1.putExtra("kind", activity.currentKind);
+                        intent1.putExtra(Constants.LIST_TASK, tasks.get(position));
+                        intent1.putExtra(Constants.KIND, activity.currentKind);
                         context.startActivity(intent1);
                         activity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                         break;

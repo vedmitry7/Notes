@@ -154,7 +154,7 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
 
             editText = (EditText) itemView.findViewById(R.id.itemListEditText);
             if(editText!=null) {
-                editText.setTextSize(sharedPreferences.getInt("taskFontSize", 16));
+                editText.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16));
                 editText.setTypeface(SingletonFonts.getInstance(context).getRobotoRegular());
                 editText.addTextChangedListener(editTextListener);
             }
@@ -170,12 +170,12 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
             newPoint = (TextView)itemView.findViewById(R.id.newPoint);
             if(newPoint!=null) {
                 newPoint.setTypeface(SingletonFonts.getInstance(context).getRobotoRegular());
-                newPoint.setTextSize(sharedPreferences.getInt("taskFontSize", 16));
+                newPoint.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16));
             }
 
             headLineEditText = (EditText) itemView.findViewById(R.id.listHeadEditText2);
             if(headLineEditText!=null) {
-                headLineEditText.setTextSize(sharedPreferences.getInt("taskFontSize", 16));
+                headLineEditText.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16));
                 headLineEditText.clearFocus();
                 headLineEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
                     @Override
