@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
 import com.example.dmitryvedmed.taskbook.logic.ListTask;
+import com.example.dmitryvedmed.taskbook.untils.Constants;
 
 public class ListTaskDialogActivity extends AppCompatActivity {
 
@@ -62,7 +63,7 @@ public class ListTaskDialogActivity extends AppCompatActivity {
 
         //task = (ListTask) getIntent().getSerializableExtra("ListTask");
 
-        task = (ListTask) dbHelper5.getTask(getIntent().getIntExtra("ListTaskId", 0));
+        task = (ListTask) dbHelper5.getTask(getIntent().getIntExtra(Constants.ID, 0));
 
         head = (TextView) findViewById(R.id.listTaskDialogHeadTextView);
         if(task.getHeadLine()==null||task.getHeadLine().length()==0)
@@ -98,7 +99,7 @@ public class ListTaskDialogActivity extends AppCompatActivity {
         Log.d("TAG", "clicccccccccccccccccccccccccccccck edit");
 
         Intent intent1 = new Intent(this, ListTaskActivity.class);
-        intent1.putExtra("ListTask", task);
+        intent1.putExtra(Constants.ID, task);
         this.startActivity(intent1);
         this.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
 

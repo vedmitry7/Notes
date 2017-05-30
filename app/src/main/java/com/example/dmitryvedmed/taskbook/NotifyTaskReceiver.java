@@ -55,7 +55,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
                 task.setReminderTime(task.getReminderTime() + task.getRepeatingPeriod());
             }
             notificationIntent = new Intent(context, SimpleTaskDialogActivity.class);
-            notificationIntent.putExtra("TaskId", task.getId());
+            notificationIntent.putExtra(Constants.ID, task.getId());
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             //notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -97,7 +97,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             else {
                 task.setReminderTime(task.getReminderTime() + task.getRepeatingPeriod());
             }
-            notificationIntent.putExtra("ListTaskId", task.getId());
+            notificationIntent.putExtra(Constants.ID, task.getId());
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 

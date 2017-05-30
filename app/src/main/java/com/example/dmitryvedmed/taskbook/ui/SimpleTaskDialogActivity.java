@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
 import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
+import com.example.dmitryvedmed.taskbook.untils.Constants;
 
 public class SimpleTaskDialogActivity extends AppCompatActivity {
 
@@ -42,7 +43,7 @@ public class SimpleTaskDialogActivity extends AppCompatActivity {
 
         //task = (SimpleTask) getIntent().getSerializableExtra("Task");
 
-        task = (SimpleTask) dbHelper5.getTask(getIntent().getIntExtra("TaskId", 0));
+        task = (SimpleTask) dbHelper5.getTask(getIntent().getIntExtra(Constants.ID, 0));
         if(task.getHeadLine().length()>0)
             head.setText(task.getHeadLine());
         else

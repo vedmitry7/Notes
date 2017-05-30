@@ -4,8 +4,17 @@ import java.io.Serializable;
 
 
 public class Section implements Serializable {
-    String name;
-    int id;
+    private String name;
+    private int id;
+    private int position;
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
 
     public String getName() {
         return name;

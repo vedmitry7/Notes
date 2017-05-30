@@ -2,6 +2,7 @@ package com.example.dmitryvedmed.taskbook.ui;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -155,6 +156,10 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 });
                 popupMenu.show();
                 break;
+            case R.id.setSectionPosition:
+                Intent intent = new Intent(this, SectionPositionActivity.class);
+                this.startActivity(intent);
+                return;
             case R.id.setSwipeAction:
 
                 final AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
@@ -222,7 +227,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 stringQuantityValue.setText(String.valueOf(i + 1));
                 if(i==20)
                     stringQuantityValue.setText(R.string.all);
-                editor.putInt("stringQuantity",i);
+                editor.putInt("stringQuantity", i);
                 break;
 
         }

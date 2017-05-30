@@ -224,5 +224,26 @@
 
     </RelativeLayout>
 
+
+    <View style="@style/Divider"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:id="@+id/setSectionPosition"
+        android:onClick="onClick">
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:paddingTop="10dp"
+            android:paddingLeft="16dp"
+            android:textSize="16sp"
+            android:text="Установить позицию разделов"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </RelativeLayout>
+
 </LinearLayout>
 

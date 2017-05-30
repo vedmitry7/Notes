@@ -44,6 +44,8 @@ import com.example.dmitryvedmed.taskbook.logic.SuperTask;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.example.dmitryvedmed.taskbook.R.drawable.delete;
@@ -361,6 +363,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         navmenu.add(Menu.NONE, R.id.undefined , Menu.NONE, "Все").setIcon(getResources().getDrawable(R.drawable.note_multiple));
         navmenu.add(Menu.NONE, R.id.archive , Menu.NONE, "Архив").setIcon(getResources().getDrawable(R.drawable.archive));
+        compareSections();
         for (Section s:sections
                 ) {
             Log.d("TAG", "Section " + s.getName() + " id " + s.getId());
@@ -691,6 +694,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                     });
                     Section section = new Section();
                     section.setName(value);
+                    section.setPosition(sections.size());
                     int sectionId = dbHelper.addSection(section);
                     section.setId(sectionId);
                     dbHelper.updateSection(section);
@@ -880,5 +884,23 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     public String getCurrentKind() {
         return currentKind;
+    }
+
+    private void compareSections(){
+        Log.d("TAG", "       Adapter --- compareSections");
+        Comparator<Section> comparator = new Comparator<Section>() {
+            @Override
+            public int compare(Section section, Section t1) {
+                return section.getPosition() > t1.getPosition() ? 1 : -1;
+            }
+        };
+        Collections.sort(sections, comparator);
+    }
+
+    private void setRightPosition(){
+        Log.d("TAG", "       Adapter --- setRightPosition");
+        for (int i = 0; i < sections.size(); i++) {
+            sections.get(i).setPosition(sections.size()-i-1);
+        }
     }
 }

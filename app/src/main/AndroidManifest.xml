@@ -11,9 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:windowSoftInputMode="adjustPan">
-        <activity
-            android:name=".ui.Main3Activity"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".ui.ListTaskActivity"
             android:windowSoftInputMode="stateHidden" />
@@ -26,18 +24,18 @@
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainActivity" />
+
         <activity
             android:name=".ui.SettingsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.DrawerTestActivity"
             android:label="Заметки"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:theme="@style/AppTheme"></activity>
 
         <receiver android:name=".widget.AppWidget">
             <intent-filter>
@@ -68,13 +66,15 @@
                 <action android:name="TASK_NOTIFICATION" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".BootReceiver"
+        <receiver
+            android:name=".BootReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="android.intent.action.REBOOT"/>
+                <action android:name="android.intent.action.REBOOT" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
@@ -85,12 +85,13 @@
             android:noHistory="true"
             android:theme="@style/Theme.MyDialog" />
         <activity
-            android:label="dialogList"
             android:name=".ui.ListTaskDialogActivity"
+            android:label="dialogList"
             android:noHistory="true"
-            android:theme="@style/Theme.MyDialog">
-        </activity>
-        <activity android:name=".ui.CommonTaskActivity">
+            android:theme="@style/Theme.MyDialog"></activity>
+        <activity android:name=".ui.CommonTaskActivity"></activity>
+        <activity android:name=".ui.SectionPositionActivity"
+            >
 
         </activity>
     </application>

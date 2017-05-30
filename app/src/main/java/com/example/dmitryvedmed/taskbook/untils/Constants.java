@@ -41,7 +41,4 @@ public class Constants {
     public static final String LAYOUT_LIST  = "list";
     public static final String LAYOUT_GRID  = "grid";
     public static final String MAIN_RECYCLER_LAYOUT  = "recucler_layout";
-
-
-
 }
