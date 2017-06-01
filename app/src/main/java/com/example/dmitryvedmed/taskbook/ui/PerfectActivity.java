@@ -363,7 +363,17 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         navmenu.add(Menu.NONE, R.id.undefined , Menu.NONE, "Все").setIcon(getResources().getDrawable(R.drawable.note_multiple));
         navmenu.add(Menu.NONE, R.id.archive , Menu.NONE, "Архив").setIcon(getResources().getDrawable(R.drawable.archive));
+        Log.d("TAG",                                "Sections DO" );
+        for (Section s:sections
+             ) {
+            Log.d("TAG", "Section " + s.getName() + " " + s.getPosition());
+        }
         compareSections();
+        Log.d("TAG",                                "Sections POSLE" );
+        for (Section s:sections
+                ) {
+            Log.d("TAG", "Section " + s.getName() + " " + s.getPosition());
+        }
         for (Section s:sections
                 ) {
             Log.d("TAG", "Section " + s.getName() + " id " + s.getId());
@@ -615,7 +625,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             }
         }
 
+
         switch (item.getItemId()){
+
             case R.id.undefined:
                 setItemMovement(true);
                 mainToolbarText.setText("");
@@ -669,6 +681,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 break;
             case 245:
                 dbHelper.clearSectionTable();
+                sections = dbHelper.getAllSections();
+                onCreateNavigationMenu();
                 break;
         }
 
@@ -850,6 +864,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         Log.d("TAG", "      Activity --- onResume  ---");
 
         update();
+        onCreateNavigationMenu();
         super.onResume();
     }
 
@@ -891,7 +906,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         Comparator<Section> comparator = new Comparator<Section>() {
             @Override
             public int compare(Section section, Section t1) {
-                return section.getPosition() > t1.getPosition() ? 1 : -1;
+                return section.getPosition() < t1.getPosition() ? 1 : -1;
             }
         };
         Collections.sort(sections, comparator);

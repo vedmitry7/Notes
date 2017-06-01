@@ -264,7 +264,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         navmenu.add(Menu.NONE, R.id.deleted , Menu.NONE,"Корзина").setIcon(getResources().getDrawable(R.drawable.delete));
         navmenu.add(Menu.NONE, R.id.settings , Menu.NONE,"Настройки").setIcon(getResources().getDrawable(R.drawable.settings));
         navmenu.add(Menu.NONE, R.id.exit , Menu.NONE,"Выход").setIcon(getResources().getDrawable(R.drawable.exit_to_app));
-        navmenu.add(Menu.NONE, 245 , Menu.NONE,"clear sections");
+        navmenu.add(Menu.NONE, 245 , Menu.NONE, "clear sections");
 
         return true;
     }

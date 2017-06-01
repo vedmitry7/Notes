@@ -20,8 +20,13 @@ public class SectionPositionRecyclerAdapter extends RecyclerView.Adapter<Section
 
     private List<Section> sections;
 
+    public List<Section> getSections() {
+        return sections;
+    }
+
     public SectionPositionRecyclerAdapter(List<Section> sections) {
         this.sections = sections;
+        compareSections();
     }
 
     @Override

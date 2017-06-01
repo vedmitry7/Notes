@@ -49,4 +49,17 @@ public class SectionPositionActivity extends AppCompatActivity {
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
     }
+
+
+    @Override
+    protected void onPause() {
+
+        sections = adapter.getSections();
+        for (Section s : sections
+             ) {
+            dbHelper5.updateSection(s);
+        }
+        super.onPause();
+    }
+
 }
