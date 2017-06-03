@@ -16,6 +16,7 @@ import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
 import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
+import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
 
 public class SimpleTaskDialogActivity extends AppCompatActivity {
 
@@ -40,6 +41,8 @@ public class SimpleTaskDialogActivity extends AppCompatActivity {
     private void initView() {
         head = (TextView) findViewById(R.id.headTextView);
         context = (TextView) findViewById(R.id.contextTextView);
+        context.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());
+        head.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
 
         //task = (SimpleTask) getIntent().getSerializableExtra("Task");
 

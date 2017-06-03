@@ -18,6 +18,7 @@ import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
 import com.example.dmitryvedmed.taskbook.logic.ListTask;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
+import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
 
 public class ListTaskDialogActivity extends AppCompatActivity {
 
@@ -66,6 +67,8 @@ public class ListTaskDialogActivity extends AppCompatActivity {
         task = (ListTask) dbHelper5.getTask(getIntent().getIntExtra(Constants.ID, 0));
 
         head = (TextView) findViewById(R.id.listTaskDialogHeadTextView);
+        head.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());
+
         if(task.getHeadLine()==null||task.getHeadLine().length()==0)
             head.setVisibility(View.GONE);
         else

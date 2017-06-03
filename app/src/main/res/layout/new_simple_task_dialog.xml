@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
-                android:alpha="67"
+                android:alpha="0.67"
                 android:id="@+id/headTextView"
                 android:textSize="17sp"
                 android:textStyle="normal|bold"/>
@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
-                android:alpha="67"
+                android:alpha="0.67"
                 android:id="@+id/contextTextView"
                 android:textSize="17sp" />
 

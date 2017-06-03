@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -78,6 +79,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private SharedPreferences sharedPreferences;
     private ArrayList<Section> sections;
     private Section currentSection;
+    private int columnsNomber;
 
     ActionMode actionMode;
 
@@ -223,6 +225,10 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         setContentView(R.layout.activity_drawer_test);
         context = this;
         dbHelper = new DBHelper5(this);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            columnsNomber = 2;
+        } else columnsNomber = 3;
+
         loadPreferences();
         update();
         initView();
@@ -270,7 +276,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         if(s.equals(Constants.LAYOUT_LIST)) {
             layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         } else {
-            layoutManager = new StaggeredGridLayoutManager(2, 1);
+            layoutManager = new StaggeredGridLayoutManager(columnsNomber, 1);
         }
         recyclerView.setLayoutManager(layoutManager);
 
@@ -460,7 +466,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 RecyclerView.LayoutManager layoutManager;
 
                 if(s.equals(Constants.LAYOUT_LIST)) {
-                    layoutManager = new StaggeredGridLayoutManager(2, 1);
+                    layoutManager = new StaggeredGridLayoutManager(columnsNomber, 1);
                     editor.putString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_GRID);
 
                 } else {
