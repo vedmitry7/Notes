@@ -57,7 +57,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
 
-    private List<SuperTask> values;
+    private List<SuperTask> values = new ArrayList<>();
     public static DBHelper5 dbHelper;
     public static RecyclerView recyclerView;
     private MainRecyclerAdapter adapter;
@@ -79,141 +79,13 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private SharedPreferences sharedPreferences;
     private ArrayList<Section> sections;
     private Section currentSection;
-    private int columnsNomber;
+    private int columnsNumber;
+    private SharedPreferences.Editor editor;
 
     ActionMode actionMode;
 
 
-    private ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            getMenuInflater().inflate(R.menu.menu_selection_mode, menu);
-
-            if(currentKind==Constants.DELETED){
-                MenuItem delete = menu.findItem(R.id.delete_selection_items);
-                delete.setIcon(getResources().getDrawable(R.drawable.delete_forever));
-            }
-
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
-            switch (item.getItemId()) {
-
-                case R.id.green:
-                    adapter.setColorSelectionTasks(Constants.GREEN);
-                    fab.show();
-                    break;
-                case R.id.red:
-                    adapter.setColorSelectionTasks(Constants.RED);
-                    fab.show();
-                    break;
-                case R.id.blue:
-                    adapter.setColorSelectionTasks(Constants.BLUE);
-                    fab.show();
-                    break;
-                case R.id.yellow:
-                    adapter.setColorSelectionTasks(Constants.YELLOW);
-                    fab.show();
-                    break;
-                case R.id.white:
-                    adapter.setColorSelectionTasks(0);
-                    break;
-
-                case R.id.delete_selection_items:
-                    Log.d("TAG", "       Adapter --- delete_selection_items");
-
-                    if(currentKind == Constants.DELETED) {
-
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                        // alert.setTitle("Очистить корзину?");
-                        alert.setMessage("Вы действительно хотите удалить выделенные заметки из корзины навсегда?");
-                        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                adapter.deleteSelectedTasksForever();
-                                mode.finish();
-                            }
-                        });
-                        alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                            }
-                        });
-                        alert.show();
-                        break;
-                    }
-                    showSnackBar(adapter.getSelectedTasksCounter());
-                    adapter.deleteSelectedTasks();
-                    mode.finish();
-                    break;
-                case R.id.set_color:
-           /*         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
-                    View mViewe = getLayoutInflater().inflate(R.layout.color_layout, null);
-                    mBuilder.setCancelable(true);
-                    mBuilder.setView(mViewe);
-                    final AlertDialog dialog = mBuilder.create();
-                    dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialogInterface) {
-                            Log.d("TAG", "       Adapter --- CANCEL LISTENER ");
-                        }
-                    });
-                    dialog.show();*/
-                    break;
-                case R.id.toArchive:
-                    adapter.translateTo(Constants.ARCHIVE);
-                    break;
-
-                case R.id.translateTo:
-
-                    MenuBuilder menuBuilder = new MenuBuilder(context);
-
-                    MenuPopupHelper optionsMenu = new MenuPopupHelper(context, menuBuilder, toolbar);
-                    optionsMenu.setForceShowIcon(true);
-
-
-                    PopupMenu popupMenu = new PopupMenu(context, toolbar, Gravity.TOP);
-
-                    if(currentKind != Constants.UNDEFINED)
-                        popupMenu.getMenu().add("Основной раздел");
-                    sections = dbHelper.getAllSections();
-                    for (Section section:sections
-                            ) {
-                        popupMenu.getMenu().add(section.getName());
-                    }
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            Log.d("TAG", "           click pop up NAME " + item.getItemId() + item.getTitle());
-                            if(item.getTitle().equals("Основной раздел")){
-                                adapter.translateTo(Constants.UNDEFINED);
-                            } else
-                                adapter.translateTo((String) item.getTitle());
-                            onNavigationItemSelected(undifinedPoint);
-                            mode.finish();
-                            return true;
-                        }
-                    });
-                    popupMenu.show();
-                    break;
-            }
-
-
-            return false;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            adapter.cancelSelection();
-        }
-    };
+    private ActionMode.Callback actionModeCallback;
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
         return super.onCreateView(parent, name, context, attrs);
@@ -226,8 +98,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         context = this;
         dbHelper = new DBHelper5(this);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            columnsNomber = 2;
-        } else columnsNomber = 3;
+            columnsNumber = 2;
+        } else columnsNumber = 3;
 
         loadPreferences();
         update();
@@ -238,8 +110,11 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     private void loadPreferences(){
         sharedPreferences = this.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
-
+        editor = sharedPreferences.edit();
     }
+
+
+
 
     private void initView() {
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -260,9 +135,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         });
 
 
-
-
-
         //  counterTextView = (TextView) findViewById(R.id.counter_text2);
         //counterTextView.setVisibility(View.GONE);
 
@@ -276,7 +148,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         if(s.equals(Constants.LAYOUT_LIST)) {
             layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         } else {
-            layoutManager = new StaggeredGridLayoutManager(columnsNomber, 1);
+            layoutManager = new StaggeredGridLayoutManager(columnsNumber, 1);
         }
         recyclerView.setLayoutManager(layoutManager);
 
@@ -309,6 +181,168 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        actionModeCallback = new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                getMenuInflater().inflate(R.menu.menu_selection_mode, menu);
+
+                if(currentKind==Constants.DELETED){
+                    MenuItem delete = menu.findItem(R.id.delete_selection_items);
+                    delete.setIcon(getResources().getDrawable(R.drawable.delete_forever));
+                }
+
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+
+                    case R.id.green:
+                        adapter.setColorSelectionTasks(Constants.GREEN);
+                        fab.show();
+                        break;
+                    case R.id.red:
+                        adapter.setColorSelectionTasks(Constants.RED);
+                        fab.show();
+                        break;
+                    case R.id.blue:
+                        adapter.setColorSelectionTasks(Constants.BLUE);
+                        fab.show();
+                        break;
+                    case R.id.yellow:
+                        adapter.setColorSelectionTasks(Constants.YELLOW);
+                        fab.show();
+                        break;
+                    case R.id.white:
+                        adapter.setColorSelectionTasks(0);
+                        break;
+
+                    case R.id.delete_selection_items:
+                        Log.d("TAG", "       Adapter --- delete_selection_items");
+
+                        if(currentKind == Constants.DELETED) {
+
+                            final AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                            // alert.setTitle("Очистить корзину?");
+                            alert.setMessage("Вы действительно хотите удалить выделенные заметки из корзины навсегда?");
+                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    adapter.deleteSelectedTasksForever();
+                                    mode.finish();
+                                }
+                            });
+                            alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            });
+                            alert.show();
+                            break;
+                        }
+                        showSnackBar(adapter.getSelectedTasksCounter());
+                        adapter.deleteSelectedTasks();
+                        mode.finish();
+                        break;
+                    case R.id.set_color:
+           /*         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
+                    View mViewe = getLayoutInflater().inflate(R.layout.color_layout, null);
+                    mBuilder.setCancelable(true);
+                    mBuilder.setView(mViewe);
+                    final AlertDialog dialog = mBuilder.create();
+                    dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialogInterface) {
+                            Log.d("TAG", "       Adapter --- CANCEL LISTENER ");
+                        }
+                    });
+                    dialog.show();*/
+                        break;
+                    case R.id.toArchive:
+                        adapter.translateTo(Constants.ARCHIVE);
+                        break;
+
+                    case R.id.translateTo:
+
+                        MenuBuilder menuBuilder = new MenuBuilder(context);
+
+                        MenuPopupHelper optionsMenu = new MenuPopupHelper(context, menuBuilder, toolbar);
+                        optionsMenu.setForceShowIcon(true);
+
+
+                        PopupMenu popupMenu = new PopupMenu(context, toolbar, Gravity.TOP);
+
+                        if(currentKind != Constants.UNDEFINED)
+                            popupMenu.getMenu().add("Основной раздел");
+                        sections = dbHelper.getAllSections();
+                        for (Section section:sections
+                                ) {
+                            popupMenu.getMenu().add(section.getName());
+                        }
+                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                Log.d("TAG", "           click pop up NAME " + item.getItemId() + item.getTitle());
+                                if(item.getTitle().equals("Основной раздел")){
+                                    adapter.translateTo(Constants.UNDEFINED);
+                                } else
+                                    adapter.translateTo((String) item.getTitle());
+                                onNavigationItemSelected(undifinedPoint);
+                                mode.finish();
+                                return true;
+                            }
+                        });
+                        popupMenu.show();
+                        break;
+                }
+
+
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                adapter.cancelSelection();
+            }
+        };
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if(is_in_action_mode) {
+            outState.putInt(Constants.ACTION_MODE, 1);
+            outState.putBooleanArray(Constants.SELLECTION_ARRAY, adapter.getSelects());
+            editor.putInt(Constants.SELECTED_ITEM_COUNT, adapter.getSelectedTasksCounter());
+            editor.commit();
+
+            outState.putIntegerArrayList(Constants.SELECTED_ITEM_IDS, adapter.getSelectedListIds());
+        }
+        else
+            outState.putInt(Constants.ACTION_MODE, 0);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        if(savedInstanceState!=null && savedInstanceState.getInt(Constants.ACTION_MODE)==1){
+            Log.d("TAG", "                              POVOROOOOT onRestoreInstanceState");
+            setSelectionMode();
+            adapter.setSelectedTasksCounter(savedInstanceState.getInt(Constants.SELECTED_ITEM_COUNT));
+            adapter.setSelects(savedInstanceState.getBooleanArray(Constants.SELLECTION_ARRAY));
+            adapter.fillSelectedTasks(savedInstanceState.getIntegerArrayList(Constants.SELECTED_ITEM_IDS));
+          //  actionMode.setTitle(String.valueOf(savedInstanceState.getInt(Constants.SELECTED_ITEM_COUNT)));
+            actionMode.setTitle(String.valueOf(sharedPreferences.getInt(Constants.SELECTED_ITEM_COUNT,0)));
+            adapter.setSelectedTasksCounter(sharedPreferences.getInt(Constants.SELECTED_ITEM_COUNT,0));
+
+        }
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -394,6 +428,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         navmenu.add(Menu.NONE, 245 , Menu.NONE,"clear sections");
     }
 
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -418,7 +453,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 })
                 .show();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -466,7 +500,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 RecyclerView.LayoutManager layoutManager;
 
                 if(s.equals(Constants.LAYOUT_LIST)) {
-                    layoutManager = new StaggeredGridLayoutManager(columnsNomber, 1);
+                    layoutManager = new StaggeredGridLayoutManager(columnsNumber, 1);
                     editor.putString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_GRID);
 
                 } else {
@@ -752,6 +786,17 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         values = dbHelper.getTasks(Constants.DELETED);
     }
 
+    public void setSelectionMode(){
+        actionMode = startActionMode(actionModeCallback);
+        is_in_action_mode = true;
+        adapter.setSelectionMode(MainRecyclerAdapter.Mode.SELECTION_MODE);
+        //onCreateOptionsMenu(menu);
+        editor.putInt(Constants.ACTION_MODE, 1);
+        editor.commit();
+
+        fab.hide();
+    }
+
     public void selectedItemCount(int selectedTasksCounter) {
         if(selectedTasksCounter == 0) {
             actionMode.finish();
@@ -759,6 +804,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             setItemMovement(true);
             fab.show();
             onCreateOptionsMenu(menu);
+            editor.putInt(Constants.ACTION_MODE, 0);
+            editor.commit();
         } else {
             actionMode.setTitle(String.valueOf(selectedTasksCounter));
             setItemMovement(false);
@@ -778,15 +825,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         fabAddST.setClickable(false);
         fabAddLT.setClickable(false);
         fabPressed = false;
-    }
-
-    public void setSelectionMode(){
-        actionMode = startActionMode(actionModeCallback);
-        is_in_action_mode = true;
-        adapter.setSelectionMode(MainRecyclerAdapter.Mode.SELECTION_MODE);
-        onCreateOptionsMenu(menu);
-
-        fab.hide();
     }
 
     public void add(View v){
@@ -869,7 +907,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     protected void onResume() {
         Log.d("TAG", "      Activity --- onResume  ---");
 
-        update();
+        //update();
         onCreateNavigationMenu();
         super.onResume();
     }

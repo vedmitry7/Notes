@@ -19,6 +19,11 @@ public class Constants {
     public static final String REPEATING = "repeating";
     public static final String PERIOD = "period";
     public static final String ID = "id";
+    public static final String ACTION_MODE = "action_mode";
+    public static final String SELLECTION_ARRAY = "selection_array";
+    public static final String SELECTED_ITEM_COUNT = "selected_item_count";
+    public static final String SELECTED_ITEM_IDS = "selected_item_count";
+
 
     public static final String MORNING_TIME_HOURS = "morning_time_hours";
     public static final String AFTERNOON_TIME_HOURS = "afternoon_time_hours";
