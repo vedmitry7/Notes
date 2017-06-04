@@ -577,7 +577,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 notificationTime.set(Calendar.HOUR_OF_DAY, hours);
                 notificationTime.set(Calendar.MINUTE, minutes);
                 Log.d("TAG", "DAY - " + String.valueOf(notificationTime.get(Calendar.DAY_OF_MONTH)));
-                spinnerButtonDate.setText(getResources().getString(R.string.testerday));
+                spinnerButtonDate.setText(getResources().getString(R.string.today));
                 break;
             case R.id.item_tomorrow:
                 notificationTime = Calendar.getInstance();

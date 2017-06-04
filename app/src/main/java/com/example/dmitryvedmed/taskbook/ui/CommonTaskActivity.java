@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -417,7 +416,7 @@ public class CommonTaskActivity extends AppCompatActivity implements PopupMenu.O
                 notificationTime.set(Calendar.HOUR_OF_DAY, hours);
                 notificationTime.set(Calendar.MINUTE, minutes);
                 Log.d("TAG", "DAY - " + String.valueOf(notificationTime.get(Calendar.DAY_OF_MONTH)));
-                spinnerButtonDate.setText(getResources().getString(R.string.testerday));
+                spinnerButtonDate.setText(getResources().getString(R.string.today));
 
                 break;
 

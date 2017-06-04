@@ -36,7 +36,7 @@
     <string name="afternoon">День</string>
     <string name="evening">Вечер</string>
     <string name="tomorrow">Завтра</string>
-    <string name="testerday">Сегодня</string>
+    <string name="today">Сегодня</string>
     <string name="newPoint">Новый пункт</string>
     <string name="bucket">Корзина</string>
     <string name="settings">Настройки</string>

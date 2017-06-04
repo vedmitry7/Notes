@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="action_settings">Settings</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string-array name="pref_list_titles">
+        <item>Список</item>
+        <item>Сетка</item>
+    </string-array>
+    <string-array name="pref_list_values">
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+
+    <string-array name="dates">
+        <item>Сегодня</item>
+        <item>Завтра</item>
+        <item>Через неделю</item>
+        <item>Выбрать дату</item>
+    </string-array>
+
+    <string-array name="times">
+        <item>Утро</item>
+        <item>День</item>
+        <item>Вечер</item>
+        <item>Выбрать время</item>
+    </string-array>
+
+
+    <string name="morning">Morning</string>
+    <string name="afternoon">Afternoon</string>
+    <string name="evening">Evening</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="today">Today</string>
+    <string name="newPoint">New item</string>
+    <string name="bucket">Bucket</string>
+    <string name="settings">Settings</string>
+    <string name="exit">Exit</string>
+    <string name="cancel">Cancel</string>
+    <string name="deleteForeverMassage">Are you sure you want to delete the selected notes from the bucket forever?</string>
+    <string name="deletePoint">Delete the section?</string>
+    <string name="deletePointMassage">If the section contains notes, they will go to the trash.</string>
+    <string name="archiv">Archive</string>
+    <string name="notifications">Reminders</string>
+    <string name="addPoint">Add a section</string>
+    <string name="unarchive">Unarchive</string>
+    <string name="act_archive">Archive</string>
+    <string name="act_delete">Delete</string>
+    <string name="act_ask">Ask</string>
+    <string name="at_once">At once</string>
+    <string name="one_day">1 day</string>
+    <string name="tree_day">3 days</string>
+    <string name="seven_day">7 days</string>
+    <string name="month">Month</string>
+    <string name="all">All</string>
+    <string name="notification">Reminder</string>
+    <string name="question_delete_notification">Delete the reminder?</string>
+    <string name="ok">OK</string>
+    <string name="every_day">Every day</string>
+    <string name="every_week">Every week</string>
+    <string name="act_open">Open</string>
+
+
+</resources>

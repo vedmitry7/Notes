@@ -408,8 +408,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         submenu.clear();
         */
 
-        navmenu.add(Menu.NONE, R.id.undefined , Menu.NONE, "Все").setIcon(getResources().getDrawable(R.drawable.note_multiple));
-        navmenu.add(Menu.NONE, R.id.archive , Menu.NONE, "Архив").setIcon(getResources().getDrawable(R.drawable.archive));
+        navmenu.add(Menu.NONE, R.id.undefined , Menu.NONE, R.string.all).setIcon(getResources().getDrawable(R.drawable.note_multiple));
+        navmenu.add(Menu.NONE, R.id.archive , Menu.NONE, R.string.archiv).setIcon(getResources().getDrawable(R.drawable.archive));
         for (Section s:sections
                 ) {
             Log.d("TAG", "Section " + s.getName() + " id " + s.getId());
@@ -421,7 +421,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         navmenu.add(Menu.NONE, R.id.deleted , Menu.NONE, R.string.bucket).setIcon(getResources().getDrawable(delete));
         navmenu.add(Menu.NONE, R.id.settings , Menu.NONE, R.string.settings).setIcon(getResources().getDrawable(R.drawable.settings));
         navmenu.add(Menu.NONE, R.id.exit , Menu.NONE, R.string.exit).setIcon(getResources().getDrawable(R.drawable.exit_to_app));
-        navmenu.add(Menu.NONE, 245 , Menu.NONE,"clear sections");
+      //  navmenu.add(Menu.NONE, 245 , Menu.NONE,"clear sections");
     }
 
 
