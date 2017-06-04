@@ -16,6 +16,7 @@
     <string-array name="dates">
         <item>Сегодня</item>
         <item>Завтра</item>
+
         <item>Через неделю</item>
         <item>Выбрать дату</item>
     </string-array>
