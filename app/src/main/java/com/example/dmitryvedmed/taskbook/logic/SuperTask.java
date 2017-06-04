@@ -13,6 +13,7 @@ public class SuperTask implements Serializable {
     private int repeatingPeriod;
     private boolean repeating;
 
+
     public long getDeletionTime() {
         return deletionTime;
     }

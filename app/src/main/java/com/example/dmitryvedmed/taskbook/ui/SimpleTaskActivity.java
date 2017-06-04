@@ -468,6 +468,8 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
 
     @Override
     protected void onPause() {
+        Log.d("TAG", "SIMPLE ACT ON PAUSE");
+
         saveTask(true);
         super.onPause();
     }

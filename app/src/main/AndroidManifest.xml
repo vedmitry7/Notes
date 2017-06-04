@@ -11,7 +11,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:windowSoftInputMode="adjustPan">
-
         <activity
             android:name=".ui.ListTaskActivity"
             android:windowSoftInputMode="stateHidden" />
@@ -28,14 +27,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.SettingsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.DrawerTestActivity"
             android:label="Заметки"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
 
         <receiver android:name=".widget.AppWidget">
             <intent-filter>
@@ -88,12 +86,10 @@
             android:name=".ui.ListTaskDialogActivity"
             android:label="dialogList"
             android:noHistory="true"
-            android:theme="@style/Theme.MyDialog"></activity>
-        <activity android:name=".ui.CommonTaskActivity"></activity>
-        <activity android:name=".ui.SectionPositionActivity"
-            >
-
-        </activity>
+            android:theme="@style/Theme.MyDialog" />
+        <activity android:name=".ui.CommonTaskActivity" />
+        <activity android:name=".ui.SectionPositionActivity"></activity>
+        <activity android:name=".ui.SettingAcivity2"></activity>
     </application>
 
 </manifest>

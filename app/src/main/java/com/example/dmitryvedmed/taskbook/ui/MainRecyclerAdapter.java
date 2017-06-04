@@ -102,6 +102,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             Log.d("TAG", "       Adapter --- setSelects(boolean[] selects");
         this.selects = selects;
         notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
     enum Mode {
@@ -110,6 +111,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     Mode getMode() {
         return mode;
     }
+
     void setSelectionMode(Mode mode){
         this.mode = mode;
     }
@@ -119,7 +121,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     MainRecyclerAdapter(List<SuperTask> tasks, Context context) {
-      //  Log.d("TAG", "       Adapter --- constructor  ---");
+        Log.d("TAG", "       Adapter --- constructor  ---");
         this.tasks = tasks;
 
         compareTasks();
@@ -533,16 +535,41 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return recyclerViewHolder;
     }
 
+    public List<SuperTask> getSelectedTasks() {
+        return selectedTasks;
+    }
+
     private void setColorCardView(CardView cardView, int position){
         Log.d("TAG", "       setColorCardView");
+        for (SuperTask s:selectedTasks
+                ) {
+            Log.d("TAG", "  sel task  id = " + s.hashCode() +" "+ s.getId());
+
+        }
+        for (SuperTask s:tasks
+                ) {
+            Log.d("TAG", "  sel task  id = " + s.hashCode() +" "+ s.getId());
+        }
+
         if(mode == Mode.SELECTION_MODE) {
             Log.d("TAG", "                          on selection mode");
 
-            Log.d("TAG", "       Adapter --- setColorCardView SELECTION MODE ON ");
+      //      Log.d("TAG", "       Adapter --- setColorCardView SELECTION MODE ON ");
      //       Log.d("TAG", "       SelectedTasks Size = " + selectedTasks.size() + " position = " + position);
 
-            if (selectedTasks.contains(tasks.get(position))) {
-        //        Log.d("TAG", "       SelectedTasks contains = " + position);
+            int id = tasks.get(position).getId();
+            boolean b = false;
+            for (SuperTask s:selectedTasks
+                 ) {
+                if(s.getId()==id){
+                    b = true;
+                    continue;
+                }
+            }
+
+            if(b){
+           // if (selectedTasks.contains(tasks.get(position))) {
+                Log.d("TAG", "       SelectedTasks contains = " + position);
        //         Log.d("TAG", "                                              COLOR CHANGE  LT GRAY ON BIND VH");
 
                 cardView.setCardBackgroundColor(Color.LTGRAY);
@@ -749,7 +776,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public void dataChanged(List<SuperTask> tasks){
         Log.d("TAG", "       Adapter --- dataChanged");
         this.tasks = tasks;
-        selects = new boolean[tasks.size()];
+        if(!activity.is_in_action_mode()){
+            selects = new boolean[tasks.size()];
+            Log.d("TAG", "       Adapter ---                                                selects = new boolean[tasks.size()];");
+        } else             Log.d("TAG", "       Adapter ---                  ne obnuliaem");
+
         textSize = sharedPreferences.getInt("cardFontSize", 16);
         compareTasks();
         notifyDataSetChanged();

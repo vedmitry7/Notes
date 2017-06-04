@@ -84,6 +84,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     ActionMode actionMode;
 
+    public boolean is_in_action_mode() {
+        return is_in_action_mode;
+    }
 
     private ActionMode.Callback actionModeCallback;
     @Override
@@ -316,6 +319,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+
+
+        Log.d("TAG", "                               onSaveInstanceState!!!!!!!!!!!!!");
         if(is_in_action_mode) {
             outState.putInt(Constants.ACTION_MODE, 1);
             outState.putBooleanArray(Constants.SELLECTION_ARRAY, adapter.getSelects());
@@ -332,7 +338,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         if(savedInstanceState!=null && savedInstanceState.getInt(Constants.ACTION_MODE)==1){
-            Log.d("TAG", "                              POVOROOOOT onRestoreInstanceState");
+            is_in_action_mode = true;
+            Log.d("TAG", "                              onRestoreInstanceState!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             setSelectionMode();
             adapter.setSelectedTasksCounter(savedInstanceState.getInt(Constants.SELECTED_ITEM_COUNT));
             adapter.setSelects(savedInstanceState.getBooleanArray(Constants.SELLECTION_ARRAY));
@@ -403,17 +410,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         navmenu.add(Menu.NONE, R.id.undefined , Menu.NONE, "Все").setIcon(getResources().getDrawable(R.drawable.note_multiple));
         navmenu.add(Menu.NONE, R.id.archive , Menu.NONE, "Архив").setIcon(getResources().getDrawable(R.drawable.archive));
-        Log.d("TAG",                                "Sections DO" );
-        for (Section s:sections
-             ) {
-            Log.d("TAG", "Section " + s.getName() + " " + s.getPosition());
-        }
-        compareSections();
-        Log.d("TAG",                                "Sections POSLE" );
-        for (Section s:sections
-                ) {
-            Log.d("TAG", "Section " + s.getName() + " " + s.getPosition());
-        }
         for (Section s:sections
                 ) {
             Log.d("TAG", "Section " + s.getName() + " id " + s.getId());
@@ -885,6 +881,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 s.setRemind(false);
             dbHelper.updateTask(s, currentKind);
         }
+
         super.onPause();
     }
 
@@ -904,11 +901,17 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
 
     @Override
+    protected void onRestart() {
+        Log.d("TAG", "    Activity --- onRESTART  ---");
+        update();
+        super.onRestart();
+    }
+
+    @Override
     protected void onResume() {
         Log.d("TAG", "      Activity --- onResume  ---");
-
-        //update();
-        onCreateNavigationMenu();
+       // update();
+       // onCreateNavigationMenu();
         super.onResume();
     }
 

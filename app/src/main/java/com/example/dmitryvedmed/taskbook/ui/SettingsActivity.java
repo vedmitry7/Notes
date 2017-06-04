@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
@@ -49,7 +51,12 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         Toolbar toolbar = (Toolbar) findViewById(R.id.setting_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle(R.string.settings);
+      //  toolbar.setTitle(R.string.settings);
+        getSupportActionBar().setTitle(R.string.settings);
+
+        int color = ContextCompat.getColor(this, R.color.common_google_signin_btn_text_dark);
+        toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+
 
         cardFontLabel = (TextView) findViewById(R.id.labelCardFont);
         taskFontLabel = (TextView) findViewById(R.id.labelTaskFont);
@@ -114,7 +121,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         System.out.println("                                        ertfgyhujikolp;jhgwaerdtfghjkl;");
-        getMenuInflater().inflate(R.menu.menu_activity_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_activity_main, menu);
         return true;
     }
 

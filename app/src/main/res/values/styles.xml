@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar"
         >
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -52,6 +52,14 @@
     <style name="Theme.MyDialog" parent="@style/Theme.AppCompat.Light.Dialog">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="MyCardView">
+       <item name="android:layout_marginLeft">@dimen/card_view_margin</item>
+       <item name="android:layout_marginRight">@dimen/card_view_margin</item>
+       <item name="android:minHeight">@dimen/card_view_minimum_height</item>
+       <item name="android:layout_height">wrap_content</item>
+       <item name="android:layout_width">match_parent</item>
     </style>
 
 </resources>
