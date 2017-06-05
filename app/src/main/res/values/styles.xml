@@ -39,7 +39,7 @@
 
     <style name="Divider2">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">3px</item>
+        <item name="android:layout_height">2dp</item>
         <item name="android:background">@android:color/darker_gray</item>
     </style>
 

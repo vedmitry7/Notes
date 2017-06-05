@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
      <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-         android:elevation="10dp"
         android:theme="@style/AppTheme.AppBarOverlay"
-         android:id="@+id/appBarLayout"
-         app:elevation="10dp">
+         android:id="@+id/appBarLayout">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/st_toolbar"
-        android:elevation="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        app:popupTheme="@style/AppTheme.PopupOverlay">
 
     </android.support.v7.widget.Toolbar>
 

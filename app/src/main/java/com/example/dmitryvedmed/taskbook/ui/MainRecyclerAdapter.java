@@ -158,7 +158,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public void onItemDismiss(final int position) {
 
 
-        String rem = sharedPreferences.getString("mainSwipeRemember", "");
+        String rem = sharedPreferences.getString(Constants.SWIPE_REMEMBER, "");
        // Log.d("TAG", "       Adapter --- onItemDismiss, position = " + position + " " + rem);
 
         switch (rem){
@@ -187,16 +187,16 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 break;
             case "" :
                 final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
-                View mViewe = activity.getLayoutInflater().inflate(R.layout.dialog_question_layout, null);
+                View mView = activity.getLayoutInflater().inflate(R.layout.dialog_question_layout, null);
                 mBuilder.setCancelable(true);
-                RelativeLayout archive = (RelativeLayout) mViewe.findViewById(R.id.actionArchive);
-                RelativeLayout delete = (RelativeLayout) mViewe.findViewById(R.id.actionDelete);
-                final CheckBox remember = (CheckBox) mViewe.findViewById(R.id.remember);
-                if(activity.currentKind==Constants.ARCHIVE){
-                    TextView textView = (TextView) mViewe.findViewById(R.id.archiveTextView);
+                RelativeLayout archive = (RelativeLayout) mView.findViewById(R.id.actionArchive);
+                RelativeLayout delete = (RelativeLayout) mView.findViewById(R.id.actionDelete);
+                final CheckBox remember = (CheckBox) mView.findViewById(R.id.remember);
+                if(activity.currentKind.equals(Constants.ARCHIVE)){
+                    TextView textView = (TextView) mView.findViewById(R.id.archiveTextView);
                     textView.setText(R.string.unarchive);
                 }
-                mBuilder.setView(mViewe);
+                mBuilder.setView(mView);
                 final AlertDialog dialog = mBuilder.create();
                 dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
@@ -222,6 +222,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         notifyItemRemoved(position);
                         setRightPosition();
                         if(remember.isChecked()){
+                            Log.d("TAG", "       Adapter ---                                CHECKED ");
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(Constants.SWIPE_REMEMBER, Constants.ARCHIVE);
                             editor.commit();
@@ -243,6 +244,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         notifyItemRemoved(position);
                         setRightPosition();
                         if(remember.isChecked()){
+                            Log.d("TAG", "       Adapter ---                                CHECKED ");
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(Constants.SWIPE_REMEMBER, Constants.DELETED);
                             editor.commit();

@@ -23,7 +23,7 @@
             <TextView
                 android:layout_marginTop="5dp"
                 android:paddingRight="16dp"
-                android:text="ert"
+                android:text="text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
@@ -37,7 +37,7 @@
             <TextView
                 android:paddingRight="16dp"
                 android:paddingTop="4dp"
-                android:text="fd ff df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfdsfdg df dfg dfg df gdfg df gdf gdf gdfg dfg dfg df gdf gfdg dfg  ioj piosdiopfds"
+                android:text="text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
@@ -62,12 +62,12 @@
             android:layout_weight="1"
             android:id="@+id/dialogBtnEdit"
             android:onClick="edit"
-            android:text="Править"
+            android:text="@string/edit"
             android:layout_marginRight="2dp"/>
 
 
         <Button style="?android:attr/buttonBarButtonStyle"
-            android:text="Убрать"
+            android:text="@string/hide"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -80,7 +80,7 @@
             android:layout_weight="1"
             android:id="@+id/dialogBtnLeave"
             android:onClick="leave"
-            android:text="Оставить"
+            android:text="@string/leave"
             android:layout_marginRight="2dp"/>
 
 

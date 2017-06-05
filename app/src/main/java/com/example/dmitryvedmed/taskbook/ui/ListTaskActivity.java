@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -166,7 +167,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int color;
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
@@ -174,29 +175,34 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
             case R.id.green:
                 color = ContextCompat.getColor(this, R.color.taskColorGreen);
                 toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
                 task.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.red:
                 color = ContextCompat.getColor(this, R.color.taskColorRed);
                 toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
                 task.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.blue:
                 color = ContextCompat.getColor(this, R.color.taskColorBlue);
                 toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
                 task.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.yellow:
                 color = ContextCompat.getColor(this, R.color.taskColorYellow);
                 toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
                 task.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.white:
                 toolbar.setBackgroundColor(Color.WHITE);
+                setBlackNavIconColor();
                 task.setColor(0);
                 break;
             case R.id.notify:
@@ -205,7 +211,6 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 intent.putExtra("id", task.getId());
                 sendBroadcast(intent);
 */
-
                 createDialog();
                 //showTimePickerDialog();
                 break;
@@ -239,6 +244,17 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setBlackNavIconColor(){
+        int color = ContextCompat.getColor(this, android.R.color.black);
+        toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+    }
+
+
+    private void setWhiteNavIconColor(){
+        int color = ContextCompat.getColor(this, android.R.color.white);
+        toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
     private void createDialog() {

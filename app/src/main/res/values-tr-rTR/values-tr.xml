@@ -39,12 +39,12 @@
     <string name="settings">Ayarlar</string>
     <string name="exit">Çıkış</string>
     <string name="cancel">Iptal</string>
-    <string name="deleteForeverMassage">Eğer gerçekten kalıcı olarak geri dönüşüm kutusundan seçilen notları silmek istiyor musunuz?</string>
-    <string name="deletePoint">Kaldır bölümünde?</string>
-    <string name="deletePointMassage">Bölüm notları içeriyorsa, sepet içine gidecek.</string>
-    <string name="archiv">Arşiv</string>
+    <string name="delete_forever_massage">Eğer gerçekten kalıcı olarak geri dönüşüm kutusundan seçilen notları silmek istiyor musunuz?</string>
+    <string name="question_delete_section">Kaldır bölümünde?</string>
+    <string name="delete_section_massage">Bölüm notları içeriyorsa, sepet içine gidecek.</string>
+    <string name="archive">Arşiv</string>
     <string name="notifications">Hatırlatmalar</string>
-    <string name="addPoint">Bölüm ekle</string>
+    <string name="add_section">Bölüm ekle</string>
     <string name="unarchive">Halletmek</string>
     <string name="act_archive">Arşiv</string>
     <string name="act_delete">Silmek</string>
@@ -57,10 +57,24 @@
     <string name="all">Tüm</string>
     <string name="notification">Hatırlatma</string>
     <string name="question_delete_notification">Bu hatırlatıcı silinsin mi?</string>
-    <string name="ok">OK</string>
+    <string name="ok">TAMAM</string>
     <string name="every_day">Her gün</string>
     <string name="every_week">Her hafta</string>
     <string name="act_open">Açık</string>
+
+    <string name="question_clear_basket">Boş Çöp?</string>
+    <string name="question_clear_busket_additional">Kalıcı geri dönüşüm kutusundan tüm notları silmek istediğiniz emin misiniz?</string>
+    <string name="fonts">Yazı</string>
+    <string name="task_font_size">Yazı boyutunu notları</string>
+    <string name="font_size_card">Yazı boyutunu kartı</string>
+    <string name="other">Diğer</string>
+    <string name="deletion_from_bucket_period">Sepetten çıkarılması</string>
+    <string name="action_with_swap">İşlem için kaydırın</string>
+    <string name="set_section_location">Bölümlerin konumunu ayarlayın</string>
+    <string name="section_position">Bölümler</string>
+    <string name="edit">Düzenle</string>
+    <string name="hide">Gizle</string>
+    <string name="leave">Kapat</string>
 
 
 </resources>

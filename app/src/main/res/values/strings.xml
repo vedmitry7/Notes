@@ -42,12 +42,12 @@
     <string name="settings">Настройки</string>
     <string name="exit">Выход</string>
     <string name="cancel">Отмена</string>
-    <string name="deleteForeverMassage">Вы действительно хотите удалить выделенные заметки из корзины навсегда?</string>
-    <string name="deletePoint">Удалить раздел?</string>
-    <string name="deletePointMassage">Если раздел содержит заметки, то они отправятся в корзину</string>
-    <string name="archiv">Архив</string>
+    <string name="delete_forever_massage">Вы действительно хотите удалить выделенные заметки из корзины навсегда?</string>
+    <string name="question_delete_section">Удалить раздел?</string>
+    <string name="delete_section_massage">Если раздел содержит заметки, то они отправятся в корзину</string>
+    <string name="archive">Архив</string>
     <string name="notifications">Напоминания</string>
-    <string name="addPoint">Добавить раздел</string>
+    <string name="add_section">Добавить раздел</string>
     <string name="unarchive">Разархивировать</string>
     <string name="act_archive">Архивировать</string>
     <string name="act_delete">Удалить</string>
@@ -64,5 +64,20 @@
     <string name="every_day">Каждый день</string>
     <string name="every_week">Кажддую неделю</string>
     <string name="act_open">Открыть</string>
+
+
+    <string name="question_clear_basket">Очистить корзину?</string>
+    <string name="question_clear_busket_additional">Вы действительно хотите удалить все заметки из корзины навсегда?</string>
+    <string name="fonts">Шрифты</string>
+    <string name="task_font_size">Размер шрифта заметки</string>
+    <string name="font_size_card">Размер шрифта карточки</string>
+    <string name="other">Другое</string>
+    <string name="deletion_from_bucket_period">Удаление из корзины</string>
+    <string name="action_with_swap">Действие при свайпе</string>
+    <string name="set_section_location">Установить позицию разделов</string>
+    <string name="section_position">Позиция пунктов</string>
+    <string name="edit">Править</string>
+    <string name="hide">Убрать</string>
+    <string name="leave">Оставить</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.example.dmitryvedmed.taskbook.ui;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
@@ -33,11 +35,12 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
     TextView taskFontValue;
     TextView cardFontValue;
     TextView deletionPeriodLabel;
-    TextView stringQuantityValue;
     TextView swipeAction;
+    TextView morningTime;
+    TextView afternoonTime;
+    TextView eveningTime;
     SeekBar taskFontSeekBar;
     SeekBar cardFontSeekBar;
-    SeekBar stringQuantitySeekBar;
     SharedPreferences.Editor editor;
     RelativeLayout setDeletionPeriod;
 
@@ -47,6 +50,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         setContentView(R.layout.activity_settings);
 
         sharedPreferences = getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.setting_toolbar);
         setSupportActionBar(toolbar);
@@ -64,15 +68,13 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         cardFontValue = (TextView) findViewById(R.id.textCardFontValue);
         taskFontValue = (TextView) findViewById(R.id.textTaskFontValue);
 
-        stringQuantityValue = (TextView) findViewById(R.id.stringQuantityValue);
-        stringQuantityValue.setText(String.valueOf(sharedPreferences.getInt("stringQuantity", 5)));
+       setTime();
+
 
         taskFontSeekBar = (SeekBar) findViewById(R.id.seekBarTaskFont);
         taskFontSeekBar.setOnSeekBarChangeListener(this);
         cardFontSeekBar = (SeekBar) findViewById(R.id.seekBarCardFont);
         cardFontSeekBar.setOnSeekBarChangeListener(this);
-        stringQuantitySeekBar = (SeekBar) findViewById(R.id.stringQuantitySeekBar);
-        stringQuantitySeekBar.setOnSeekBarChangeListener(this);
 
         deletionPeriodLabel = (TextView) findViewById(R.id.deletionPeriodValue);
         Long deletionPeriod = sharedPreferences.getLong(Constants.DELETION_PERIOD,Constants.PERIOD_WEEK);
@@ -115,7 +117,24 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
 
         taskFontSeekBar.setProgress(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16) - 12);
         cardFontSeekBar.setProgress(sharedPreferences.getInt(Constants.CARD_FONT_SIZE, 17) - 12);
-        stringQuantitySeekBar.setProgress(sharedPreferences.getInt("stringQuantity", 5));
+    }
+
+    private void setTime() {
+        morningTime = (TextView) findViewById(R.id.morning_text);
+        afternoonTime = (TextView) findViewById(R.id.afternoon_text);
+        eveningTime = (TextView) findViewById(R.id.evening_text);
+
+        String mHours = String.valueOf(sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 8));
+        String aHours = String.valueOf(sharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS, 14));
+        String eHours = String.valueOf(sharedPreferences.getInt(Constants.EVENING_TIME_HOURS, 20));
+
+        String mMinutes = String.valueOf(sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 2));
+        String aMinutes = String.valueOf(sharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES, 4));
+        String eMinutes = String.valueOf(sharedPreferences.getInt(Constants.EVENING_TIME_MINUTES, 6));
+
+        morningTime.setText(mHours + ":" + mMinutes);
+        afternoonTime.setText(aHours + ":" + aMinutes);
+        eveningTime.setText(eHours + ":" + eMinutes);
     }
 
     @Override
@@ -198,6 +217,51 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 AlertDialog dialog = mBuilder.create();
                 dialog.show();
                 break;
+            case R.id.setAfternoonTime:
+                final int hour = sharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS,14);
+                final int minute = sharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES,0);
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int h, int m) {
+                        editor.putInt(Constants.AFTERNOON_TIME_MINUTES, m);
+                        editor.putInt(Constants.AFTERNOON_TIME_HOURS, h);
+                        editor.commit();
+                        setTime();
+                    }
+                }, hour, minute, true);
+                timePickerDialog.show();
+                break;
+            case R.id.setMorningTime:
+                final int hour2 = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS,8);
+                final int minute2 = sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES,0);
+
+                TimePickerDialog timePickerDialog2 = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int h, int m) {
+                        editor.putInt(Constants.AFTERNOON_TIME_MINUTES, m);
+                        editor.putInt(Constants.AFTERNOON_TIME_HOURS, h);
+                        editor.commit();
+                        setTime();
+                    }
+                }, hour2, minute2, true);
+                timePickerDialog2.show();
+                break;
+            case R.id.setEveningTime:
+                final int hour3 = sharedPreferences.getInt(Constants.EVENING_TIME_HOURS,20);
+                final int minute3 = sharedPreferences.getInt(Constants.EVENING_TIME_MINUTES,0);
+
+                TimePickerDialog timePickerDialog3 = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int h, int m) {
+                        editor.putInt(Constants.AFTERNOON_TIME_MINUTES, m);
+                        editor.putInt(Constants.AFTERNOON_TIME_HOURS, h);
+                        editor.commit();
+                        setTime();
+                    }
+                }, hour3, minute3, true);
+                timePickerDialog3.show();
+                break;
         }
     }
 
@@ -230,13 +294,6 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 }
                 cardFontValue.setText(String.valueOf(i + 12));
                 break;
-            case R.id.stringQuantitySeekBar:
-                stringQuantityValue.setText(String.valueOf(i + 1));
-                if(i==20)
-                    stringQuantityValue.setText(R.string.all);
-                editor.putInt("stringQuantity", i);
-                break;
-
         }
     }
 

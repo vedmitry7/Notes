@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -238,29 +239,34 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             case R.id.green:
                 color = ContextCompat.getColor(this, R.color.taskColorGreen);
                 toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
                 task.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.red:
                 color = ContextCompat.getColor(this, R.color.taskColorRed);
                 toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
                 task.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.blue:
                 color = ContextCompat.getColor(this, R.color.taskColorBlue);
                 toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
                 task.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.yellow:
                 color = ContextCompat.getColor(this, R.color.taskColorYellow);
                 toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
                 task.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.white:
                 toolbar.setBackgroundColor(Color.WHITE);
+                setBlackNavIconColor();
                 task.setColor(0);
                 break;
             case R.id.notify:
@@ -294,6 +300,17 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         return super.onOptionsItemSelected(item);
     }
 
+
+    private void setBlackNavIconColor(){
+        int color = ContextCompat.getColor(this, android.R.color.black);
+        toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+    }
+
+
+    private void setWhiteNavIconColor(){
+        int color = ContextCompat.getColor(this, R.color.common_google_signin_btn_text_dark);
+        toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+    }
 
     private void cancelNotification(){
 

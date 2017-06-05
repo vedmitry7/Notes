@@ -38,12 +38,12 @@
     <string name="settings">Settings</string>
     <string name="exit">Exit</string>
     <string name="cancel">Cancel</string>
-    <string name="deleteForeverMassage">Are you sure you want to delete the selected notes from the bucket forever?</string>
-    <string name="deletePoint">Delete the section?</string>
-    <string name="deletePointMassage">If the section contains notes, they will go to the trash.</string>
-    <string name="archiv">Archive</string>
+    <string name="delete_forever_massage">Are you sure you want to delete the selected notes from the bucket forever?</string>
+    <string name="question_delete_section">Delete the section?</string>
+    <string name="delete_section_massage">If the section contains notes, they will go to the trash.</string>
+    <string name="archive">Archive</string>
     <string name="notifications">Reminders</string>
-    <string name="addPoint">Add a section</string>
+    <string name="add_section">Add a section</string>
     <string name="unarchive">Unarchive</string>
     <string name="act_archive">Archive</string>
     <string name="act_delete">Delete</string>
@@ -60,6 +60,23 @@
     <string name="every_day">Every day</string>
     <string name="every_week">Every week</string>
     <string name="act_open">Open</string>
+
+
+    <string name="question_clear_basket">Empty the Recycle Bin?</string>
+    <string name="question_clear_busket_additional">Are you sure you want to delete all notes from the Recycle Bin forever?</string>
+    <string name="fonts">Fonts</string>
+    <string name="task_font_size">Font size of note</string>
+    <string name="font_size_card">Font size of the card</string>
+    <string name="other">Other</string>
+    <string name="deletion_from_bucket_period">Remove from Recycle Bin</string>
+    <string name="action_with_swap">Action with swipe</string>
+    <string name="set_section_location">Set section location</string>
+    <string name="section_position">Section position</string>
+    <string name="edit">Edit</string>
+    <string name="hide">Hide</string>
+    <string name="leave">Leave</string>
+
+
 
 
 </resources>

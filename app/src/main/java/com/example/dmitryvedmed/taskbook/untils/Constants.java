@@ -22,16 +22,17 @@ public class Constants {
     public static final String ACTION_MODE = "action_mode";
     public static final String SELLECTION_ARRAY = "selection_array";
     public static final String SELECTED_ITEM_COUNT = "selected_item_count";
+    public static final String CURRENT_KIND = Constants.UNDEFINED;
+
+
     public static final String SELECTED_ITEM_IDS = "selected_item_count";
-
-
     public static final String MORNING_TIME_HOURS = "morning_time_hours";
     public static final String AFTERNOON_TIME_HOURS = "afternoon_time_hours";
     public static final String EVENING_TIME_HOURS = "evening_time_hours";
     public static final String MORNING_TIME_MINUTES = "morning_time_minutes";
     public static final String AFTERNOON_TIME_MINUTES = "afternoon_time_minutes";
-    public static final String EVENING_TIME_MINUTES = "evening_time_minutes";
 
+    public static final String EVENING_TIME_MINUTES = "evening_time_minutes";
     public static final String DELIVER = "7413";
     public static final int GREEN = -11751600;
     public static final int RED = -769226;

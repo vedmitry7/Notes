@@ -3,8 +3,10 @@
 <LinearLayout android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFF"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/setting_toolbar"
@@ -12,8 +14,9 @@
         android:layout_height="@dimen/fab_size_normal"
         android:background="#ffc107"
         app:titleTextColor="#FFFFFF"
-        app:title="Настройки">
+        app:title="@string/settings">
     </android.support.v7.widget.Toolbar>
+
 
     <ScrollView android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,34 +33,12 @@
                 android:textColor="#00796B"
                 android:paddingBottom="4dp"
                 android:paddingLeft="16dp"
-                android:text="Внешний вид"
+                android:text="@string/fonts"
                 android:layout_width="match_parent"
                 android:textSize="16sp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView4"
                 android:textStyle="normal|bold" />
-
-            <View style="@style/Divider2"/>
-
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:id="@+id/layout"
-                android:onClick="onClick">
-
-                <TextView
-                    android:paddingLeft="16dp"
-                    android:text="Разметка"
-                    android:layout_width="match_parent"
-                    android:textSize="16sp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView43"
-                    android:textStyle="normal"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
-            </RelativeLayout>
 
             <View style="@style/Divider"/>
 
@@ -84,7 +65,7 @@
                 <TextView
                     android:paddingLeft="16dp"
                     android:textSize="16sp"
-                    android:text="Размер шрифта заметки"
+                    android:text="@string/task_font_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/labelTaskFont"
@@ -104,11 +85,12 @@
                     android:layout_alignParentEnd="true" />
             </RelativeLayout>
 
-            <View style="@style/Divider"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:onClick="onClick"
                 android:id="@+id/cardFont">
 
@@ -136,7 +118,7 @@
                 <TextView
                     android:paddingLeft="16dp"
                     android:textSize="16sp"
-                    android:text="Размер шрифта карточки"
+                    android:text="@string/font_size_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/labelCardFont"
@@ -144,136 +126,19 @@
 
             </RelativeLayout>
 
-            <View style="@style/Divider"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <SeekBar
-                    android:max="20"
-                    android:progress="5"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/labelStringQuantity"
-                    android:id="@+id/stringQuantitySeekBar" />
-
-                <TextView
-                    android:layout_toLeftOf="@+id/labelStringQuantity"
-                    android:text="5"
-                    android:textSize="16sp"
-                    android:paddingRight="16dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/stringQuantityValue"
-                    android:layout_alignParentRight="true"/>
-
-                <TextView
-                    android:paddingLeft="16dp"
-                    android:textSize="16sp"
-                    android:text="Колличество строк карточки"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/labelStringQuantity"
-                    android:textStyle="normal"/>
-
-            </RelativeLayout>
-
-            <View style="@style/Divider"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:id="@+id/setDeletionPeriod"
-                android:onClick="onClick">
-
-                <TextView
-                    android:paddingLeft="16dp"
-                    android:textSize="16sp"
-                    android:layout_centerVertical="true"
-                    android:text="Удаление из корзины"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:textSize="16sp"
-                    android:paddingRight="16dp"
-                    android:text="3 дня"
-                    android:id="@+id/deletionPeriodValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"/>
-
-
-
-            </RelativeLayout>
-
-            <View style="@style/Divider"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:id="@+id/setSwipeAction"
-                android:onClick="onClick">
-
-                <TextView
-                    android:paddingTop="10dp"
-                    android:paddingLeft="16dp"
-                    android:textSize="16sp"
-                    android:text="Действие при свайпе"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:paddingLeft="16dp"
-                    android:textSize="16sp"
-                    android:paddingRight="16dp"
-                    android:text="Спрашивать"
-                    android:id="@+id/swipeAction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentBottom="true"/>
-
-            </RelativeLayout>
-
-
-            <View style="@style/Divider"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:id="@+id/setSectionPosition"
-                android:onClick="onClick">
-
-                <TextView
-                    android:layout_centerVertical="true"
-                    android:paddingTop="10dp"
-                    android:paddingLeft="16dp"
-                    android:textSize="16sp"
-                    android:text="Установить позицию разделов"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-
-            </RelativeLayout>
-
-            <View style="@style/Divider"/>
 
             <TextView
                 android:paddingTop="4dp"
                 android:textColor="#00796B"
                 android:paddingBottom="4dp"
                 android:paddingLeft="16dp"
-                android:text="Напоминания"
+                android:text="@string/notifications"
                 android:layout_width="match_parent"
                 android:textSize="16sp"
                 android:layout_height="wrap_content"
                 android:textStyle="normal|bold" />
 
-            <View style="@style/Divider2"/>
+            <View style="@style/Divider"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -286,11 +151,12 @@
                     android:paddingLeft="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Утро"/>
+                    android:text="@string/morning"/>
 
                 <TextView
                     android:paddingRight="16dp"
                     android:textSize="16sp"
+                    android:id="@+id/morning_text"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
@@ -310,10 +176,11 @@
                     android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="День"/>
+                    android:text="@string/afternoon"/>
 
                 <TextView
                     android:paddingRight="16dp"
+                    android:id="@+id/afternoon_text"
                     android:textSize="16sp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
@@ -323,6 +190,7 @@
 
             </RelativeLayout>
 
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
@@ -331,12 +199,15 @@
                 <TextView
                     android:layout_centerVertical="true"
                     android:paddingLeft="16dp"
+                    android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Вечер"/>
+                    android:text="@string/evening"/>
 
                 <TextView
                     android:paddingRight="16dp"
+                    android:textSize="16sp"
+                    android:id="@+id/evening_text"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
@@ -345,10 +216,102 @@
 
             </RelativeLayout>
 
+            <TextView
+                android:paddingTop="4dp"
+                android:textColor="#00796B"
+                android:paddingBottom="4dp"
+                android:paddingLeft="16dp"
+                android:text="@string/other"
+                android:layout_width="match_parent"
+                android:textSize="16sp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView14"
+                android:textStyle="normal|bold" />
+
+            <View style="@style/Divider"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:id="@+id/setDeletionPeriod"
+                android:onClick="onClick">
+
+                <TextView
+                    android:paddingLeft="16dp"
+                    android:textSize="16sp"
+                    android:layout_centerVertical="true"
+                    android:text="@string/deletion_from_bucket_period"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:textSize="16sp"
+                    android:paddingRight="16dp"
+                    android:text="@string/tree_day"
+                    android:id="@+id/deletionPeriodValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:id="@+id/setSwipeAction"
+                android:onClick="onClick">
+
+                <TextView
+                    android:paddingTop="10dp"
+                    android:paddingLeft="16dp"
+                    android:textSize="16sp"
+                    android:text="@string/action_with_swap"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="16dp"
+                    android:textSize="16sp"
+                    android:paddingRight="16dp"
+                    android:text="@string/act_ask"
+                    android:id="@+id/swipeAction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:id="@+id/setSectionPosition"
+                android:onClick="onClick">
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="16dp"
+                    android:textSize="16sp"
+                    android:text="@string/set_section_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+            </RelativeLayout>
 
         </LinearLayout>
 
 
     </ScrollView>
+
+
+
+
 </LinearLayout>
 
