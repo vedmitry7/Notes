@@ -236,15 +236,15 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
                             final AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             // alert.setTitle("Очистить корзину?");
-                            alert.setMessage("Вы действительно хотите удалить выделенные заметки из корзины навсегда?");
-                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            alert.setMessage(R.string.delete_forever_massage);
+                            alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     adapter.deleteSelectedTasksForever();
                                     mode.finish();
                                 }
                             });
-                            alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                            alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                 }
@@ -285,7 +285,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         PopupMenu popupMenu = new PopupMenu(context, toolbar, Gravity.TOP);
 
                         if(currentKind != Constants.UNDEFINED)
-                            popupMenu.getMenu().add("Основной раздел");
+                            popupMenu.getMenu().add(R.string.main_section);
                         sections = dbHelper.getAllSections();
                         for (Section section:sections
                                 ) {
@@ -295,7 +295,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
                                 Log.d("TAG", "           click pop up NAME " + item.getItemId() + item.getTitle());
-                                if(item.getTitle().equals("Основной раздел")){
+                                if(item.getTitle().equals(R.string.main_section)){
                                     adapter.translateTo(Constants.UNDEFINED);
                                 } else
                                     adapter.translateTo((String) item.getTitle());
@@ -693,15 +693,12 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             }
         }
 
-
         switch (item.getItemId()){
 
             case R.id.undefined:
                 setItemMovement(true);
                 currentKind = Constants.UNDEFINED;
                 fab.show();
-                menu.clear();
-                onCreateOptionsMenu(menu);
                 sectionWasChanged();
                 break;
             case R.id.deleted:
@@ -709,18 +706,13 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 sectionWasChanged();
                 setItemMovement(false);
                 fab.hide();
-                menu.clear();
-                onCreateOptionsMenu(menu);
                 break;
             case R.id.archive:
                 setItemMovement(true);
                 mainToolbarText.setText(R.string.archive);
                 currentKind = Constants.ARCHIVE;
-                menu.clear();
-                onCreateOptionsMenu(menu);
                 sectionWasChanged();
                 break;
-
             case R.id.notifications:
                 mainToolbarText.setText(R.string.notifications);
                 //currentKind = Constants.NOTIFICATIONS;
@@ -728,7 +720,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 values = dbHelper.getNotificationTasks();
                 adapter.dataChanged(values);
                 break;
-
             case R.id.settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
                 this.startActivity(intent);
@@ -773,16 +764,12 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                     dbHelper.updateSection(section);
                     menu.clear(); //!!!!!!!!!!
                     onCreateOptionsMenu(menu);
-          /*          Menu menu = navigationView.getMenu();
-                    Menu submenu = menu.getItem(0).getSubMenu();
-                    //MenuItem sections =  menu.getItem(R.id.sections);
-                    submenu.add(R.id.sections,Menu.FIRST,Menu.NONE, value);*/
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
                 }
             });
 
-            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     // Canceled.
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -801,7 +788,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     }
 
     private void checkOldTask() {
-        long deletionPeriod = sharedPreferences.getLong("deletionPeriod", Constants.PERIOD_WEEK);
+        long deletionPeriod = sharedPreferences.getLong(Constants.DELETION_PERIOD, Constants.PERIOD_WEEK);
         for (SuperTask task : values
                 ) {
             if(task.getDeletionTime() + deletionPeriod < System.currentTimeMillis())

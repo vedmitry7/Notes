@@ -79,5 +79,6 @@
     <string name="edit">Править</string>
     <string name="hide">Убрать</string>
     <string name="leave">Оставить</string>
+    <string name="main_section">Основной раздел</string>
 
 </resources>
