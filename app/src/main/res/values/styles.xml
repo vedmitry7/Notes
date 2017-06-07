@@ -7,13 +7,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:actionModeBackground">@color/colorYellow</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:actionModeStyle">@style/MyActionMode</item>
     </style>
 
     <style name="MyActionMode" parent="@style/Widget.AppCompat.ActionMode">
-        <item name="background">@color/colorYellow</item>
+        <item name="background">@color/material_blue_500</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

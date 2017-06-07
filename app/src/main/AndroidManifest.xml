@@ -89,7 +89,6 @@
             android:theme="@style/Theme.MyDialog" />
         <activity android:name=".ui.CommonTaskActivity" />
         <activity android:name=".ui.SectionPositionActivity"></activity>
-        <activity android:name=".ui.SettingAcivity2"></activity>
     </application>
 
 </manifest>

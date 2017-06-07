@@ -14,7 +14,7 @@
 
     <item
         android:id="@+id/set_color"
-        android:icon="@drawable/format_color_fill"
+        android:icon="@drawable/set_color2"
         android:title="Установить цвет"
         android:showAsAction="always" >
         <menu>
