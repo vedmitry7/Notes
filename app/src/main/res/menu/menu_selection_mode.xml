@@ -2,18 +2,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.dmitryvedmed.taskbook.ui.DrawerTestActivity">
 
-    <item android:icon="@drawable/archive"
+    <item android:icon="@drawable/archive2"
         android:id="@+id/toArchive"
         android:title="toArchive"
         android:showAsAction="always"/>
 
-    <item android:icon="@drawable/move"
+    <item android:icon="@drawable/transfer"
         android:id="@+id/translateTo"
         android:title="translateTo"
         android:showAsAction="always"/>
 
     <item
-        android:id="@+id/set_color"
+        android:id="@+id/set_color_3"
         android:icon="@drawable/set_color2"
         android:title="Установить цвет"
         android:showAsAction="always" >
@@ -47,7 +47,7 @@
         </menu>
     </item>
 
-    <item android:icon="@drawable/delete"
+    <item android:icon="@drawable/delete_2"
         android:id="@+id/delete_selection_items"
         android:title="toBucket"
         android:showAsAction="always"/>

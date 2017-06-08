@@ -5,7 +5,7 @@
     <color name="colorAccent">#00796B</color>
     <color name="colorCardView">#FFF</color>
     <color name="colorYellow">#ffc107</color>
-    <color name="colorCardViewPressed">#999</color>
+    <color name="colorCardViewPressed">#992349</color>
 
 
 
@@ -24,6 +24,8 @@
 
 
     <color name="tool_bar_setting_color">#00796B</color>
+    <color name="activity_color">#EEE</color>
+    <color name="grey">#616161</color>
 
 
 
