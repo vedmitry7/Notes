@@ -12,6 +12,9 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_common"
         android:scrollbars="vertical"
+        android:layout_marginRight="@dimen/half_cards_margin"
+        android:layout_marginLeft="@dimen/half_cards_margin"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"

@@ -77,5 +77,10 @@
     <string name="leave">Kapat</string>
     <string name="main_section">Birincil bölüm</string>
 
+    <string name="notify">Hatırlatma</string>
+    <string name="delete_notification">Hatırlatma kaldır</string>
+    <string name="delete_checked">Kaldır işaretli</string>
+    <string name="set_color">Rengini ayarlamak</string>
+
 
 </resources>

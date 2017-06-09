@@ -77,6 +77,11 @@
     <string name="leave">Leave</string>
     <string name="main_section">Main section</string>
 
+    <string name="notify">Remind</string>
+    <string name="delete_notification">Remove reminder</string>
+    <string name="delete_checked">Remove checked</string>
+    <string name="set_color">Set color</string>
+
 
 
 

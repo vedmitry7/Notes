@@ -161,7 +161,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
-        recyclerView.addItemDecoration(new SpacesItemDecoration(15));
+        recyclerView.addItemDecoration(new SpacesItemDecoration());
         callback = new SimpleItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);

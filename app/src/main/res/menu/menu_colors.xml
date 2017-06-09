@@ -13,7 +13,7 @@
     <item
         android:orderInCategory="100"
         android:id="@+id/set_color"
-        android:title="Установить цвет"
+        android:title="@string/set_color"
         app:showAsAction="never" >
         <menu>
             <item android:id="@+id/white"
@@ -47,7 +47,7 @@
 
     <item
         android:orderInCategory="101"
-        android:title="Напомнить"
+        android:title="@string/notify"
         android:menuCategory="secondary"
         android:id="@+id/notify"
         app:showAsAction="never">
@@ -56,13 +56,13 @@
     <item
         android:orderInCategory="100"
         android:id="@+id/cancel_notification"
-        android:title="Убрать напоминание"
+        android:title="@string/delete_notification"
         app:showAsAction="never" />
 
     <item
         android:orderInCategory="100"
         android:id="@+id/delete_checked_tasks"
-        android:title="Удалить отмеченные"
+        android:title="@string/delete_checked"
         android:visible="false"
         app:showAsAction="never" />
 

@@ -80,5 +80,9 @@
     <string name="hide">Убрать</string>
     <string name="leave">Оставить</string>
     <string name="main_section">Основной раздел</string>
+    <string name="notify">Напомнить</string>
+    <string name="delete_notification">Убрать напоминание</string>
+    <string name="delete_checked">Удалить отмеченные</string>
+    <string name="set_color">Установить цвет</string>
 
 </resources>
