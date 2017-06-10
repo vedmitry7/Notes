@@ -61,6 +61,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
     int minutes;
     private String repeating;
     MenuItem deleteCheckedTasks, cancelNotification;
+    private AlertDialog dialog;
 
 
     @Override
@@ -214,9 +215,9 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 createDialog();
                 //showTimePickerDialog();
                 break;
-            case R.id.cancel_notification:
+          /*  case R.id.cancel_notification:
                 cancelNotification();
-                break;
+                break;*/
             case R.id.delete_checked_tasks:
                 listTaskRecyclerAdapter.deleteCheckedTasks();
                 changeMenuItemVisibility(0);
@@ -242,8 +243,55 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 });
                 alert.show();
                 break;
+            case R.id.set_color2:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                //builder.setTitle("Выберете цвет");
+                builder.setView(R.layout.dialog_choose_color);
+                dialog = builder.create();
+                dialog.show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setColor(View v){
+        int color;
+
+        switch (v.getId()){
+            case R.id.green:
+                color = ContextCompat.getColor(this, R.color.taskColorGreen);
+                toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
+                task.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.red:
+                color = ContextCompat.getColor(this, R.color.taskColorRed);
+                toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
+                task.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.blue:
+                color = ContextCompat.getColor(this, R.color.taskColorBlue);
+                toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
+                task.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.yellow:
+                color = ContextCompat.getColor(this, R.color.taskColorYellow);
+                toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
+                task.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.white:
+                toolbar.setBackgroundColor(Color.WHITE);
+                setBlackNavIconColor();
+                task.setColor(0);
+                break;
+        }
+        dialog.dismiss();
     }
 
     private void setBlackNavIconColor(){

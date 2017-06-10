@@ -81,6 +81,21 @@
     <string name="delete_notification">Hatırlatma kaldır</string>
     <string name="delete_checked">Kaldır işaretli</string>
     <string name="set_color">Rengini ayarlamak</string>
+    <string name="choose_color">Bir renk seçin</string>
+    <string name="clear_bucket">Boş Çöp</string>
+    <string name="act_remember">Hatırla</string>
+    <string name="title">Başlık</string>
+    <string name="text">Metin</string>
+    <string name="new_point">Liste öğesi</string>
+    <string name="without_color">Renk olmadan</string>
 
+    <string name="other_time">Başka zaman</string>
+    <string name="every_month">Her ay</string>
+    <string name="never">Asla</string>
+    <string name="choose_date">Seçme tarih</string>
+
+    <string name="date">Tarih</string>
+    <string name="time">Zaman</string>
+    <string name="repeat">Tekrarlama</string>
 
 </resources>

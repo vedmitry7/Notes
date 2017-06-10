@@ -48,6 +48,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
     private String currentKind;
     private Toolbar toolbar;
     private String repeating;
+    AlertDialog dialog;
 
     Context context;
 
@@ -272,9 +273,9 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             case R.id.notify:
                 createDialog();
                     break;
-            case R.id.cancel_notification:
+           /* case R.id.cancel_notification:
                 cancelNotification();
-                break;
+                break;*/
             case R.id.cancel_notif:
                 final AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 // alert.setTitle("Очистить корзину?");
@@ -296,10 +297,56 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 });
                 alert.show();
                 break;
+            case R.id.set_color2:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                //builder.setTitle("Выберете цвет");
+                builder.setView(R.layout.dialog_choose_color);
+                dialog = builder.create();
+                dialog.show();
         }
         return super.onOptionsItemSelected(item);
     }
 
+    public void setColor(View v){
+        int color;
+
+        switch (v.getId()){
+            case R.id.green:
+                color = ContextCompat.getColor(this, R.color.taskColorGreen);
+                toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
+                task.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.red:
+                color = ContextCompat.getColor(this, R.color.taskColorRed);
+                toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
+                task.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.blue:
+                color = ContextCompat.getColor(this, R.color.taskColorBlue);
+                toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
+                task.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.yellow:
+                color = ContextCompat.getColor(this, R.color.taskColorYellow);
+                toolbar.setBackgroundColor(color);
+                setWhiteNavIconColor();
+                task.setColor(color);
+                Log.d("TAG", "COLOR " + color);
+                break;
+            case R.id.white:
+                toolbar.setBackgroundColor(Color.WHITE);
+                setBlackNavIconColor();
+                task.setColor(0);
+                break;
+        }
+        dialog.dismiss();
+    }
 
     private void setBlackNavIconColor(){
         int color = ContextCompat.getColor(this, android.R.color.black);

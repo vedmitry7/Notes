@@ -129,8 +129,14 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         String eHours = String.valueOf(sharedPreferences.getInt(Constants.EVENING_TIME_HOURS, 20));
 
         String mMinutes = String.valueOf(sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 2));
+        if(mMinutes.length()==1)
+            mMinutes = "0" + mMinutes;
         String aMinutes = String.valueOf(sharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES, 4));
+        if(aMinutes.length()==1)
+            aMinutes = "0" + aMinutes;
         String eMinutes = String.valueOf(sharedPreferences.getInt(Constants.EVENING_TIME_MINUTES, 6));
+        if(eMinutes.length()==1)
+            eMinutes = "0" + eMinutes;
 
         morningTime.setText(mHours + ":" + mMinutes);
         afternoonTime.setText(aHours + ":" + aMinutes);

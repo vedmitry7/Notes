@@ -197,6 +197,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     textView.setText(R.string.unarchive);
                 }
                 mBuilder.setView(mView);
+                //mBuilder.setView(R.layout.dialog_question_layout);
                 final AlertDialog dialog = mBuilder.create();
                 dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override

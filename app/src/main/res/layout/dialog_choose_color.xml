@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:paddingBottom="4dp"
+        android:textColor="#000"
+        android:textSize="18sp"
+
+        android:textStyle="bold"
+        android:paddingLeft ="16dp"
+        android:id="@+id/shclr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_color"/>
+
+
+    <LinearLayout
+        android:padding="4dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/shclr"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageView
+            android:padding="4dp"
+            android:id="@id/green"
+            android:clickable="true"
+            android:onClick="setColor"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:src="@drawable/green_round"/>
+
+
+        <ImageView
+            android:padding="4dp"
+            android:id="@id/red"
+            android:clickable="true"
+            android:onClick="setColor"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:src="@drawable/red_round"/>
+        <ImageView
+            android:padding="4dp"
+            android:id="@id/blue"
+            android:clickable="true"
+            android:onClick="setColor"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:src="@drawable/blue_round"/>
+        <ImageView
+            android:padding="4dp"
+            android:id="@id/yellow"
+            android:clickable="true"
+            android:onClick="setColor"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:src="@drawable/yellow_round"/>
+        <ImageView
+            android:padding="4dp"
+            android:id="@id/white"
+            android:clickable="true"
+            android:onClick="setColor"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:src="@drawable/white_round2"/>
+
+    </LinearLayout>
+</RelativeLayout>
+

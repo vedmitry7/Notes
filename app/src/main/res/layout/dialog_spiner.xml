@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Дата"
+            android:text="@string/date"
             android:layout_weight="1"
             android:textSize="16dp"
             />
@@ -22,7 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="Сегодня"
             android:textSize="16dp"
             android:paddingRight="10dp"
             android:id="@+id/spinnerButtonDate"
@@ -45,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16dp"
-            android:text="Время" />
+            android:text="@string/time" />
 
         <Button
             android:layout_weight="1"
@@ -55,7 +54,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/spinnerButtonTime"
             style="?android:attr/spinnerStyle"
-            android:text="Вечер"
             android:textSize="16dp" />
 
 
@@ -71,14 +69,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16dp"
-            android:text="Повтор" />
+            android:text="@string/repeat" />
 
         <Button
             android:layout_weight="1"
             android:paddingLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Никогда"
             android:id="@+id/spinnerButtonRepeat"
             style="?android:attr/spinnerStyle"
             android:textSize="16dp"/>

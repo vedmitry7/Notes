@@ -16,7 +16,7 @@
             android:layout_centerVertical="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Архивировать"/>
+            android:text="@string/act_archive"/>
 
     </RelativeLayout>
 
@@ -33,7 +33,7 @@
             android:layout_centerVertical="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Удалить"/>
+            android:text="@string/act_delete"/>
 
     </RelativeLayout>
 
@@ -48,7 +48,7 @@
             android:textSize="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Запомнить"
+            android:text="@string/act_remember"
             android:id="@+id/remember" />
 
     </RelativeLayout>

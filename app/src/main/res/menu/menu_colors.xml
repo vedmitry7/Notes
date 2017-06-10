@@ -10,6 +10,12 @@
         android:icon="@drawable/bell_off"
         android:title=""
         app:showAsAction="always" />
+
+    <item
+        android:orderInCategory="100"
+        android:id="@+id/set_color2"
+        android:title="@string/set_color"
+        app:showAsAction="never" />
     <item
         android:orderInCategory="100"
         android:id="@+id/set_color"
@@ -17,7 +23,7 @@
         app:showAsAction="never" >
         <menu>
             <item android:id="@+id/white"
-                android:title="Без цвета">
+                android:title="@string/without_color">
 
             </item>
 
@@ -53,11 +59,11 @@
         app:showAsAction="never">
     </item>
 
-    <item
+  <!--  <item
         android:orderInCategory="100"
         android:id="@+id/cancel_notification"
         android:title="@string/delete_notification"
-        app:showAsAction="never" />
+        app:showAsAction="never" />-->
 
     <item
         android:orderInCategory="100"

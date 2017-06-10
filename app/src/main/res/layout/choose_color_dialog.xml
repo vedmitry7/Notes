@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent">
+
+    <TextView
+        android:paddingLeft="16dp"
+        android:paddingBottom="10dp"
+        android:text="Выберити цвет"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:id="@+id/text_label_choose_color"
+        android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:padding="16dp"
+        android:layout_below="@+id/text_label_choose_color"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:background="#FFF"
+            android:scaleType="fitCenter"
+            android:layout_weight="1"
+            android:id="@+id/green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="setColor"
+            android:src="@drawable/green_block"/>
+
+        <ImageButton
+            android:background="#FFF"
+            android:scaleType="fitCenter"
+            android:id="@+id/blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="setColor"
+            android:src="@drawable/blue_block"
+            android:layout_weight="1"
+
+            />
+
+        <ImageButton
+            android:background="#FFF"
+            android:scaleType="fitCenter"
+            android:layout_weight="1"
+            android:id="@+id/red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="setColor"
+            android:src="@drawable/red_block"/>
+
+        <ImageButton
+            android:background="#FFF"
+            android:scaleType="fitCenter"
+
+            android:layout_weight="1"
+            android:id="@+id/yellow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="setColor"
+            android:src="@drawable/yellow_block"/>
+
+        <ImageButton
+            android:background="#FFF"
+            android:scaleType="fitCenter"
+            android:layout_weight="1"
+            android:id="@+id/pink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="setColor"
+            android:src="@drawable/pink_block"/>
+
+        <ImageButton
+            android:background="#FFF"
+            android:scaleType="fitCenter"
+            android:id="@+id/white"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:onClick="setColor"
+            android:src="@drawable/white_block"/>
+
+
+    </LinearLayout>
+</RelativeLayout>

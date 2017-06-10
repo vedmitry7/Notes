@@ -3,21 +3,21 @@
     <item
         android:id="@+id/item_morning"
         android:showAsAction="ifRoom|withText"
-        android:title="Утро"
+        android:title="@string/month"
         android:visible="true"/>
     <item
         android:id="@+id/item_afternoon"
         android:showAsAction="ifRoom|withText"
-        android:title="День"
+        android:title="@string/afternoon"
         android:visible="true"/>
     <item
         android:id="@+id/item_evening"
         android:showAsAction="ifRoom|withText"
-        android:title="Вечер"
+        android:title="@string/evening"
         android:visible="true"/>
     <item
         android:id="@+id/item_chose_time"
         android:showAsAction="ifRoom|withText"
-        android:title="Другое время"
+        android:title="@string/other_time"
         android:visible="true"/>
 </menu>

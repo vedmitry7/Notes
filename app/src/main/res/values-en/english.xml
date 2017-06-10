@@ -81,8 +81,21 @@
     <string name="delete_notification">Remove reminder</string>
     <string name="delete_checked">Remove checked</string>
     <string name="set_color">Set color</string>
+    <string name="choose_color">Select the color</string>
+    <string name="clear_bucket">Empty Recycle Bin</string>
+    <string name="act_remember">Remember</string>
+    <string name="title">Title</string>
+    <string name="text">Text</string>
+    <string name="new_point">List item</string>
+    <string name="without_color">Without color</string>
 
+    <string name="other_time">Another time</string>
+    <string name="every_month">Every month</string>
+    <string name="never">Never</string>
+    <string name="choose_date">Select date</string>
 
-
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="repeat">Repeat</string>
 
 </resources>

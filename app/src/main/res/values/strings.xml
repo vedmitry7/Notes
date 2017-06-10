@@ -84,5 +84,22 @@
     <string name="delete_notification">Убрать напоминание</string>
     <string name="delete_checked">Удалить отмеченные</string>
     <string name="set_color">Установить цвет</string>
+    <string name="choose_color">Выберите цвет</string>
+    <string name="clear_bucket">Очистить корзину</string>
+    <string name="act_remember">Запомнить</string>
+    <string name="title">Заголовок</string>
+    <string name="text">Текст</string>
+    <string name="new_point">Новый пункт</string>
+    <string name="without_color">Без цвета</string>
+
+
+    <string name="other_time">Другое время</string>
+    <string name="every_month">Каждый месяц</string>
+    <string name="never">Никогда</string>
+    <string name="choose_date">Выбрать дату</string>
+
+    <string name="date">Дата</string>
+    <string name="time">Время</string>
+    <string name="repeat">Повтор</string>
 
 </resources>

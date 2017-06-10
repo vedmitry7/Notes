@@ -3,16 +3,16 @@
     <item
         android:id="@+id/item_yesterday"
         android:showAsAction="ifRoom|withText"
-        android:title="Сегодня"
+        android:title="@string/today"
         android:visible="true"/>
     <item
         android:id="@+id/item_tomorrow"
         android:showAsAction="ifRoom|withText"
-        android:title="Завтра"
+        android:title="@string/tomorrow"
         android:visible="true"/>
     <item
         android:id="@+id/item_chose_date"
         android:showAsAction="ifRoom|withText"
-        android:title="Выбрать дату"
+        android:title="@string/choose_date"
         android:visible="true"/>
 </menu>

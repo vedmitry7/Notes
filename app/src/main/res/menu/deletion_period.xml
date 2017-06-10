@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 <item android:id="@+id/at_once"
-    android:title="Сразу" />
+    android:title="@string/at_once" />
     <item android:id="@+id/one_day"
-        android:title="1 день" />
+        android:title="@string/one_day" />
     <item android:id="@+id/tree_days"
-        android:title="3 дня" />
+        android:title="@string/tree_day" />
     <item android:id="@+id/seven_days"
-    android:title="7 дней" />
+    android:title="@string/seven_day" />
     <item android:id="@+id/month"
-        android:title="Месяц" />
+        android:title="@string/month" />
 
 </menu>

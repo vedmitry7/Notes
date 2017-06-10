@@ -40,7 +40,6 @@
         android:ems="10"
         android:id="@+id/itemListEditText"
         android:textStyle="normal"
-        android:hint="Пункт списка"
         android:layout_gravity="center"
         android:layout_toRightOf="@+id/checkBox"
         android:layout_toLeftOf="@+id/delButton"

@@ -65,7 +65,7 @@
                 android:ems="10"
                 android:id="@+id/headEditText"
                 android:textStyle="normal|bold"
-                android:hint="Заголовок"
+                android:hint="@string/title"
                 android:focusableInTouchMode="true"
                 app:fonts="robotoBold"
                 android:alpha="0.5"
@@ -92,7 +92,7 @@
                 android:background="#FFFFFF"
                 android:id="@+id/taskEditText"
                 android:textStyle="normal"
-                android:hint="Текст"
+                android:hint="@string/text"
                 app:fonts="robotoRegular"
                 android:alpha="0.5"
                 />

@@ -3,23 +3,23 @@
     <item
         android:id="@+id/item_newer"
         android:showAsAction="ifRoom|withText"
-        android:title="Никогда"
+        android:title="@string/never"
         android:visible="true"/>
     <item
         android:id="@+id/item_every_day"
         android:showAsAction="ifRoom|withText"
-        android:title="Каждый день"
+        android:title="@string/every_day"
         android:textStyle="bold"
         android:visible="true"
         />
     <item
         android:id="@+id/item_every_week"
         android:showAsAction="ifRoom|withText"
-        android:title="Каждую неделю"
+        android:title="@string/every_week"
         android:visible="true"/>
     <item
         android:id="@+id/item_every_month"
         android:showAsAction="ifRoom|withText"
-        android:title="Каждый месяц"
+        android:title="@string/every_month"
         android:visible="true"/>
 </menu>

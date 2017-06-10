@@ -82,7 +82,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private Section currentSection;
     private int columnsNumber;
     private SharedPreferences.Editor editor;
-
+    private AlertDialog dialog;
     ActionMode actionMode;
 
     public boolean is_in_action_mode() {
@@ -194,7 +194,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
                 if(currentKind==Constants.DELETED){
                     MenuItem delete = menu.findItem(R.id.delete_selection_items);
-                    delete.setIcon(getResources().getDrawable(R.drawable.delete_forever));
+                    delete.setIcon(getResources().getDrawable(R.drawable.delete_forever_2));
                 }
 
                 return true;
@@ -227,6 +227,13 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         break;
                     case R.id.white:
                         adapter.setColorSelectionTasks(0);
+                        break;
+                    case R.id.set_color_3:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        //builder.setTitle("Выберете цвет");
+                        builder.setView(R.layout.dialog_choose_color);
+                        dialog = builder.create();
+                        dialog.show();
                         break;
 
                     case R.id.delete_selection_items:
@@ -317,12 +324,11 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 adapter.cancelSelection();
             }
         };
-
     }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-
 
         Log.d("TAG", "                               onSaveInstanceState!!!!!!!!!!!!!");
         if(is_in_action_mode) {
@@ -411,7 +417,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         */
 
         navmenu.add(Menu.NONE, R.id.undefined , Menu.NONE, R.string.all).setIcon(getResources().getDrawable(R.drawable.note_multiple));
-        navmenu.add(Menu.NONE, R.id.archive , Menu.NONE, R.string.archive).setIcon(getResources().getDrawable(R.drawable.archive));
+        navmenu.add(Menu.NONE, R.id.archive , Menu.NONE, R.string.archive).setIcon(getResources().getDrawable(R.drawable.archive_2));
         for (Section s:sections
                 ) {
             Log.d("TAG", "Section " + s.getName() + " id " + s.getId());
@@ -658,14 +664,18 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         switch (currentKind){
             case Constants.DELETED:
                 mainToolbarText.setText(R.string.bucket);
+                setItemMovement(false);
                 break;
             case Constants.ARCHIVE:
+                setItemMovement(false);
                 mainToolbarText.setText(R.string.archive);
                 break;
             case Constants.UNDEFINED:
+                setItemMovement(true);
                 mainToolbarText.setText("");
                 break;
             default:
+                setItemMovement(true);
                 mainToolbarText.setText(currentKind);
                 break;
         }
@@ -961,8 +971,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             case R.id.pink:
                 adapter.setColorSelectionTasks(Constants.RED);
                 break;
-
         }
+        dialog.dismiss();
     }
 
     public String getCurrentKind() {
