@@ -80,7 +80,7 @@ public class SimpleTaskDialogActivity extends AppCompatActivity {
         Log.d("TAG", "clicccccccccccccccccccccccccccccck edit");
 
         Intent intent = new Intent(this, SimpleTaskActivity.class);
-        intent.putExtra("Task", task);
+        intent.putExtra(Constants.TASK, task);
         this.startActivity(intent);
         this.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
 

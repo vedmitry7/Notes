@@ -102,7 +102,7 @@ public class ListTaskDialogActivity extends AppCompatActivity {
         Log.d("TAG", "clicccccccccccccccccccccccccccccck edit");
 
         Intent intent1 = new Intent(this, ListTaskActivity.class);
-        intent1.putExtra(Constants.ID, task);
+        intent1.putExtra(Constants.LIST_TASK, task);
         this.startActivity(intent1);
         this.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
 

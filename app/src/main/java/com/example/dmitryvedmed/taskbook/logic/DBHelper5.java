@@ -423,7 +423,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
 
 
 
-        Log.d("TAG", "      DBHelper - UPDATE tasks KIND - " + kind!=null ? kind : "null");
+//        Log.d("TAG", "      DBHelper - UPDATE tasks KIND - " + kind!=null ? kind : "null");
 
         if(kind!=null && kind.equals(Constants.DELETED)){
             task.setDeletionTime(System.currentTimeMillis());
