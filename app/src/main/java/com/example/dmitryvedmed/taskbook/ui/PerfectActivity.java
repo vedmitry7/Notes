@@ -801,8 +801,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         long deletionPeriod = sharedPreferences.getLong(Constants.DELETION_PERIOD, Constants.PERIOD_WEEK);
         for (SuperTask task : values
                 ) {
-            if(task.getDeletionTime() + deletionPeriod < System.currentTimeMillis())
+            if(task.getDeletionTime() + deletionPeriod < System.currentTimeMillis()) {
                 dbHelper.deleteTask(task);
+            }
         }
         values = dbHelper.getTasks(Constants.DELETED);
     }

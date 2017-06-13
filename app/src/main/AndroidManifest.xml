@@ -13,9 +13,11 @@
         android:windowSoftInputMode="adjustPan">
         <activity
             android:name=".ui.ListTaskActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.SimpleTaskActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.PerfectActivity"
@@ -23,7 +25,6 @@
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

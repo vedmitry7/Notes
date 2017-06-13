@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.dmitryvedmed.taskbook.ui.DrawerTestActivity">
 
-    <item android:icon="@drawable/archive2"
+    <item android:icon="@drawable/archive_white"
         android:id="@+id/toArchive"
         android:title="toArchive"
         android:showAsAction="always"/>
@@ -14,7 +14,7 @@
 
     <item
         android:id="@+id/set_color_3"
-        android:icon="@drawable/set_color2"
+        android:icon="@drawable/set_color_paint"
         android:title="Установить цвет"
         android:showAsAction="always" >
     </item>
