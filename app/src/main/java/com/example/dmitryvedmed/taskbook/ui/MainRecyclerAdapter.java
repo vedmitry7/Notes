@@ -340,7 +340,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public void setColorSelectionTasks(int color){
         Log.d("TAG", "!!!!!!!!!             AAAAAA SET COLOR sel tasks size = " + selectedTasks.size());
-        updateSelectedTask();
         Log.d("TAG", "!!!!!!!!!        after update     AAAAAA SET COLOR sel tasks size = " + selectedTasks.size());
 
         for (SuperTask s:tasks
@@ -363,7 +362,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         selects = new boolean[tasks.size()];
     }
 
-    private void updateSelectedTask(){
+    public void updateSelectedTask(){
         List<SuperTask> sa = new ArrayList<>();
         for (SuperTask st:selectedTasks
              ) {
@@ -589,7 +588,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             Log.d("TAG", "  sel task  id = " + s.hashCode() +" "+ s.getId());
         }
 */
-        updateSelectedTask();
         if(mode == Mode.SELECTION_MODE) {
             Log.d("TAG", "                          on selection mode");
 

@@ -936,7 +936,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     protected void onRestart() {
         Log.d("TAG", "    Activity --- onRESTART  ---");
         Log.d("TAG", "!!!!!!!!! sel size = " + adapter.getSelectedTasks().size());
+
         update();
+        adapter.updateSelectedTask();
 
         super.onRestart();
     }
