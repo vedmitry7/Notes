@@ -77,4 +77,5 @@ public class SuperTask implements Serializable {
     public void setRemind(boolean remind) {
         this.remind = remind;
     }
+
 }

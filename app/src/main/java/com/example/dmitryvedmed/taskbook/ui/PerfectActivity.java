@@ -84,6 +84,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private SharedPreferences.Editor editor;
     private AlertDialog dialog;
     ActionMode actionMode;
+    Bundle instanceState;
 
     public boolean is_in_action_mode() {
         return is_in_action_mode;
@@ -99,6 +100,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer_test);
+
+
         context = this;
         dbHelper = new DBHelper5(this);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
@@ -116,9 +119,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         sharedPreferences = this.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
-
-
-
 
     private void initView() {
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -329,7 +329,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-
         Log.d("TAG", "                               onSaveInstanceState!!!!!!!!!!!!!");
         if(is_in_action_mode) {
             outState.putInt(Constants.ACTION_MODE, 1);
@@ -339,16 +338,18 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
             outState.putIntegerArrayList(Constants.SELECTED_ITEM_IDS, adapter.getSelectedListIds());
         }
-        else
+        else {
             outState.putInt(Constants.ACTION_MODE, 0);
+        }
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.d("TAG", "                              onRestoreInstanceState!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         if(savedInstanceState!=null && savedInstanceState.getInt(Constants.ACTION_MODE)==1){
             is_in_action_mode = true;
-            Log.d("TAG", "                              onRestoreInstanceState!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Log.d("TAG", "                              onRestoreInstanceState!!!!!!!!!!!!!!!!!!!!!!!!!!!  A M = true");
             setSelectionMode();
             adapter.setSelectedTasksCounter(savedInstanceState.getInt(Constants.SELECTED_ITEM_COUNT));
             adapter.setSelects(savedInstanceState.getBooleanArray(Constants.SELLECTION_ARRAY));
@@ -934,13 +935,17 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     @Override
     protected void onRestart() {
         Log.d("TAG", "    Activity --- onRESTART  ---");
+        Log.d("TAG", "!!!!!!!!! sel size = " + adapter.getSelectedTasks().size());
         update();
+
         super.onRestart();
     }
 
     @Override
     protected void onResume() {
         Log.d("TAG", "      Activity --- onResume  ---      "  + currentKind);
+        Log.d("TAG", "!!!!!!!!! sel size = " + adapter.getSelectedTasks().size());
+
         setTitle();
         // update();
         // onCreateNavigationMenu();
@@ -949,7 +954,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     public void setColor(View v){
         switch (v.getId()){
-
             case R.id.green:
                 adapter.setColorSelectionTasks(Constants.GREEN);
                 fab.show();

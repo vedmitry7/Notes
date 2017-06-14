@@ -128,6 +128,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         this.context = context;
         selectedTasks = new ArrayList<>();
+        Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
         activity = (PerfectActivity) context;
       //  Log.d("TAG", "       Adapter, tasksSize = " + tasks.size());
         textView = new TextView(context);
@@ -273,6 +274,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
 
         tasks.removeAll(selectedTasks);
+        Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
         selectedTasks.clear();
         setRightPosition();
         notifyDataSetChanged();
@@ -284,6 +286,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public void cancelSelection() {
         selectedTasks.clear();
+        Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
+
         activity.selectedItemCount(0);
         mode = Mode.NORMAL;
         notifyDataSetChanged();
@@ -298,6 +302,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             activity.dbHelper.deleteTask(t);
         }
         tasks.removeAll(selectedTasks);
+        Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
         selectedTasks.clear();
         setRightPosition();
         notifyDataSetChanged();
@@ -321,6 +326,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
         tasks.removeAll(selectedTasks);
         selectedTasks.clear();
+        Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
+
         setRightPosition();
         notifyDataSetChanged();
         activity.selectedItemCount(0);
@@ -332,16 +339,41 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
 
     public void setColorSelectionTasks(int color){
+        Log.d("TAG", "!!!!!!!!!             AAAAAA SET COLOR sel tasks size = " + selectedTasks.size());
+        updateSelectedTask();
+        Log.d("TAG", "!!!!!!!!!        after update     AAAAAA SET COLOR sel tasks size = " + selectedTasks.size());
+
+        for (SuperTask s:tasks
+             ) {
+            Log.d("TAG",s.getId() +  " code = " + s.hashCode());
+        }
+        Log.d("TAG","___________________________________________");
         for (SuperTask s:selectedTasks
                 ) {
+            Log.d("TAG", s.getId() +  " code = " + s.hashCode());
             s.setColor(color);
         }
         notifyDataSetChanged();
         selectedTasks.clear();
+        Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
+
         activity.selectedItemCount(0);
         mode = Mode.NORMAL;
         selectedTasksCounter = 0;
         selects = new boolean[tasks.size()];
+    }
+
+    private void updateSelectedTask(){
+        List<SuperTask> sa = new ArrayList<>();
+        for (SuperTask st:selectedTasks
+             ) {
+            for (SuperTask t:tasks
+                 ) {
+                if(t.getId()==st.getId())
+                    sa.add(t);
+            }
+        }
+        selectedTasks = sa;
     }
 
     @Override
@@ -412,6 +444,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             if(mode != Mode.SELECTION_MODE) {
                 wasSelected = false;
                 selectedTasks.clear();
+                Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
+
                 if (getAdapterPosition() != -1)
                     setColorCardView(cardView, getAdapterPosition());
             }
@@ -453,7 +487,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
               //      Log.d("TAG", "       SELECTED POSITION " + position +" теперь False" );
                     // cardView.setCardBackgroundColor(Color.WHITE);
                     selectedTasks.remove(tasks.get(position));
-                   // cardView.setSelected(false);
+
+                    // cardView.setSelected(false);
                     selects[position] = false;
                     selectedTasksCounter--;
                     activity.selectedItemCount(selectedTasksCounter);
@@ -544,7 +579,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     private void setColorCardView(CardView cardView, int position){
         Log.d("TAG", "       setColorCardView");
-        for (SuperTask s:selectedTasks
+ /*       for (SuperTask s:selectedTasks
                 ) {
             Log.d("TAG", "  sel task  id = " + s.hashCode() +" "+ s.getId());
 
@@ -553,25 +588,26 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 ) {
             Log.d("TAG", "  sel task  id = " + s.hashCode() +" "+ s.getId());
         }
-
+*/
+        updateSelectedTask();
         if(mode == Mode.SELECTION_MODE) {
             Log.d("TAG", "                          on selection mode");
 
       //      Log.d("TAG", "       Adapter --- setColorCardView SELECTION MODE ON ");
      //       Log.d("TAG", "       SelectedTasks Size = " + selectedTasks.size() + " position = " + position);
 
-            int id = tasks.get(position).getId();
+       /*     int id = tasks.get(position).getId();
             boolean b = false;
             for (SuperTask s:selectedTasks
                  ) {
-                if(s.getId()==id){
+                if(s.getId() == id){
                     b = true;
                     continue;
                 }
             }
 
-            if(b){
-           // if (selectedTasks.contains(tasks.get(position))) {
+            if(b){*/
+            if (selectedTasks.contains(tasks.get(position))) {
                 Log.d("TAG", "       SelectedTasks contains = " + position);
        //         Log.d("TAG", "                                              COLOR CHANGE  LT GRAY ON BIND VH");
 
