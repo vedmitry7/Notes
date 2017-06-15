@@ -312,7 +312,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
         View mViewe = getLayoutInflater().inflate(R.layout.dialog_spiner, null);
 
         spinnerButtonTime = (Button) mViewe.findViewById(R.id.spinnerButtonTime);
-        spinnerButtonTime.setText(getResources().getString(R.string.morning));
+        spinnerButtonTime.setText(R.string.morning);
         spinnerButtonTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -324,7 +324,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
         });
 
         spinnerButtonDate = (Button) mViewe.findViewById(R.id.spinnerButtonDate);
-        spinnerButtonDate.setText(getResources().getString(R.string.tomorrow));
+        spinnerButtonDate.setText(R.string.tomorrow);
         spinnerButtonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -337,6 +337,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
 
 
         spinnerButtonRepeat = (Button) mViewe.findViewById(R.id.spinnerButtonRepeat);
+        spinnerButtonRepeat.setText(R.string.never);
         spinnerButtonRepeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

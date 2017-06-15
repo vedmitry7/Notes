@@ -170,7 +170,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 } else {
                     activity.dbHelper.updateTask(tasks.get(position), Constants.ARCHIVE);
                 }
-                activity.showSnackBar(1);
+                activity.showSnackBar(Constants.ARCHIVE, 1);
                 tasks.get(position).setPosition(0);                 //?
                 tasks.remove(position);
                 notifyItemRemoved(position);
@@ -179,7 +179,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             case Constants.DELETED:
                 activity.dbHelper.updateTask(tasks.get(position), Constants.DELETED);
                 cancelNotification(tasks.get(position).getId());
-                activity.showSnackBar(1);
+                activity.showSnackBar(Constants.DELETED, 1);
                 tasks.get(position).setPosition(0);                 //?
                 tasks.get(position).setRemind(false);                 //?
                 tasks.remove(position);
@@ -215,7 +215,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         } else {
                             activity.dbHelper.updateTask(tasks.get(position), Constants.ARCHIVE);
                         }
-                        activity.showSnackBar(1);
+                        activity.showSnackBar(Constants.ARCHIVE, 1);
                         dialog.dismiss();
 
                         tasks.get(position).setPosition(0);                 //?
@@ -237,7 +237,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         activity.dbHelper.updateTask(tasks.get(position), Constants.DELETED);
                         cancelNotification(tasks.get(position).getId());
                         dialog.dismiss();
-                        activity.showSnackBar(1);
+                        activity.showSnackBar(Constants.DELETED, 1);
 
                         tasks.get(position).setPosition(0);                 //?
                         tasks.get(position).setRemind(false);                 //?
@@ -324,6 +324,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     //        Log.d("TAG", t.getId() +  "       translateTo " + s);
             activity.dbHelper.updateTask(t, s);
         }
+        activity.showSnackBar(s, selectedTasksCounter);
         tasks.removeAll(selectedTasks);
         selectedTasks.clear();
         Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
@@ -334,6 +335,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mode = Mode.NORMAL;
         selectedTasksCounter = 0;
         selects = new boolean[tasks.size()];
+
 
     }
 

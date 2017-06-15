@@ -192,11 +192,14 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 getMenuInflater().inflate(R.menu.menu_selection_mode, menu);
 
-                if(currentKind==Constants.DELETED){
+                if(currentKind.equals(Constants.DELETED)){
                     MenuItem delete = menu.findItem(R.id.delete_selection_items);
                     delete.setIcon(getResources().getDrawable(R.drawable.delete_forever_2));
                 }
-
+                if(currentKind.equals(Constants.ARCHIVE)){
+                    MenuItem unarchive = menu.findItem(R.id.toArchive);
+                    unarchive.setIcon(getResources().getDrawable(R.drawable.ic_unarch));
+                }
                 return true;
             }
 
@@ -259,7 +262,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                             alert.show();
                             break;
                         }
-                        showSnackBar(adapter.getSelectedTasksCounter());
+                        showSnackBar(Constants.DELETED, adapter.getSelectedTasksCounter());
                         adapter.deleteSelectedTasks();
                         mode.finish();
                         break;
@@ -278,7 +281,11 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                     dialog.show();*/
                         break;
                     case R.id.toArchive:
-                        adapter.translateTo(Constants.ARCHIVE);
+                        if(currentKind.equals(Constants.ARCHIVE)){
+                            adapter.translateTo(Constants.UNDEFINED);
+                        } else {
+                            adapter.translateTo(Constants.ARCHIVE);
+                        }
                         break;
 
                     case R.id.translateTo:
@@ -368,9 +375,14 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         menu.clear();
         if(this.menu!=null)
             this.menu.clear();
-        getMenuInflater().inflate(R.menu.main_menu, menu);
         if(currentKind.equals(Constants.DELETED)) {
             getMenuInflater().inflate(R.menu.bucket_menu, menu);
+            clearBascet = menu.findItem(R.id.clear_basket);
+            if(values.size()==0){
+                clearBascet.setVisible(false);
+            }
+        } else {
+            getMenuInflater().inflate(R.menu.main_menu, menu);
         }
         this.menu = menu;
         onCreateNavigationMenu();
@@ -404,33 +416,24 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     private void onCreateNavigationMenu() {
         sections = dbHelper.getAllSections();
-        System.out.println("ssssssssssssssssss");
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu navMenu = navigationView.getMenu();
+        undifinedPoint = navMenu.findItem(R.id.undefined);
+        navMenu.clear();
 
-        Menu navmenu = navigationView.getMenu();
-        undifinedPoint = navmenu.findItem(R.id.undefined);
-        navmenu.clear();
-        /*     navmenu.add(Menu.NONE,345,4,"sdf");
-
-          Menu submenu = navmenu.getItem(0).getSubMenu();
-        submenu.clear();
-        */
-
-        navmenu.add(Menu.NONE, R.id.undefined , Menu.NONE, R.string.all).setIcon(getResources().getDrawable(R.drawable.note_multiple));
-        navmenu.add(Menu.NONE, R.id.archive , Menu.NONE, R.string.archive).setIcon(getResources().getDrawable(R.drawable.archive_2));
+        navMenu.add(Menu.NONE, R.id.undefined , Menu.NONE, R.string.all).setIcon(getResources().getDrawable(R.drawable.note_multiple));
+        navMenu.add(Menu.NONE, R.id.archive , Menu.NONE, R.string.archive).setIcon(getResources().getDrawable(R.drawable.archive_2));
         for (Section s:sections
                 ) {
             Log.d("TAG", "Section " + s.getName() + " id " + s.getId());
-            //MenuItem sections =  menu.getItem(R.id.sections);
-            navmenu.add(45, s.getId(), Menu.NONE, s.getName());
+            navMenu.add(45, s.getId(), Menu.NONE, s.getName());
         }
-
-        navmenu.add(45, R.id.add, Menu.NONE, R.string.newPoint).setIcon(getResources().getDrawable(R.drawable.ic_add));
-        navmenu.add(Menu.NONE, R.id.deleted , Menu.NONE, R.string.bucket).setIcon(getResources().getDrawable(delete));
-        navmenu.add(Menu.NONE, R.id.settings , Menu.NONE, R.string.settings).setIcon(getResources().getDrawable(R.drawable.settings));
-        navmenu.add(Menu.NONE, R.id.exit , Menu.NONE, R.string.exit).setIcon(getResources().getDrawable(R.drawable.exit_to_app));
-        //  navmenu.add(Menu.NONE, 245 , Menu.NONE,"clear sections");
+        navMenu.add(45, R.id.add, Menu.NONE, R.string.newPoint).setIcon(getResources().getDrawable(R.drawable.ic_add));
+        navMenu.add(Menu.NONE, R.id.deleted , Menu.NONE, R.string.bucket).setIcon(getResources().getDrawable(delete));
+        navMenu.add(Menu.NONE, R.id.settings , Menu.NONE, R.string.settings).setIcon(getResources().getDrawable(R.drawable.settings));
+        navMenu.add(Menu.NONE, R.id.exit , Menu.NONE, R.string.exit).setIcon(getResources().getDrawable(R.drawable.exit_to_app));
+        //  navMenu.add(Menu.NONE, 245 , Menu.NONE,"clear sections");
     }
 
 
@@ -447,16 +450,42 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         }
     }
 
-    public void showSnackBar(int i){
-        Snackbar.make(coordinatorLayout, i + " заметкок добавлено в корзину!", Snackbar.LENGTH_SHORT)
-                .setAction(R.string.cancel, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Snackbar.make(coordinatorLayout,"Отменено! или нет...", Snackbar.LENGTH_LONG)
-                                .show();
-                    }
-                })
-                .show();
+    public void showSnackBar(String s, int i){
+        switch (s){
+            case Constants.DELETED:
+                Snackbar.make(coordinatorLayout, i + " заметкок добавлено в корзину!", Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.cancel, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Snackbar.make(coordinatorLayout,"Отмена!", Snackbar.LENGTH_LONG)
+                                        .show();
+                            }
+                        })
+                        .show();
+                break;
+            case Constants.ARCHIVE:
+                Snackbar.make(coordinatorLayout, i + " заметкок архивированно!", Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.cancel, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Snackbar.make(coordinatorLayout,"Отмена!", Snackbar.LENGTH_LONG)
+                                        .show();
+                            }
+                        })
+                        .show();
+                break;
+            default:
+                Snackbar.make(coordinatorLayout, i + " заметкок добавлено в раздел " + s, Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.cancel, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Snackbar.make(coordinatorLayout,"Отмена!", Snackbar.LENGTH_LONG)
+                                        .show();
+                            }
+                        })
+                        .show();
+
+        }
     }
 
     @Override
@@ -467,35 +496,15 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             return true;
 
         hideFabs();
-
         switch (item.getItemId()){
             case R.id.delete_selection_items:
                 Log.d("TAG", "       Adapter --- delete_selection_items");
-                showSnackBar(adapter.getSelectedTasksCounter());
+                showSnackBar(Constants.DELETED, adapter.getSelectedTasksCounter());
                 adapter.deleteSelectedTasks();
                 break;
             case R.id.select_item:
                 Log.d("TAG", "       Adapter --- set selection mode");
                 setSelectionMode();
-                break;
-            case R.id.green:
-                adapter.setColorSelectionTasks(Constants.GREEN);
-                fab.show();
-                break;
-            case R.id.red:
-                adapter.setColorSelectionTasks(Constants.RED);
-                fab.show();
-                break;
-            case R.id.blue:
-                adapter.setColorSelectionTasks(Constants.BLUE);
-                fab.show();
-                break;
-            case R.id.yellow:
-                adapter.setColorSelectionTasks(Constants.YELLOW);
-                fab.show();
-                break;
-            case R.id.white:
-                adapter.setColorSelectionTasks(0);
                 break;
             case R.id.change_view:
 
@@ -554,6 +563,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         adapter.getTasks().clear();
                         adapter.notifyDataSetChanged();
                         Log.d("TAG", "                      CCCCCLLLLLLLLIIIIIIRRRRRRRRR ------clear_basket");
+
                         clearBascet.setVisible(false);
                     }
                 });
@@ -569,24 +579,19 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 alert3.setTitle(R.string.question_delete_section);
                 alert3.setMessage(R.string.delete_section_massage);
 
-
                 alert3.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-
                         adapter.deleteSection();
                         deleteSection.setVisible(false);
                         onNavigationItemSelected(undifinedPoint);
                     }
                 });
-
                 alert3.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Canceled.
                     }
                 });
-
                 alert3.show();
-
                 dbHelper.deleteSection(currentSection);
                 sections.remove(currentSection);
                 currentSection = null;
@@ -656,6 +661,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         values = dbHelper.getTasks(currentKind);
         if(currentKind.equals(Constants.DELETED))
             checkOldTask();
+        onCreateOptionsMenu(menu);
         adapter.dataChanged(values);
         saveCurrentKind();
         setTitle();
