@@ -305,11 +305,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
         hideFabs();
 
         switch (item.getItemId()){
-            case R.id.delete_selection_items:
-                Log.d("TAG", "       Adapter --- delete_selection_items");
-                showSnackBar(adapter.getSelectedTasksCounter());
-                adapter.deleteSelectedTasks();
-                break;
+
             case R.id.select_item:
                 Log.d("TAG", "       Adapter --- set selection mode");
                 setSelectionMode();

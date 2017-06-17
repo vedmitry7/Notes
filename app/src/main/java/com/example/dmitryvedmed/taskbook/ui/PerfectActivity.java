@@ -263,7 +263,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                             break;
                         }
                         showSnackBar(Constants.DELETED, adapter.getSelectedTasksCounter());
-                        adapter.deleteSelectedTasks();
+                        adapter.translateTo(Constants.DELETED);
                         mode.finish();
                         break;
                     case R.id.set_color:
@@ -290,7 +290,14 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
                     case R.id.translateTo:
 
-                        MenuBuilder menuBuilder = new MenuBuilder(context);
+                        sections = dbHelper.getAllSections();
+                        if(sections.size()==0){
+                            Snackbar.make(coordinatorLayout, R.string.no_sections, Snackbar.LENGTH_SHORT)
+                                    .show();
+                            break;
+                        }
+                            MenuBuilder menuBuilder = new MenuBuilder(context);
+
 
                         MenuPopupHelper optionsMenu = new MenuPopupHelper(context, menuBuilder, toolbar);
                         optionsMenu.setForceShowIcon(true);
@@ -298,9 +305,10 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
                         PopupMenu popupMenu = new PopupMenu(context, toolbar, Gravity.TOP);
 
-                        if(currentKind != Constants.UNDEFINED)
-                            popupMenu.getMenu().add(R.string.main_section);
-                        sections = dbHelper.getAllSections();
+                        if(currentKind != Constants.UNDEFINED) {
+                            popupMenu.getMenu().add(354, Menu.NONE,Menu.NONE, R.string.main_section);
+                        }
+
                         for (Section section:sections
                                 ) {
                             popupMenu.getMenu().add(section.getName());
@@ -308,11 +316,13 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
-                                Log.d("TAG", "           click pop up NAME " + item.getItemId() + item.getTitle());
-                                if(item.getTitle().equals(R.string.main_section)){
+                                Log.d("TAG", "                                                                                  click pop up NAME " + item.getItemId() + item.getTitle());
+                            //    if(item.getTitle().equals(R.string.main_section)){
+                                if(item.getGroupId() == 354){
                                     adapter.translateTo(Constants.UNDEFINED);
-                                } else
+                                } else {
                                     adapter.translateTo((String) item.getTitle());
+                                }
                                 onNavigationItemSelected(undifinedPoint);
                                 mode.finish();
                                 return true;
@@ -381,8 +391,10 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             if(values.size()==0){
                 clearBascet.setVisible(false);
             }
-        } else {
+        } if(currentKind.equals(Constants.UNDEFINED)||currentKind.equals(Constants.ARCHIVE)){
             getMenuInflater().inflate(R.menu.main_menu, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.section_menu, menu);
         }
         this.menu = menu;
         onCreateNavigationMenu();
@@ -436,7 +448,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         //  navMenu.add(Menu.NONE, 245 , Menu.NONE,"clear sections");
     }
 
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -452,13 +463,25 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     public void showSnackBar(String s, int i){
         switch (s){
+            case Constants.UNDEFINED:
+                Snackbar.make(coordinatorLayout, i + " заметкок добавлено в основной раздел", Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.cancel, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                showSnackBarCancel();
+                            }
+                        })
+                        .show();
+                break;
             case Constants.DELETED:
                 Snackbar.make(coordinatorLayout, i + " заметкок добавлено в корзину!", Snackbar.LENGTH_SHORT)
                         .setAction(R.string.cancel, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Snackbar.make(coordinatorLayout,"Отмена!", Snackbar.LENGTH_LONG)
-                                        .show();
+                                adapter.returnTranslatedTask(currentKind);
+
+                                showSnackBarCancel();
                             }
                         })
                         .show();
@@ -468,8 +491,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         .setAction(R.string.cancel, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Snackbar.make(coordinatorLayout,"Отмена!", Snackbar.LENGTH_LONG)
-                                        .show();
+                                showSnackBarCancel();
+
                             }
                         })
                         .show();
@@ -479,13 +502,18 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         .setAction(R.string.cancel, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Snackbar.make(coordinatorLayout,"Отмена!", Snackbar.LENGTH_LONG)
-                                        .show();
+                                showSnackBarCancel();
+
                             }
                         })
                         .show();
 
         }
+    }
+
+    private void showSnackBarCancel(){
+        Snackbar.make(coordinatorLayout,"Отмена!", Snackbar.LENGTH_LONG)
+                .show();
     }
 
     @Override
@@ -497,17 +525,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         hideFabs();
         switch (item.getItemId()){
-            case R.id.delete_selection_items:
-                Log.d("TAG", "       Adapter --- delete_selection_items");
-                showSnackBar(Constants.DELETED, adapter.getSelectedTasksCounter());
-                adapter.deleteSelectedTasks();
-                break;
-            case R.id.select_item:
-                Log.d("TAG", "       Adapter --- set selection mode");
-                setSelectionMode();
-                break;
             case R.id.change_view:
-
                 String s = sharedPreferences.getString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_LIST);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -575,80 +593,36 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 alert2.show();
                 break;
             case R.id.deleteSection:
-                AlertDialog.Builder alert3 = new AlertDialog.Builder(this);
-                alert3.setTitle(R.string.question_delete_section);
-                alert3.setMessage(R.string.delete_section_massage);
-
-                alert3.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        adapter.deleteSection();
-                        deleteSection.setVisible(false);
-                        onNavigationItemSelected(undifinedPoint);
-                    }
-                });
-                alert3.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Canceled.
-                    }
-                });
-                alert3.show();
-                dbHelper.deleteSection(currentSection);
-                sections.remove(currentSection);
-                currentSection = null;
-                onCreateOptionsMenu(menu);
-                break;
-            case R.id.translateTo:
-
-                MenuBuilder menuBuilder = new MenuBuilder(this);
-
-                MenuPopupHelper optionsMenu = new MenuPopupHelper(this, menuBuilder, toolbar);
-                optionsMenu.setForceShowIcon(true);
-
-
-                PopupMenu popupMenu = new PopupMenu(this, toolbar, Gravity.TOP);
-
-                sections = dbHelper.getAllSections();
-                for (Section section:sections
-                        ) {
-                    popupMenu.getMenu().add(section.getName()).setIcon(getResources().getDrawable(R.drawable.delete));
-                }
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        Log.d("TAG", "           click pop up NAME " + item.getItemId() + item.getTitle());
-                        adapter.translateTo((String) item.getTitle());
-                        onNavigationItemSelected(undifinedPoint);
-                        return true;
-                    }
-                });
-                popupMenu.show();
-                /*PopupMenu popup = new PopupMenu(this, toolbar);
-                try {
-                    Field[] fields = popup.getClass().getDeclaredFields();
-                    for (Field field : fields) {
-                        if ("mPopup".equals(field.getName())) {
-                            field.setAccessible(true);
-                            Object menuPopupHelper = field.get(popup);
-                            Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
-                            Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon",boolean.class);
-                            setForceIcons.invoke(menuPopupHelper, true);
-                            break;
+                if(values.size()>0) {
+                    AlertDialog.Builder alert3 = new AlertDialog.Builder(this);
+                    alert3.setTitle(R.string.question_delete_section);
+                    alert3.setMessage(R.string.delete_section_massage);
+                    alert3.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            adapter.deleteSection();
+                            //deleteSection.setVisible(false);
+                            onNavigationItemSelected(undifinedPoint);
+                            dbHelper.deleteSection(currentSection);
+                            sections.remove(currentSection);
+                            currentSection = null;
+                            onCreateOptionsMenu(menu);
                         }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    });
+                    alert3.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Canceled.
+                        }
+                    });
+                    alert3.show();
+                } else {
+                    onNavigationItemSelected(undifinedPoint);
+                    dbHelper.deleteSection(currentSection);
+                    sections.remove(currentSection);
+                    currentSection = null;
+                    onCreateOptionsMenu(menu);
                 }
-                popup.getMenuInflater().inflate(R.menu.popupmenu, popup.getMenu());
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-
-                    public boolean onMenuItemClick(MenuItem item) {
-                        return true;
-                    }
-                });
-                popup.show();*/
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -733,7 +707,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             case R.id.notifications:
                 mainToolbarText.setText(R.string.notifications);
                 //currentKind = Constants.NOTIFICATIONS;
-                deleteSection.setVisible(false);
+                //deleteSection.setVisible(false);
                 values = dbHelper.getNotificationTasks();
                 adapter.dataChanged(values);
                 break;
@@ -828,7 +802,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     public void selectedItemCount(int selectedTasksCounter) {
         if(selectedTasksCounter == 0) {
-            actionMode.finish();
+            if(actionMode!=null){
+                actionMode.finish();
+            }
             is_in_action_mode = false;
             setItemMovement(true);
             fab.show();

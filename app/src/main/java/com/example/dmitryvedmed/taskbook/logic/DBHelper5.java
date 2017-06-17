@@ -53,6 +53,8 @@ public class DBHelper5 extends SQLiteOpenHelper {
     }
 
     public void deleteSection(Section section){
+        Log.d("TAG", "      DBHelper Delate Section " + section.getName());
+
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete("sections",
                 KEY_ID + " = ?",

@@ -69,6 +69,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public int getSelectedTasksCounter() {
         return selectedTasksCounter;
     }
+    private List<SuperTask> selectedTaskCopy;
 
     public boolean[] getSelects() {
         return selects;
@@ -96,6 +97,18 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
         Log.d("TAG", "       Adapter ---  fillSelectedTasks S = " + selectedTasks.size());
 
+    }
+
+    public void returnTranslatedTask(String s){
+        Log.d("TAG", "       Adapter ---  RETUUUUUUURN = " + selectedTaskCopy.size());
+        for (SuperTask st: selectedTaskCopy){
+            activity.dbHelper.updateTask(st, s);
+        }
+        Log.d("TAG", "       Adapter ---  RETUUUUUUURN = " + tasks.size());
+        tasks.addAll(selectedTaskCopy);
+        Log.d("TAG", "       Adapter ---  RETUUUUUUURN 2 = " + tasks.size());
+
+        notifyDataSetChanged();
     }
 
     public void setSelects(boolean[] selects) {
@@ -138,6 +151,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mode = Mode.NORMAL;
 
         selects = new boolean[tasks.size()];
+
+        selectedTaskCopy = new ArrayList<>();
 
         sharedPreferences = activity.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
 
@@ -266,22 +281,27 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     }
 
-    public void deleteSelectedTasks(){
-        compareSelectionTasks();
+    public void translateTo(String s){
+        //    Log.d("TAG", "           adapter translateTo " + s);
+        selectedTaskCopy.addAll(selectedTasks);
+        Log.d("TAG", "       Adapter --- !                      COOOOOOOOOOOOPYYYY111111 " + selectedTaskCopy.size());
         for (SuperTask t:selectedTasks
                 ) {
-            activity.dbHelper.updateTask(t, Constants.DELETED);
+            //        Log.d("TAG", t.getId() +  "       translateTo " + s);
+            activity.dbHelper.updateTask(t, s);
         }
-
+        activity.showSnackBar(s, selectedTasksCounter);
         tasks.removeAll(selectedTasks);
-        Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
         selectedTasks.clear();
+        Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
+
         setRightPosition();
         notifyDataSetChanged();
+        selectedTasksCounter = 0;
         activity.selectedItemCount(0);
         mode = Mode.NORMAL;
-        selectedTasksCounter = 0;
         selects = new boolean[tasks.size()];
+        Log.d("TAG", "       Adapter --- !                      COOOOOOOOOOOOPYYYY2222222222 " + selectedTaskCopy.size());
     }
 
     public void cancelSelection() {
@@ -311,32 +331,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         selectedTasksCounter = 0;
     }
 
+
     public void deleteSection(){
         selectedTasks.addAll(tasks);
-        deleteSelectedTasks();
-    }
-
-
-    public void translateTo(String s){
-    //    Log.d("TAG", "           adapter translateTo " + s);
-        for (SuperTask t:selectedTasks
-                ) {
-    //        Log.d("TAG", t.getId() +  "       translateTo " + s);
-            activity.dbHelper.updateTask(t, s);
-        }
-        activity.showSnackBar(s, selectedTasksCounter);
-        tasks.removeAll(selectedTasks);
-        selectedTasks.clear();
-        Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
-
-        setRightPosition();
-        notifyDataSetChanged();
-        activity.selectedItemCount(0);
-        mode = Mode.NORMAL;
-        selectedTasksCounter = 0;
-        selects = new boolean[tasks.size()];
-
-
+        translateTo(Constants.DELETED);
     }
 
 
