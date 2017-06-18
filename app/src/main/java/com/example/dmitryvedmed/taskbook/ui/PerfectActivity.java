@@ -85,6 +85,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private AlertDialog dialog;
     ActionMode actionMode;
     Bundle instanceState;
+    private boolean notification_on;
 
     public boolean is_in_action_mode() {
         return is_in_action_mode;
@@ -200,6 +201,12 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                     MenuItem unarchive = menu.findItem(R.id.toArchive);
                     unarchive.setIcon(getResources().getDrawable(R.drawable.ic_unarch));
                 }
+                if(notification_on){
+                    MenuItem unarchive = menu.findItem(R.id.toArchive);
+                    MenuItem translate = menu.findItem(R.id.translateTo);
+                    unarchive.setVisible(false);
+                    translate.setVisible(false);
+                }
                 return true;
             }
 
@@ -212,25 +219,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
 
-                    case R.id.green:
-                        adapter.setColorSelectionTasks(Constants.GREEN);
-                        fab.show();
-                        break;
-                    case R.id.red:
-                        adapter.setColorSelectionTasks(Constants.RED);
-                        fab.show();
-                        break;
-                    case R.id.blue:
-                        adapter.setColorSelectionTasks(Constants.BLUE);
-                        fab.show();
-                        break;
-                    case R.id.yellow:
-                        adapter.setColorSelectionTasks(Constants.YELLOW);
-                        fab.show();
-                        break;
-                    case R.id.white:
-                        adapter.setColorSelectionTasks(0);
-                        break;
                     case R.id.set_color_3:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         //builder.setTitle("Выберете цвет");
@@ -246,7 +234,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
                             final AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             // alert.setTitle("Очистить корзину?");
-                            alert.setMessage(R.string.delete_forever_massage);
+                                    alert.setMessage(R.string.delete_forever_massage);
                             alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -291,7 +279,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                     case R.id.translateTo:
 
                         sections = dbHelper.getAllSections();
-                        if(sections.size()==0){
+                        if(sections.size() == 0 && !currentKind.equals(Constants.DELETED)){
                             Snackbar.make(coordinatorLayout, R.string.no_sections, Snackbar.LENGTH_SHORT)
                                     .show();
                             break;
@@ -435,6 +423,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         navMenu.clear();
 
         navMenu.add(Menu.NONE, R.id.undefined , Menu.NONE, R.string.all).setIcon(getResources().getDrawable(R.drawable.note_multiple));
+        navMenu.add(Menu.NONE, R.id.notifications , Menu.NONE, "Напоминания").setIcon(getResources().getDrawable(R.drawable.bell));
         navMenu.add(Menu.NONE, R.id.archive , Menu.NONE, R.string.archive).setIcon(getResources().getDrawable(R.drawable.archive_2));
         for (Section s:sections
                 ) {
@@ -684,6 +673,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             }
         }
 
+        notification_on = false;
+
         switch (item.getItemId()){
 
             case R.id.undefined:
@@ -705,6 +696,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 sectionWasChanged();
                 break;
             case R.id.notifications:
+                notification_on = true;
                 mainToolbarText.setText(R.string.notifications);
                 //currentKind = Constants.NOTIFICATIONS;
                 //deleteSection.setVisible(false);
