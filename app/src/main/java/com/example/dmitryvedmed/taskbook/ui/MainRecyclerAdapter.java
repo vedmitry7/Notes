@@ -85,6 +85,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return list;
     }
 
+    public void setSelectedTaskCopy(List<SuperTask> selectedTaskCopy) {
+        this.selectedTaskCopy = selectedTaskCopy;
+        Log.d("TAG", "       Adapter ---  COOOOOOOOOOOPYYYY SIZE = " + selectedTasks.size());
+    }
+
     public void fillSelectedTasks(ArrayList<Integer> list){
         for (Integer i : list
                 ) {
@@ -100,16 +105,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     public void returnTranslatedTask(String s){
-        Log.d("TAG", "       Adapter ---  RETUUUUUUURN = " + selectedTaskCopy.size());
+        Log.d("TAG", "       Adapter ---  RETUUUUUUURN COPY SIZE start = " + selectedTaskCopy.size());
         for (SuperTask st: selectedTaskCopy){
             activity.dbHelper.updateTask(st, s);
         }
-        Log.d("TAG", "       Adapter ---  RETUUUUUUURN = " + tasks.size());
+        Log.d("TAG", "       Adapter ---  RETUUUUUUURN TASKS SIZE start = " + tasks.size());
         tasks.addAll(selectedTaskCopy);
-        Log.d("TAG", "       Adapter ---  SEL TASK S COPY = " + selectedTaskCopy.size());
+        Log.d("TAG", "       Adapter ---  RETUUUUUUURN TASKS SIZE finish = " + tasks.size());
         selectedTaskCopy.clear();
-        Log.d("TAG", "       Adapter ---  SEL TASK S COPY 2 = " + selectedTaskCopy.size());
-        Log.d("TAG", "       Adapter ---  RETUUUUUUURN 2 = " + tasks.size());
+        Log.d("TAG", "       Adapter ---  RETUUUUUUURN COPY finish = " + selectedTaskCopy.size());
 
         dataChanged(tasks);
     }
@@ -176,6 +180,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public void onItemDismiss(final int position) {
 
+        selectedTaskCopy.clear();
+        selectedTaskCopy.add(tasks.get(position));
 
         String rem = sharedPreferences.getString(Constants.SWIPE_REMEMBER, "");
        // Log.d("TAG", "       Adapter --- onItemDismiss, position = " + position + " " + rem);
@@ -238,8 +244,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
                         tasks.get(position).setPosition(0);//?
 
-                        selectedTaskCopy.add(tasks.get(position));
-
                         tasks.remove(position);
                         notifyItemRemoved(position);
                         setRightPosition();
@@ -262,8 +266,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         tasks.get(position).setPosition(0);                 //?
                         tasks.get(position).setRemind(false);
                         //?
-                        selectedTaskCopy.add(tasks.get(position));
-
                         tasks.remove(position);
                         notifyItemRemoved(position);
                         setRightPosition();
@@ -827,6 +829,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         textSize = sharedPreferences.getInt("cardFontSize", 16);
         compareTasks();
+        selectedTaskCopy = new ArrayList<>();
         notifyDataSetChanged();
     }
 

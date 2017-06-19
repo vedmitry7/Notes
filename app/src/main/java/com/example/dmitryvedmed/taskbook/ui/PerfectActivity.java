@@ -191,6 +191,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         actionModeCallback = new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+
+               // adapter.setSelectedTaskCopy(new ArrayList<SuperTask>());
+
                 getMenuInflater().inflate(R.menu.menu_selection_mode, menu);
 
                 if(currentKind.equals(Constants.DELETED)){
@@ -311,7 +314,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                                 } else {
                                     adapter.translateTo((String) item.getTitle());
                                 }
-                                onNavigationItemSelected(undifinedPoint);
+                                //onNavigationItemSelected(undifinedPoint);
                                 mode.finish();
                                 return true;
                             }
@@ -451,54 +454,35 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     }
 
     public void showSnackBar(String s, int i){
+
+        String s1;
+
         switch (s){
             case Constants.UNDEFINED:
-                Snackbar.make(coordinatorLayout, i + " заметкок добавлено в основной раздел", Snackbar.LENGTH_SHORT)
-                        .setAction(R.string.cancel, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
 
-                                showSnackBarCancel();
-                            }
-                        })
-                        .show();
+                s1 =  i + " заметок добавлено в основной раздел";
                 break;
             case Constants.DELETED:
-                Snackbar.make(coordinatorLayout, i + " заметкок добавлено в корзину!", Snackbar.LENGTH_SHORT)
-                        .setAction(R.string.cancel, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                adapter.returnTranslatedTask(currentKind);
-
-                                showSnackBarCancel();
-                            }
-                        })
-                        .show();
+                s1 = i + " заметкок добавлено в корзину!";
                 break;
             case Constants.ARCHIVE:
-                Snackbar.make(coordinatorLayout, i + " заметкок архивированно!", Snackbar.LENGTH_SHORT)
-                        .setAction(R.string.cancel, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                showSnackBarCancel();
-                                adapter.returnTranslatedTask(currentKind);
-                            }
-                        })
-                        .show();
+                s1 = i + " заметкок архивированно!";
                 break;
             default:
-                Snackbar.make(coordinatorLayout, i + " заметкок добавлено в раздел " + s, Snackbar.LENGTH_SHORT)
-                        .setAction(R.string.cancel, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                showSnackBarCancel();
-                                adapter.returnTranslatedTask(currentKind);
-
-                            }
-                        })
-                        .show();
+                s1 = i + " заметкок добавлено в раздел " + s;
 
         }
+        Snackbar.make(coordinatorLayout, s1, Snackbar.LENGTH_SHORT)
+                .setAction(R.string.cancel, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showSnackBarCancel();
+                        adapter.returnTranslatedTask(currentKind);
+
+                    }
+                })
+                .show();
+
     }
 
     private void showSnackBarCancel(){
@@ -510,9 +494,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d("TAG", "        onOptionsItemSelected  onOptionsItemSelected  onOptionsItemSelected");
 
-        if(toggle.onOptionsItemSelected(item))
+        if(toggle.onOptionsItemSelected(item)) {
             return true;
-
+        }
         hideFabs();
         switch (item.getItemId()){
             case R.id.change_view:
