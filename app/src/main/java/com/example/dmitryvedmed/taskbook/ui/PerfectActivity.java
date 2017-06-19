@@ -481,7 +481,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                             @Override
                             public void onClick(View view) {
                                 showSnackBarCancel();
-
+                                adapter.returnTranslatedTask(currentKind);
                             }
                         })
                         .show();
@@ -492,6 +492,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                             @Override
                             public void onClick(View view) {
                                 showSnackBarCancel();
+                                adapter.returnTranslatedTask(currentKind);
 
                             }
                         })

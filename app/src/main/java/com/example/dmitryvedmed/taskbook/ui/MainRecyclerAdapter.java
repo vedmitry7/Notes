@@ -106,9 +106,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
         Log.d("TAG", "       Adapter ---  RETUUUUUUURN = " + tasks.size());
         tasks.addAll(selectedTaskCopy);
+        Log.d("TAG", "       Adapter ---  SEL TASK S COPY = " + selectedTaskCopy.size());
+        selectedTaskCopy.clear();
+        Log.d("TAG", "       Adapter ---  SEL TASK S COPY 2 = " + selectedTaskCopy.size());
         Log.d("TAG", "       Adapter ---  RETUUUUUUURN 2 = " + tasks.size());
 
-        notifyDataSetChanged();
+        dataChanged(tasks);
     }
 
     public void setSelects(boolean[] selects) {
@@ -233,7 +236,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         activity.showSnackBar(Constants.ARCHIVE, 1);
                         dialog.dismiss();
 
-                        tasks.get(position).setPosition(0);                 //?
+                        tasks.get(position).setPosition(0);//?
+
+                        selectedTaskCopy.add(tasks.get(position));
 
                         tasks.remove(position);
                         notifyItemRemoved(position);
@@ -255,7 +260,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         activity.showSnackBar(Constants.DELETED, 1);
 
                         tasks.get(position).setPosition(0);                 //?
-                        tasks.get(position).setRemind(false);                 //?
+                        tasks.get(position).setRemind(false);
+                        //?
+                        selectedTaskCopy.add(tasks.get(position));
 
                         tasks.remove(position);
                         notifyItemRemoved(position);
