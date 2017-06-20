@@ -830,6 +830,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         hideFabs();
         Intent intent = new Intent(getApplicationContext(), ListTaskActivity.class);
         intent.putExtra(Constants.POSITION, adapter.getTasks().size());
+        intent.putExtra(Constants.KIND, currentKind);
         startActivity(intent);
     }
 
@@ -838,6 +839,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         hideFabs();
         Intent intent = new Intent(getApplicationContext(), SimpleTaskActivity.class);
         intent.putExtra(Constants.POSITION, adapter.getTasks().size());
+        intent.putExtra(Constants.KIND, currentKind);
         startActivity(intent);
     }
 

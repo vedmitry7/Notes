@@ -145,6 +145,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         }
 
         currentKind = getIntent().getStringExtra(Constants.KIND);
+        Log.d("TAG", "CUR KIND " + currentKind);
         if (currentKind == null)
             currentKind = Constants.UNDEFINED;
 
