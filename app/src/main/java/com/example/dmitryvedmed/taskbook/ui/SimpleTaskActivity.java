@@ -137,15 +137,19 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             Log.d("TAG", "ID = " + task.getId());
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             head.requestFocus();
+
         } else {
             Log.d("TAG", "TAAAAAAASK EST'!!!!!!!!");
             Log.d("TAG", "ID = " + task.getId());
-            if (task.getColor() != 0)
+            if (task.getColor() != 0){
                 toolbar.setBackgroundColor(task.getColor());
+            } else {
+                setBlackNavIconColor();
+            }
         }
 
         currentKind = getIntent().getStringExtra(Constants.KIND);
-        Log.d("TAG", "CUR KIND " + currentKind);
+        Log.d("TAG", "              TASK GET -  " + currentKind);
         if (currentKind == null)
             currentKind = Constants.UNDEFINED;
 
@@ -232,51 +236,14 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int color;
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
                 return true;
-            case R.id.green:
-                color = ContextCompat.getColor(this, R.color.taskColorGreen);
-                toolbar.setBackgroundColor(color);
-                setWhiteNavIconColor();
-                task.setColor(color);
-                Log.d("TAG", "COLOR " + color);
-                break;
-            case R.id.red:
-                color = ContextCompat.getColor(this, R.color.taskColorRed);
-                toolbar.setBackgroundColor(color);
-                setWhiteNavIconColor();
-                task.setColor(color);
-                Log.d("TAG", "COLOR " + color);
-                break;
-            case R.id.blue:
-                color = ContextCompat.getColor(this, R.color.taskColorBlue);
-                toolbar.setBackgroundColor(color);
-                setWhiteNavIconColor();
-                task.setColor(color);
-                Log.d("TAG", "COLOR " + color);
-                break;
-            case R.id.yellow:
-                color = ContextCompat.getColor(this, R.color.taskColorYellow);
-                toolbar.setBackgroundColor(color);
-                setWhiteNavIconColor();
-                task.setColor(color);
-                Log.d("TAG", "COLOR " + color);
-                break;
-            case R.id.white:
-                toolbar.setBackgroundColor(Color.WHITE);
-                setBlackNavIconColor();
-                task.setColor(0);
-                break;
             case R.id.notify:
                 createDialog();
                     break;
-           /* case R.id.cancel_notification:
-                cancelNotification();
-                break;*/
             case R.id.cancel_notif:
                 final AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 // alert.setTitle("Очистить корзину?");
@@ -506,13 +473,15 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         if (task.getId() == -1) {
             if (head.getText().length() == 0 && text.getText().length() == 0)
                 return;
-            task.setId(dbHelper.addTask(task));
+            task.setId(dbHelper.addTask(task, currentKind));
+            Log.d("TAG", "      ADAPTER                 SAVE TASK " + currentKind);
             Log.d("TAG", "NEW TASK ID = " + task.getId());
         } else {
             Log.d("TAG", "UPDATE id = " + task.getId());
             if(check)
                 if(!dbHelper.isRemind(task))
                     task.setRemind(false);
+            Log.d("TAG", "      ADAPTER                 SAVE TASK " + currentKind);
             dbHelper.updateTask(task, currentKind);
         }
 

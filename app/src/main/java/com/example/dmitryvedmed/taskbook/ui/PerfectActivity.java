@@ -607,8 +607,11 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     private void sectionWasChanged(){
         values = dbHelper.getTasks(currentKind);
-        if(currentKind.equals(Constants.DELETED))
+        fab.show();
+        if(currentKind.equals(Constants.DELETED)){
             checkOldTask();
+            fab.hide();
+        }
         onCreateOptionsMenu(menu);
         adapter.dataChanged(values);
         saveCurrentKind();
@@ -665,14 +668,12 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             case R.id.undefined:
                 setItemMovement(true);
                 currentKind = Constants.UNDEFINED;
-                fab.show();
                 sectionWasChanged();
                 break;
             case R.id.deleted:
                 currentKind = Constants.DELETED;
                 sectionWasChanged();
                 setItemMovement(false);
-                fab.hide();
                 break;
             case R.id.archive:
                 setItemMovement(true);
@@ -687,6 +688,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 //deleteSection.setVisible(false);
                 values = dbHelper.getNotificationTasks();
                 adapter.dataChanged(values);
+                fab.hide();
                 break;
             case R.id.settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
@@ -694,11 +696,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 break;
             case R.id.exit:
                 this.finish();
-                break;
-            case 245:
-                dbHelper.clearSectionTable();
-                sections = dbHelper.getAllSections();
-                onCreateNavigationMenu();
                 break;
         }
 
@@ -831,6 +828,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         Intent intent = new Intent(getApplicationContext(), ListTaskActivity.class);
         intent.putExtra(Constants.POSITION, adapter.getTasks().size());
         intent.putExtra(Constants.KIND, currentKind);
+        Log.d("TAG", "      Main3Activity                   SEND INTENT " + currentKind);
         startActivity(intent);
     }
 
@@ -839,6 +837,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         hideFabs();
         Intent intent = new Intent(getApplicationContext(), SimpleTaskActivity.class);
         intent.putExtra(Constants.POSITION, adapter.getTasks().size());
+        intent.putExtra(Constants.KIND, currentKind);
+        Log.d("TAG", "      Main3Activity                   SEND INTENT " + currentKind);
+
         intent.putExtra(Constants.KIND, currentKind);
         startActivity(intent);
     }
@@ -881,13 +882,18 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         Log.d("TAG", "      Activity --- update  ---");
         currentKind = sharedPreferences.getString(Constants.CURRENT_KIND, Constants.UNDEFINED);
         values = dbHelper.getTasks(currentKind);
+        checkDeprecated();
         if(adapter!=null)
             adapter.dataChanged(values);
+    }
 
+    private void checkDeprecated(){
         for (SuperTask s:values
                 ) {
-            if(s.isRemind()==true&& s.getReminderTime()<System.currentTimeMillis()){
+            if(s.isRemind() == true && s.getReminderTime()<System.currentTimeMillis()){
                 Log.d("TAG", "      Activity                    DEPRICATED TASK!!!" + s.getId());
+                s.setRemind(false);
+                dbHelper.updateTask(s,currentKind);
             }
         }
     }

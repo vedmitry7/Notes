@@ -4,10 +4,10 @@ package com.example.dmitryvedmed.taskbook.untils;
 public class Constants {
 
     public static final String UNDEFINED = "undefined";
-    public static final String DELETED = "deleted";
+    public static final String DELETED = "deleted_code";
     public static final String NOTIFICATIONS = "notifications";
     public static final String ACTION_NOTIFICATION = "TASK_NOTIFICATION";
-    public static final String ARCHIVE = "archive";
+    public static final String ARCHIVE = "archive_code";
     public static final String POSITION = "position";
     public static final String SWIPE_REMEMBER = "swipeRemember";
     public static final String TASK = "task";

@@ -16,40 +16,6 @@
         android:id="@+id/set_color2"
         android:title="@string/set_color"
         app:showAsAction="never" />
-    <item
-        android:orderInCategory="100"
-        android:id="@+id/set_color"
-        android:title="@string/set_color"
-        app:showAsAction="never" >
-        <menu>
-            <item android:id="@+id/white"
-                android:title="@string/without_color">
-
-            </item>
-
-            <item android:id="@+id/red"
-                android:icon="@drawable/red_block"
-                android:title="">
-
-            </item>
-
-            <item android:id="@+id/green"
-                android:icon="@drawable/green_block"
-                android:title="">
-
-            </item>
-
-            <item android:id="@+id/yellow"
-                android:icon="@drawable/yellow_block"
-                android:title="">
-            </item>
-            <item android:id="@+id/blue"
-                android:icon="@drawable/blue_block"
-                android:title="">
-            </item>
-
-        </menu>
-    </item>
 
     <item
         android:orderInCategory="101"

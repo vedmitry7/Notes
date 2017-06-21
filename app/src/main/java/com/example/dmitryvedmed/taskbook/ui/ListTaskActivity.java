@@ -1,6 +1,5 @@
 package com.example.dmitryvedmed.taskbook.ui;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.NotificationManager;
@@ -122,8 +121,11 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
-        if(task.getColor() != 0)
+        if (task.getColor() != 0){
             toolbar.setBackgroundColor(task.getColor());
+        } else {
+            setBlackNavIconColor();
+        }
 
         setItemMovement(false);
 
@@ -159,53 +161,13 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
             currentKind = Constants.UNDEFINED;
     }
 
-
-    public void hideDefaultKeyboard() {
-        Activity activity = (Activity) context;
-        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int color;
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
                 return true;
-            case R.id.green:
-                color = ContextCompat.getColor(this, R.color.taskColorGreen);
-                toolbar.setBackgroundColor(color);
-                setWhiteNavIconColor();
-                task.setColor(color);
-                Log.d("TAG", "COLOR " + color);
-                break;
-            case R.id.red:
-                color = ContextCompat.getColor(this, R.color.taskColorRed);
-                toolbar.setBackgroundColor(color);
-                setWhiteNavIconColor();
-                task.setColor(color);
-                Log.d("TAG", "COLOR " + color);
-                break;
-            case R.id.blue:
-                color = ContextCompat.getColor(this, R.color.taskColorBlue);
-                toolbar.setBackgroundColor(color);
-                setWhiteNavIconColor();
-                task.setColor(color);
-                Log.d("TAG", "COLOR " + color);
-                break;
-            case R.id.yellow:
-                color = ContextCompat.getColor(this, R.color.taskColorYellow);
-                toolbar.setBackgroundColor(color);
-                setWhiteNavIconColor();
-                task.setColor(color);
-                Log.d("TAG", "COLOR " + color);
-                break;
-            case R.id.white:
-                toolbar.setBackgroundColor(Color.WHITE);
-                setBlackNavIconColor();
-                task.setColor(0);
-                break;
             case R.id.notify:
            /*     Intent intent = new Intent("TASK_NOTIFICATION");
                 saveTask(true);
@@ -215,9 +177,6 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 createDialog();
                 //showTimePickerDialog();
                 break;
-          /*  case R.id.cancel_notification:
-                cancelNotification();
-                break;*/
             case R.id.delete_checked_tasks:
                 listTaskRecyclerAdapter.deleteCheckedTasks();
                 changeMenuItemVisibility(0);
@@ -443,7 +402,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
 
         DBHelper5 dbHelper = new DBHelper5(this);
         if(task.getId() == -1){
-            task.setId(dbHelper.addTask(task));
+            task.setId(dbHelper.addTask(task, currentKind ));
         }
         else {
             if(check)

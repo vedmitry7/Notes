@@ -208,6 +208,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_TASK,  bytes);
         values.put(KEY_KIND, kind);
+        values.put(KEY_REMIND,task.isRemind() ? 1 : 0);
         // 3. insert
         long id = db.insert(TABLE, null, values);
         // 4. close
