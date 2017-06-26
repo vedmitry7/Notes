@@ -123,8 +123,8 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
 
     private void initView() {
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fabAddST = (FloatingActionButton) findViewById(R.id.fabAddST);
-        fabAddLT = (FloatingActionButton) findViewById(R.id.fabAddLT);
+        fabAddST = (FloatingActionButton) findViewById(R.id.fabListNote);
+        fabAddLT = (FloatingActionButton) findViewById(R.id.fabSimpleNote);
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cl);
 
@@ -153,7 +153,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
        // counterTextView = (TextView) findViewById(R.id.counter_text2);
         //counterTextView.setVisibility(View.GONE);
 
-        mainToolbarText = (TextView) findViewById(R.id.mainToolbarText);
+      //  mainToolbarText = (TextView) findViewById(R.id.mainToolbarText);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_common);
         adapter = new MainRecyclerAdapter(values, DrawerTestActivity.this);

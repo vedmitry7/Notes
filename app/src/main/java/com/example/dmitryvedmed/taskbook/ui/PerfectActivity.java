@@ -35,7 +35,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.helper.SimpleItemTouchHelperCallback;
@@ -65,7 +64,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private ItemTouchHelper mItemTouchHelper;
     private ItemTouchHelper.Callback callback;
     boolean is_in_action_mode = false;
-    private  TextView counterTextView, mainToolbarText;
     private Toolbar toolbar;
     public String currentKind = Constants.UNDEFINED;
     private Context context;
@@ -84,7 +82,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private SharedPreferences.Editor editor;
     private AlertDialog dialog;
     ActionMode actionMode;
-    Bundle instanceState;
     private boolean notification_on;
 
     public boolean is_in_action_mode() {
@@ -123,14 +120,15 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     private void initView() {
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fabAddST = (FloatingActionButton) findViewById(R.id.fabAddST);
+        fabAddST = (FloatingActionButton) findViewById(R.id.fabListNote);
         //  fabAddST.setVisibility(View.INVISIBLE);
-        fabAddLT = (FloatingActionButton) findViewById(R.id.fabAddLT);
+        fabAddLT = (FloatingActionButton) findViewById(R.id.fabSimpleNote);
         //  fabAddLT.setVisibility(View.INVISIBLE);
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cl);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("waWesrdftyuio");
         setSupportActionBar(toolbar);
         toolbar.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -145,7 +143,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         //  counterTextView = (TextView) findViewById(R.id.counter_text2);
         //counterTextView.setVisibility(View.GONE);
 
-        mainToolbarText = (TextView) findViewById(R.id.mainToolbarText);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_common);
         adapter = new MainRecyclerAdapter(values, PerfectActivity.this);
@@ -621,20 +618,20 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private void setTitle() {
         switch (currentKind){
             case Constants.DELETED:
-                mainToolbarText.setText(R.string.bucket);
+                toolbar.setTitle(R.string.bucket);
                 setItemMovement(false);
                 break;
             case Constants.ARCHIVE:
                 setItemMovement(false);
-                mainToolbarText.setText(R.string.archive);
+                toolbar.setTitle(R.string.archive);
                 break;
             case Constants.UNDEFINED:
                 setItemMovement(true);
-                mainToolbarText.setText("");
+                toolbar.setTitle("");
                 break;
             default:
                 setItemMovement(true);
-                mainToolbarText.setText(currentKind);
+                toolbar.setTitle(currentKind);
                 break;
         }
     }
@@ -677,15 +674,13 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 break;
             case R.id.archive:
                 setItemMovement(true);
-                mainToolbarText.setText(R.string.archive);
+                toolbar.setTitle(R.string.archive);
                 currentKind = Constants.ARCHIVE;
                 sectionWasChanged();
                 break;
             case R.id.notifications:
                 notification_on = true;
-                mainToolbarText.setText(R.string.notifications);
-                //currentKind = Constants.NOTIFICATIONS;
-                //deleteSection.setVisible(false);
+                toolbar.setTitle(R.string.notifications);
                 values = dbHelper.getNotificationTasks();
                 adapter.dataChanged(values);
                 fab.hide();

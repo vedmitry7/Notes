@@ -19,51 +19,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways"
-            android:background="#ffc107"
+            android:background="@color/main_toolbar_color"
             app:popupTheme="@style/AppTheme.PopupOverlay" >
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:id="@+id/mainToolbarText"
-                    android:textSize="18dp"
-                    android:textColor="#FFF"
-                    android:textStyle="bold"/>
-
-                </RelativeLayout>
 
             </android.support.v7.widget.Toolbar>
-
-    <!--    <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar2"
-            android:visibility="invisible"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways"
-            android:background="@color/colorCardViewPressed"
-            app:popupTheme="@style/AppTheme.PopupOverlay" >
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:id="@+id/counter_text2"
-                    android:textSize="18dp"
-                    android:textColor="#EEE"
-                    android:textStyle="bold"/>
-
-            </RelativeLayout>
-
-        </android.support.v7.widget.Toolbar>-->
 
     </android.support.design.widget.AppBarLayout>
 
@@ -78,65 +37,31 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/ic_add"
-       android:elevation="6dp"/>
+        android:elevation="@dimen/fab_elevation"/>
 
-    <!--app:layout_behavior="com.example.dmitryvedmed.taskbook.helper.FABScrollBehavior"-->
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabAddST"
+        android:id="@+id/fabListNote"
         android:onClick="newSimpleTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="125dp"
-
+        android:layout_marginBottom="@dimen/list_note_fab_margin"
         android:layout_marginRight="@dimen/activity_vertical_margin"
         app:fabSize="mini"
         app:srcCompat="@drawable/format_list"
         android:visibility="invisible" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabAddLT"
+        android:id="@+id/fabSimpleNote"
         android:onClick="newListTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:visibility="invisible"
-        android:layout_marginBottom="85dp"
+        android:layout_marginBottom="@dimen/simple_note_fab_margin"
         android:layout_marginRight="@dimen/activity_vertical_margin"
         app:fabSize="mini"
         app:srcCompat="@drawable/format_list_checks" />
-
-<!--    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab3"
-        android:onClick="clearList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_delete" />-->
-
-    <!--   <include layout="@layout/fab_layout"
-           android:layout_gravity="bottom|end"
-           android:layout_height="wrap_content"
-           android:layout_width="wrap_content">
-           </include>-->
-<!--    <RelativeLayout
-        android:background="#EEE"
-        android:elevation="10dp"
-        android:layout_gravity="bottom|center"
-        android:layout_width="match_parent"
-        android:layout_height="36dp">
-
-        <Button
-            android:gravity="right"
-            android:layout_margin="8dp"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@drawable/format_list_checks"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-    </RelativeLayout>-->
 
 
 </android.support.design.widget.CoordinatorLayout>

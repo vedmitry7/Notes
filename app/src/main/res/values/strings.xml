@@ -102,5 +102,6 @@
     <string name="time">Время</string>
     <string name="repeat">Повтор</string>
     <string name="no_sections">Разделы отсутствуют</string>
+    <string name="reminder_past_time">Напоминание задано в прошедшем времени. Поместить в уведомления?</string>
 
 </resources>

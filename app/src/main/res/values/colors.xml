@@ -9,6 +9,13 @@
 
 
 
+    <color name="activityColorFFF">#FFFFFF</color>
+    <color name="main_toolbar_color">#ffc107</color>
+
+    <color name="main_activity_bg_color">#EEE</color>
+
+
+
 
     <color name="taskColorGreen">#4CAF50</color>
     <color name="taskColorLightGreen">#C8E6C9</color>

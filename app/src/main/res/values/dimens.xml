@@ -9,6 +9,16 @@
     <dimen name="card_view_minimum_height">48dp</dimen>
     <dimen name="card_view_margin">6dp</dimen>
     <dimen name="card_view_elevation">2dp</dimen>
+    <dimen name="padding_3dp">3dp</dimen>
+    <dimen name="fab_elevation">6dp</dimen>
+
+    <dimen name="text_size_17sp">6dp</dimen>
+
+
+    <dimen name="simple_note_fab_margin">85dp</dimen>
+    <dimen name="list_note_fab_margin">125dp</dimen>
+
+
     <integer name="slide_animation_duration">300</integer>
     <!--
 Refer to App Widget Documentation for margin information

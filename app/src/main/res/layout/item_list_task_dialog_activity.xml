@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/checkBoxDialog"
         android:layout_gravity="top|left"
+        android:alpha="0.67"
         android:button="@drawable/checkbox_selector"
         />
 

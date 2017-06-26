@@ -7,8 +7,6 @@
     android:paddingTop="2dp"
     >
 
-
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -20,7 +18,6 @@
 
         <TextView
             android:layout_marginTop="5dp"
-
             android:paddingLeft="10dp"
             android:paddingRight="16dp"
             android:text="Text"
@@ -29,6 +26,7 @@
             android:textColor="#000000"
             android:id="@+id/listTaskDialogHeadTextView"
             android:textSize="17sp"
+            android:alpha="0.67"
             android:textStyle="normal|bold" />
 
 

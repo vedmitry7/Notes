@@ -330,8 +330,8 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 if(repeating.equals("")) {
                     if(notificationTime.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()){
                         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
-                        mBuilder.setMessage("Напоминание задано в прошедшем времени. Поместить в уведомления?");
-                        mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        mBuilder.setMessage(R.string.reminder_past_time);
+                        mBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
@@ -339,7 +339,7 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                             }
                         });
 
-                        mBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        mBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
