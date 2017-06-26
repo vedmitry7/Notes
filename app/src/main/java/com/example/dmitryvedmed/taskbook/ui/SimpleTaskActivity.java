@@ -342,9 +342,9 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
 
         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
 
-        View mViewe = getLayoutInflater().inflate(R.layout.dialog_spiner, null);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_spiner, null);
 
-        spinnerButtonTime = (Button) mViewe.findViewById(R.id.spinnerButtonTime);
+        spinnerButtonTime = (Button) mView.findViewById(R.id.spinnerButtonTime);
         spinnerButtonTime.setText(R.string.morning);
         spinnerButtonTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -356,7 +356,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             }
         });
 
-        spinnerButtonDate = (Button) mViewe.findViewById(R.id.spinnerButtonDate);
+        spinnerButtonDate = (Button) mView.findViewById(R.id.spinnerButtonDate);
         spinnerButtonDate.setText(R.string.tomorrow);
         spinnerButtonDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -369,7 +369,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         });
 
 
-        spinnerButtonRepeat = (Button) mViewe.findViewById(R.id.spinnerButtonRepeat);
+        spinnerButtonRepeat = (Button) mView.findViewById(R.id.spinnerButtonRepeat);
         spinnerButtonRepeat.setText(R.string.never);
         spinnerButtonRepeat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -409,14 +409,37 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
 
 */
 
-                Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
+                final Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
                 intent.setAction(Constants.ACTION_NOTIFICATION);
                 saveTask(true);
                 intent.putExtra(Constants.ID, task.getId());
 
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
                 if(repeating.equals("")) {
+
+                    if(notificationTime.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()){
+                        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
+                        mBuilder.setMessage("Напоминание задано в прошедшем времени. Поместить в уведомления?");
+                        mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                                alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
+                            }
+                        });
+
+                        mBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+                        AlertDialog dialog = mBuilder.create();
+                        dialog.show();
+                        return;
+                    }
+
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
                     alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
                 }
@@ -452,7 +475,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             }
         });
 
-        mBuilder.setView(mViewe);
+        mBuilder.setView(mView);
         AlertDialog dialog = mBuilder.create();
         dialog.show();
     }
@@ -528,7 +551,6 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
     @Override
     public void onStart() {
         super.onStart();
-
     }
 
     @Override
@@ -571,7 +593,6 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             }
         }, hour, minute, true);
         timePickerDialog.show();
-
     }
 
     private void showDatePickerDialog() {
@@ -579,10 +600,10 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
 
-                notificationTime.set(year,month,day);
-                spinnerButtonDate.setText(day+":"+month+";"+year);
+                notificationTime.set(year, month, day);
+                spinnerButtonDate.setText(day + ":" + month + ";" + year);
             }
-        },notificationTime.get(Calendar.YEAR),notificationTime.get(Calendar.MONTH), notificationTime.get(Calendar.DAY_OF_MONTH));
+        },notificationTime.get(Calendar.YEAR), notificationTime.get(Calendar.MONTH), notificationTime.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 
@@ -593,21 +614,29 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
 
             case R.id.item_morning:
                 spinnerButtonTime.setText(getResources().getString(R.string.morning));
+                hours = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 14);
+                minutes = sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 15);
+                notificationTime.set(Calendar.HOUR_OF_DAY, hours);
+                notificationTime.set(Calendar.MINUTE, minutes);
                 break;
             case R.id.item_afternoon:
                 spinnerButtonTime.setText(getResources().getString(R.string.afternoon));
                 hours = sharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS, 14);
                 minutes = sharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES, 15);
+                notificationTime.set(Calendar.HOUR_OF_DAY, hours);
+                notificationTime.set(Calendar.MINUTE, minutes);
                 break;
             case R.id.item_evening:
                 spinnerButtonTime.setText(getResources().getString(R.string.evening));
                 hours = sharedPreferences.getInt(Constants.EVENING_TIME_HOURS, 20);
                 minutes = sharedPreferences.getInt(Constants.EVENING_TIME_MINUTES, 15);
+                notificationTime.set(Calendar.HOUR_OF_DAY, hours);
+                notificationTime.set(Calendar.MINUTE, minutes);
                 break;
             case R.id.item_chose_time:
                 showTimePickerDialog();
                 break;
-            case R.id.item_yesterday:
+            case R.id.item_today:
                 notificationTime = Calendar.getInstance();
                 notificationTime.set(Calendar.HOUR_OF_DAY, hours);
                 notificationTime.set(Calendar.MINUTE, minutes);

@@ -245,8 +245,8 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 TimePickerDialog timePickerDialog2 = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int h, int m) {
-                        editor.putInt(Constants.AFTERNOON_TIME_MINUTES, m);
-                        editor.putInt(Constants.AFTERNOON_TIME_HOURS, h);
+                        editor.putInt(Constants.MORNING_TIME_MINUTES, m);
+                        editor.putInt(Constants.MORNING_TIME_HOURS, h);
                         editor.commit();
                         setTime();
                     }
@@ -260,8 +260,8 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 TimePickerDialog timePickerDialog3 = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int h, int m) {
-                        editor.putInt(Constants.AFTERNOON_TIME_MINUTES, m);
-                        editor.putInt(Constants.AFTERNOON_TIME_HOURS, h);
+                        editor.putInt(Constants.EVENING_TIME_MINUTES, m);
+                        editor.putInt(Constants.EVENING_TIME_HOURS, h);
                         editor.commit();
                         setTime();
                     }

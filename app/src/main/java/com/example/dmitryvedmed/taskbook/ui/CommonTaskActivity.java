@@ -411,7 +411,7 @@ public class CommonTaskActivity extends AppCompatActivity implements PopupMenu.O
             case R.id.item_chose_time:
                 showTimePickerDialog();
                 break;
-            case R.id.item_yesterday:
+            case R.id.item_today:
                 notificationTime = Calendar.getInstance();
                 notificationTime.set(Calendar.HOUR_OF_DAY, hours);
                 notificationTime.set(Calendar.MINUTE, minutes);

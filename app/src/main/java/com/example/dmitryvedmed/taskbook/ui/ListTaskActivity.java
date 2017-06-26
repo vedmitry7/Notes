@@ -319,15 +319,36 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 Log.d("TAG", String.valueOf(notificationTime.get(Calendar.MINUTE)));
                 Log.d("TAG", "----------------------");
 
-                Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
+                final Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
                 intent.setAction(Constants.ACTION_NOTIFICATION);
                 saveTask(true);
                 intent.putExtra(Constants.ID, task.getId());
 
 
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
                 if(repeating.equals("")) {
+                    if(notificationTime.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()){
+                        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
+                        mBuilder.setMessage("Напоминание задано в прошедшем времени. Поместить в уведомления?");
+                        mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                                alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
+                            }
+                        });
+
+                        mBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+                        AlertDialog dialog = mBuilder.create();
+                        dialog.show();
+                        return;
+                    }
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
                     alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
                 }
@@ -479,22 +500,29 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
 
             case R.id.item_morning:
                 spinnerButtonTime.setText(getResources().getString(R.string.morning));
-
+                hours = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 14);
+                minutes = sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 15);
+                notificationTime.set(Calendar.HOUR_OF_DAY, hours);
+                notificationTime.set(Calendar.MINUTE, minutes);
                 break;
             case R.id.item_afternoon:
                 spinnerButtonTime.setText(getResources().getString(R.string.afternoon));
                 hours = sharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS, 14);
                 minutes = sharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES, 15);
+                notificationTime.set(Calendar.HOUR_OF_DAY, hours);
+                notificationTime.set(Calendar.MINUTE, minutes);
                 break;
             case R.id.item_evening:
                 spinnerButtonTime.setText(getResources().getString(R.string.evening));
                 hours = sharedPreferences.getInt(Constants.EVENING_TIME_HOURS, 20);
                 minutes = sharedPreferences.getInt(Constants.EVENING_TIME_MINUTES, 15);
+                notificationTime.set(Calendar.HOUR_OF_DAY, hours);
+                notificationTime.set(Calendar.MINUTE, minutes);
                 break;
             case R.id.item_chose_time:
                 showTimePickerDialog();
                 break;
-            case R.id.item_yesterday:
+            case R.id.item_today:
                 notificationTime = Calendar.getInstance();
                 notificationTime.set(Calendar.HOUR_OF_DAY, hours);
                 notificationTime.set(Calendar.MINUTE, minutes);

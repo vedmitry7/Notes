@@ -3,7 +3,7 @@
     <item
         android:id="@+id/item_morning"
         android:showAsAction="ifRoom|withText"
-        android:title="@string/month"
+        android:title="@string/morning"
         android:visible="true"/>
     <item
         android:id="@+id/item_afternoon"
