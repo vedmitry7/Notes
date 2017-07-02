@@ -44,6 +44,11 @@ import com.example.dmitryvedmed.taskbook.logic.Section;
 import com.example.dmitryvedmed.taskbook.logic.SuperTask;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -816,6 +821,29 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             fabAddLT.setVisibility(View.VISIBLE);
             fabPressed = true;
         }
+    }
+
+    public void copyDb(View v) throws IOException {
+
+       // File dbFile = new File ("/data/data/com/example/dmitryvedmed/databases/myDB8.db");
+      //  File dbFile = new File (context.getFilesDir().getPath() + "myDB8.db");
+      //  File dbFile = new File (context.getApplicationInfo().dataDir + "/databases/" + "myDB8.db");
+        // File dbFile = new File (context.getPackageName() + "/databases/" + "myDB8.db");
+        File dbFile =  (context.getDatabasePath("myDB8.db"));
+        FileInputStream fileInputStream = new FileInputStream(dbFile);
+
+        OutputStream myOutput = new FileOutputStream("./sdcard/myDB8.db");
+
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = fileInputStream.read(buffer))>0){
+            myOutput.write(buffer, 0, length);
+        }
+
+        myOutput.flush();
+        myOutput.close();
+        fileInputStream.close();
+
     }
 
     public void newListTask(View v){
