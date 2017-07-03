@@ -5,6 +5,14 @@
 
     <item
         android:orderInCategory="100"
+        android:id="@+id/inform"
+        android:visible="true"
+        android:icon="@drawable/ic_information4"
+        android:title=""
+        app:showAsAction="always" />
+
+    <item
+        android:orderInCategory="100"
         android:id="@+id/cancel_notif"
         android:visible="false"
         android:icon="@drawable/bell_off"

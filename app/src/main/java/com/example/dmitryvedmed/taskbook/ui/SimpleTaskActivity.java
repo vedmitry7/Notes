@@ -408,6 +408,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 cancelNotification.setVisible(true);
 
 */
+                Log.d("TAG", "REPEATING + " + "." + repeating + ".");
 
                 final Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
                 intent.setAction(Constants.ACTION_NOTIFICATION);
@@ -444,6 +445,8 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                     alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
                 }
                 if(repeating.equals(R.string.every_day)) {
+                    Log.d("TAG", "REPEATING every day " + repeating);
+
                     intent.putExtra(Constants.REPEATING, true);
                     intent.putExtra(Constants.PERIOD, 3*60*1000);
                     task.setRepeatingPeriod(3*60*1000);
@@ -517,6 +520,8 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         if(task.isRemind()){
             Log.d("TAG", "is REMIND FALSE");
             cancelNotification.setVisible(true);
+        //    toolbar.setTitle("Напоминание: 16.02.2017");
+        //    toolbar.setSubtitle("Повтор: Каждыый день");
         } else {
             Log.d("TAG", "is REMIND TRUE");
             cancelNotification.setVisible(false);
