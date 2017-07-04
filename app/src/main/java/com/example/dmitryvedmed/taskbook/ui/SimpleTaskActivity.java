@@ -141,11 +141,8 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         } else {
             Log.d("TAG", "TAAAAAAASK EST'!!!!!!!!");
             Log.d("TAG", "ID = " + task.getId());
-            if (task.getColor() != 0){
-                toolbar.setBackgroundColor(task.getColor());
-            } else {
-                setBlackNavIconColor();
-            }
+            Log.d("TAG", "IIIIIIIIIIIIINNNNNNNNNNNNNIIIIIIIIIIIIIIIITTTTTTTTTTTTTT COLORS");
+
         }
 
         currentKind = getIntent().getStringExtra(Constants.KIND);
@@ -245,6 +242,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 createDialog();
                     break;
             case R.id.cancel_notif:
+
                 final AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 // alert.setTitle("Очистить корзину?");
                 alert.setMessage(R.string.question_delete_notification);
@@ -263,7 +261,31 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                     public void onClick(DialogInterface dialogInterface, int i) {
                     }
                 });
-                alert.show();
+
+
+
+                final AlertDialog.Builder inform = new AlertDialog.Builder(this);
+                inform.setTitle(getResources().getString(R.string.notification));
+                inform.setMessage(getResources().getString(R.string.date) + " : " + "12.05.2017" + "\r\n" +
+                "Время : " + "12.48"+ "\r\n" + "Повтор : " + getResources().getString(R.string.every_month));
+
+                inform.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+
+                inform.setNegativeButton(R.string.act_delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        alert.show();
+                    }
+                });
+                AlertDialog informDialog = inform.create();
+                informDialog.show();
+
+
+
                 break;
             case R.id.set_color2:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -317,13 +339,17 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
     }
 
     private void setBlackNavIconColor(){
+        Log.d("TAG", "COLOR  BLAAAAAAAACK" );
         int color = ContextCompat.getColor(this, android.R.color.black);
+        cancelNotification.setIcon(getResources().getDrawable(R.drawable.ic_bell_outline_grey600_48dp));
         toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
 
     private void setWhiteNavIconColor(){
-        int color = ContextCompat.getColor(this, R.color.common_google_signin_btn_text_dark);
+        Log.d("TAG", "COLOR  WHIIIIIIIIIITE" );
+        int color = ContextCompat.getColor(this, android.R.color.white);
+        cancelNotification.setIcon(getResources().getDrawable(R.drawable.ic_bell_outline_white_48dp));
         toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
@@ -517,6 +543,16 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_colors, menu);
         cancelNotification = menu.findItem(R.id.cancel_notif);
+        Log.d("TAG", "IIIIIIIIIIIIINNNNNNNNNNNNNIIIIIIIIIIIIIIIITTTTTTTTTTTTTT MENU ITEM");
+
+
+        if (task.getColor() != 0){
+            toolbar.setBackgroundColor(task.getColor());
+            setWhiteNavIconColor();
+        } else {
+            setBlackNavIconColor();
+        }
+
         if(task.isRemind()){
             Log.d("TAG", "is REMIND FALSE");
             cancelNotification.setVisible(true);

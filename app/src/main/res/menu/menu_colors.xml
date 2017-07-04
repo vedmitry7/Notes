@@ -6,8 +6,8 @@
     <item
         android:orderInCategory="100"
         android:id="@+id/inform"
-        android:visible="true"
-        android:icon="@drawable/ic_information4"
+        android:visible="false"
+        android:icon="@drawable/ic_information_variant_white_48dp"
         android:title=""
         app:showAsAction="always" />
 
@@ -15,7 +15,7 @@
         android:orderInCategory="100"
         android:id="@+id/cancel_notif"
         android:visible="false"
-        android:icon="@drawable/bell_off"
+        android:icon="@drawable/ic_bell_outline_white_48dp"
         android:title=""
         app:showAsAction="always" />
 
