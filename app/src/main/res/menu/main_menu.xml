@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.dmitryvedmed.taskbook.ui.PerfectActivity">
+
+    <item android:icon="@drawable/ic_view_stream_white_36dp"
+        android:id="@+id/change_view"
+        android:title="change"
+        app:showAsAction="always"/>
+
+</menu>
