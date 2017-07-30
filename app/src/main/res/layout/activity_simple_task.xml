@@ -9,13 +9,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
-         android:id="@+id/appBarLayout">
+         android:id="@+id/appBarLayout"
+         android:layout_alignParentTop="true"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentStart="true">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/st_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+
+            <Button
+                android:id="@+id/cancelNotifButton"
+                android:layout_toLeftOf="@+id/menuButton"
+                android:background="@drawable/ic_bell_outline_black_36dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginRight="16dp"
+                android:alpha="0.60"
+                android:onClick="cancelNotification"/>
+            <Button
+                android:id="@+id/menuButton"
+                android:background="@drawable/ic_naw_white"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:onClick="menuButton"
+                android:layout_centerVertical="true"
+                android:alpha="0.80"
+                />
+        </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
 

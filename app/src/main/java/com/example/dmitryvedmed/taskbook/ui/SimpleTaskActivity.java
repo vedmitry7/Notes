@@ -19,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -57,7 +56,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
     private SharedPreferences sharedPreferences;
     int hours;
     int minutes;
-    MenuItem cancelNotification;
+    Button cancelNotification, menuButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +103,10 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         setSupportActionBar(toolbar);
         //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.taskColorGreen)));
 
+        cancelNotification = (Button) findViewById(R.id.cancelNotifButton);
+        menuButton = (Button) findViewById(R.id.menuButton);
+
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         head = (EditText) findViewById(R.id.headEditText);
         text = (EditText) findViewById(R.id.taskEditText);
@@ -115,7 +118,6 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         head.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 17));
 
         toolbar.setNavigationIcon(R.drawable.ic_back);
-
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,19 +147,27 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
 
         }
 
+
+        if(task.isRemind()){
+            Log.d("TAG", "is REMIND FALSE");
+            cancelNotification.setVisibility(View.VISIBLE);
+        } else {
+            Log.d("TAG", "is REMIND TRUE");
+            cancelNotification.setVisibility(View.GONE);
+        }
+
+        if (task.getColor() != 0){
+            toolbar.setBackgroundColor(task.getColor());
+            setWhiteNavIconColor();
+        } else {
+            setBlackNavIconColor();
+        }
+
         currentKind = getIntent().getStringExtra(Constants.KIND);
         Log.d("TAG", "              TASK GET -  " + currentKind);
         if (currentKind == null)
             currentKind = Constants.UNDEFINED;
 
-        // Log.d("TAG", "Eah, I've get task - " + String.valueOf(id));
-
-      /*  if(id==-1){
-            task = new Task();
-            task.setId(id);
-            return;
-        }*/
-        // task = dbHelper.getTask(id);
         head.setText(task.getHeadLine());
         text.setText(task.getContext());
 
@@ -184,21 +194,6 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             }
         });
 
-       /* text.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL
-                        && keyEvent.getAction()==KeyEvent.ACTION_DOWN){
-                    Log.d("TAG", "                                  DEL!" + text.getText());
-
-                    if(text.getText().toString().equals("")){
-                        head.requestFocus();
-                    }
-                    return true;
-                }
-                return true;
-            }
-        });*/
         text.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -210,13 +205,6 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             }
         });
 
-    /*    text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("TAG", "EDITTWXT                  CLICK");
-                text.setSelection(text.getText().length());
-            }
-        });*/
         text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
@@ -238,61 +226,6 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 finish();
                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
                 return true;
-            case R.id.notify:
-                createDialog();
-                    break;
-            case R.id.cancel_notif:
-
-                final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                // alert.setTitle("Очистить корзину?");
-                alert.setMessage(R.string.question_delete_notification);
-
-                alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        cancelNotification();
-                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        notificationManager.cancel(task.getId());
-                        cancelNotification.setVisible(false);
-                    }
-                });
-                alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                });
-
-
-
-                final AlertDialog.Builder inform = new AlertDialog.Builder(this);
-                inform.setTitle(getResources().getString(R.string.notification));
-                inform.setMessage(getResources().getString(R.string.date) + " : " + "12.05.2017" + "\r\n" +
-                "Время : " + "12.48"+ "\r\n" + "Повтор : " + getResources().getString(R.string.every_month));
-
-                inform.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                });
-
-                inform.setNegativeButton(R.string.act_delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        alert.show();
-                    }
-                });
-                AlertDialog informDialog = inform.create();
-                informDialog.show();
-
-
-
-                break;
-            case R.id.set_color2:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                //builder.setTitle("Выберете цвет");
-                builder.setView(R.layout.dialog_choose_color);
-                dialog = builder.create();
-                dialog.show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -341,15 +274,17 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
     private void setBlackNavIconColor(){
         Log.d("TAG", "COLOR  BLAAAAAAAACK" );
         int color = ContextCompat.getColor(this, android.R.color.black);
-        cancelNotification.setIcon(getResources().getDrawable(R.drawable.ic_bell_outline_grey600_48dp));
+        cancelNotification.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_bell_outline_black_36dp));
+        menuButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_naw_black));
         toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
-
 
     private void setWhiteNavIconColor(){
         Log.d("TAG", "COLOR  WHIIIIIIIIIITE" );
         int color = ContextCompat.getColor(this, android.R.color.white);
-        cancelNotification.setIcon(getResources().getDrawable(R.drawable.ic_bell_outline_white_48dp));
+        cancelNotification.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_bell_outline_white_48dp));
+        menuButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_naw_white));
+        cancelNotification.setFocusable(false);
         toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
@@ -364,6 +299,74 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
 
         task.setRemind(false);
     }
+
+    public void cancelNotification(View v){
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        // alert.setTitle("Очистить корзину?");
+        alert.setMessage(R.string.question_delete_notification);
+
+        alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                cancelNotification();
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(task.getId());
+                cancelNotification.setVisibility(View.GONE);
+            }
+        });
+        alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        final AlertDialog.Builder inform = new AlertDialog.Builder(this);
+        inform.setTitle(getResources().getString(R.string.notification));
+        inform.setMessage(getResources().getString(R.string.date) + " : " + "12.05.2017" + "\r\n" +
+                "Время : " + "12.48"+ "\r\n" + "Повтор : " + getResources().getString(R.string.every_month));
+
+        inform.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        inform.setNegativeButton(R.string.act_delete, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                alert.show();
+            }
+        });
+        AlertDialog informDialog = inform.create();
+        informDialog.show();
+    }
+
+
+    public void menuButton(View v){
+
+        PopupMenu popupMenu = new PopupMenu(this, v);
+        popupMenu.inflate(R.menu.menu_colors);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.set_color2:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        //builder.setTitle("Выберете цвет");
+                        builder.setView(R.layout.dialog_choose_color);
+                        dialog = builder.create();
+                        dialog.show();
+                        break;
+                    case R.id.notify:
+                        createDialog();
+                }
+                return false;
+            }
+        });
+
+        popupMenu.show();
+    }
+
     private void createDialog() {
 
         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
@@ -523,8 +526,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 task.setRemind(true);
                 task.setReminderTime(notificationTime.getTimeInMillis());
                 saveTask(false);
-                cancelNotification.setVisible(true);
-
+                cancelNotification.setVisibility(View.VISIBLE);
             }
         });
 
@@ -569,7 +571,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         }
     }
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_colors, menu);
         cancelNotification = menu.findItem(R.id.cancel_notif);
@@ -586,14 +588,12 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         if(task.isRemind()){
             Log.d("TAG", "is REMIND FALSE");
             cancelNotification.setVisible(true);
-        //    toolbar.setTitle("Напоминание: 16.02.2017");
-        //    toolbar.setSubtitle("Повтор: Каждыый день");
         } else {
             Log.d("TAG", "is REMIND TRUE");
             cancelNotification.setVisible(false);
         }
         return super.onCreateOptionsMenu(menu);
-    }
+    }*/
 
     @Override
     protected void onPause() {

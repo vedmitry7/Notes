@@ -154,14 +154,16 @@ public class ListTaskRecyclerAdapter extends RecyclerView.Adapter<ListTaskRecycl
 
             editText = (EditText) itemView.findViewById(R.id.itemListEditText);
             if(editText!=null) {
+               // editText.setTypeface(SingletonFonts.getInstance(context).getRobotoRegular());
                 editText.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16));
-                editText.setTypeface(SingletonFonts.getInstance(context).getRobotoRegular());
                 editText.addTextChangedListener(editTextListener);
             }
+
             checkBox = (CheckBox) itemView.findViewById(R.id.checkBox);
             if(checkBox != null) {
                 checkBox.setOnCheckedChangeListener(checkBoxListener);
             }
+
             button = (Button) itemView.findViewById(R.id.delButton);
             imageView = (ImageView) itemView.findViewById(R.id.drag);
             if(imageView!=null) {
