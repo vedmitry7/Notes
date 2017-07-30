@@ -913,10 +913,10 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private void checkDeprecated(){
         for (SuperTask s:values
                 ) {
-            if(s.isRemind() == true && s.getReminderTime()<System.currentTimeMillis()){
+            if(s.isRemind() == true && s.getReminderTime()<System.currentTimeMillis() && !s.isRepeating()){
                 Log.d("TAG", "      Activity                    DEPRICATED TASK!!!" + s.getId());
                 s.setRemind(false);
-                dbHelper.updateTask(s,currentKind);
+                dbHelper.updateTask(s, currentKind);
             }
         }
     }

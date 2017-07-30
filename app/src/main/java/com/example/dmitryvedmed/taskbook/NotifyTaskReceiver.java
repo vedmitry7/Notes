@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -82,6 +84,11 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
 
             Notification notification = builder.build();
 
+
+            Uri ringURI =
+                    RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            notification.sound = ringURI;
+
             notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
 
             NotificationManager notificationManager = (NotificationManager) context
@@ -125,6 +132,10 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             // Notification notification = builder.getNotification(); // до API 16
 
             Notification notification = builder.build();
+
+            Uri ringURI =
+                    RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            notification.sound = ringURI;
 
             notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
 

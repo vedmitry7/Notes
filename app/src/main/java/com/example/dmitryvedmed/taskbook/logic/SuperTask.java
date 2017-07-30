@@ -10,7 +10,7 @@ public class SuperTask implements Serializable {
     private long reminderTime;
     private long deletionTime;
     private boolean remind;
-    private int repeatingPeriod;
+    private long repeatingPeriod;
     private boolean repeating;
 
 
@@ -30,11 +30,11 @@ public class SuperTask implements Serializable {
         this.repeating = repeating;
     }
 
-    public int getRepeatingPeriod() {
+    public long getRepeatingPeriod() {
         return repeatingPeriod;
     }
 
-    public void setRepeatingPeriod(int repeatingPeriod) {
+    public void setRepeatingPeriod(long repeatingPeriod) {
         this.repeatingPeriod = repeatingPeriod;
     }
 

@@ -452,7 +452,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                                alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
+                                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
                             }
                         });
 
@@ -462,6 +462,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
 
                             }
                         });
+
                         AlertDialog dialog = mBuilder.create();
                         dialog.show();
                         return;
@@ -470,23 +471,53 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
                     alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
                 }
-                if(repeating.equals(R.string.every_day)) {
+                if(repeating.equals(Constants.EVERY_DAY)) {
                     Log.d("TAG", "REPEATING every day " + repeating);
 
+                    Log.d("TAG", "difference 1 " + (notificationTime.getTimeInMillis() - System.currentTimeMillis()));
+
                     intent.putExtra(Constants.REPEATING, true);
-                    intent.putExtra(Constants.PERIOD, 3*60*1000);
-                    task.setRepeatingPeriod(3*60*1000);
+                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_ONE_DAY);
+                    task.setRepeatingPeriod(Constants.PERIOD_ONE_DAY);
                     task.setRepeating(true);
+
+                    if(notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
+                        notificationTime.add(Calendar.DAY_OF_MONTH, 1);
+                    }
+
+                    Log.d("TAG", "difference 2 " + (notificationTime.getTimeInMillis() - System.currentTimeMillis()));
+
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), 3*60*1000, pendingIntent);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_ONE_DAY, pendingIntent);
                 }
-                if(repeating.equals(R.string.every_week)) {
+                if(repeating.equals(Constants.EVERY_WEEK)) {
+                    Log.d("TAG", "REPEATING every WEEK " + repeating);
                     intent.putExtra(Constants.REPEATING, true);
-                    intent.putExtra(Constants.PERIOD, 3*60*1000);
-                    task.setRepeatingPeriod(3*60*1000);
+                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_WEEK);
+                    task.setRepeatingPeriod(Constants.PERIOD_WEEK);
                     task.setRepeating(true);
+
+                    long next = 0;
+                    if(notificationTime.getTimeInMillis()<System.currentTimeMillis())
+                        next = notificationTime.getTimeInMillis() + Constants.PERIOD_ONE_DAY - System.currentTimeMillis();
+
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), 3*60*1000, pendingIntent);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, next, Constants.PERIOD_WEEK, pendingIntent);
+                }
+
+                if(repeating.equals(Constants.EVERY_MONTH)) {
+                    Log.d("TAG", "REPEATING every MOUTH " + repeating);
+                    intent.putExtra(Constants.REPEATING, true);
+                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_MONTH);
+                    task.setRepeatingPeriod(Constants.PERIOD_MONTH);
+                    task.setRepeating(true);
+
+                    long next = 0;
+                    if(notificationTime.getTimeInMillis()<System.currentTimeMillis())
+                        next = notificationTime.getTimeInMillis() + Constants.PERIOD_ONE_DAY - System.currentTimeMillis();
+
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, next, Constants.PERIOD_MONTH, pendingIntent);
                 }
 
                 task.setRemind(true);
@@ -536,7 +567,6 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             Log.d("TAG", "      ADAPTER                 SAVE TASK " + currentKind);
             dbHelper.updateTask(task, currentKind);
         }
-
     }
 
     @Override
@@ -695,12 +725,16 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 showDatePickerDialog();
                 break;
             case R.id.item_every_day:
-                repeating = getString(R.string.every_day);
+                repeating = Constants.EVERY_DAY;
                 spinnerButtonRepeat.setText(R.string.every_day);
                 break;
             case R.id.item_every_week:
-                repeating = getString(R.string.every_week);
+                repeating = Constants.EVERY_WEEK;
                 spinnerButtonRepeat.setText(R.string.every_week);
+                break;
+            case R.id.item_every_month:
+                repeating = Constants.EVERY_MONTH;
+                spinnerButtonRepeat.setText(R.string.every_month);
                 break;
             case R.id.item_newer:
                 repeating = "";
