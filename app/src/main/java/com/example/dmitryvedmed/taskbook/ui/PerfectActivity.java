@@ -309,7 +309,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
-                                Log.d("TAG", "                                                                                  click pop up NAME " + item.getItemId() + item.getTitle());
+                                Log.d("TAG", "        click pop up NAME " + item.getItemId() + item.getTitle());
                             //    if(item.getTitle().equals(R.string.main_section)){
                                 if(item.getGroupId() == 354){
                                     adapter.translateTo(Constants.UNDEFINED);
@@ -324,8 +324,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         popupMenu.show();
                         break;
                 }
-
-
                 return false;
             }
 
@@ -422,6 +420,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private void onCreateNavigationMenu() {
         sections = dbHelper.getAllSections();
 
+        compareSections();
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu navMenu = navigationView.getMenu();
         undifinedPoint = navMenu.findItem(R.id.undefined);
@@ -430,11 +430,14 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         navMenu.add(Menu.NONE, R.id.undefined , Menu.NONE, R.string.all).setIcon(getResources().getDrawable(R.drawable.note_multiple));
         navMenu.add(Menu.NONE, R.id.notifications , Menu.NONE, "Напоминания").setIcon(getResources().getDrawable(R.drawable.bell));
         navMenu.add(Menu.NONE, R.id.archive , Menu.NONE, R.string.archive).setIcon(getResources().getDrawable(R.drawable.archive_2));
+
+
         for (Section s:sections
                 ) {
-            Log.d("TAG", "Section " + s.getName() + " id " + s.getId());
+            Log.d("TAG", "Section " + s.getName() + ". id " + s.getId() + ". pos : " + s.getPosition());
             navMenu.add(45, s.getId(), Menu.NONE, s.getName());
         }
+
         navMenu.add(45, R.id.add, Menu.NONE, R.string.newPoint).setIcon(getResources().getDrawable(R.drawable.ic_add));
         navMenu.add(Menu.NONE, R.id.deleted , Menu.NONE, R.string.bucket).setIcon(getResources().getDrawable(delete));
         navMenu.add(Menu.NONE, R.id.settings , Menu.NONE, R.string.settings).setIcon(getResources().getDrawable(R.drawable.settings));
@@ -696,6 +699,10 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 break;
             case R.id.exit:
                 this.finish();
+                break;
+            case 23423:
+                compareSections();
+
                 break;
         }
 

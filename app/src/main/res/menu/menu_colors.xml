@@ -17,6 +17,8 @@
         android:id="@+id/delete_checked_tasks"
         android:orderInCategory="95"
         android:title="@string/delete_checked"
-        android:visible="true" />
+        android:visible="false"
+        app:showAsAction="never"
+        />
 
 </menu>

@@ -94,7 +94,7 @@ public class SectionPositionRecyclerAdapter extends RecyclerView.Adapter<Section
         Comparator<Section> comparator = new Comparator<Section>() {
             @Override
             public int compare(Section section, Section t1) {
-                return section.getPosition() < t1.getPosition() ? 1 : -1;
+                return section.getPosition() < t1.getPosition() ? -1 : 1;
             }
         };
         Collections.sort(sections, comparator);
