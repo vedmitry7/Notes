@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.dmitryvedmed.taskbook.R;
@@ -49,6 +50,13 @@ public class SectionPositionActivity extends AppCompatActivity {
 
         dbHelper5 = new DBHelper5(this);
         sections = dbHelper5.getAllSections();
+
+        Log.d("TAG", "          ACTIVITY GET SECTION");
+        for (Section s:sections
+                ) {
+            Log.d("TAG", "Section " + s.getName() + ". pos : " + s.getPosition());
+        }
+        Log.d("TAG", "_____________________________");
 
         recyclerView = (RecyclerView) findViewById(R.id.section_position_recycler_view);
         adapter = new SectionPositionRecyclerAdapter(sections);

@@ -23,7 +23,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Gravity;
@@ -44,11 +43,6 @@ import com.example.dmitryvedmed.taskbook.logic.Section;
 import com.example.dmitryvedmed.taskbook.logic.SuperTask;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -89,21 +83,18 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     ActionMode actionMode;
     private boolean notification_on;
 
+    private MenuItem view;
+
     public boolean is_in_action_mode() {
         return is_in_action_mode;
     }
 
     private ActionMode.Callback actionModeCallback;
-    @Override
-    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        return super.onCreateView(parent, name, context, attrs);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer_test);
-
 
         context = this;
         dbHelper = new DBHelper5(this);
@@ -145,10 +136,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         });
 
 
-        //  counterTextView = (TextView) findViewById(R.id.counter_text2);
-        //counterTextView.setVisibility(View.GONE);
-
-
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_common);
         adapter = new MainRecyclerAdapter(values, PerfectActivity.this);
         RecyclerView.LayoutManager layoutManager;
@@ -156,6 +143,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         if(s.equals(Constants.LAYOUT_LIST)) {
             layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
         } else {
             layoutManager = new StaggeredGridLayoutManager(columnsNumber, 1);
         }
@@ -169,10 +157,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
-
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        //  drawerLayout.setScrimColor(Color.TRANSPARENT);
 
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -193,8 +178,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         actionModeCallback = new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-
-               // adapter.setSelectedTaskCopy(new ArrayList<SuperTask>());
 
                 getMenuInflater().inflate(R.menu.menu_selection_mode, menu);
 
@@ -260,18 +243,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         mode.finish();
                         break;
                     case R.id.set_color:
-           /*         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
-                    View mViewe = getLayoutInflater().inflate(R.layout.color_layout, null);
-                    mBuilder.setCancelable(true);
-                    mBuilder.setView(mViewe);
-                    final AlertDialog dialog = mBuilder.create();
-                    dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialogInterface) {
-                            Log.d("TAG", "       Adapter --- CANCEL LISTENER ");
-                        }
-                    });
-                    dialog.show();*/
                         break;
                     case R.id.toArchive:
                         if(currentKind.equals(Constants.ARCHIVE)){
@@ -291,10 +262,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         }
                             MenuBuilder menuBuilder = new MenuBuilder(context);
 
-
                         MenuPopupHelper optionsMenu = new MenuPopupHelper(context, menuBuilder, toolbar);
                         optionsMenu.setForceShowIcon(true);
-
 
                         PopupMenu popupMenu = new PopupMenu(context, toolbar, Gravity.TOP);
 
@@ -362,7 +331,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             adapter.setSelectedTasksCounter(savedInstanceState.getInt(Constants.SELECTED_ITEM_COUNT));
             adapter.setSelects(savedInstanceState.getBooleanArray(Constants.SELLECTION_ARRAY));
             adapter.fillSelectedTasks(savedInstanceState.getIntegerArrayList(Constants.SELECTED_ITEM_IDS));
-            //  actionMode.setTitle(String.valueOf(savedInstanceState.getInt(Constants.SELECTED_ITEM_COUNT)));
             actionMode.setTitle(String.valueOf(sharedPreferences.getInt(Constants.SELECTED_ITEM_COUNT,0)));
             adapter.setSelectedTasksCounter(sharedPreferences.getInt(Constants.SELECTED_ITEM_COUNT,0));
         }
@@ -388,33 +356,22 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             getMenuInflater().inflate(R.menu.section_menu, menu);
         }
         this.menu = menu;
+        view = menu.findItem(R.id.change_view);
+        setChangeViewMenuItemIcon();
         onCreateNavigationMenu();
         return  true;
+    }
 
-/*
-
-
-            choose = menu.findItem(R.id.select_item);
-            clearBascet = menu.findItem(R.id.clear_basket);
-            if(currentKind==Constants.DELETED && adapter.getTasks().size() !=0)
-                clearBascet.setVisible(true);
-            else
-                clearBascet.setVisible(false);
-            delateForever = menu.findItem(R.id.delete_forever);
-            delateForever.setVisible(false);
-
-            deleteSection = menu.findItem(R.id.deleteSection);
-            deleteSection.setVisible(false);
-            translateTo = menu.findItem(R.id.translateTo);
-            translateTo.setVisible(false);
-*/
-
-
-
-
-        //  menuItemDelete = menu.findItem(R.id.delete);
-        //  menuItemDelete.setVisible(false);
-
+    private void setChangeViewMenuItemIcon() {
+        if(view==null) {
+            return;
+        }
+        String s = sharedPreferences.getString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_LIST);
+        if(s.equals(Constants.LAYOUT_LIST)) {
+            view.setIcon(getResources().getDrawable(R.drawable.ic_view_dashboard_white_36dp));
+        } else {
+            view.setIcon(getResources().getDrawable(R.drawable.ic_view_stream_white_36dp));
+        }
     }
 
     private void onCreateNavigationMenu() {
@@ -464,7 +421,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         switch (s){
             case Constants.UNDEFINED:
-
                 s1 =  i + " заметок добавлено в основной раздел";
                 break;
             case Constants.DELETED:
@@ -475,7 +431,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 break;
             default:
                 s1 = i + " заметкок добавлено в раздел " + s;
-
         }
         Snackbar.make(coordinatorLayout, s1, Snackbar.LENGTH_SHORT)
                 .setAction(R.string.cancel, new View.OnClickListener() {
@@ -519,6 +474,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                     editor.putString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_LIST);
                 }
                 editor.commit();
+                setChangeViewMenuItemIcon();
+
                 recyclerView.setLayoutManager(layoutManager);
                 adapter.notifyDataSetChanged();
                 break;
@@ -830,7 +787,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         }
     }
 
-    public void copyDb(View v) throws IOException {
+ /*   public void copyDb(View v) throws IOException {
 
        // File dbFile = new File ("/data/data/com/example/dmitryvedmed/databases/myDB8.db");
       //  File dbFile = new File (context.getFilesDir().getPath() + "myDB8.db");
@@ -850,8 +807,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         myOutput.flush();
         myOutput.close();
         fileInputStream.close();
-
-    }
+    }*/
 
     public void newListTask(View v){
         hideFabs();
@@ -928,7 +884,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         }
     }
 
-
     @Override
     protected void onRestart() {
         Log.d("TAG", "    Activity --- onRESTART  ---");
@@ -936,7 +891,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         update();
         adapter.updateSelectedTask();
-
         super.onRestart();
     }
 
@@ -944,10 +898,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     protected void onResume() {
         Log.d("TAG", "      Activity --- onResume  ---      "  + currentKind);
         Log.d("TAG", "!!!!!!!!! sel size = " + adapter.getSelectedTasks().size());
-
         setTitle();
         // update();
-        // onCreateNavigationMenu();
+        onCreateNavigationMenu();
         super.onResume();
     }
 
@@ -988,16 +941,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         Comparator<Section> comparator = new Comparator<Section>() {
             @Override
             public int compare(Section section, Section t1) {
-                return section.getPosition() < t1.getPosition() ? 1 : -1;
+                return section.getPosition() < t1.getPosition() ? -1 : 1;
             }
         };
         Collections.sort(sections, comparator);
-    }
-
-    private void setRightPosition(){
-        Log.d("TAG", "       Adapter --- setRightPosition");
-        for (int i = 0; i < sections.size(); i++) {
-            sections.get(i).setPosition(sections.size()-i-1);
-        }
     }
 }

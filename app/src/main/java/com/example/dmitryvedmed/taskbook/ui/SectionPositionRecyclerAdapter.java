@@ -27,6 +27,12 @@ public class SectionPositionRecyclerAdapter extends RecyclerView.Adapter<Section
     public SectionPositionRecyclerAdapter(List<Section> sections) {
         this.sections = sections;
         compareSections();
+        Log.d("TAG", "          ADAPTER GET SECTION AND COMPARE");
+        for (Section s:sections
+                ) {
+            Log.d("TAG", "Section " + s.getName() + ". pos : " + s.getPosition());
+        }
+        Log.d("TAG", "_____________________________");
     }
 
     @Override
@@ -103,7 +109,7 @@ public class SectionPositionRecyclerAdapter extends RecyclerView.Adapter<Section
     private void setRightPosition(){
         Log.d("TAG", "       Adapter --- setRightPosition");
         for (int i = 0; i < sections.size(); i++) {
-            sections.get(i).setPosition(sections.size()-i-1);
+            sections.get(i).setPosition(i);
         }
     }
 }

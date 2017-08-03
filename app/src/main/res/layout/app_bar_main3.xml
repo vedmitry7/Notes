@@ -39,7 +39,7 @@
         app:srcCompat="@drawable/ic_add"
         android:elevation="@dimen/fab_elevation"/>
 
-    <android.support.design.widget.FloatingActionButton
+   <!-- <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabDB"
         android:onClick="copyDb"
         android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
         android:layout_gravity="bottom|left"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/ic_add"
-        android:elevation="@dimen/fab_elevation"/>
+        android:elevation="@dimen/fab_elevation"/>-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabListNote"
