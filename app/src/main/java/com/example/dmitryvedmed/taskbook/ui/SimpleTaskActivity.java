@@ -17,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -39,6 +40,7 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.Thing;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener  {
 
@@ -322,8 +324,13 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
 
         final AlertDialog.Builder inform = new AlertDialog.Builder(this);
         inform.setTitle(getResources().getString(R.string.notification));
-        inform.setMessage(getResources().getString(R.string.date) + " : " + "12.05.2017" + "\r\n" +
-                "Время : " + "12.48"+ "\r\n" + "Повтор : " + getResources().getString(R.string.every_month));
+
+        String dateString = DateFormat.format("MM/dd/yyyy", new Date(task.getReminderTime())).toString();
+        String timeString = DateFormat.format("h:mm", new Date(task.getReminderTime())).toString();
+
+
+        inform.setMessage(getResources().getString(R.string.date) + " : " + dateString + "\r\n" +
+                "Время : " + timeString+ "\r\n" + "Повтор : " + getResources().getString(R.string.every_month));
 
         inform.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
