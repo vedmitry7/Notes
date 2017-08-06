@@ -399,25 +399,23 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder, View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
-        private TextView stHeadLine, stContent, listHeadEditText;
+        private TextView stHeadLine, stContent, listHeadEditText, notifInfo;
         private LinearLayout layout;
         private CardView cardView;
         private ImageView alarm;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
-       //     Log.d("TAG", "       Adapter --- RECYCLER VIEW Holder");
             stHeadLine = (TextView) itemView.findViewById(headTextView);
             stContent = (TextView) itemView.findViewById(taskTextView);
             alarm = (ImageView) itemView.findViewById(R.id.alarm_ic);
+            notifInfo = (TextView) itemView.findViewById(R.id.text_view_notification_info);
             alarm.setVisibility(View.GONE);
-
 
             if(stContent!=null) {
                 stHeadLine.setTypeface(boldTypeFace);
                 stContent.setTypeface(typeFace);
             }
-
 
             listHeadEditText = (TextView) itemView.findViewById(R.id.mainRecListItemHead);
             if(listHeadEditText!=null){
@@ -570,7 +568,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         RecyclerViewHolder recyclerViewHolder = null;
         switch (viewType) {
             case 0:
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task, parent,false);
+                View view;
+                if(!activity.isNotification_on()){
+                    Log.d("TAG", "       Adapter --- onCreateViewHolder       WITHOUT INFO");
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task, parent,false);}
+                else {
+                    Log.d("TAG", "       Adapter --- onCreateViewHolder       WITH INFO WITH INFO WITH INFO");
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task_with_date, parent, false);
+                }
                 recyclerViewHolder = new RecyclerViewHolder(view);
                 break;
             case 1:
@@ -794,12 +799,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 });*/
                 if(tasks.get(position).isRemind()){
                     holder.alarm.setVisibility(View.VISIBLE);
-
             //        Log.d("TAG", "       Adapter --- onBindViewHolder TASK " + position + "REMIND IS TRUE" );
-
                 } else
                     holder.alarm.setVisibility(View.GONE);
                 break;
+            default:
+                if(activity.isNotification_on() && holder.notifInfo!=null)
+                    holder.notifInfo.setText("next notif - " + String.valueOf(tasks.get(position).getReminderTime()));
         }
     }
 

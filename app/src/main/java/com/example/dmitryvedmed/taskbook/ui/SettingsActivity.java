@@ -70,7 +70,6 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
 
        setTime();
 
-
         taskFontSeekBar = (SeekBar) findViewById(R.id.seekBarTaskFont);
         taskFontSeekBar.setOnSeekBarChangeListener(this);
         cardFontSeekBar = (SeekBar) findViewById(R.id.seekBarCardFont);
@@ -95,7 +94,6 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
             deletionPeriodLabel.setText(R.string.month);
 
         }
-
 
         swipeAction = (TextView) findViewById(R.id.swipeAction);
         String remember = sharedPreferences.getString(Constants.SWIPE_REMEMBER,"");
@@ -124,17 +122,17 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         afternoonTime = (TextView) findViewById(R.id.afternoon_text);
         eveningTime = (TextView) findViewById(R.id.evening_text);
 
-        String mHours = String.valueOf(sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 8));
-        String aHours = String.valueOf(sharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS, 14));
-        String eHours = String.valueOf(sharedPreferences.getInt(Constants.EVENING_TIME_HOURS, 20));
+        String mHours = String.valueOf(sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 7));
+        String aHours = String.valueOf(sharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS, 13));
+        String eHours = String.valueOf(sharedPreferences.getInt(Constants.EVENING_TIME_HOURS, 19));
 
-        String mMinutes = String.valueOf(sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 2));
+        String mMinutes = String.valueOf(sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 0));
         if(mMinutes.length()==1)
             mMinutes = "0" + mMinutes;
-        String aMinutes = String.valueOf(sharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES, 4));
+        String aMinutes = String.valueOf(sharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES, 0));
         if(aMinutes.length()==1)
             aMinutes = "0" + aMinutes;
-        String eMinutes = String.valueOf(sharedPreferences.getInt(Constants.EVENING_TIME_MINUTES, 6));
+        String eMinutes = String.valueOf(sharedPreferences.getInt(Constants.EVENING_TIME_MINUTES, 0));
         if(eMinutes.length()==1)
             eMinutes = "0" + eMinutes;
 
@@ -224,7 +222,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 dialog.show();
                 break;
             case R.id.setAfternoonTime:
-                final int hour = sharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS,14);
+                final int hour = sharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS,13);
                 final int minute = sharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES,0);
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
@@ -239,7 +237,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 timePickerDialog.show();
                 break;
             case R.id.setMorningTime:
-                final int hour2 = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS,8);
+                final int hour2 = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS,7);
                 final int minute2 = sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES,0);
 
                 TimePickerDialog timePickerDialog2 = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
@@ -254,7 +252,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 timePickerDialog2.show();
                 break;
             case R.id.setEveningTime:
-                final int hour3 = sharedPreferences.getInt(Constants.EVENING_TIME_HOURS,20);
+                final int hour3 = sharedPreferences.getInt(Constants.EVENING_TIME_HOURS,19);
                 final int minute3 = sharedPreferences.getInt(Constants.EVENING_TIME_MINUTES,0);
 
                 TimePickerDialog timePickerDialog3 = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {

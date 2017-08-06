@@ -89,17 +89,9 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
     private void loadPreferences(){
         sharedPreferences = this.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        if(sharedPreferences.getString("123","321").equals("321")) {
-            editor.putInt(Constants.MORNING_TIME_HOURS, 7);
-            editor.putInt(Constants.MORNING_TIME_MINUTES, 0);
-            editor.putInt(Constants.AFTERNOON_TIME_HOURS, 13);
-            editor.putInt(Constants.AFTERNOON_TIME_MINUTES, 0);
-            editor.putInt(Constants.EVENING_TIME_HOURS, 19);
-            editor.putInt(Constants.EVENING_TIME_MINUTES, 0);
-        }
 
-        hours = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 8);
-        minutes = sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 15);
+        hours = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 7);
+        minutes = sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 0);
     }
 
     private void initView() {
