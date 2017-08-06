@@ -44,18 +44,21 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
         }
         DBHelper5 dbHelper5 = new DBHelper5(context);
         SuperTask superTask = dbHelper5.getTask(id);
-        if(superTask==null)
+        if(superTask == null)
             return;
+
         Log.d("TAG", "ST != null" );
+
         Intent notificationIntent;
 
         if(superTask instanceof SimpleTask){
             SimpleTask task = (SimpleTask) superTask;
             if(!task.isRepeating())
-            task.setRemind(false);
+                task.setRemind(false);
             else {
                 task.setReminderTime(task.getReminderTime() + task.getRepeatingPeriod());
             }
+
             notificationIntent = new Intent(context, SimpleTaskDialogActivity.class);
             notificationIntent.putExtra(Constants.ID, task.getId());
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -65,8 +68,8 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
                     0, notificationIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
 
-
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+
             Resources res = context.getResources();
 
             builder.setContentIntent(contentIntent)

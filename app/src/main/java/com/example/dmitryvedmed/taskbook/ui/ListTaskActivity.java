@@ -19,6 +19,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +38,7 @@ import com.example.dmitryvedmed.taskbook.untils.Constants;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -68,10 +70,11 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_task);
         context = this;
+
+        loadPreferences();
         initTask();
         initView();
         initDate();
-        loadPreferences();
         repeating = "";
     }
 
@@ -138,7 +141,6 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
             }
         });
-
 
         if (task.getColor() != 0){
             toolbar.setBackgroundColor(task.getColor());
@@ -246,6 +248,8 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
 
     private void createDialog() {
 
+        repeating = "";
+
         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
 
         View mViewe = getLayoutInflater().inflate(R.layout.dialog_spiner, null);
@@ -304,10 +308,13 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 saveTask(true);
                 intent.putExtra(Constants.ID, task.getId());
 
-
                 final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
                 if(repeating.equals("")) {
+
+                    task.setRepeatingPeriod(0);
+                    task.setRepeating(false);
+
                     if(notificationTime.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()){
                         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
                         mBuilder.setMessage(R.string.reminder_past_time);
@@ -315,7 +322,8 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                                alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
+                                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+                                Log.d("TAG", " SET IN PAAAAAAAAAAST!!!!!!!!!!!!! ALARM ALARM!");
                             }
                         });
 
@@ -325,28 +333,63 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
 
                             }
                         });
+
                         AlertDialog dialog = mBuilder.create();
                         dialog.show();
                         return;
                     }
+
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
                     alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
                 }
-                if(repeating.equals(R.string.every_day)) {
+                if(repeating.equals(Constants.EVERY_DAY)) {
+                    Log.d("TAG", "REPEATING every day " + repeating);
+
+                    Log.d("TAG", "difference 1 " + (notificationTime.getTimeInMillis() - System.currentTimeMillis()));
+
                     intent.putExtra(Constants.REPEATING, true);
-                    intent.putExtra(Constants.PERIOD, 3*60*1000);
-                    task.setRepeatingPeriod(3*60*1000);
+                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_ONE_DAY);
+                    task.setRepeatingPeriod(Constants.PERIOD_ONE_DAY);
                     task.setRepeating(true);
+
+                    while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+
+                        notificationTime.add(Calendar.DAY_OF_MONTH, 1);
+                    }
+
+                    Log.d("TAG", "difference 2 " + (notificationTime.getTimeInMillis() - System.currentTimeMillis()));
+
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), 3*60*1000, pendingIntent);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_ONE_DAY, pendingIntent);
                 }
-                if(repeating.equals(R.string.every_week)) {
+                if(repeating.equals(Constants.EVERY_WEEK)) {
+                    Log.d("TAG", "REPEATING every WEEK " + repeating);
                     intent.putExtra(Constants.REPEATING, true);
-                    intent.putExtra(Constants.PERIOD, 3*60*1000);
-                    task.setRepeatingPeriod(3*60*1000);
+                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_WEEK);
+                    task.setRepeatingPeriod(Constants.PERIOD_WEEK);
                     task.setRepeating(true);
+
+                    while (notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
+                        notificationTime.add(Calendar.WEEK_OF_MONTH, 1);
+                    }
+
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), 3*60*1000, pendingIntent);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_WEEK, pendingIntent);
+                }
+
+                if(repeating.equals(Constants.EVERY_MONTH)) {
+                    Log.d("TAG", "REPEATING every MOUTH " + repeating);
+                    intent.putExtra(Constants.REPEATING, true);
+                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_MONTH);
+                    task.setRepeatingPeriod(Constants.PERIOD_MONTH);
+                    task.setRepeating(true);
+
+                    while(notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
+                        notificationTime.add(Calendar.MONTH, 1);
+                    }
+
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_MONTH, pendingIntent);
                 }
 
                 task.setRemind(true);
@@ -400,8 +443,31 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
 
         final AlertDialog.Builder inform = new AlertDialog.Builder(this);
         inform.setTitle(getResources().getString(R.string.notification));
-        inform.setMessage(getResources().getString(R.string.date) + " : " + "12.05.2017" + "\r\n" +
-                "Время : " + "12.48"+ "\r\n" + "Повтор : " + getResources().getString(R.string.every_month));
+
+        if(task.getReminderTime() < System.currentTimeMillis()){
+            long period = task.getRepeatingPeriod();
+            while (task.getReminderTime() < System.currentTimeMillis()){
+                task.setReminderTime(task.getReminderTime() + period);
+            }
+            saveTask(false);
+        }
+
+        String dateString = DateFormat.format("dd/MM/yyyy", new Date(task.getReminderTime())).toString();
+        String timeString = DateFormat.format("H:mm", new Date(task.getReminderTime())).toString();
+        String repeating;
+
+        if(task.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY){
+            repeating = getResources().getString(R.string.every_day);
+        } else if(task.getRepeatingPeriod() == Constants.PERIOD_WEEK){
+            repeating = getResources().getString(R.string.every_week);
+        } else if(task.getRepeatingPeriod() == Constants.PERIOD_MONTH){
+            repeating = getResources().getString(R.string.every_month);
+        } else {
+            repeating = "None";
+        }
+
+        inform.setMessage(getResources().getString(R.string.date) + " : " + dateString + "\r\n" +
+                "Время : " + timeString+ "\r\n" + "Повтор : " + repeating);
 
         inform.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -517,6 +583,10 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
                 long firstTime = calendar.getTimeInMillis();
 
 
+                task.setRemind(true);
+                task.setReminderTime(firstTime);
+                saveTask(false);
+
 
                 String time = notificationTime.get(Calendar.HOUR_OF_DAY) + ":" + notificationTime.get(Calendar.MINUTE);
 
@@ -527,7 +597,6 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
             }
         }, hour, minute, true);
         timePickerDialog.show();
-
     }
 
     private void showDatePickerDialog() {
@@ -594,13 +663,18 @@ public class ListTaskActivity extends AppCompatActivity implements PopupMenu.OnM
             case R.id.item_chose_date:
                 showDatePickerDialog();
                 break;
+
             case R.id.item_every_day:
                 repeating = Constants.EVERY_DAY;
                 spinnerButtonRepeat.setText(R.string.every_day);
                 break;
             case R.id.item_every_week:
-                repeating = getString(R.string.every_week);
+                repeating = Constants.EVERY_WEEK;
                 spinnerButtonRepeat.setText(R.string.every_week);
+                break;
+            case R.id.item_every_month:
+                repeating = Constants.EVERY_MONTH;
+                spinnerButtonRepeat.setText(R.string.every_month);
                 break;
         }
         return false;

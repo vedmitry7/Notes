@@ -325,12 +325,30 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         final AlertDialog.Builder inform = new AlertDialog.Builder(this);
         inform.setTitle(getResources().getString(R.string.notification));
 
-        String dateString = DateFormat.format("MM/dd/yyyy", new Date(task.getReminderTime())).toString();
-        String timeString = DateFormat.format("h:mm", new Date(task.getReminderTime())).toString();
+        if(task.getReminderTime() < System.currentTimeMillis()){
+            long period = task.getRepeatingPeriod();
+            while (task.getReminderTime() < System.currentTimeMillis()){
+                task.setReminderTime(task.getReminderTime() + period);
+            }
+            saveTask(false);
+        }
 
+        String dateString = DateFormat.format("dd/MM/yyyy", new Date(task.getReminderTime())).toString();
+        String timeString = DateFormat.format("H:mm", new Date(task.getReminderTime())).toString();
+        String repeating;
+
+        if(task.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY){
+            repeating = getResources().getString(R.string.every_day);
+        } else if(task.getRepeatingPeriod() == Constants.PERIOD_WEEK){
+            repeating = getResources().getString(R.string.every_week);
+        } else if(task.getRepeatingPeriod() == Constants.PERIOD_MONTH){
+            repeating = getResources().getString(R.string.every_month);
+        } else {
+            repeating = "None";
+        }
 
         inform.setMessage(getResources().getString(R.string.date) + " : " + dateString + "\r\n" +
-                "Время : " + timeString+ "\r\n" + "Повтор : " + getResources().getString(R.string.every_month));
+                "Время : " + timeString+ "\r\n" + "Повтор : " + repeating);
 
         inform.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -375,6 +393,8 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
     }
 
     private void createDialog() {
+
+        repeating = "";
 
         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
 
@@ -455,6 +475,9 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
 
                 if(repeating.equals("")) {
 
+                    task.setRepeatingPeriod(0);
+                    task.setRepeating(false);
+
                     if(notificationTime.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()){
                         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
                         mBuilder.setMessage(R.string.reminder_past_time);
@@ -463,6 +486,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
                                 alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+                                Log.d("TAG", " SET IN PAAAAAAAAAAST!!!!!!!!!!!!! ALARM ALARM!");
                             }
                         });
 
@@ -491,7 +515,7 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                     task.setRepeatingPeriod(Constants.PERIOD_ONE_DAY);
                     task.setRepeating(true);
 
-                    if(notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
+                    while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
                         notificationTime.add(Calendar.DAY_OF_MONTH, 1);
                     }
 
@@ -500,19 +524,19 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_ONE_DAY, pendingIntent);
                 }
-                if(repeating.equals(Constants.EVERY_WEEK)) {
+                while(repeating.equals(Constants.EVERY_WEEK)) {
                     Log.d("TAG", "REPEATING every WEEK " + repeating);
                     intent.putExtra(Constants.REPEATING, true);
                     intent.putExtra(Constants.PERIOD, Constants.PERIOD_WEEK);
                     task.setRepeatingPeriod(Constants.PERIOD_WEEK);
                     task.setRepeating(true);
 
-                    long next = 0;
-                    if(notificationTime.getTimeInMillis()<System.currentTimeMillis())
-                        next = notificationTime.getTimeInMillis() + Constants.PERIOD_ONE_DAY - System.currentTimeMillis();
+                    if(notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
+                        notificationTime.add(Calendar.WEEK_OF_MONTH, 1);
+                    }
 
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, next, Constants.PERIOD_WEEK, pendingIntent);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_WEEK, pendingIntent);
                 }
 
                 if(repeating.equals(Constants.EVERY_MONTH)) {
@@ -522,12 +546,12 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                     task.setRepeatingPeriod(Constants.PERIOD_MONTH);
                     task.setRepeating(true);
 
-                    long next = 0;
-                    if(notificationTime.getTimeInMillis()<System.currentTimeMillis())
-                        next = notificationTime.getTimeInMillis() + Constants.PERIOD_ONE_DAY - System.currentTimeMillis();
+                    while(notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
+                        notificationTime.add(Calendar.MONTH, 1);
+                    }
 
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, next, Constants.PERIOD_MONTH, pendingIntent);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_MONTH, pendingIntent);
                 }
 
                 task.setRemind(true);
