@@ -568,7 +568,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         RecyclerViewHolder recyclerViewHolder = null;
         switch (viewType) {
             case 0:
-                View view;
+                //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task, parent,false);
+                View view ;
+
                 if(!activity.isNotification_on()){
                     Log.d("TAG", "       Adapter --- onCreateViewHolder       WITHOUT INFO");
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task, parent,false);}
@@ -576,6 +578,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     Log.d("TAG", "       Adapter --- onCreateViewHolder       WITH INFO WITH INFO WITH INFO");
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task_with_date, parent, false);
                 }
+
                 recyclerViewHolder = new RecyclerViewHolder(view);
                 break;
             case 1:

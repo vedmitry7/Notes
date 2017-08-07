@@ -17,7 +17,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/drag_vertical"
-        android:paddingRight="6dp"/>
+        android:paddingRight="6dp"
+        android:layout_centerVertical="true"
+        />
 
     <CheckBox
         android:alpha="0.60"
@@ -28,6 +30,7 @@
         android:layout_gravity="top|left"
         android:layout_toRightOf="@+id/drag"
         android:button="@drawable/checkbox_selector"
+        android:layout_centerVertical="true"
         />
 
     <com.example.dmitryvedmed.taskbook.untils.RobotoFontEditText
@@ -39,7 +42,7 @@
         android:focusableInTouchMode="true"
         android:paddingLeft="10dp"
         android:inputType="textMultiLine|textCapSentences"
-        android:textSize="16sp"
+        android:textSize="12sp"
         android:ems="10"
         android:textStyle="normal"
         android:layout_gravity="center"
@@ -47,6 +50,7 @@
         android:layout_toLeftOf="@+id/delButton"
         app:fonts="robotoRegular"
         android:alpha="0.5"
+        android:text="dfgl;sdfg'l dfsol;gj'dsfgkl"
         />
 
 
@@ -67,7 +71,7 @@
     <View style="@style/Divider"
         android:layout_marginLeft="10dp"
         android:layout_alignParentBottom="true"
-        android:alpha="0.1"
+        android:alpha="0.3"
         android:layout_alignBottom="@id/itemListEditText"
         android:layout_toLeftOf="@+id/delButton"
         android:layout_toRightOf="@+id/checkBox">
