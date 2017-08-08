@@ -694,6 +694,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         setColorCardView(holder.cardView, position);
 
+
+
         switch (getItemViewType(position)){
             case 0:
                 SimpleTask simpleTask = (SimpleTask) tasks.get(position);
@@ -844,7 +846,38 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             //        Log.d("TAG", "       Adapter --- onBindViewHolder TASK " + position + "REMIND IS TRUE" );
                 } else
                     holder.alarm.setVisibility(View.GONE);
+
                 break;
+        }
+
+        if(activity.isNotification_on()){
+            holder.notifInfoContainer.setVisibility(View.VISIBLE);
+            if(holder.notifInfo!=null) {
+
+                SuperTask task = tasks.get(position);
+
+
+                String dateString = DateFormat.format("dd.MM.yyyy", new Date(task.getReminderTime())).toString();
+                String timeString = DateFormat.format("H:mm", new Date(task.getReminderTime())).toString();
+                String repeating;
+
+                if(task.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY){
+                    repeating = activity.getResources().getString(R.string.every_day);
+                } else if(task.getRepeatingPeriod() == Constants.PERIOD_WEEK){
+                    repeating = activity.getResources().getString(R.string.every_week);
+                } else if(task.getRepeatingPeriod() == Constants.PERIOD_MONTH){
+                    repeating = activity.getResources().getString(R.string.every_month);
+                } else {
+                    repeating = "";
+                }
+
+               /* holder.notifInfo.setText(activity.getResources().getString(R.string.date) + " : " + dateString + "\r\n" +
+                        "Время : " + timeString+ "\r\n" + "Повтор : " + repeating);*/
+                holder.notifInfo.setText(dateString + " " + timeString+ " " + repeating);
+
+            }
+        } else {
+            holder.notifInfoContainer.setVisibility(View.GONE);
         }
     }
 

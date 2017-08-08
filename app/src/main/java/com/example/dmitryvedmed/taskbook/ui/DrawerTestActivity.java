@@ -547,7 +547,6 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 //currentKind = Constants.NOTIFICATIONS;
                     deleteSection.setVisible(false);
 
-
                 values = dbHelper.getNotificationTasks();
                 adapter.dataChanged(values);
                 break;

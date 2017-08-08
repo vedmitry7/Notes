@@ -672,10 +672,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             case R.id.exit:
                 this.finish();
                 break;
-            case 23423:
-                compareSections();
-
-                break;
         }
 
         if (id == R.id.add){
@@ -882,7 +878,11 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     void update(){
         Log.d("TAG", "      Activity --- update  ---");
         currentKind = sharedPreferences.getString(Constants.CURRENT_KIND, Constants.UNDEFINED);
-        values = dbHelper.getTasks(currentKind);
+    /*    if(currentKind.equals(Constants.NOTIFICATIONS)) {
+            values = dbHelper.getNotificationTasks();
+        } else {*/
+            values = dbHelper.getTasks(currentKind);
+
         checkDeprecated();
         if(adapter!=null)
             adapter.dataChanged(values);
