@@ -58,21 +58,32 @@
             android:layout_height="wrap_content"
             android:id="@+id/taskTextView" />
 
-        <RelativeLayout
-            android:id="@+id/deliver_nitif_card"
-            android:layout_below="@+id/taskTextView"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#999999">
-
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/text_view_notification_info"
-            android:layout_below="@id/deliver_nitif_card"
+        <LinearLayout
+            android:id="@+id/nitif_info_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            />
+            android:layout_below="@+id/taskTextView"
+  android:visibility="gone"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/deliver_nitif_card"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#999999">
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/text_view_notification_info"
+                android:layout_below="@id/deliver_nitif_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                />
+
+        </LinearLayout>
+
+
     </RelativeLayout>
 </android.support.v7.widget.CardView>

@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -40,6 +41,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import static com.example.dmitryvedmed.taskbook.R.id.headTextView;
@@ -400,7 +402,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder, View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
         private TextView stHeadLine, stContent, listHeadEditText, notifInfo;
-        private LinearLayout layout;
+        private LinearLayout layout, notifInfoContainer;
         private CardView cardView;
         private ImageView alarm;
 
@@ -409,7 +411,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             stHeadLine = (TextView) itemView.findViewById(headTextView);
             stContent = (TextView) itemView.findViewById(taskTextView);
             alarm = (ImageView) itemView.findViewById(R.id.alarm_ic);
+
             notifInfo = (TextView) itemView.findViewById(R.id.text_view_notification_info);
+            notifInfoContainer = (LinearLayout) itemView.findViewById(R.id.nitif_info_container);
+
             alarm.setVisibility(View.GONE);
 
             if(stContent!=null) {
@@ -564,23 +569,25 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-     //   Log.d("TAG", "       Adapter --- onCreateViewHolder");
+       Log.d("TAG", "       Adapter --- onCreateViewHolder");
         RecyclerViewHolder recyclerViewHolder = null;
         switch (viewType) {
             case 0:
                 //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task, parent,false);
-                View view ;
+              // View view ;
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task_with_date, parent, false);;
 
-                if(!activity.isNotification_on()){
+          /*      if(!activity.isNotification_on()){
                     Log.d("TAG", "       Adapter --- onCreateViewHolder       WITHOUT INFO");
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task, parent,false);}
                 else {
                     Log.d("TAG", "       Adapter --- onCreateViewHolder       WITH INFO WITH INFO WITH INFO");
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task_with_date, parent, false);
-                }
+                }*/
 
                 recyclerViewHolder = new RecyclerViewHolder(view);
                 break;
+
             case 1:
                 View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_list_task, parent,false);
                 recyclerViewHolder = new RecyclerViewHolder(view1);
@@ -711,7 +718,39 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.alarm.setVisibility(View.VISIBLE);
                 } else
                     holder.alarm.setVisibility(View.GONE);
+
+
+                if(activity.isNotification_on()){
+                    holder.notifInfoContainer.setVisibility(View.VISIBLE);
+                    if(holder.notifInfo!=null) {
+
+                        SuperTask task = tasks.get(position);
+
+
+                        String dateString = DateFormat.format("dd/MM/yyyy", new Date(task.getReminderTime())).toString();
+                        String timeString = DateFormat.format("H:mm", new Date(task.getReminderTime())).toString();
+                        String repeating;
+
+                        if(task.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY){
+                            repeating = activity.getResources().getString(R.string.every_day);
+                        } else if(task.getRepeatingPeriod() == Constants.PERIOD_WEEK){
+                            repeating = activity.getResources().getString(R.string.every_week);
+                        } else if(task.getRepeatingPeriod() == Constants.PERIOD_MONTH){
+                            repeating = activity.getResources().getString(R.string.every_month);
+                        } else {
+                            repeating = "None";
+                        }
+
+                        holder.notifInfo.setText(activity.getResources().getString(R.string.date) + " : " + dateString + "\r\n" +
+                                "Время : " + timeString+ "\r\n" + "Повтор : " + repeating);
+
+                    }
+                } else {
+                    holder.notifInfoContainer.setVisibility(View.GONE);
+                }
+
                 break;
+
             case 1:
                 listTask = (ListTask) tasks.get(position);
              /*        holder.ltFirst.setText(listTask.getUncheckedTask(0));
@@ -806,9 +845,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 } else
                     holder.alarm.setVisibility(View.GONE);
                 break;
-            default:
-                if(activity.isNotification_on() && holder.notifInfo!=null)
-                    holder.notifInfo.setText("next notif - " + String.valueOf(tasks.get(position).getReminderTime()));
         }
     }
 

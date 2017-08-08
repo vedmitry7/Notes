@@ -424,6 +424,7 @@ public class DrawerTestActivity extends AppCompatActivity implements NavigationV
                 currentSection = null;
                 onCreateOptionsMenu(menu);
                 break;
+
             case R.id.translateTo:
 
                 MenuBuilder menuBuilder = new MenuBuilder(this);
