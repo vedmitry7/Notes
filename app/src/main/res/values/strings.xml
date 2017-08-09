@@ -103,5 +103,6 @@
     <string name="repeat">Повтор</string>
     <string name="no_sections">Разделы отсутствуют</string>
     <string name="reminder_past_time">Напоминание задано в прошедшем времени. Поместить в уведомления?</string>
+    <string name="section_location">Позиция разделов</string>
 
 </resources>

@@ -42,7 +42,7 @@ public class SectionPositionActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //  toolbar.setTitle(R.string.settings);
-        getSupportActionBar().setTitle(R.string.settings);
+        getSupportActionBar().setTitle(R.string.section_location);
 
         int color = ContextCompat.getColor(this, R.color.common_google_signin_btn_text_dark);
         toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);

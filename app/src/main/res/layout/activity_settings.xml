@@ -11,10 +11,11 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/setting_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/fab_size_normal"
+        android:layout_height="wrap_content"
         android:background="#ffc107"
         app:titleTextColor="#FFFFFF"
-        app:title="@string/settings">
+        app:title="@string/settings"
+        app:titleTextAppearance="@style/ToolbarTitle">
     </android.support.v7.widget.Toolbar>
 
 
