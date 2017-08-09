@@ -49,6 +49,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.example.dmitryvedmed.taskbook.R.drawable.delete;
+import static com.example.dmitryvedmed.taskbook.untils.Constants.NOTIF_ON;
 
 
 public class PerfectActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -102,15 +103,18 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         context = this;
         dbHelper = new DBHelper5(this);
+
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             columnsNumber = 2;
-        } else columnsNumber = 3;
+        } else {
+            columnsNumber = 3;
+        }
 
         loadPreferences();
         update();
         initView();
         initAnimation();
-        loadPreferences();
+        //loadPreferences();
     }
 
     private void loadPreferences(){
@@ -139,7 +143,10 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cl);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("waWesrdftyuio");
+
+        if(sharedPreferences.getBoolean(NOTIF_ON, false)){
+        }
+
         setSupportActionBar(toolbar);
         toolbar.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -583,6 +590,10 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     }
 
     private void sectionWasChanged(){
+
+        editor.putBoolean(Constants.NOTIF_ON, false);
+        editor.commit();
+
         values = dbHelper.getTasks(currentKind);
         fab.show();
         if(currentKind.equals(Constants.DELETED)){
@@ -596,6 +607,10 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     }
 
     private void setTitle() {
+        if(sharedPreferences.getBoolean(Constants.NOTIF_ON, false)){
+            toolbar.setTitle(R.string.notifications);
+            return;
+        }
         switch (currentKind){
             case Constants.DELETED:
                 toolbar.setTitle(R.string.bucket);
@@ -628,6 +643,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 ) {
             Log.d("TAG", "           SECTIONS NAME " + s.getName() + "id" +  item.getItemId());
             if(item.getItemId() == s.getId()){
+                saveNotes();
                 setItemMovement(false);
                 currentKind = s.getName();
                 currentSection = s;
@@ -643,23 +659,31 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         switch (item.getItemId()){
 
             case R.id.undefined:
+                saveNotes();
                 setItemMovement(true);
                 currentKind = Constants.UNDEFINED;
                 sectionWasChanged();
                 break;
             case R.id.deleted:
+                saveNotes();
                 currentKind = Constants.DELETED;
                 sectionWasChanged();
                 setItemMovement(false);
                 break;
             case R.id.archive:
+                saveNotes();
                 setItemMovement(true);
                 toolbar.setTitle(R.string.archive);
                 currentKind = Constants.ARCHIVE;
                 sectionWasChanged();
                 break;
             case R.id.notifications:
+                saveNotes();
                 notification_on = true;
+
+                editor.putBoolean(NOTIF_ON, true);
+                editor.commit();
+
                 toolbar.setTitle(R.string.notifications);
                 values = dbHelper.getNotificationTasks();
                 adapter.dataChanged(values);
@@ -863,16 +887,23 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     @Override
     protected void onPause() {
         Log.d("TAG", "      Activity --- onPause  ---");
+        if(!notification_on){
+            saveNotes();
+        }
+
+        super.onPause();
+    }
+
+    private void saveNotes() {
         values = adapter.getTasks();
         // save because positions could change
         for (SuperTask s:values
                 ) {
-            if(!dbHelper.isRemind(s))
+            if(!dbHelper.isRemind(s)){
                 s.setRemind(false);
+            }
             dbHelper.updateTask(s, currentKind);
         }
-
-        super.onPause();
     }
 
     void update(){
@@ -881,7 +912,11 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     /*    if(currentKind.equals(Constants.NOTIFICATIONS)) {
             values = dbHelper.getNotificationTasks();
         } else {*/
+        if(!sharedPreferences.getBoolean(NOTIF_ON, false)){
             values = dbHelper.getTasks(currentKind);
+        } else {
+            values = dbHelper.getNotificationTasks();
+        }
 
         checkDeprecated();
         if(adapter!=null)

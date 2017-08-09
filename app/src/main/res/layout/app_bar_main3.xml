@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways"
             android:background="@color/main_toolbar_color"
-            app:popupTheme="@style/AppTheme.PopupOverlay" >
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:titleTextAppearance="@style/ToolbarTitle">
 
             </android.support.v7.widget.Toolbar>
 
