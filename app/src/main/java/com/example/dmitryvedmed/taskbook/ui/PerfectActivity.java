@@ -121,6 +121,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         sharedPreferences = this.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
+        notification_on = sharedPreferences.getBoolean(Constants.NOTIF_ON, false);
+
         if(sharedPreferences.getString("first_launch","321").equals("321")) {
             editor.putInt(Constants.MORNING_TIME_HOURS, 7);
             editor.putInt(Constants.MORNING_TIME_MINUTES, 0);
@@ -895,6 +897,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     }
 
     private void saveNotes() {
+        if(sharedPreferences.getBoolean(Constants.NOTIF_ON, false))
+            return;
+
         values = adapter.getTasks();
         // save because positions could change
         for (SuperTask s:values
