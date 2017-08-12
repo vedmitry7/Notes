@@ -18,7 +18,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-public class DBHelper5 extends SQLiteOpenHelper {
+public class DBHelper extends SQLiteOpenHelper {
 
     private static final String TABLE = "mytable7";
     private static final String KEY_ID = "id";
@@ -27,7 +27,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
     private static final String KEY_REMIND = "remind";
     private static final String[] COLUMNS = {KEY_ID, KEY_TASK};
 
-    public DBHelper5(Context context) {
+    public DBHelper(Context context) {
         // конструктор суперкласса
         super(context, "myDB8", null, 1);
     }
@@ -182,7 +182,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
         return sections;
     }
 
-    public int addTask(SuperTask task, String kind) {
+    public int addTask(SuperNote task, String kind) {
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
         // 2. create ContentValues to add key "column"/value
@@ -219,7 +219,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
         return (int) id;
     }
 
-    public int addTask(SuperTask task) {
+    public int addTask(SuperNote task) {
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
         // 2. create ContentValues to add key "column"/value
@@ -258,8 +258,8 @@ public class DBHelper5 extends SQLiteOpenHelper {
 
 
 
-    public ArrayList<SuperTask> getAllTask() {
-        ArrayList<SuperTask> tasks = new ArrayList<>();
+    public ArrayList<SuperNote> getAllTask() {
+        ArrayList<SuperNote> tasks = new ArrayList<>();
 
         // 1. build the query
         String query = "SELECT  * FROM " + TABLE;
@@ -270,7 +270,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
 
         Log.d("TAG", "      DBHelper - getAllTask"  );
         // 3. go over each row, build book and add it to list
-        SuperTask task = null;
+        SuperNote task = null;
         if (cursor.moveToFirst()) {
             do {
                 byte[] bytes = cursor.getBlob(2);
@@ -278,7 +278,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
                 ObjectInput in = null;
                 try {
                     in = new ObjectInputStream(bis);
-                    task = (SuperTask) in.readObject();
+                    task = (SuperNote) in.readObject();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -305,18 +305,18 @@ public class DBHelper5 extends SQLiteOpenHelper {
         return tasks;
     }
 
-    public SuperTask getTask(int id){
+    public SuperNote getTask(int id){
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT  * FROM " + TABLE + " WHERE id = '" + id + "'";
         Cursor cursor = db.rawQuery(query, null);
-        SuperTask task = null;
+        SuperNote task = null;
         if (cursor.moveToFirst()) {
             byte[] bytes = cursor.getBlob(2);
             ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
             ObjectInput in = null;
             try {
                 in = new ObjectInputStream(bis);
-                task = (SuperTask) in.readObject();
+                task = (SuperNote) in.readObject();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -339,7 +339,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
 
 
 
-    public boolean isRemind(SuperTask t){
+    public boolean isRemind(SuperNote t){
 
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT  * FROM " + TABLE + " WHERE id = '" + t.getId()+ "'";
@@ -361,8 +361,8 @@ public class DBHelper5 extends SQLiteOpenHelper {
         return false;
     }
 
-    public ArrayList<SuperTask> getTasks(String kind) {
-        ArrayList<SuperTask> tasks = new ArrayList<>();
+    public ArrayList<SuperNote> getTasks(String kind) {
+        ArrayList<SuperNote> tasks = new ArrayList<>();
 
         // 1. build the query
         String query = "SELECT  * FROM " + TABLE + " WHERE kind = '" + kind + "'";
@@ -376,7 +376,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
 
         Log.d("TAG", "      DBHelper - getTasks KIND - " + kind!=null?kind:"null");
         // 3. go over each row, build book and add it to list
-        SuperTask task = null;
+        SuperNote task = null;
         if (cursor.moveToFirst()) {
             do {
                 byte[] bytes = cursor.getBlob(2);
@@ -384,7 +384,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
                 ObjectInput in = null;
                 try {
                     in = new ObjectInputStream(bis);
-                    task = (SuperTask) in.readObject();
+                    task = (SuperNote) in.readObject();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -421,7 +421,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
         return tasks;
     }
 
-    public int updateTask(SuperTask task, String kind) {
+    public int updateTask(SuperNote task, String kind) {
         // 1. get reference to writable DB
 
 
@@ -474,8 +474,8 @@ public class DBHelper5 extends SQLiteOpenHelper {
         return i;
     }
 
-    public ArrayList<SuperTask> getNotificationTasks() {
-        ArrayList<SuperTask> tasks = new ArrayList<>();
+    public ArrayList<SuperNote> getNotificationTasks() {
+        ArrayList<SuperNote> tasks = new ArrayList<>();
 
         // 1. build the query
         String query = "SELECT  * FROM " + TABLE + " WHERE remind = '" + 1 + "'";
@@ -486,7 +486,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
 
         Log.d("TAG", "      DBHelper - getTasks"  );
         // 3. go over each row, build book and add it to list
-        SuperTask task = null;
+        SuperNote task = null;
         if (cursor.moveToFirst()) {
             do {
                 byte[] bytes = cursor.getBlob(2);
@@ -494,7 +494,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
                 ObjectInput in = null;
                 try {
                     in = new ObjectInputStream(bis);
-                    task = (SuperTask) in.readObject();
+                    task = (SuperNote) in.readObject();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -532,7 +532,7 @@ public class DBHelper5 extends SQLiteOpenHelper {
     }
 
 
-    public void deleteTask(SuperTask task) {
+    public void deleteTask(SuperNote task) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE,

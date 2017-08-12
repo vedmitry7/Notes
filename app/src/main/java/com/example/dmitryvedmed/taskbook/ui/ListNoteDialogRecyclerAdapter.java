@@ -12,23 +12,23 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.dmitryvedmed.taskbook.R;
-import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
-import com.example.dmitryvedmed.taskbook.logic.ListTask;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper;
+import com.example.dmitryvedmed.taskbook.logic.ListNote;
 import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
 
-public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTaskDialogRecyclerAdapter.RecyclerViewHolder> {
+public class ListNoteDialogRecyclerAdapter extends RecyclerView.Adapter<ListNoteDialogRecyclerAdapter.RecyclerViewHolder> {
 
-    private ListTaskDialogActivity activity;
+    private ListNoteDialogActivity activity;
     private boolean onBind;
-    private ListTask listTask;
-    private DBHelper5 dbHelper;
+    private ListNote listNote;
+    private DBHelper dbHelper;
     private View view;
 
 
-    public ListTaskDialogRecyclerAdapter(ListTask task, ListTaskDialogActivity listTaskDialogActivity) {
-        activity = listTaskDialogActivity;
-        this.listTask = task;
-        dbHelper = new DBHelper5(activity);
+    public ListNoteDialogRecyclerAdapter(ListNote task, ListNoteDialogActivity listNoteDialogActivity) {
+        activity = listNoteDialogActivity;
+        this.listNote = task;
+        dbHelper = new DBHelper(activity);
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
@@ -47,7 +47,7 @@ public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTask
             if(itemView.isSelected())
             view = itemView.findViewById(R.id.deliver);
 
-            if(view!=null && (listTask.getCheckedTasks().size()==0||listTask.getUncheckedTasks().size()==0))
+            if(view!=null && (listNote.getCheckedTasks().size()==0|| listNote.getUncheckedTasks().size()==0))
             view.setVisibility(View.GONE);
             checkBoxListener = new CheckBoxListener();
 
@@ -73,17 +73,17 @@ public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTask
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ListTaskDialogRecyclerAdapter.RecyclerViewHolder recyclerViewHolder = null;
+        ListNoteDialogRecyclerAdapter.RecyclerViewHolder recyclerViewHolder = null;
         switch (viewType)
         {
             case 0:
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_task_dialog_activity, parent,false);
-                recyclerViewHolder = new ListTaskDialogRecyclerAdapter.RecyclerViewHolder(view);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_note_dialog_activity, parent,false);
+                recyclerViewHolder = new ListNoteDialogRecyclerAdapter.RecyclerViewHolder(view);
                 break;
             case 1:
                 View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.deliver, parent,false);
                 view1.setSelected(true);
-                recyclerViewHolder = new ListTaskDialogRecyclerAdapter.RecyclerViewHolder(view1);
+                recyclerViewHolder = new ListNoteDialogRecyclerAdapter.RecyclerViewHolder(view1);
                 break;
         }
         return recyclerViewHolder;
@@ -102,8 +102,8 @@ public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTask
             case 1:
                 break;
         }
-        if(position < listTask.getUncheckedTasks().size()) {
-            holder.textView.setText(listTask.getUncheckedTasks().get(position));
+        if(position < listNote.getUncheckedTasks().size()) {
+            holder.textView.setText(listNote.getUncheckedTasks().get(position));
             holder.checkBoxListener.updatePosition(position);
 
             onBind = true;
@@ -115,8 +115,8 @@ public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTask
 
         }
 
-        if(position > listTask.getUncheckedTasks().size()) {
-            String s = (listTask.getCheckedTasks().get(position - (listTask.getUncheckedTasks().size() + 1)));
+        if(position > listNote.getUncheckedTasks().size()) {
+            String s = (listNote.getCheckedTasks().get(position - (listNote.getUncheckedTasks().size() + 1)));
             holder.textView.setText(s);
             holder.textView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             holder.textView.setAlpha(0.5f);
@@ -125,7 +125,7 @@ public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTask
             onBind = true;
             holder.checkBox.setChecked(true);
             onBind = false;
-            System.out.println(position + " - " + listTask.getCheckedTasks().get(position - (listTask.getUncheckedTasks().size() + 1)));
+            System.out.println(position + " - " + listNote.getCheckedTasks().get(position - (listNote.getUncheckedTasks().size() + 1)));
 
 
         }
@@ -133,7 +133,7 @@ public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTask
 
     @Override
     public int getItemViewType(int position) {
-        if(position == listTask.getUncheckedTasks().size())
+        if(position == listNote.getUncheckedTasks().size())
             return 1;
         else
             return 0;
@@ -150,21 +150,21 @@ public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTask
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
             if (!onBind) {
                 if (b) {
-                    listTask.getCheckedTasks().add(listTask.getUncheckedTask(position));
-                    listTask.getUncheckedTasks().remove(position);
+                    listNote.getCheckedTasks().add(listNote.getUncheckedTask(position));
+                    listNote.getUncheckedTasks().remove(position);
                     if(view!=null)
                         view.setVisibility(View.VISIBLE);
-                    if(view!=null&&listTask.getUncheckedTasks().size()==0)
+                    if(view!=null&& listNote.getUncheckedTasks().size()==0)
                         view.setVisibility(View.GONE);
                     update();
                 } else {
-                    if(view!=null&&listTask.getUncheckedTasks().size()==0)
+                    if(view!=null&& listNote.getUncheckedTasks().size()==0)
                         view.setVisibility(View.VISIBLE);
-                    listTask.getUncheckedTasks().add(listTask.getCheckedTask(position - (listTask.getUncheckedTasks().size() + 1)));
-                    listTask.getCheckedTasks().remove(position - (listTask.getUncheckedTasks().size()));
+                    listNote.getUncheckedTasks().add(listNote.getCheckedTask(position - (listNote.getUncheckedTasks().size() + 1)));
+                    listNote.getCheckedTasks().remove(position - (listNote.getUncheckedTasks().size()));
                     Log.d("TAG", "view null  " + (view == null));
-                    Log.d("TAG", "list null  " + (listTask.getCheckedTasks().size()==0));
-                    if(view!=null && listTask.getCheckedTasks().size()==0)
+                    Log.d("TAG", "list null  " + (listNote.getCheckedTasks().size()==0));
+                    if(view!=null && listNote.getCheckedTasks().size()==0)
                         view.setVisibility(View.GONE);
                     update();
                 }
@@ -174,12 +174,12 @@ public class ListTaskDialogRecyclerAdapter extends RecyclerView.Adapter<ListTask
 
     @Override
     public int getItemCount() {
-        return listTask.getUncheckedTasks().size() + listTask.getCheckedTasks().size()+1;
+        return listNote.getUncheckedTasks().size() + listNote.getCheckedTasks().size()+1;
     }
 
     private void update(){
         Log.d("TAG", "update " );
-        dbHelper.updateTask(listTask, null);
+        dbHelper.updateTask(listNote, null);
         notifyDataSetChanged();
     }
 }

@@ -11,67 +11,71 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.dmitryvedmed.taskbook.NotifyTaskReceiver;
 import com.example.dmitryvedmed.taskbook.R;
-import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
-import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
+import com.example.dmitryvedmed.taskbook.helper.ListNoteItemTouchHelperCallback;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper;
+import com.example.dmitryvedmed.taskbook.logic.ListNote;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
-import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.Thing;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
-public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener  {
 
-    private EditText head, text;
-    private SimpleTask task;
+
+public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+
+    private ListNote task;
+    public static RecyclerView recyclerView;
+    private ListNoteRecyclerAdapter listNoteRecyclerAdapter;
+    private Context context;
     private String currentKind;
     private Toolbar toolbar;
-    private String repeating;
-    AlertDialog dialog;
-
-    Context context;
-
+    private ItemTouchHelper mItemTouchHelper;
+    private ItemTouchHelper.Callback callback;
     private Button spinnerButtonTime, spinnerButtonDate, spinnerButtonRepeat;
+    private List<String> entries = new ArrayList<>();
     private Calendar notificationTime;
     private SharedPreferences sharedPreferences;
     int hours;
     int minutes;
+    private String repeating;
+    MenuItem deleteCheckedTasks;
     Button cancelNotification, menuButton;
+    private AlertDialog dialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_simple_task);
+        setContentView(R.layout.activity_list_task);
         context = this;
 
         loadPreferences();
-        initView();
         initTask();
+        initView();
         initDate();
         repeating = "";
-
     }
 
     private void initDate() {
@@ -86,30 +90,38 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         sharedPreferences = this.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        hours = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 8);
-        minutes = sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 15);
+        hours = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 7);
+        minutes = sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 0);
     }
 
     private void initView() {
-        toolbar = (Toolbar) findViewById(R.id.st_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.lt_toolbar);
         toolbar.setTitle("");
         toolbar.setBackgroundColor(Color.WHITE);
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.taskColorGreen)));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         cancelNotification = (Button) findViewById(R.id.cancelNotifButton);
         menuButton = (Button) findViewById(R.id.menuButton);
 
+        recyclerView = (RecyclerView) findViewById(R.id.list_activity_recycler_view);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        head = (EditText) findViewById(R.id.headEditText);
-        text = (EditText) findViewById(R.id.taskEditText);
+        listNoteRecyclerAdapter = new ListNoteRecyclerAdapter(task, ListNoteActivity.this);
 
-        text.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());
-        head.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
+        recyclerView.setLayoutManager(layoutManager);
 
-        text.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 17));
-        head.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 17));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(listNoteRecyclerAdapter);
+
+
+        callback = new ListNoteItemTouchHelperCallback(listNoteRecyclerAdapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
+
+
+        setItemMovement(false);
 
         toolbar.setNavigationIcon(R.drawable.ic_back);
 
@@ -121,26 +133,13 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
             }
         });
-    }
 
-    private void initTask() {
-        task = (SimpleTask) getIntent().getSerializableExtra(Constants.TASK);
-        if (task == null) {
-            task = new SimpleTask();
-            task.setId(-1);
-            task.setPosition(getIntent().getIntExtra(Constants.POSITION, 0));
-            Log.d("TAG", "TAAAAAAASKA  NEEEET");
-            Log.d("TAG", "ID = " + task.getId());
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-            head.requestFocus();
-
+        if (task.getColor() != 0){
+            toolbar.setBackgroundColor(task.getColor());
+            setWhiteNavIconColor();
         } else {
-            Log.d("TAG", "TAAAAAAASK EST'!!!!!!!!");
-            Log.d("TAG", "ID = " + task.getId());
-            Log.d("TAG", "IIIIIIIIIIIIINNNNNNNNNNNNNIIIIIIIIIIIIIIIITTTTTTTTTTTTTT COLORS");
-
+            setBlackNavIconColor();
         }
-
 
         if(task.isRemind()){
             Log.d("TAG", "is REMIND FALSE");
@@ -150,67 +149,24 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             cancelNotification.setVisibility(View.GONE);
         }
 
-        if (task.getColor() != 0){
-            toolbar.setBackgroundColor(task.getColor());
-            setWhiteNavIconColor();
-        } else {
-            setBlackNavIconColor();
+    }
+
+    private void initTask() {
+        task = (ListNote) getIntent().getSerializableExtra(Constants.LIST_TASK);
+        if(task == null) {
+            System.out.println("LIST TASK = NULL!");
+            task = new ListNote();
+            task.setId(-1);
+            task.setPosition(getIntent().getIntExtra(Constants.POSITION, 0));
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
-
+        else {
+            System.out.println("LIST TASK != NULL, id = " + task.getHeadLine());
+            Log.d("TAG", "COLOR - " + task.getColor());
+        }
         currentKind = getIntent().getStringExtra(Constants.KIND);
-        Log.d("TAG", "              TASK GET -  " + currentKind);
-        if (currentKind == null)
+        if(currentKind==null)
             currentKind = Constants.UNDEFINED;
-
-        head.setText(task.getHeadLine());
-        text.setText(task.getContext());
-
-        head.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
-                        && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                    Log.d("TAG", "                                  ENTER!");
-                    text.requestFocus();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        head.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    text.requestFocus();
-                }
-                return false;
-            }
-        });
-
-        text.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (text.getText().toString().equals(""))
-                        head.requestFocus();
-                }
-                return false;
-            }
-        });
-
-        text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    // Always use a TextKeyListener when clearing a TextView to prevent android
-                    // warnings in the log
-                    Log.d("TAG", "EDITTWXT                  HAS FOKUS");
-                    text.setSelection(text.getText().length());
-                }
-            }
-        });
     }
 
     @Override
@@ -282,17 +238,180 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
-    private void cancelNotification(){
+    private void createDialog() {
 
-        Intent intent1 = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
-        intent1.setAction(Constants.ACTION_NOTIFICATION);
-        //intent1.putExtra("id", task.getId());
-        PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), task.getId(), intent1, 0);
-        AlarmManager alarmManager1 = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager1.cancel(sender);
+        repeating = "";
 
-        task.setRemind(false);
+        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
+
+        View mViewe = getLayoutInflater().inflate(R.layout.dialog_spiner, null);
+
+        spinnerButtonTime = (Button) mViewe.findViewById(R.id.spinnerButtonTime);
+        spinnerButtonTime.setText(R.string.morning);
+        spinnerButtonTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(context, view);
+                popupMenu.inflate(R.menu.popup_time);
+                popupMenu.show();
+                popupMenu.setOnMenuItemClickListener(ListNoteActivity.this);
+            }
+        });
+
+        spinnerButtonDate = (Button) mViewe.findViewById(R.id.spinnerButtonDate);
+        spinnerButtonDate.setText(R.string.tomorrow);
+        spinnerButtonDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(context, view);
+                popupMenu.inflate(R.menu.popup_date);
+                popupMenu.show();
+                popupMenu.setOnMenuItemClickListener(ListNoteActivity.this);
+            }
+        });
+
+
+        spinnerButtonRepeat = (Button) mViewe.findViewById(R.id.spinnerButtonRepeat);
+        spinnerButtonRepeat.setText(R.string.never);
+        spinnerButtonRepeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(context, view);
+                popupMenu.inflate(R.menu.popup_repeat);
+                popupMenu.show();
+                popupMenu.setOnMenuItemClickListener(ListNoteActivity.this);
+            }
+        });
+
+        mBuilder.setTitle(R.string.notification);
+        mBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d("TAG", "----------------------OK");
+                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.YEAR)));
+                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.MONTH)));
+                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.DAY_OF_MONTH)));
+                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.HOUR_OF_DAY)));
+                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.MINUTE)));
+                Log.d("TAG", "----------------------");
+
+                final Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
+                intent.setAction(Constants.ACTION_NOTIFICATION);
+                saveTask(true);
+                intent.putExtra(Constants.ID, task.getId());
+
+                final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+                if(repeating.equals("")) {
+
+                    task.setRepeatingPeriod(0);
+                    task.setRepeating(false);
+
+                    if(notificationTime.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()){
+                        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
+                        mBuilder.setMessage(R.string.reminder_past_time);
+                        mBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+                                Log.d("TAG", " SET IN PAAAAAAAAAAST!!!!!!!!!!!!! ALARM ALARM!");
+                            }
+                        });
+
+                        mBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+
+                        AlertDialog dialog = mBuilder.create();
+                        dialog.show();
+                        return;
+                    }
+
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
+                }
+                if(repeating.equals(Constants.EVERY_DAY)) {
+                    Log.d("TAG", "REPEATING every day " + repeating);
+
+                    Log.d("TAG", "difference 1 " + (notificationTime.getTimeInMillis() - System.currentTimeMillis()));
+
+                    intent.putExtra(Constants.REPEATING, true);
+                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_ONE_DAY);
+                    task.setRepeatingPeriod(Constants.PERIOD_ONE_DAY);
+                    task.setRepeating(true);
+
+                    while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+
+                        notificationTime.add(Calendar.DAY_OF_MONTH, 1);
+                    }
+
+                    Log.d("TAG", "difference 2 " + (notificationTime.getTimeInMillis() - System.currentTimeMillis()));
+
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_ONE_DAY, pendingIntent);
+                }
+                if(repeating.equals(Constants.EVERY_WEEK)) {
+                    Log.d("TAG", "REPEATING every WEEK " + repeating);
+                    intent.putExtra(Constants.REPEATING, true);
+                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_WEEK);
+                    task.setRepeatingPeriod(Constants.PERIOD_WEEK);
+                    task.setRepeating(true);
+
+                    while (notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
+                        notificationTime.add(Calendar.WEEK_OF_MONTH, 1);
+                    }
+
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_WEEK, pendingIntent);
+                }
+
+                if(repeating.equals(Constants.EVERY_MONTH)) {
+                    Log.d("TAG", "REPEATING every MOUTH " + repeating);
+                    intent.putExtra(Constants.REPEATING, true);
+                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_MONTH);
+                    task.setRepeatingPeriod(Constants.PERIOD_MONTH);
+                    task.setRepeating(true);
+
+                    while(notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
+                        notificationTime.add(Calendar.MONTH, 1);
+                    }
+
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_MONTH, pendingIntent);
+                }
+
+                task.setRemind(true);
+                task.setReminderTime(notificationTime.getTimeInMillis());
+                saveTask(false);
+                cancelNotification.setVisibility(View.VISIBLE);
+            }
+        });
+
+        mBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        mBuilder.setView(mViewe);
+        AlertDialog dialog = mBuilder.create();
+        dialog.show();
     }
+
+/*    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_colors, menu);
+        deleteCheckedTasks = menu.findItem(R.id.delete_checked_tasks);
+
+        //changeMenuItemVisibility(task.getCheckedTasks().size());
+
+        return super.onCreateOptionsMenu(menu);
+    }*/
 
     public void cancelNotification(View v){
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -363,6 +482,9 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
 
         PopupMenu popupMenu = new PopupMenu(this, v);
         popupMenu.inflate(R.menu.menu_colors);
+        deleteCheckedTasks = popupMenu.getMenu().findItem(R.id.delete_checked_tasks);
+        changeMenuItemVisibility(task.getCheckedTasks().size());
+
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -376,6 +498,11 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                         break;
                     case R.id.notify:
                         createDialog();
+                        break;
+                    case R.id.delete_checked_tasks:
+                        listNoteRecyclerAdapter.deleteCheckedTasks();
+                        changeMenuItemVisibility(0);
+                        break;
                 }
                 return false;
             }
@@ -384,273 +511,48 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
         popupMenu.show();
     }
 
-    private void createDialog() {
+    private void cancelNotification(){
 
-        repeating = "";
+        Intent intent1 = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
+        intent1.setAction(Constants.ACTION_NOTIFICATION);
+        //intent1.putExtra("id", task.getId());
+        PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), task.getId(), intent1, 0);
+        AlarmManager alarmManager1 = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager1.cancel(sender);
 
-        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
-
-        View mView = getLayoutInflater().inflate(R.layout.dialog_spiner, null);
-
-        spinnerButtonTime = (Button) mView.findViewById(R.id.spinnerButtonTime);
-        spinnerButtonTime.setText(R.string.morning);
-        spinnerButtonTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(context, view);
-                popupMenu.inflate(R.menu.popup_time);
-                popupMenu.show();
-                popupMenu.setOnMenuItemClickListener(SimpleTaskActivity.this);
-            }
-        });
-
-        spinnerButtonDate = (Button) mView.findViewById(R.id.spinnerButtonDate);
-        spinnerButtonDate.setText(R.string.tomorrow);
-        spinnerButtonDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(context, view);
-                popupMenu.inflate(R.menu.popup_date);
-                popupMenu.show();
-                popupMenu.setOnMenuItemClickListener(SimpleTaskActivity.this);
-            }
-        });
-
-
-        spinnerButtonRepeat = (Button) mView.findViewById(R.id.spinnerButtonRepeat);
-        spinnerButtonRepeat.setText(R.string.never);
-        spinnerButtonRepeat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(context, view);
-                popupMenu.inflate(R.menu.popup_repeat);
-                popupMenu.show();
-                popupMenu.setOnMenuItemClickListener(SimpleTaskActivity.this);
-            }
-        });
-
-
-        mBuilder.setTitle(R.string.notification);
-        mBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Log.d("TAG", "----------------------OK");
-                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.YEAR)));
-                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.MONTH)));
-                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.DAY_OF_MONTH)));
-                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.HOUR_OF_DAY)));
-                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.MINUTE)));
-                Log.d("TAG", "----------------------");
-
-          /*      Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
-                intent.setAction(Constants.ACTION_NOTIFICATION);
-                saveTask(true);
-                intent.putExtra("id", task.getId());
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
-
-                task.setRemind(true);
-                task.setReminderTime(notificationTime.getTimeInMillis());
-                saveTask(false);
-                cancelNotification.setVisible(true);
-
-*/
-                Log.d("TAG", "REPEATING + " + "." + repeating + ".");
-
-                final Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
-                intent.setAction(Constants.ACTION_NOTIFICATION);
-                saveTask(true);
-                intent.putExtra(Constants.ID, task.getId());
-
-                final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-                if(repeating.equals("")) {
-
-                    task.setRepeatingPeriod(0);
-                    task.setRepeating(false);
-
-                    if(notificationTime.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()){
-                        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
-                        mBuilder.setMessage(R.string.reminder_past_time);
-                        mBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
-                                Log.d("TAG", " SET IN PAAAAAAAAAAST!!!!!!!!!!!!! ALARM ALARM!");
-                            }
-                        });
-
-                        mBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        });
-
-                        AlertDialog dialog = mBuilder.create();
-                        dialog.show();
-                        return;
-                    }
-
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
-                }
-                if(repeating.equals(Constants.EVERY_DAY)) {
-                    Log.d("TAG", "REPEATING every day " + repeating);
-
-                    Log.d("TAG", "difference 1 " + (notificationTime.getTimeInMillis() - System.currentTimeMillis()));
-
-                    intent.putExtra(Constants.REPEATING, true);
-                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_ONE_DAY);
-                    task.setRepeatingPeriod(Constants.PERIOD_ONE_DAY);
-                    task.setRepeating(true);
-
-                    while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
-                        notificationTime.add(Calendar.DAY_OF_MONTH, 1);
-                    }
-
-                    Log.d("TAG", "difference 2 " + (notificationTime.getTimeInMillis() - System.currentTimeMillis()));
-
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_ONE_DAY, pendingIntent);
-                }
-                while(repeating.equals(Constants.EVERY_WEEK)) {
-                    Log.d("TAG", "REPEATING every WEEK " + repeating);
-                    intent.putExtra(Constants.REPEATING, true);
-                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_WEEK);
-                    task.setRepeatingPeriod(Constants.PERIOD_WEEK);
-                    task.setRepeating(true);
-
-                    if(notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
-                        notificationTime.add(Calendar.WEEK_OF_MONTH, 1);
-                    }
-
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_WEEK, pendingIntent);
-                }
-
-                if(repeating.equals(Constants.EVERY_MONTH)) {
-                    Log.d("TAG", "REPEATING every MOUTH " + repeating);
-                    intent.putExtra(Constants.REPEATING, true);
-                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_MONTH);
-                    task.setRepeatingPeriod(Constants.PERIOD_MONTH);
-                    task.setRepeating(true);
-
-                    while(notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
-                        notificationTime.add(Calendar.MONTH, 1);
-                    }
-
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_MONTH, pendingIntent);
-                }
-
-                task.setRemind(true);
-                task.setReminderTime(notificationTime.getTimeInMillis());
-                saveTask(false);
-                cancelNotification.setVisibility(View.VISIBLE);
-            }
-        });
-
-        mBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-
-        mBuilder.setView(mView);
-        AlertDialog dialog = mBuilder.create();
-        dialog.show();
+        task.setRemind(false);
     }
 
-
     private void saveTask(boolean check) {
-        String headline = String.valueOf(head.getText());
-        String content = String.valueOf(text.getText());
+        task = listNoteRecyclerAdapter.getListNote();
 
-        Log.d("TAG", "SAVE  !!! " + headline + " " + content);
-        Log.d("TAG", "SAVE id = " + task.getId() + "???");
+        // task.setHeadLine(headList.getText().toString());
 
-        task.setHeadLine(headline);
-        task.setContext(content);
-
-
-        DBHelper5 dbHelper = new DBHelper5(this);
-        if (task.getId() == -1) {
-            if (head.getText().length() == 0 && text.getText().length() == 0)
-                return;
-            task.setId(dbHelper.addTask(task, currentKind));
-            Log.d("TAG", "      ADAPTER                 SAVE TASK " + currentKind);
-            Log.d("TAG", "NEW TASK ID = " + task.getId());
-        } else {
-            Log.d("TAG", "UPDATE id = " + task.getId());
+        DBHelper dbHelper = new DBHelper(this);
+        if(task.getId() == -1){
+            task.setId(dbHelper.addTask(task, currentKind ));
+        }
+        else {
             if(check)
                 if(!dbHelper.isRemind(task))
                     task.setRemind(false);
-            Log.d("TAG", "      ADAPTER                 SAVE TASK " + currentKind);
             dbHelper.updateTask(task, currentKind);
         }
     }
 
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_colors, menu);
-        cancelNotification = menu.findItem(R.id.cancel_notif);
-        Log.d("TAG", "IIIIIIIIIIIIINNNNNNNNNNNNNIIIIIIIIIIIIIIIITTTTTTTTTTTTTT MENU ITEM");
-
-
-        if (task.getColor() != 0){
-            toolbar.setBackgroundColor(task.getColor());
-            setWhiteNavIconColor();
-        } else {
-            setBlackNavIconColor();
-        }
-
-        if(task.isRemind()){
-            Log.d("TAG", "is REMIND FALSE");
-            cancelNotification.setVisible(true);
-        } else {
-            Log.d("TAG", "is REMIND TRUE");
-            cancelNotification.setVisible(false);
-        }
-        return super.onCreateOptionsMenu(menu);
-    }*/
+    public void setItemMovement(boolean b){
+        Log.d("TAG", "MOVEMENT  " + b);
+        ((ListNoteItemTouchHelperCallback)callback).setCanMovement(b);
+    }
 
     @Override
     protected void onPause() {
-        Log.d("TAG", "SIMPLE ACT ON PAUSE");
-
-        saveTask(true);
+        if(!(task.getHeadLine().length() == 0 &&
+                task.getCheckedTasks().size() == 0 &&
+                task.getUncheckedTasks().size() == 1 &&
+                task.getUncheckedTasks().get(0).length() == 0))
+            saveTask(true);
         super.onPause();
-    }
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Task Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
     }
 
     private void showTimePickerDialog(){
@@ -694,10 +596,10 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
 
-                notificationTime.set(year, month, day);
-                spinnerButtonDate.setText(day + ":" + month + ";" + year);
+                notificationTime.set(year,month,day);
+                spinnerButtonDate.setText(day+":"+month+";"+year);
             }
-        },notificationTime.get(Calendar.YEAR), notificationTime.get(Calendar.MONTH), notificationTime.get(Calendar.DAY_OF_MONTH));
+        },notificationTime.get(Calendar.YEAR),notificationTime.get(Calendar.MONTH), notificationTime.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 
@@ -736,17 +638,24 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 notificationTime.set(Calendar.MINUTE, minutes);
                 Log.d("TAG", "DAY - " + String.valueOf(notificationTime.get(Calendar.DAY_OF_MONTH)));
                 spinnerButtonDate.setText(getResources().getString(R.string.today));
+
                 break;
+
             case R.id.item_tomorrow:
                 notificationTime = Calendar.getInstance();
                 notificationTime.set(Calendar.HOUR_OF_DAY, hours);
                 notificationTime.set(Calendar.MINUTE, minutes);
                 notificationTime.add(Calendar.DAY_OF_MONTH, 1);
                 spinnerButtonDate.setText(getResources().getString(R.string.tomorrow));
+
+                break;
+            case R.id.item_newer:
+                repeating = "";
                 break;
             case R.id.item_chose_date:
                 showDatePickerDialog();
                 break;
+
             case R.id.item_every_day:
                 repeating = Constants.EVERY_DAY;
                 spinnerButtonRepeat.setText(R.string.every_day);
@@ -759,10 +668,16 @@ public class SimpleTaskActivity extends AppCompatActivity implements PopupMenu.O
                 repeating = Constants.EVERY_MONTH;
                 spinnerButtonRepeat.setText(R.string.every_month);
                 break;
-            case R.id.item_newer:
-                repeating = "";
-                break;
         }
         return false;
+    }
+
+    public void changeMenuItemVisibility(int size) {
+        if(deleteCheckedTasks!=null) {
+            if (size == 0)
+                deleteCheckedTasks.setVisible(false);
+            else
+                deleteCheckedTasks.setVisible(true);
+        }
     }
 }

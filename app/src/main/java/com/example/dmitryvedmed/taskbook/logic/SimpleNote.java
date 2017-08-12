@@ -3,17 +3,17 @@ package com.example.dmitryvedmed.taskbook.logic;
 
 import java.io.Serializable;
 
-public class SimpleTask extends SuperTask implements Serializable {
+public class SimpleNote extends SuperNote implements Serializable {
 
     private String headLine, context;
 
-    public SimpleTask(int id, String headLine, String context) {
+    public SimpleNote(int id, String headLine, String context) {
         this.setId(id);
         this.headLine = headLine;
         this.context = context;
     }
 
-    public SimpleTask() {
+    public SimpleNote() {
     }
 
     public String getHeadLine() {
@@ -35,7 +35,7 @@ public class SimpleTask extends SuperTask implements Serializable {
 
     @Override
     public String toString() {
-        return "SimpleTask{" +
+        return "SimpleNote{" +
                 "id=" + getId() +
                 ", headLine='" + headLine + '\'' +
                 ", context='" + context + '\'' +

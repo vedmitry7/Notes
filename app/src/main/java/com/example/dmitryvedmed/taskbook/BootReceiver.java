@@ -8,8 +8,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
-import com.example.dmitryvedmed.taskbook.logic.SuperTask;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper;
+import com.example.dmitryvedmed.taskbook.logic.SuperNote;
 
 import java.util.List;
 
@@ -27,12 +27,12 @@ public class BootReceiver extends BroadcastReceiver {
         this.intent = intent;
 
         Toast.makeText(context, "УРРРРРРАААААААА", Toast.LENGTH_LONG).show();
-        DBHelper5 dbHelper5 = new DBHelper5(context);
+        DBHelper dbHelper = new DBHelper(context);
         Log.d("TAG", "BOOT RECEIVER. WORK");
 
-        List<SuperTask> tasks = dbHelper5.getNotificationTasks();
+        List<SuperNote> tasks = dbHelper.getNotificationTasks();
 
-        for (SuperTask task:tasks
+        for (SuperNote task:tasks
                 ) {
             Log.d("TAG", "BOOT RECEIVER. " + task.getId() + " repeat " + task.isRepeating());
 
@@ -49,7 +49,7 @@ public class BootReceiver extends BroadcastReceiver {
                 }
                 else {
                     task.setRemind(false);
-                    dbHelper5.updateTask(task, null);
+                    dbHelper.updateTask(task, null);
                 }
             } else {
                 Log.d("TAG", task.getId() + " NOT OLD");
@@ -63,7 +63,7 @@ public class BootReceiver extends BroadcastReceiver {
         }
     }
 
-    private void createSingleNotification(SuperTask task){
+    private void createSingleNotification(SuperNote task){
         Log.d("TAG", task.getId() + " SIngle not");
 
         Intent i = new Intent(context, NotifyTaskReceiver.class);
@@ -74,7 +74,7 @@ public class BootReceiver extends BroadcastReceiver {
         alarmManager.set(AlarmManager.RTC_WAKEUP, task.getReminderTime(), pendingIntent);
     }
 
-    private void createRepeatingNotification(SuperTask task){
+    private void createRepeatingNotification(SuperNote task){
         Log.d("TAG", task.getId() + " rep not not");
         Intent i = new Intent(context, NotifyTaskReceiver.class);
         intent.setAction("TASK_NOTIFICATION");

@@ -3,7 +3,7 @@ package com.example.dmitryvedmed.taskbook.logic;
 
 import java.io.Serializable;
 
-public class SuperTask implements Serializable {
+public class SuperNote implements Serializable {
     private int id;
     private int position;
     private int color;

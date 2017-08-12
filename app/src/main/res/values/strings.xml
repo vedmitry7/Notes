@@ -44,7 +44,7 @@
     <string name="cancel">Отмена</string>
     <string name="delete_forever_massage">Вы действительно хотите удалить выделенные заметки из корзины навсегда?</string>
     <string name="question_delete_section">Удалить раздел?</string>
-    <string name="delete_section_massage">Если раздел содержит заметки, то они отправятся в корзину</string>
+    <string name="delete_section_massage">Если раздел содержит заметки, то они будут отправлены в корзину</string>
     <string name="archive">Архив</string>
     <string name="notifications">Напоминания</string>
     <string name="add_section">Добавить раздел</string>

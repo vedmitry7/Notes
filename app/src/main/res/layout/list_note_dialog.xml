@@ -14,7 +14,7 @@
         android:layout_weight="1"
         android:orientation="vertical"
         android:background="#FFFFFF"
-        tools:context="com.example.dmitryvedmed.taskbook.ui.ListTaskActivity">
+        tools:context="com.example.dmitryvedmed.taskbook.ui.ListNoteActivity">
 
         <TextView
             android:layout_marginTop="5dp"

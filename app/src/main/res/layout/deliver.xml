@@ -5,8 +5,8 @@
         android:paddingLeft="34dp"
     android:paddingRight="16dp"
     android:paddingTop="8dp">
-    <View android:id="@+id/deliver"
 
+    <View android:id="@+id/deliver"
         style="@style/Divider">
     </View>
 </LinearLayout>

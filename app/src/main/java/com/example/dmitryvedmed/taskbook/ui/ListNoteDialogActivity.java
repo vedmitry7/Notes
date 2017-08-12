@@ -15,26 +15,26 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.dmitryvedmed.taskbook.R;
-import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
-import com.example.dmitryvedmed.taskbook.logic.ListTask;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper;
+import com.example.dmitryvedmed.taskbook.logic.ListNote;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
 
-public class ListTaskDialogActivity extends AppCompatActivity {
+public class ListNoteDialogActivity extends AppCompatActivity {
 
     public static RecyclerView recyclerView;
-    private ListTaskDialogRecyclerAdapter listTaskDialogRecyclerAdapter;
+    private ListNoteDialogRecyclerAdapter listNoteDialogRecyclerAdapter;
     private TextView head;
-    private ListTask task;
-    private DBHelper5 dbHelper5;
+    private ListNote task;
+    private DBHelper dbHelper;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.new_list_task_dialog);
-        dbHelper5 = new DBHelper5(this);
+        setContentView(R.layout.list_note_dialog);
+        dbHelper = new DBHelper(this);
         Window window = this.getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();
 
@@ -62,9 +62,9 @@ public class ListTaskDialogActivity extends AppCompatActivity {
     private void initView() {
 
 
-        //task = (ListTask) getIntent().getSerializableExtra("ListTask");
+        //task = (ListNote) getIntent().getSerializableExtra("ListNote");
 
-        task = (ListTask) dbHelper5.getTask(getIntent().getIntExtra(Constants.ID, 0));
+        task = (ListNote) dbHelper.getTask(getIntent().getIntExtra(Constants.ID, 0));
 
         head = (TextView) findViewById(R.id.listTaskDialogHeadTextView);
         head.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());
@@ -77,13 +77,13 @@ public class ListTaskDialogActivity extends AppCompatActivity {
 
 
         recyclerView = (RecyclerView) findViewById(R.id.list_dialog_activity_recycler_view);
-        listTaskDialogRecyclerAdapter = new ListTaskDialogRecyclerAdapter(task, ListTaskDialogActivity.this);
+        listNoteDialogRecyclerAdapter = new ListNoteDialogRecyclerAdapter(task, ListNoteDialogActivity.this);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(listTaskDialogRecyclerAdapter);
+        recyclerView.setAdapter(listNoteDialogRecyclerAdapter);
 
     }
 
@@ -101,7 +101,7 @@ public class ListTaskDialogActivity extends AppCompatActivity {
     public void edit(View v){
         Log.d("TAG", "clicccccccccccccccccccccccccccccck edit");
 
-        Intent intent1 = new Intent(this, ListTaskActivity.class);
+        Intent intent1 = new Intent(this, ListNoteActivity.class);
         intent1.putExtra(Constants.LIST_TASK, task);
         this.startActivity(intent1);
         this.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);

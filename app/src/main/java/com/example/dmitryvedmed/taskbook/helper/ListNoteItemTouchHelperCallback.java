@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
 
-public class ListTaskItemTouchHelperCallback extends ItemTouchHelper.Callback {
+public class ListNoteItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperAdapter mAdapter;
     private boolean wasMoved = false;
@@ -18,7 +18,7 @@ public class ListTaskItemTouchHelperCallback extends ItemTouchHelper.Callback {
         this.canMovement = canMovement;
     }
 
-    public ListTaskItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
+    public ListNoteItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
     }
 

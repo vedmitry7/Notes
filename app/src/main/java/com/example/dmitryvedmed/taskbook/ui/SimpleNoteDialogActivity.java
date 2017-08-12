@@ -13,24 +13,24 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.dmitryvedmed.taskbook.R;
-import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
-import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper;
+import com.example.dmitryvedmed.taskbook.logic.SimpleNote;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
 
-public class SimpleTaskDialogActivity extends AppCompatActivity {
+public class SimpleNoteDialogActivity extends AppCompatActivity {
 
     private TextView head, context;
-    private SimpleTask task;
-    private DBHelper5 dbHelper5;
+    private SimpleNote task;
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbHelper5 = new DBHelper5(this);
+        dbHelper = new DBHelper(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.new_simple_task_dialog);
+        setContentView(R.layout.simple_note_dialog);
         initView();
         WindowManager.LayoutParams lp = this.getWindow().getAttributes();
         lp.dimAmount = 0.7f;
@@ -44,9 +44,9 @@ public class SimpleTaskDialogActivity extends AppCompatActivity {
         context.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());
         head.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
 
-        //task = (SimpleTask) getIntent().getSerializableExtra("Task");
+        //task = (SimpleNote) getIntent().getSerializableExtra("Task");
 
-        task = (SimpleTask) dbHelper5.getTask(getIntent().getIntExtra(Constants.ID, 0));
+        task = (SimpleNote) dbHelper.getTask(getIntent().getIntExtra(Constants.ID, 0));
         if(task.getHeadLine().length()>0)
             head.setText(task.getHeadLine());
         else
@@ -79,7 +79,7 @@ public class SimpleTaskDialogActivity extends AppCompatActivity {
     public void edit(View v){
         Log.d("TAG", "clicccccccccccccccccccccccccccccck edit");
 
-        Intent intent = new Intent(this, SimpleTaskActivity.class);
+        Intent intent = new Intent(this, SimpleNoteActivity.class);
         intent.putExtra(Constants.TASK, task);
         this.startActivity(intent);
         this.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);

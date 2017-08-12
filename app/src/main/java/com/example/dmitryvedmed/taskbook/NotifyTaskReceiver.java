@@ -13,12 +13,12 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
-import com.example.dmitryvedmed.taskbook.logic.ListTask;
-import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
-import com.example.dmitryvedmed.taskbook.logic.SuperTask;
-import com.example.dmitryvedmed.taskbook.ui.ListTaskDialogActivity;
-import com.example.dmitryvedmed.taskbook.ui.SimpleTaskDialogActivity;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper;
+import com.example.dmitryvedmed.taskbook.logic.ListNote;
+import com.example.dmitryvedmed.taskbook.logic.SimpleNote;
+import com.example.dmitryvedmed.taskbook.logic.SuperNote;
+import com.example.dmitryvedmed.taskbook.ui.ListNoteDialogActivity;
+import com.example.dmitryvedmed.taskbook.ui.SimpleNoteDialogActivity;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 
 public class NotifyTaskReceiver extends BroadcastReceiver {
@@ -42,24 +42,24 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
         if(id==-2) {
             return;
         }
-        DBHelper5 dbHelper5 = new DBHelper5(context);
-        SuperTask superTask = dbHelper5.getTask(id);
-        if(superTask == null)
+        DBHelper dbHelper = new DBHelper(context);
+        SuperNote superNote = dbHelper.getTask(id);
+        if(superNote == null)
             return;
 
         Log.d("TAG", "ST != null" );
 
         Intent notificationIntent;
 
-        if(superTask instanceof SimpleTask){
-            SimpleTask task = (SimpleTask) superTask;
+        if(superNote instanceof SimpleNote){
+            SimpleNote task = (SimpleNote) superNote;
             if(!task.isRepeating())
                 task.setRemind(false);
             else {
                 task.setReminderTime(task.getReminderTime() + task.getRepeatingPeriod());
             }
 
-            notificationIntent = new Intent(context, SimpleTaskDialogActivity.class);
+            notificationIntent = new Intent(context, SimpleNoteDialogActivity.class);
             notificationIntent.putExtra(Constants.ID, task.getId());
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -97,11 +97,11 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(id, notification);
-            dbHelper5.updateTask(task, null);
+            dbHelper.updateTask(task, null);
         }
         else{
-            notificationIntent = new Intent(context, ListTaskDialogActivity.class);
-            ListTask task = (ListTask) superTask;
+            notificationIntent = new Intent(context, ListNoteDialogActivity.class);
+            ListNote task = (ListNote) superNote;
             if(!task.isRepeating())
                 task.setRemind(false);
             else {
@@ -145,7 +145,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(id, notification);
-            dbHelper5.updateTask(task, null);
+            dbHelper.updateTask(task, null);
         }
         //throw new UnsupportedOperationException("Not yet implemented");
     }

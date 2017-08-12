@@ -57,7 +57,7 @@
        android:layout_height="match_parent"
        android:orientation="vertical"
        android:background="@color/activityColorFFF"
-       tools:context="com.example.dmitryvedmed.taskbook.ui.ListTaskActivity">
+       tools:context="com.example.dmitryvedmed.taskbook.ui.ListNoteActivity">
 
       <android.support.v7.widget.RecyclerView
           android:paddingLeft="@dimen/activity_horizontal_margin"

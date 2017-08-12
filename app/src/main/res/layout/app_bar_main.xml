@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:id="@+id/cl"
-    tools:context="com.example.dmitryvedmed.taskbook.ui.DrawerTestActivity">
+    tools:context="com.example.dmitryvedmed.taskbook.ui.PerfectActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main3"
+    <include layout="@layout/content_main"
         android:id="@+id/include" />
 
    <android.support.design.widget.FloatingActionButton
@@ -39,16 +39,6 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/ic_plus_white_24dp"
         android:elevation="@dimen/fab_elevation"/>
-
-   <!-- <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabDB"
-        android:onClick="copyDb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_add"
-        android:elevation="@dimen/fab_elevation"/>-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabListNote"

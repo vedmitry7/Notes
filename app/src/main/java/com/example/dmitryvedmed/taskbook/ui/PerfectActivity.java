@@ -38,9 +38,9 @@ import android.widget.EditText;
 import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.helper.SimpleItemTouchHelperCallback;
 import com.example.dmitryvedmed.taskbook.helper.SpacesItemDecoration;
-import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper;
 import com.example.dmitryvedmed.taskbook.logic.Section;
-import com.example.dmitryvedmed.taskbook.logic.SuperTask;
+import com.example.dmitryvedmed.taskbook.logic.SuperNote;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 
 import java.util.ArrayList;
@@ -57,8 +57,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
 
-    private List<SuperTask> values = new ArrayList<>();
-    public static DBHelper5 dbHelper;
+    private List<SuperNote> values = new ArrayList<>();
+    public static DBHelper dbHelper;
     public static RecyclerView recyclerView;
     private MainRecyclerAdapter adapter;
     private ItemTouchHelper mItemTouchHelper;
@@ -99,10 +99,10 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_drawer_test);
+        setContentView(R.layout.main_activity);
 
         context = this;
-        dbHelper = new DBHelper5(this);
+        dbHelper = new DBHelper(this);
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             columnsNumber = 2;
@@ -534,7 +534,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 alert2.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        for (SuperTask t:dbHelper.getTasks(Constants.DELETED)
+                        for (SuperNote t:dbHelper.getTasks(Constants.DELETED)
                                 ) {
                             dbHelper.deleteTask(t);
                         }
@@ -755,7 +755,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     private void checkOldTask() {
         long deletionPeriod = sharedPreferences.getLong(Constants.DELETION_PERIOD, Constants.PERIOD_WEEK);
-        for (SuperTask task : values
+        for (SuperNote task : values
                 ) {
             if(task.getDeletionTime() + deletionPeriod < System.currentTimeMillis()) {
                 dbHelper.deleteTask(task);
@@ -848,7 +848,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     public void newListTask(View v){
         hideFabs();
-        Intent intent = new Intent(getApplicationContext(), ListTaskActivity.class);
+        Intent intent = new Intent(getApplicationContext(), ListNoteActivity.class);
         intent.putExtra(Constants.POSITION, adapter.getTasks().size());
         intent.putExtra(Constants.KIND, currentKind);
         Log.d("TAG", "      Main3Activity                   SEND INTENT " + currentKind);
@@ -858,7 +858,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     public void newSimpleTask(View v){
         hideFabs();
-        Intent intent = new Intent(getApplicationContext(), SimpleTaskActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SimpleNoteActivity.class);
         intent.putExtra(Constants.POSITION, adapter.getTasks().size());
         intent.putExtra(Constants.KIND, currentKind);
         Log.d("TAG", "      Main3Activity                   SEND INTENT " + currentKind);
@@ -902,7 +902,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         values = adapter.getTasks();
         // save because positions could change
-        for (SuperTask s:values
+        for (SuperNote s:values
                 ) {
             if(!dbHelper.isRemind(s)){
                 s.setRemind(false);
@@ -929,7 +929,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     }
 
     private void checkDeprecated(){
-        for (SuperTask s:values
+        for (SuperNote s:values
                 ) {
             if(s.isRemind() == true && s.getReminderTime()<System.currentTimeMillis() && !s.isRepeating()){
                 Log.d("TAG", "      Activity                    DEPRICATED TASK!!!" + s.getId());

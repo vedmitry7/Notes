@@ -15,11 +15,11 @@
         android:theme="@style/AppTheme"
         android:windowSoftInputMode="adjustPan">
         <activity
-            android:name=".ui.ListTaskActivity"
+            android:name=".ui.ListNoteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ui.SimpleTaskActivity"
+            android:name=".ui.SimpleNoteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden" />
         <activity
@@ -34,28 +34,7 @@
         <activity
             android:name=".ui.SettingsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name=".ui.DrawerTestActivity"
-            android:label="Заметки"
-            android:theme="@style/AppTheme" />
 
-        <receiver android:name=".widget.AppWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/app_widget_info" />
-        </receiver>
-
-        <service
-            android:name=".widget.WidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
-        <!--
- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
-        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -82,16 +61,15 @@
         </receiver>
 
         <activity
-            android:name=".ui.SimpleTaskDialogActivity"
+            android:name=".ui.SimpleNoteDialogActivity"
             android:clearTaskOnLaunch="true"
             android:noHistory="true"
             android:theme="@style/Theme.MyDialog" />
         <activity
-            android:name=".ui.ListTaskDialogActivity"
+            android:name=".ui.ListNoteDialogActivity"
             android:label="dialogList"
             android:noHistory="true"
             android:theme="@style/Theme.MyDialog" />
-        <activity android:name=".ui.CommonTaskActivity" />
         <activity android:name=".ui.SectionPositionActivity"></activity>
     </application>
 

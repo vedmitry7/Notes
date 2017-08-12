@@ -4,13 +4,13 @@ package com.example.dmitryvedmed.taskbook.logic;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ListTask extends SuperTask implements Serializable {
+public class ListNote extends SuperNote implements Serializable {
 
     private String headLine;
     private ArrayList<String> uncheckedTasks;
     private ArrayList<String> checkedTasks;
 
-    public ListTask() {
+    public ListNote() {
         uncheckedTasks = new ArrayList<>();
         checkedTasks = new ArrayList<>();
     }

@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.helper.SectionTouchHelperCallback;
-import com.example.dmitryvedmed.taskbook.logic.DBHelper5;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper;
 import com.example.dmitryvedmed.taskbook.logic.Section;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class SectionPositionActivity extends AppCompatActivity {
     private SectionPositionRecyclerAdapter adapter;
     private ItemTouchHelper mItemTouchHelper;
     private ItemTouchHelper.Callback callback;
-    private DBHelper5 dbHelper5;
+    private DBHelper dbHelper;
     private List<Section> sections;
 
     @Override
@@ -48,8 +48,8 @@ public class SectionPositionActivity extends AppCompatActivity {
         toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 
 
-        dbHelper5 = new DBHelper5(this);
-        sections = dbHelper5.getAllSections();
+        dbHelper = new DBHelper(this);
+        sections = dbHelper.getAllSections();
 
         Log.d("TAG", "          ACTIVITY GET SECTION");
         for (Section s:sections
@@ -88,7 +88,7 @@ public class SectionPositionActivity extends AppCompatActivity {
         sections = adapter.getSections();
         for (Section s : sections
                 ) {
-            dbHelper5.updateSection(s);
+            dbHelper.updateSection(s);
         }
         super.onPause();
     }

@@ -32,9 +32,9 @@ import com.example.dmitryvedmed.taskbook.NotifyTaskReceiver;
 import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperAdapter;
 import com.example.dmitryvedmed.taskbook.helper.ItemTouchHelperViewHolder;
-import com.example.dmitryvedmed.taskbook.logic.ListTask;
-import com.example.dmitryvedmed.taskbook.logic.SimpleTask;
-import com.example.dmitryvedmed.taskbook.logic.SuperTask;
+import com.example.dmitryvedmed.taskbook.logic.ListNote;
+import com.example.dmitryvedmed.taskbook.logic.SimpleNote;
+import com.example.dmitryvedmed.taskbook.logic.SuperNote;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 
 import java.io.Serializable;
@@ -54,10 +54,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         this.selectedTasksCounter = selectedTasksCounter;
     }
 
-    private List<SuperTask> tasks;
-    private List<SuperTask> selectedTasks;
+    private List<SuperNote> tasks;
+    private List<SuperNote> selectedTasks;
     private Context context;
-    private ListTask listTask;
+    private ListNote listNote;
     private TextView textView;
     private Typeface typeFace;
     private Typeface boldTypeFace ;
@@ -71,7 +71,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public int getSelectedTasksCounter() {
         return selectedTasksCounter;
     }
-    private List<SuperTask> selectedTaskCopy;
+    private List<SuperNote> selectedTaskCopy;
 
     public boolean[] getSelects() {
         return selects;
@@ -79,7 +79,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public ArrayList<Integer> getSelectedListIds(){
         ArrayList<Integer> list = new ArrayList<>();
-        for (SuperTask t:selectedTasks
+        for (SuperNote t:selectedTasks
              ) {
             list.add(t.getId());
         }
@@ -87,7 +87,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return list;
     }
 
-    public void setSelectedTaskCopy(List<SuperTask> selectedTaskCopy) {
+    public void setSelectedTaskCopy(List<SuperNote> selectedTaskCopy) {
         this.selectedTaskCopy = selectedTaskCopy;
         Log.d("TAG", "       Adapter ---  COOOOOOOOOOOPYYYY SIZE = " + selectedTasks.size());
     }
@@ -95,7 +95,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public void fillSelectedTasks(ArrayList<Integer> list){
         for (Integer i : list
                 ) {
-            for (SuperTask t:tasks
+            for (SuperNote t:tasks
                  ) {
                 if(t.getId() == i){
                     selectedTasks.add(t);
@@ -108,7 +108,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public void returnTranslatedTask(String s){
         Log.d("TAG", "       Adapter ---  RETUUUUUUURN COPY SIZE start = " + selectedTaskCopy.size());
-        for (SuperTask st: selectedTaskCopy){
+        for (SuperNote st: selectedTaskCopy){
             activity.dbHelper.updateTask(st, s);
         }
         Log.d("TAG", "       Adapter ---  RETUUUUUUURN TASKS SIZE start = " + tasks.size());
@@ -138,11 +138,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         this.mode = mode;
     }
 
-    List<SuperTask> getTasks() {
+    List<SuperNote> getTasks() {
         return tasks;
     }
 
-    MainRecyclerAdapter(List<SuperTask> tasks, Context context) {
+    MainRecyclerAdapter(List<SuperNote> tasks, Context context) {
         Log.d("TAG", "       Adapter --- constructor  ---");
         this.tasks = tasks;
 
@@ -296,7 +296,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         //    Log.d("TAG", "           adapter translateTo " + s);
         selectedTaskCopy.addAll(selectedTasks);
         Log.d("TAG", "       Adapter --- !                      COOOOOOOOOOOOPYYYY111111 " + selectedTaskCopy.size());
-        for (SuperTask t:selectedTasks
+        for (SuperNote t:selectedTasks
                 ) {
             //        Log.d("TAG", t.getId() +  "       translateTo " + s);
             activity.dbHelper.updateTask(t, s);
@@ -328,7 +328,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public void deleteSelectedTasksForever() {
         compareSelectionTasks();
-        for (SuperTask t : selectedTasks
+        for (SuperNote t : selectedTasks
                 ) {
             activity.dbHelper.deleteTask(t);
         }
@@ -353,12 +353,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         Log.d("TAG", "!!!!!!!!!             AAAAAA SET COLOR sel tasks size = " + selectedTasks.size());
         Log.d("TAG", "!!!!!!!!!        after update     AAAAAA SET COLOR sel tasks size = " + selectedTasks.size());
 
-        for (SuperTask s:tasks
+        for (SuperNote s:tasks
              ) {
             Log.d("TAG",s.getId() +  " code = " + s.hashCode());
         }
         Log.d("TAG","___________________________________________");
-        for (SuperTask s:selectedTasks
+        for (SuperNote s:selectedTasks
                 ) {
             Log.d("TAG", s.getId() +  " code = " + s.hashCode());
             s.setColor(color);
@@ -374,10 +374,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     public void updateSelectedTask(){
-        List<SuperTask> sa = new ArrayList<>();
-        for (SuperTask st:selectedTasks
+        List<SuperNote> sa = new ArrayList<>();
+        for (SuperNote st:selectedTasks
              ) {
-            for (SuperTask t:tasks
+            for (SuperNote t:tasks
                  ) {
                 if(t.getId()==st.getId())
                     sa.add(t);
@@ -389,7 +389,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
     //    Log.d("TAG", "       Adapter --- onItemMove, FROM - " + fromPosition + ", TO - " + toPosition);
-        SuperTask prev = tasks.remove(fromPosition);
+        SuperNote prev = tasks.remove(fromPosition);
         tasks.add(toPosition, prev);
         notifyItemMoved(fromPosition, toPosition);
         setRightPosition();
@@ -477,14 +477,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
                 switch (MainRecyclerAdapter.this.getItemViewType(position)) {
                     case 0:
-                        Intent intent = new Intent(context, SimpleTaskActivity.class);
+                        Intent intent = new Intent(context, SimpleNoteActivity.class);
                         intent.putExtra(Constants.TASK, (Serializable) tasks.get(position));
                         intent.putExtra(Constants.KIND, activity.currentKind);
                         context.startActivity(intent);
                         activity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                         break;
                     case 1:
-                        Intent intent1 = new Intent(context, ListTaskActivity.class);
+                        Intent intent1 = new Intent(context, ListNoteActivity.class);
                         intent1.putExtra(Constants.LIST_TASK, tasks.get(position));
                         intent1.putExtra(Constants.KIND, activity.currentKind);
                         context.startActivity(intent1);
@@ -573,13 +573,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         RecyclerViewHolder recyclerViewHolder = null;
         switch (viewType) {
             case 0:
-                //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task, parent,false);
+                //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_note, parent,false);
               // View view ;
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task_with_date, parent, false);;
 
           /*      if(!activity.isNotification_on()){
                     Log.d("TAG", "       Adapter --- onCreateViewHolder       WITHOUT INFO");
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task, parent,false);}
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_note, parent,false);}
                 else {
                     Log.d("TAG", "       Adapter --- onCreateViewHolder       WITH INFO WITH INFO WITH INFO");
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task_with_date, parent, false);
@@ -589,25 +589,25 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 break;
 
             case 1:
-                View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_list_task, parent,false);
+                View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_list_note, parent,false);
                 recyclerViewHolder = new RecyclerViewHolder(view1);
                 break;
         }
         return recyclerViewHolder;
     }
 
-    public List<SuperTask> getSelectedTasks() {
+    public List<SuperNote> getSelectedTasks() {
         return selectedTasks;
     }
 
     private void setColorCardView(CardView cardView, int position){
         Log.d("TAG", "       setColorCardView");
- /*       for (SuperTask s:selectedTasks
+ /*       for (SuperNote s:selectedTasks
                 ) {
             Log.d("TAG", "  sel task  id = " + s.hashCode() +" "+ s.getId());
 
         }
-        for (SuperTask s:tasks
+        for (SuperNote s:tasks
                 ) {
             Log.d("TAG", "  sel task  id = " + s.hashCode() +" "+ s.getId());
         }
@@ -620,7 +620,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
        /*     int id = tasks.get(position).getId();
             boolean b = false;
-            for (SuperTask s:selectedTasks
+            for (SuperNote s:selectedTasks
                  ) {
                 if(s.getId() == id){
                     b = true;
@@ -698,21 +698,21 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         switch (getItemViewType(position)){
             case 0:
-                SimpleTask simpleTask = (SimpleTask) tasks.get(position);
+                SimpleNote simpleNote = (SimpleNote) tasks.get(position);
                 holder.stHeadLine.setTextSize(textSize);
                 holder.stContent.setTextSize(textSize);
 
-                if(simpleTask.getHeadLine().length()==0)
+                if(simpleNote.getHeadLine().length()==0)
                     holder.stHeadLine.setVisibility(View.GONE);
                 else {
                     holder.stHeadLine.setVisibility(View.VISIBLE);
-                    holder.stHeadLine.setText(simpleTask.getHeadLine());
+                    holder.stHeadLine.setText(simpleNote.getHeadLine());
                 }
-                if(simpleTask.getContext().length()==0)
+                if(simpleNote.getContext().length()==0)
                     holder.stContent.setVisibility(View.GONE);
                 else {
                     holder.stContent.setVisibility(View.VISIBLE);
-                    holder.stContent.setText(simpleTask.getContext());
+                    holder.stContent.setText(simpleNote.getContext());
                 }
 
                 if(tasks.get(position).isRemind()){
@@ -726,7 +726,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.notifInfoContainer.setVisibility(View.VISIBLE);
                     if(holder.notifInfo!=null) {
 
-                        SuperTask task = tasks.get(position);
+                        SuperNote task = tasks.get(position);
 
 
                         String dateString = DateFormat.format("dd/MM/yyyy", new Date(task.getReminderTime())).toString();
@@ -754,17 +754,17 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 break;
 
             case 1:
-                listTask = (ListTask) tasks.get(position);
-             /*        holder.ltFirst.setText(listTask.getUncheckedTask(0));
-                    holder.ltSecond.setText(listTask.getUncheckedTask(1));*/
+                listNote = (ListNote) tasks.get(position);
+             /*        holder.ltFirst.setText(listNote.getUncheckedTask(0));
+                    holder.ltSecond.setText(listNote.getUncheckedTask(1));*/
 
                 holder.listHeadEditText.setTextSize(textSize);
-                if(listTask.getHeadLine()!=null && listTask.getHeadLine().length()==0) {
+                if(listNote.getHeadLine()!=null && listNote.getHeadLine().length()==0) {
                     holder.listHeadEditText.setVisibility(View.GONE);
                 }
                 else {
                     holder.listHeadEditText.setVisibility(View.VISIBLE);
-                    holder.listHeadEditText.setText(listTask.getHeadLine());
+                    holder.listHeadEditText.setText(listNote.getHeadLine());
                 }
 
 
@@ -776,11 +776,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 int count = 0;
                 String s = null;
                 for (int i = 0; i < 5; i++) {
-                    if(listTask.getUncheckedTasks().size()-1 < i){
+                    if(listNote.getUncheckedTasks().size()-1 < i){
                         break;
                     }
                     count++;
-                    s = listTask.getUncheckedTasks().get(i);
+                    s = listNote.getUncheckedTasks().get(i);
                     View view = inflater.inflate(R.layout.card_view_list_item, null, false);
                     TextView t = (TextView) view.findViewById(R.id.textView3);
                     t.setMaxLines(2);
@@ -793,10 +793,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.layout.addView(view);
                 }
                 for (int i = 0; i < 5 - count ; i++) {
-                    if(listTask.getCheckedTasks().size()-1 < i){
+                    if(listNote.getCheckedTasks().size()-1 < i){
                         break;
                     }
-                    s = listTask.getCheckedTasks().get(i);
+                    s = listNote.getCheckedTasks().get(i);
                     View view = inflater.inflate(R.layout.card_view_list_item, null, false);
                     TextView t = (TextView) view.findViewById(R.id.textView3);
                     t.setMaxLines(2);
@@ -810,7 +810,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.layout.addView(view);
 
                 }
-         /*       for (String s:listTask.getUncheckedTasks()
+         /*       for (String s:listNote.getUncheckedTasks()
                         ) {
                     View view = inflater.inflate(R.layout.card_view_list_item, null, false);
                     TextView t = (TextView) view.findViewById(R.id.textView3);
@@ -821,7 +821,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     t.setText(s);
                     holder.layout.addView(view);
                 }
-                for (String s:listTask.getCheckedTasks()
+                for (String s:listNote.getCheckedTasks()
                         ) {
                     View view = inflater.inflate(R.layout.card_view_list_item, null, false);
                     TextView t = (TextView) view.findViewById(R.id.textView3);
@@ -836,8 +836,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         /*       holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(context, ListTaskActivity.class);
-                        intent.putExtra("ListTask", tasks.get(position));
+                        Intent intent = new Intent(context, ListNoteActivity.class);
+                        intent.putExtra("ListNote", tasks.get(position));
                         context.startActivity(intent);
                     }
                 });*/
@@ -854,7 +854,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.notifInfoContainer.setVisibility(View.VISIBLE);
             if(holder.notifInfo!=null) {
 
-                SuperTask task = tasks.get(position);
+                SuperNote task = tasks.get(position);
 
 
                 String dateString = DateFormat.format("dd.MM.yyyy", new Date(task.getReminderTime())).toString();
@@ -889,15 +889,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public int getItemViewType(int position) {
 
-        if (tasks.get(position) instanceof SimpleTask)
+        if (tasks.get(position) instanceof SimpleNote)
             return 0;
-        if(tasks.get(position) instanceof ListTask) {
+        if(tasks.get(position) instanceof ListNote) {
             return 1;
         }
         return -1;
     }
 
-    public void dataChanged(List<SuperTask> tasks){
+    public void dataChanged(List<SuperNote> tasks){
         Log.d("TAG", "       Adapter --- dataChanged");
         this.tasks = tasks;
         if(!activity.is_in_action_mode()){
@@ -913,9 +913,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     private void compareTasks(){
     //    Log.d("TAG", "       Adapter --- compareTasks");
-        Comparator<SuperTask> comparator = new Comparator<SuperTask>() {
+        Comparator<SuperNote> comparator = new Comparator<SuperNote>() {
             @Override
-            public int compare(SuperTask superTask, SuperTask t1) {
+            public int compare(SuperNote superTask, SuperNote t1) {
                 return superTask.getPosition() < t1.getPosition() ? 1 : -1;
             }
         };
@@ -923,9 +923,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
     private void compareSelectionTasks(){
     //    Log.d("TAG", "       Adapter --- compareTasks");
-        Comparator<SuperTask> comparator = new Comparator<SuperTask>() {
+        Comparator<SuperNote> comparator = new Comparator<SuperNote>() {
             @Override
-            public int compare(SuperTask superTask, SuperTask t1) {
+            public int compare(SuperNote superTask, SuperNote t1) {
                 return superTask.getPosition() < t1.getPosition() ? 1 : -1;
             }
         };
