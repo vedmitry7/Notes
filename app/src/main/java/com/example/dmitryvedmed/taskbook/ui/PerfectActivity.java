@@ -266,8 +266,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         adapter.translateTo(Constants.DELETED);
                         mode.finish();
                         break;
-                    case R.id.set_color:
-                        break;
+
                     case R.id.toArchive:
                         if(currentKind.equals(Constants.ARCHIVE)){
                             adapter.translateTo(Constants.UNDEFINED);
@@ -405,13 +404,13 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu navMenu = navigationView.getMenu();
-        undifinedPoint = navMenu.findItem(R.id.undefined);
         navMenu.clear();
 
-        navMenu.add(Menu.NONE, R.id.undefined , Menu.NONE, R.string.all).setIcon(getResources().getDrawable(R.drawable.note_multiple));
-        navMenu.add(Menu.NONE, R.id.notifications , Menu.NONE, "Напоминания").setIcon(getResources().getDrawable(R.drawable.bell));
-        navMenu.add(Menu.NONE, R.id.archive , Menu.NONE, R.string.archive).setIcon(getResources().getDrawable(R.drawable.archive_2));
+        navMenu.add(Menu.NONE, Constants.KEY_GENERAL_SECTION , Menu.NONE, R.string.all).setIcon(getResources().getDrawable(R.drawable.note_multiple));
+        navMenu.add(Menu.NONE, Constants.KEY_NOTIFICATIONS_SECTION , Menu.NONE, "Напоминания").setIcon(getResources().getDrawable(R.drawable.bell));
+        navMenu.add(Menu.NONE, Constants.KEY_ARCHIVE_SECTION , Menu.NONE, R.string.archive).setIcon(getResources().getDrawable(R.drawable.archive_2));
 
+        undifinedPoint = navMenu.findItem(Constants.KEY_GENERAL_SECTION);
 
         for (Section s:sections
                 ) {
@@ -420,9 +419,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         }
 
         navMenu.add(45, R.id.add, Menu.NONE, R.string.newPoint).setIcon(getResources().getDrawable(R.drawable.ic_add));
-        navMenu.add(Menu.NONE, R.id.deleted , Menu.NONE, R.string.bucket).setIcon(getResources().getDrawable(delete));
-        navMenu.add(Menu.NONE, R.id.settings , Menu.NONE, R.string.settings).setIcon(getResources().getDrawable(R.drawable.settings));
-        navMenu.add(Menu.NONE, R.id.exit , Menu.NONE, R.string.exit).setIcon(getResources().getDrawable(R.drawable.exit_to_app));
+        navMenu.add(Menu.NONE, Constants.KEY_DELETED_SECTION , Menu.NONE, R.string.bucket).setIcon(getResources().getDrawable(delete));
+        navMenu.add(Menu.NONE, Constants.KEY_SETTINGS , Menu.NONE, R.string.settings).setIcon(getResources().getDrawable(R.drawable.settings));
         //  navMenu.add(Menu.NONE, 245 , Menu.NONE,"clear sections");
     }
 
@@ -660,26 +658,26 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         switch (item.getItemId()){
 
-            case R.id.undefined:
+            case Constants.KEY_GENERAL_SECTION:
                 saveNotes();
                 setItemMovement(true);
                 currentKind = Constants.UNDEFINED;
                 sectionWasChanged();
                 break;
-            case R.id.deleted:
+            case Constants.KEY_DELETED_SECTION:
                 saveNotes();
                 currentKind = Constants.DELETED;
                 sectionWasChanged();
                 setItemMovement(false);
                 break;
-            case R.id.archive:
+            case Constants.KEY_ARCHIVE_SECTION:
                 saveNotes();
                 setItemMovement(true);
                 toolbar.setTitle(R.string.archive);
                 currentKind = Constants.ARCHIVE;
                 sectionWasChanged();
                 break;
-            case R.id.notifications:
+            case Constants.KEY_NOTIFICATIONS_SECTION:
                 saveNotes();
                 notification_on = true;
 
@@ -691,12 +689,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 adapter.dataChanged(values);
                 fab.hide();
                 break;
-            case R.id.settings:
+            case Constants.KEY_SETTINGS:
                 Intent intent = new Intent(this, SettingsActivity.class);
                 this.startActivity(intent);
-                break;
-            case R.id.exit:
-                this.finish();
                 break;
         }
 
@@ -979,9 +974,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 break;
             case R.id.white:
                 adapter.setColorSelectionTasks(0);
-                break;
-            case R.id.pink:
-                adapter.setColorSelectionTasks(Constants.RED);
                 break;
         }
         dialog.dismiss();

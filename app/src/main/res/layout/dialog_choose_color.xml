@@ -29,18 +29,18 @@
 
         <ImageView
             android:padding="4dp"
-            android:id="@id/green"
+            android:id="@+id/green"
             android:clickable="true"
             android:onClick="setColor"
             android:layout_weight="1"
-            android:layout_width="wrap_content"
+            android:layout_width="56dp"
             android:layout_height="56dp"
             android:src="@drawable/green_round"/>
 
 
         <ImageView
             android:padding="4dp"
-            android:id="@id/red"
+            android:id="@+id/red"
             android:clickable="true"
             android:onClick="setColor"
             android:layout_weight="1"
@@ -49,7 +49,7 @@
             android:src="@drawable/red_round"/>
         <ImageView
             android:padding="4dp"
-            android:id="@id/blue"
+            android:id="@+id/blue"
             android:clickable="true"
             android:onClick="setColor"
             android:layout_weight="1"
@@ -58,7 +58,7 @@
             android:src="@drawable/blue_round"/>
         <ImageView
             android:padding="4dp"
-            android:id="@id/yellow"
+            android:id="@+id/yellow"
             android:clickable="true"
             android:onClick="setColor"
             android:layout_weight="1"
@@ -67,7 +67,7 @@
             android:src="@drawable/yellow_round"/>
         <ImageView
             android:padding="4dp"
-            android:id="@id/white"
+            android:id="@+id/white"
             android:clickable="true"
             android:onClick="setColor"
             android:layout_weight="1"

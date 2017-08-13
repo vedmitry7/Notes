@@ -52,4 +52,11 @@ public class Constants {
     public static final String LAYOUT_GRID  = "grid";
     public static final String MAIN_RECYCLER_LAYOUT  = "recucler_layout";
     public static final String NOTIF_ON = "notification_on";
+
+
+    public static final int KEY_GENERAL_SECTION  = 456789789;
+    public static final int KEY_NOTIFICATIONS_SECTION  = 456789790;
+    public static final int KEY_ARCHIVE_SECTION  = 456789791;
+    public static final int KEY_SETTINGS  = 456789792;
+    public static final int KEY_DELETED_SECTION  = 456789793;
 }
