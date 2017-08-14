@@ -49,7 +49,7 @@
         android:layout_marginBottom="@dimen/list_note_fab_margin"
         android:layout_marginRight="@dimen/activity_vertical_margin"
         app:fabSize="mini"
-        app:srcCompat="@drawable/format_list"
+        app:srcCompat="@drawable/ic_menu_black_24dp"
         android:visibility="invisible" />
 
     <android.support.design.widget.FloatingActionButton
@@ -62,7 +62,7 @@
         android:layout_marginBottom="@dimen/simple_note_fab_margin"
         android:layout_marginRight="@dimen/activity_vertical_margin"
         app:fabSize="mini"
-        app:srcCompat="@drawable/format_list_checks" />
+        app:srcCompat="@drawable/ic_format_list_checks_black_24dp" />
 
 
 </android.support.design.widget.CoordinatorLayout>

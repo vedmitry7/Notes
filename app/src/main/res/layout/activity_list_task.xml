@@ -33,7 +33,7 @@
                 android:onClick="cancelNotification"/>
             <Button
                 android:id="@+id/menuButton"
-                android:background="@drawable/ic_naw_white"
+                android:background="@drawable/ic_dots_vertical_black_36dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="16dp"
                 android:layout_width="24dp"

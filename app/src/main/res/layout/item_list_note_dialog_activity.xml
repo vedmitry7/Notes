@@ -14,7 +14,7 @@
         android:id="@+id/checkBoxDialog"
         android:layout_gravity="top|left"
         android:alpha="0.67"
-        android:button="@drawable/checkbox_selector"
+        android:button="@drawable/check_box_selector"
         />
 
     <TextView

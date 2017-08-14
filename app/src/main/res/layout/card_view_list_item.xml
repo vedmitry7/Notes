@@ -11,14 +11,12 @@
         android:layout_height="16dp"
         android:layout_width="16dp"
         android:id="@+id/checkBoxDialog"
-        android:background="@drawable/image_button_selector"
-
+        android:background="@drawable/check_box_selector"
         />
 
     <TextView
         android:layout_toRightOf="@+id/checkBoxDialog"
         android:paddingLeft="2dp"
-        android:text="TextView TextView  dsf sfsd fsd fsd fsdf sd fsd fsdf sdf sView TextView "
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView3"

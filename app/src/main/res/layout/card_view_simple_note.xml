@@ -8,7 +8,7 @@
     card_view:cardCornerRadius="3dp"
     >
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,6 +16,7 @@
         android:paddingRight="3dp">
 
         <RelativeLayout
+            android:id="@+id/container_text_with_alarm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -35,7 +36,7 @@
             <ImageView
                 android:visibility="invisible"
                 android:id="@+id/alarm_ic"
-                android:src="@drawable/alarm_check"
+                android:src="@drawable/ic_alarm_black_18dp"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_gravity="right"
@@ -46,8 +47,8 @@
 
         </RelativeLayout>
 
-
         <TextView
+            android:layout_below="@+id/container_text_with_alarm"
             android:text="TextView"
             android:paddingBottom="1dp"
             android:maxLines="5"
@@ -56,5 +57,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/taskTextView" />
-    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nitif_info_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/taskTextView"
+  android:visibility="gone"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/deliver_nitif_card"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#999999">
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/text_view_notification_info"
+                android:layout_below="@id/deliver_nitif_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
 </android.support.v7.widget.CardView>

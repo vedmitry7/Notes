@@ -38,7 +38,7 @@
             <ImageView
                 android:visibility="invisible"
                 android:id="@+id/alarm_ic"
-                android:src="@drawable/alarm_check"
+                android:src="@drawable/ic_alarm_black_18dp"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_gravity="right"

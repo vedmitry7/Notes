@@ -16,7 +16,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,7 +36,6 @@ import com.example.dmitryvedmed.taskbook.logic.SimpleNote;
 import com.example.dmitryvedmed.taskbook.logic.SuperNote;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -68,10 +66,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private boolean[] selects;
     private SharedPreferences sharedPreferences;
     private int textSize;
+    private List<SuperNote> selectedTaskCopy;
+
     public int getSelectedTasksCounter() {
         return selectedTasksCounter;
     }
-    private List<SuperNote> selectedTaskCopy;
 
     public boolean[] getSelects() {
         return selects;
@@ -87,11 +86,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return list;
     }
 
-    public void setSelectedTaskCopy(List<SuperNote> selectedTaskCopy) {
-        this.selectedTaskCopy = selectedTaskCopy;
-        Log.d("TAG", "       Adapter ---  COOOOOOOOOOOPYYYY SIZE = " + selectedTasks.size());
-    }
-
     public void fillSelectedTasks(ArrayList<Integer> list){
         for (Integer i : list
                 ) {
@@ -102,26 +96,18 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 }
             }
         }
-        Log.d("TAG", "       Adapter ---  fillSelectedTasks S = " + selectedTasks.size());
-
     }
 
     public void returnTranslatedTask(String s){
-        Log.d("TAG", "       Adapter ---  RETUUUUUUURN COPY SIZE start = " + selectedTaskCopy.size());
         for (SuperNote st: selectedTaskCopy){
             activity.dbHelper.updateTask(st, s);
         }
-        Log.d("TAG", "       Adapter ---  RETUUUUUUURN TASKS SIZE start = " + tasks.size());
         tasks.addAll(selectedTaskCopy);
-        Log.d("TAG", "       Adapter ---  RETUUUUUUURN TASKS SIZE finish = " + tasks.size());
         selectedTaskCopy.clear();
-        Log.d("TAG", "       Adapter ---  RETUUUUUUURN COPY finish = " + selectedTaskCopy.size());
-
         dataChanged(tasks);
     }
 
     public void setSelects(boolean[] selects) {
-            Log.d("TAG", "       Adapter --- setSelects(boolean[] selects");
         this.selects = selects;
         notifyDataSetChanged();
         notifyDataSetChanged();
@@ -130,6 +116,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     enum Mode {
         NORMAL, SELECTION_MODE
     }
+
     Mode getMode() {
         return mode;
     }
@@ -143,16 +130,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     MainRecyclerAdapter(List<SuperNote> tasks, Context context) {
-        Log.d("TAG", "       Adapter --- constructor  ---");
         this.tasks = tasks;
 
         compareTasks();
 
         this.context = context;
         selectedTasks = new ArrayList<>();
-        Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
         activity = (PerfectActivity) context;
-      //  Log.d("TAG", "       Adapter, tasksSize = " + tasks.size());
         textView = new TextView(context);
         textView.setText("1234we5r");
         typeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Regular.ttf");
@@ -172,7 +156,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         Intent intent = new Intent(context, NotifyTaskReceiver.class);
         intent.setAction("TASK_NOTIFICATION");
-        //intent1.putExtra("id", task.getId());
         PendingIntent sender = PendingIntent.getBroadcast(context, requestCode, intent, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(sender);
@@ -186,7 +169,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         selectedTaskCopy.add(tasks.get(position));
 
         String rem = sharedPreferences.getString(Constants.SWIPE_REMEMBER, "");
-       // Log.d("TAG", "       Adapter --- onItemDismiss, position = " + position + " " + rem);
 
         switch (rem){
 
@@ -197,7 +179,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     activity.dbHelper.updateTask(tasks.get(position), Constants.ARCHIVE);
                 }
                 activity.showSnackBar(Constants.ARCHIVE, 1);
-                tasks.get(position).setPosition(0);                 //?
+                tasks.get(position).setPosition(0);
                 tasks.remove(position);
                 notifyItemRemoved(position);
                 setRightPosition();
@@ -206,8 +188,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 activity.dbHelper.updateTask(tasks.get(position), Constants.DELETED);
                 cancelNotification(tasks.get(position).getId());
                 activity.showSnackBar(Constants.DELETED, 1);
-                tasks.get(position).setPosition(0);                 //?
-                tasks.get(position).setRemind(false);                 //?
+                tasks.get(position).setPosition(0);
+                tasks.get(position).setRemind(false);
                 tasks.remove(position);
                 notifyItemRemoved(position);
                 setRightPosition();
@@ -224,12 +206,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     textView.setText(R.string.unarchive);
                 }
                 mBuilder.setView(mView);
-                //mBuilder.setView(R.layout.dialog_question_layout);
                 final AlertDialog dialog = mBuilder.create();
                 dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialogInterface) {
-                   //     Log.d("TAG", "       Adapter --- CANCEL LISTENER ");
                         notifyDataSetChanged();
                     }
                 });
@@ -244,13 +224,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         activity.showSnackBar(Constants.ARCHIVE, 1);
                         dialog.dismiss();
 
-                        tasks.get(position).setPosition(0);//?
+                        tasks.get(position).setPosition(0);
 
                         tasks.remove(position);
                         notifyItemRemoved(position);
                         setRightPosition();
                         if(remember.isChecked()){
-                            Log.d("TAG", "       Adapter ---                                CHECKED ");
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(Constants.SWIPE_REMEMBER, Constants.ARCHIVE);
                             editor.commit();
@@ -265,14 +244,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         dialog.dismiss();
                         activity.showSnackBar(Constants.DELETED, 1);
 
-                        tasks.get(position).setPosition(0);                 //?
+                        tasks.get(position).setPosition(0);
                         tasks.get(position).setRemind(false);
                         //?
                         tasks.remove(position);
                         notifyItemRemoved(position);
                         setRightPosition();
                         if(remember.isChecked()){
-                            Log.d("TAG", "       Adapter ---                                CHECKED ");
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(Constants.SWIPE_REMEMBER, Constants.DELETED);
                             editor.commit();
@@ -288,23 +266,17 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public void onItemSelected() {
-      //  System.out.println(" onItem SELECTED ");
-
     }
 
     public void translateTo(String s){
-        //    Log.d("TAG", "           adapter translateTo " + s);
         selectedTaskCopy.addAll(selectedTasks);
-        Log.d("TAG", "       Adapter --- !                      COOOOOOOOOOOOPYYYY111111 " + selectedTaskCopy.size());
         for (SuperNote t:selectedTasks
                 ) {
-            //        Log.d("TAG", t.getId() +  "       translateTo " + s);
             activity.dbHelper.updateTask(t, s);
         }
         activity.showSnackBar(s, selectedTasksCounter);
         tasks.removeAll(selectedTasks);
         selectedTasks.clear();
-        Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
 
         setRightPosition();
         notifyDataSetChanged();
@@ -312,12 +284,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         activity.selectedItemCount(0);
         mode = Mode.NORMAL;
         selects = new boolean[tasks.size()];
-        Log.d("TAG", "       Adapter --- !                      COOOOOOOOOOOOPYYYY2222222222 " + selectedTaskCopy.size());
     }
 
     public void cancelSelection() {
         selectedTasks.clear();
-        Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
 
         activity.selectedItemCount(0);
         mode = Mode.NORMAL;
@@ -333,7 +303,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             activity.dbHelper.deleteTask(t);
         }
         tasks.removeAll(selectedTasks);
-        Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
         selectedTasks.clear();
         setRightPosition();
         notifyDataSetChanged();
@@ -350,22 +319,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
 
     public void setColorSelectionTasks(int color){
-        Log.d("TAG", "!!!!!!!!!             AAAAAA SET COLOR sel tasks size = " + selectedTasks.size());
-        Log.d("TAG", "!!!!!!!!!        after update     AAAAAA SET COLOR sel tasks size = " + selectedTasks.size());
-
-        for (SuperNote s:tasks
-             ) {
-            Log.d("TAG",s.getId() +  " code = " + s.hashCode());
-        }
-        Log.d("TAG","___________________________________________");
         for (SuperNote s:selectedTasks
                 ) {
-            Log.d("TAG", s.getId() +  " code = " + s.hashCode());
             s.setColor(color);
         }
         notifyDataSetChanged();
         selectedTasks.clear();
-        Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
 
         activity.selectedItemCount(0);
         mode = Mode.NORMAL;
@@ -388,7 +347,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-    //    Log.d("TAG", "       Adapter --- onItemMove, FROM - " + fromPosition + ", TO - " + toPosition);
         SuperNote prev = tasks.remove(fromPosition);
         tasks.add(toPosition, prev);
         notifyItemMoved(fromPosition, toPosition);
@@ -429,7 +387,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
             layout = (LinearLayout) itemView.findViewById(R.id.card_view_list_layout);
             cardView = (CardView) itemView.findViewById(R.id.card_view);
-            //cardView.setOnLongClickListener((DrawerTestActivity)context);
             cardView.setOnClickListener(this);
             cardView.setOnLongClickListener(this);
             itemView.setOnTouchListener(this);
@@ -438,11 +395,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public void onItemSelected() {
-        //    Log.d("TAG", "       Adapter --- onItemSelected POSITION " + getAdapterPosition());
             if(getAdapterPosition() == -1)
                 return;
             if(mode==Mode.NORMAL) {
-          //      Log.d("TAG", "                                              COLOR CHANGE  LT GRAY ON ITEM SEl");
                 cardView.setCardBackgroundColor(Color.LTGRAY);
                 wasSelected = true;
                 selectedTasks.add(tasks.get(getAdapterPosition()));
@@ -451,12 +406,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public void onItemClear() {
-         //   Log.d("TAG", "       Adapter --- onItemClear");
             if(mode != Mode.SELECTION_MODE) {
                 wasSelected = false;
                 selectedTasks.clear();
-                Log.d("TAG", "       Adapter --- !!!!!!!!!!!!!!!!!!!!!!!!!!!!selectedTasks.clear()");
-
                 if (getAdapterPosition() != -1)
                     setColorCardView(cardView, getAdapterPosition());
             }
@@ -465,20 +417,16 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-         //   Log.d("TAG", "       Adapter --- onClick " + position);
-         //   Log.d("TAG", "       Adapter --- onClick " + view.toString());
-            Log.d("TAG", "                                          start             ON Click " + selectedTasks.size());
 
             if(position==-1)
                 return;
 
             if(mode == Mode.NORMAL) {
-        //        Log.d("TAG", "       Adapter --- MODE NORMAL " + MainRecyclerAdapter.this.getItemViewType(position) );
 
                 switch (MainRecyclerAdapter.this.getItemViewType(position)) {
                     case 0:
                         Intent intent = new Intent(context, SimpleNoteActivity.class);
-                        intent.putExtra(Constants.TASK, (Serializable) tasks.get(position));
+                        intent.putExtra(Constants.TASK, tasks.get(position));
                         intent.putExtra(Constants.KIND, activity.currentKind);
                         context.startActivity(intent);
                         activity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
@@ -493,35 +441,24 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 }
             }
             else if (mode == Mode.SELECTION_MODE) {
-           //     Log.d("TAG", "       Adapter --- MODE NE NORMAL " );
                 if (selects[position]) {
-              //      Log.d("TAG", "       SELECTED POSITION " + position +" теперь False" );
-                    // cardView.setCardBackgroundColor(Color.WHITE);
                     selectedTasks.remove(tasks.get(position));
-
-                    // cardView.setSelected(false);
                     selects[position] = false;
                     selectedTasksCounter--;
                     activity.selectedItemCount(selectedTasksCounter);
                     if(selectedTasksCounter==0) {
                         setSelectionMode(Mode.NORMAL);
                     }
-               //     Log.d("TAG", "       selectedTasksCounter " + selectedTasksCounter);
                 } else {
-                   // cardView.setCardBackgroundColor(Color.LTGRAY);
-                 //   cardView.setSelected(true);
-              //      Log.d("TAG", "       SELECTED POSITION " + position +" теперь True" );
                     if(!selectedTasks.contains(tasks.get(position)))
                     selectedTasks.add(tasks.get(position));
                     selectedTasksCounter++;
                     activity.selectedItemCount(selectedTasksCounter);
                     selects[position] = true;
-             //       Log.d("TAG", "       selectedTasksCounter " + selectedTasksCounter);
                 }
-             //   Log.d("TAG", "       Adapter --- sel. size" + selectedTasks.size());
+
             }
             notifyItemChanged(getAdapterPosition());
-        //    Log.d("TAG", "                                             end          ON Click " + selectedTasks.size());
         }
 
         @Override
@@ -530,29 +467,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             if(mode == Mode.NORMAL)
                 activity.setSelectionMode();
             int position = getAdapterPosition();
-      //      Log.d("TAG", "       SELECTED POSITION " + position + " теперь True Mode normal - " + (mode==Mode.NORMAL));
-
             onClick(new View(context));
-
-            /* if(getAdapterPosition()!=-1) {
-                Log.d("TAG", "       EAHHH  work");
-                if(selects[position]){
-                    selectedTasksCounter--;
-                    selects[position] = false;
-                    selectedTasks.remove(tasks.get(position));
-                    onClick(new View(context));
-                } else{
-                    selectedTasksCounter++;
-                    selects[position] = true;
-                }
-                activity.selectedItemCount(selectedTasksCounter);
-                notifyItemChanged(position);
-            }*/
         }
 
         @Override
         public boolean onLongClick(View view) {
-        //    Log.d("TAG", "      LOOOOONG CLICK " );
             return true;
         }
 
@@ -569,25 +488,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-       Log.d("TAG", "       Adapter --- onCreateViewHolder");
         RecyclerViewHolder recyclerViewHolder = null;
         switch (viewType) {
             case 0:
-                //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_note, parent,false);
-              // View view ;
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task_with_date, parent, false);;
-
-          /*      if(!activity.isNotification_on()){
-                    Log.d("TAG", "       Adapter --- onCreateViewHolder       WITHOUT INFO");
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_note, parent,false);}
-                else {
-                    Log.d("TAG", "       Adapter --- onCreateViewHolder       WITH INFO WITH INFO WITH INFO");
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_task_with_date, parent, false);
-                }*/
-
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_simple_note, parent, false);
                 recyclerViewHolder = new RecyclerViewHolder(view);
                 break;
-
             case 1:
                 View view1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_list_note, parent,false);
                 recyclerViewHolder = new RecyclerViewHolder(view1);
@@ -601,42 +507,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     private void setColorCardView(CardView cardView, int position){
-        Log.d("TAG", "       setColorCardView");
- /*       for (SuperNote s:selectedTasks
-                ) {
-            Log.d("TAG", "  sel task  id = " + s.hashCode() +" "+ s.getId());
-
-        }
-        for (SuperNote s:tasks
-                ) {
-            Log.d("TAG", "  sel task  id = " + s.hashCode() +" "+ s.getId());
-        }
-*/
         if(mode == Mode.SELECTION_MODE) {
-            Log.d("TAG", "                          on selection mode");
-
-      //      Log.d("TAG", "       Adapter --- setColorCardView SELECTION MODE ON ");
-     //       Log.d("TAG", "       SelectedTasks Size = " + selectedTasks.size() + " position = " + position);
-
-       /*     int id = tasks.get(position).getId();
-            boolean b = false;
-            for (SuperNote s:selectedTasks
-                 ) {
-                if(s.getId() == id){
-                    b = true;
-                    continue;
-                }
-            }
-
-            if(b){*/
             if (selectedTasks.contains(tasks.get(position))) {
-                Log.d("TAG", "       SelectedTasks contains = " + position);
-       //         Log.d("TAG", "                                              COLOR CHANGE  LT GRAY ON BIND VH");
-
                 cardView.setCardBackgroundColor(Color.LTGRAY);
-
             } else {
-       //         Log.d("TAG", "       Adapter --- NOT SELECTION");
                 if (position >= tasks.size())
                     return;
                 switch (tasks.get(position).getColor()) {
@@ -653,16 +527,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightLightBlue));
                         break;
                     case 0:
-         //               Log.d("TAG", "                                              COLOR CHANGE WHITE!!!!!!!!!  ON BIND VH");
                         cardView.setCardBackgroundColor(Color.WHITE);
                         break;
                 }
             }
             return;
         }
+
         if (position >= tasks.size())
             return;
-    //    Log.d("TAG", "                          on normal mode");
         switch (tasks.get(position).getColor()) {
             case Constants.GREEN:
                 cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightGreen));
@@ -677,7 +550,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightLightBlue));
                 break;
             case 0:
-   //             Log.d("TAG", "                                              COLOR CHANGE WHITE not sel mode  ON BIND VH");
                 cardView.setCardBackgroundColor(Color.WHITE);
                 break;
         }
@@ -685,16 +557,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
-        Log.d("TAG", "       Adapter --- onBindViewHolder");
-     //   Log.d("TAG", "       POS = " + position + " CV selected - " + holder.cardView.isSelected());
-        //holder.cardView.setSelected(false);
-        // holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.taskColorRed));
-        // holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context,tasks.get(position).getColor()));
-        // holder.cardView.setCardBackgroundColor(tasks.get(position).getColor());
-
         setColorCardView(holder.cardView, position);
-
-
 
         switch (getItemViewType(position)){
             case 0:
@@ -716,19 +579,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 }
 
                 if(tasks.get(position).isRemind()){
-        //           Log.d("TAG", "       Adapter --- onBindViewHolder TASK " + position + "REMIND IS TRUE" );
                     holder.alarm.setVisibility(View.VISIBLE);
                 } else
                     holder.alarm.setVisibility(View.GONE);
-
 
                 if(activity.isNotification_on()){
                     holder.notifInfoContainer.setVisibility(View.VISIBLE);
                     if(holder.notifInfo!=null) {
 
                         SuperNote task = tasks.get(position);
-
-
                         String dateString = DateFormat.format("dd/MM/yyyy", new Date(task.getReminderTime())).toString();
                         String timeString = DateFormat.format("H:mm", new Date(task.getReminderTime())).toString();
                         String repeating;
@@ -742,10 +601,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         } else {
                             repeating = "None";
                         }
-
                         holder.notifInfo.setText(activity.getResources().getString(R.string.date) + " : " + dateString + "\r\n" +
                                 "Время : " + timeString+ "\r\n" + "Повтор : " + repeating);
-
                     }
                 } else {
                     holder.notifInfoContainer.setVisibility(View.GONE);
@@ -755,9 +612,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
             case 1:
                 listNote = (ListNote) tasks.get(position);
-             /*        holder.ltFirst.setText(listNote.getUncheckedTask(0));
-                    holder.ltSecond.setText(listNote.getUncheckedTask(1));*/
-
                 holder.listHeadEditText.setTextSize(textSize);
                 if(listNote.getHeadLine()!=null && listNote.getHeadLine().length()==0) {
                     holder.listHeadEditText.setVisibility(View.GONE);
@@ -766,7 +620,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.listHeadEditText.setVisibility(View.VISIBLE);
                     holder.listHeadEditText.setText(listNote.getHeadLine());
                 }
-
 
                 LayoutInflater inflater = (LayoutInflater)context.getSystemService
                         (Context.LAYOUT_INFLATER_SERVICE);
@@ -787,7 +640,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     t.setTextSize(textSize);
                     t.setEllipsize(TextUtils.TruncateAt.END);
                     ImageButton c = (ImageButton) view.findViewById(R.id.checkBoxDialog);
-                    // c.setPressed(true);
                     t.setTypeface(typeFace);
                     t.setText(s);
                     holder.layout.addView(view);
@@ -810,40 +662,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.layout.addView(view);
 
                 }
-         /*       for (String s:listNote.getUncheckedTasks()
-                        ) {
-                    View view = inflater.inflate(R.layout.card_view_list_item, null, false);
-                    TextView t = (TextView) view.findViewById(R.id.textView3);
-                    t.setMaxLines(2);
-                    ImageButton c = (ImageButton) view.findViewById(R.id.checkBoxDialog);
-                    // c.setPressed(true);
-                    t.setTypeface(typeFace);
-                    t.setText(s);
-                    holder.layout.addView(view);
-                }
-                for (String s:listNote.getCheckedTasks()
-                        ) {
-                    View view = inflater.inflate(R.layout.card_view_list_item, null, false);
-                    TextView t = (TextView) view.findViewById(R.id.textView3);
-                    ImageButton c = (ImageButton) view.findViewById(R.id.checkBoxDialog);
-                    c.setPressed(true);
-                    t.setTypeface(typeFace);
-                    t.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-                    t.setText(s);
-                    holder.layout.addView(view);
-                }
-                */
-        /*       holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(context, ListNoteActivity.class);
-                        intent.putExtra("ListNote", tasks.get(position));
-                        context.startActivity(intent);
-                    }
-                });*/
                 if(tasks.get(position).isRemind()){
                     holder.alarm.setVisibility(View.VISIBLE);
-            //        Log.d("TAG", "       Adapter --- onBindViewHolder TASK " + position + "REMIND IS TRUE" );
                 } else
                     holder.alarm.setVisibility(View.GONE);
 
@@ -855,7 +675,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             if(holder.notifInfo!=null) {
 
                 SuperNote task = tasks.get(position);
-
 
                 String dateString = DateFormat.format("dd.MM.yyyy", new Date(task.getReminderTime())).toString();
                 String timeString = DateFormat.format("H:mm", new Date(task.getReminderTime())).toString();
@@ -871,10 +690,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     repeating = "";
                 }
 
-               /* holder.notifInfo.setText(activity.getResources().getString(R.string.date) + " : " + dateString + "\r\n" +
-                        "Время : " + timeString+ "\r\n" + "Повтор : " + repeating);*/
                 holder.notifInfo.setText(dateString + " " + timeString+ " " + repeating);
-
             }
         } else {
             holder.notifInfoContainer.setVisibility(View.GONE);
@@ -898,13 +714,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     public void dataChanged(List<SuperNote> tasks){
-        Log.d("TAG", "       Adapter --- dataChanged");
         this.tasks = tasks;
         if(!activity.is_in_action_mode()){
             selects = new boolean[tasks.size()];
-            Log.d("TAG", "       Adapter ---                                                selects = new boolean[tasks.size()];");
-        } else             Log.d("TAG", "       Adapter ---                  ne obnuliaem");
-
+        }
         textSize = sharedPreferences.getInt("cardFontSize", 16);
         compareTasks();
         selectedTaskCopy = new ArrayList<>();
@@ -912,7 +725,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     private void compareTasks(){
-    //    Log.d("TAG", "       Adapter --- compareTasks");
         Comparator<SuperNote> comparator = new Comparator<SuperNote>() {
             @Override
             public int compare(SuperNote superTask, SuperNote t1) {
@@ -922,7 +734,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         Collections.sort(tasks, comparator);
     }
     private void compareSelectionTasks(){
-    //    Log.d("TAG", "       Adapter --- compareTasks");
         Comparator<SuperNote> comparator = new Comparator<SuperNote>() {
             @Override
             public int compare(SuperNote superTask, SuperNote t1) {
@@ -933,7 +744,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     private void setRightPosition(){
-    //    Log.d("TAG", "       Adapter --- setRightPosition");
         for (int i = 0; i < tasks.size(); i++) {
             tasks.get(i).setPosition(tasks.size()-i-1);
         }

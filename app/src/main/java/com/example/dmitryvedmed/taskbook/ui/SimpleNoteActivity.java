@@ -269,15 +269,15 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
         Log.d("TAG", "COLOR  BLAAAAAAAACK" );
         int color = ContextCompat.getColor(this, android.R.color.black);
         cancelNotification.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_bell_outline_black_36dp));
-        menuButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_naw_black));
+        menuButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_dots_vertical_black_36dp));
         toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
     private void setWhiteNavIconColor(){
         Log.d("TAG", "COLOR  WHIIIIIIIIIITE" );
         int color = ContextCompat.getColor(this, android.R.color.white);
-        cancelNotification.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_bell_outline_white_48dp));
-        menuButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_naw_white));
+        cancelNotification.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_bell_outline_white_36dp));
+        menuButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_dots_vertical_white_36dp));
         cancelNotification.setFocusable(false);
         toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }

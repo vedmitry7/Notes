@@ -2,24 +2,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.dmitryvedmed.taskbook.ui.DrawerTestActivity">
 
-    <item android:icon="@drawable/archive_white"
+    <item android:icon="@drawable/ic_package_down_white_36dp"
         android:id="@+id/toArchive"
         android:title="toArchive"
         android:showAsAction="always"/>
 
-    <item android:icon="@drawable/transfer"
+    <item android:icon="@drawable/ic_transfer_white_36dp"
         android:id="@+id/translateTo"
         android:title="translateTo"
         android:showAsAction="always"/>
 
     <item
         android:id="@+id/set_color_3"
-        android:icon="@drawable/set_color_paint"
+        android:icon="@drawable/ic_format_paint_white_36dp"
         android:title="Установить цвет"
         android:showAsAction="always" >
     </item>
 
-    <item android:icon="@drawable/delete_2"
+    <item android:icon="@drawable/ic_delete_white_36dp"
         android:id="@+id/delete_selection_items"
         android:title="toBucket"
         android:showAsAction="always"/>

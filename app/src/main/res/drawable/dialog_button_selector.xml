@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/dialod_bg_shape"
+    <item android:drawable="@drawable/dialog_bg_shape"
         android:state_pressed="false" />
 
     <item android:drawable="@color/cardview_shadow_start_color"

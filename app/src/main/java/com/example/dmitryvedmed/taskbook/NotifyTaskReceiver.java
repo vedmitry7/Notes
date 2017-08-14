@@ -73,13 +73,13 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             Resources res = context.getResources();
 
             builder.setContentIntent(contentIntent)
-                    .setSmallIcon(R.drawable.note_multiple_outline)
+                    .setSmallIcon(R.drawable.ic_menu_black_24dp)
                     // большая картинка
-                    .setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.note_multiple_outline))
+                    .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.super_ic))
                     .setTicker(String.valueOf(task.getId()))
                     .setWhen(System.currentTimeMillis())
                     .setAutoCancel(false)
-                    .addAction(R.drawable.note_multiple_outline, context.getString(R.string.act_open), contentIntent)
+                    .addAction(R.drawable.ic_menu_black_24dp, context.getString(R.string.act_open), contentIntent)
                     .setContentTitle(task.getHeadLine())
                     .setContentText(task.getContext()); // Текст уведомления
 
@@ -123,13 +123,13 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             Resources res = context.getResources();
 
             builder.setContentIntent(contentIntent)
-                    .setSmallIcon(R.drawable.note_multiple_outline)
+                    .setSmallIcon(R.drawable.ic_format_list_checks_black_24dp)
                     // большая картинка
-                    .setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.note_multiple_outline))
+                    .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.super_ic))
                     .setTicker(String.valueOf(task.getId()))
                     .setWhen(System.currentTimeMillis())
                     .setAutoCancel(false)
-                    .addAction(R.drawable.note_multiple_outline, "Открыть", contentIntent)
+                    .addAction(R.drawable.ic_format_list_checks_black_24dp, "Открыть", contentIntent)
                     .setContentTitle(task.getHeadLine())
                     .setContentText("324");
             // Notification notification = builder.getNotification(); // до API 16
