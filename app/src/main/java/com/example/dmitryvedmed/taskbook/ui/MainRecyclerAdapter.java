@@ -113,6 +113,20 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         notifyDataSetChanged();
     }
 
+    public void cancelNotification(){
+
+        for (SuperNote note:selectedTasks
+             ) {
+            Intent intent1 = new Intent(activity.getApplicationContext(), NotifyTaskReceiver.class);
+            intent1.setAction(Constants.ACTION_NOTIFICATION);
+            PendingIntent sender = PendingIntent.getBroadcast(activity.getApplicationContext(), note.getId(), intent1, 0);
+            AlarmManager alarmManager1 = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
+            alarmManager1.cancel(sender);
+
+            note.setRemind(false);
+        }
+    }
+
     enum Mode {
         NORMAL, SELECTION_MODE
     }
@@ -270,8 +284,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public void translateTo(String s){
         selectedTaskCopy.addAll(selectedTasks);
+
         for (SuperNote t:selectedTasks
                 ) {
+            if(s.equals(Constants.DELETED)){
+                t.setRemind(false);
+            }
             activity.dbHelper.updateTask(t, s);
         }
         activity.showSnackBar(s, selectedTasksCounter);

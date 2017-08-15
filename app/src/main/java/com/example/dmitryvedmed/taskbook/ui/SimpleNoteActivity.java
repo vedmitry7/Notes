@@ -363,6 +363,10 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
 
         PopupMenu popupMenu = new PopupMenu(this, v);
         popupMenu.inflate(R.menu.menu_colors);
+        if(sharedPreferences.getString(Constants.CURRENT_KIND, Constants.UNDEFINED).equals(Constants.DELETED)){
+            MenuItem notify = popupMenu.getMenu().findItem(R.id.notify);
+            notify.setVisible(false);
+        }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {

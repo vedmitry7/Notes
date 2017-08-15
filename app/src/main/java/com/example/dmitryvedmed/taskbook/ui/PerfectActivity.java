@@ -34,6 +34,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.helper.SimpleItemTouchHelperCallback;
@@ -84,6 +85,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private boolean notification_on;
 
     private MenuItem view;
+
+    private TextView textNoNotes;
+
 
     public boolean is_in_action_mode() {
         return is_in_action_mode;
@@ -144,6 +148,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cl);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        textNoNotes = (TextView) findViewById(R.id.textNoNotes);
+
 
         if(sharedPreferences.getBoolean(NOTIF_ON, false)){
         }
@@ -212,11 +219,12 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                     MenuItem unarchive = menu.findItem(R.id.toArchive);
                     unarchive.setIcon(getResources().getDrawable(R.drawable.ic_package_up_white_36dp));
                 }
+
                 if(notification_on){
                     MenuItem unarchive = menu.findItem(R.id.toArchive);
                     MenuItem translate = menu.findItem(R.id.translateTo);
                     MenuItem delete = menu.findItem(R.id.delete_selection_items);
-                    delete.setIcon(getResources().getDrawable(R.drawable.ic_delete_white_36dp));
+                    delete.setVisible(false);
                     unarchive.setVisible(false);
                     translate.setVisible(false);
                 }
@@ -596,15 +604,30 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         editor.commit();
 
         values = dbHelper.getTasks(currentKind);
-        fab.show();
+
+        isSectionEmpty();
+
         if(currentKind.equals(Constants.DELETED)){
             checkOldTask();
             fab.hide();
+        } else {
+            fab.show();
         }
+
         onCreateOptionsMenu(menu);
         adapter.dataChanged(values);
         saveCurrentKind();
         setTitle();
+    }
+
+    private void isSectionEmpty(){
+
+        if(values.size() == 0){
+            textNoNotes.setVisibility(View.VISIBLE);
+        }
+        else {
+            textNoNotes.setVisibility(View.GONE);
+        }
     }
 
     private void setTitle() {
@@ -689,6 +712,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
                 toolbar.setTitle(R.string.notifications);
                 values = dbHelper.getNotificationTasks();
+                isSectionEmpty();
                 adapter.dataChanged(values);
                 fab.hide();
                 break;
@@ -922,7 +946,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         }
 
         checkDeprecated();
-        if(adapter!=null)
+        if(adapter != null)
             adapter.dataChanged(values);
     }
 
@@ -952,7 +976,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         Log.d("TAG", "      Activity --- onResume  ---      "  + currentKind);
         Log.d("TAG", "!!!!!!!!! sel size = " + adapter.getSelectedTasks().size());
         setTitle();
-        // update();
         onCreateNavigationMenu();
         super.onResume();
     }
