@@ -13,11 +13,16 @@
         <item name="android:statusBarColor">#000</item>
         <item name="android:actionBarStyle">@style/actionBar</item>
     </style>
+
     <style name="actionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
     </style>
 
     <style name="MyActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@color/taskColorLightYellow</item>
+    </style>
+
+    <style name="SettingTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">#000</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

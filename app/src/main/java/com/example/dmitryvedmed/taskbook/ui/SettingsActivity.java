@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,8 @@ import android.widget.TimePicker;
 
 import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
+
+import java.util.Calendar;
 
 
 public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
@@ -55,7 +58,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         Toolbar toolbar = (Toolbar) findViewById(R.id.setting_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      //  toolbar.setTitle(R.string.settings);
+        //  toolbar.setTitle(R.string.settings);
         getSupportActionBar().setTitle(R.string.settings);
 
         int color = ContextCompat.getColor(this, R.color.common_google_signin_btn_text_dark);
@@ -68,7 +71,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         cardFontValue = (TextView) findViewById(R.id.textCardFontValue);
         taskFontValue = (TextView) findViewById(R.id.textTaskFontValue);
 
-       setTime();
+        setTime();
 
         taskFontSeekBar = (SeekBar) findViewById(R.id.seekBarTaskFont);
         taskFontSeekBar.setOnSeekBarChangeListener(this);
@@ -136,9 +139,27 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         if(eMinutes.length()==1)
             eMinutes = "0" + eMinutes;
 
-        morningTime.setText(mHours + ":" + mMinutes);
-        afternoonTime.setText(aHours + ":" + aMinutes);
-        eveningTime.setText(eHours + ":" + eMinutes);
+        Calendar time = Calendar.getInstance();
+        String formattedTime;
+        java.text.DateFormat timeFormat = DateFormat.getTimeFormat(this);
+
+        time.set(Calendar.HOUR_OF_DAY, Integer.parseInt(mHours));
+        time.set(Calendar.MINUTE, Integer.parseInt(mMinutes));
+
+        formattedTime = timeFormat.format(time.getTimeInMillis());
+        morningTime.setText(formattedTime);
+
+        time.set(Calendar.HOUR_OF_DAY, Integer.parseInt(aHours));
+        time.set(Calendar.MINUTE, Integer.parseInt(aMinutes));
+
+        formattedTime = timeFormat.format(time.getTimeInMillis());
+        afternoonTime.setText(formattedTime);
+
+        time.set(Calendar.HOUR_OF_DAY, Integer.parseInt(eHours));
+        time.set(Calendar.MINUTE, Integer.parseInt(eMinutes));
+
+        formattedTime = timeFormat.format(time.getTimeInMillis());
+        eveningTime.setText(formattedTime);
     }
 
     @Override

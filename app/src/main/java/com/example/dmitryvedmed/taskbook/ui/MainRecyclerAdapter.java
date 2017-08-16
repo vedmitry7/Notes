@@ -601,31 +601,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 } else
                     holder.alarm.setVisibility(View.GONE);
 
-                if(activity.isNotification_on()){
-                    holder.notifInfoContainer.setVisibility(View.VISIBLE);
-                    if(holder.notifInfo!=null) {
-
-                        SuperNote task = tasks.get(position);
-                        String dateString = DateFormat.format("dd/MM/yyyy", new Date(task.getReminderTime())).toString();
-                        String timeString = DateFormat.format("H:mm", new Date(task.getReminderTime())).toString();
-                        String repeating;
-
-                        if(task.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY){
-                            repeating = activity.getResources().getString(R.string.every_day);
-                        } else if(task.getRepeatingPeriod() == Constants.PERIOD_WEEK){
-                            repeating = activity.getResources().getString(R.string.every_week);
-                        } else if(task.getRepeatingPeriod() == Constants.PERIOD_MONTH){
-                            repeating = activity.getResources().getString(R.string.every_month);
-                        } else {
-                            repeating = "None";
-                        }
-                        holder.notifInfo.setText(activity.getResources().getString(R.string.date) + " : " + dateString + "\r\n" +
-                                "Время : " + timeString+ "\r\n" + "Повтор : " + repeating);
-                    }
-                } else {
-                    holder.notifInfoContainer.setVisibility(View.GONE);
-                }
-
                 break;
 
             case 1:
@@ -698,6 +673,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 String timeString = DateFormat.format("H:mm", new Date(task.getReminderTime())).toString();
                 String repeating;
 
+                java.text.DateFormat dateFormat = DateFormat.getDateFormat(context);
+                java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
+
+                String formattedDate = dateFormat.format(task.getReminderTime()) + " " + timeFormat.format(task.getReminderTime());
+
+                //String rightDateFormat = DateFormat.format("yyyy-MM-dd hh:mm a", new Date(task.getReminderTime())).toString();
+
                 if(task.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY){
                     repeating = activity.getResources().getString(R.string.every_day);
                 } else if(task.getRepeatingPeriod() == Constants.PERIOD_WEEK){
@@ -708,7 +690,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     repeating = "";
                 }
 
-                holder.notifInfo.setText(dateString + " " + timeString+ " " + repeating);
+             //   holder.notifInfo.setText(dateString + " " + timeString+ " " + repeating);
+                holder.notifInfo.setText(formattedDate + " " + repeating);
             }
         } else {
             holder.notifInfoContainer.setVisibility(View.GONE);

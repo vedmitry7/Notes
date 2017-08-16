@@ -33,7 +33,7 @@
         </activity>
         <activity
             android:name=".ui.SettingsActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/SettingTheme" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -70,7 +70,10 @@
             android:label="dialogList"
             android:noHistory="true"
             android:theme="@style/Theme.MyDialog" />
-        <activity android:name=".ui.SectionPositionActivity"></activity>
+        <activity
+            android:name=".ui.SectionPositionActivity"
+            android:theme="@style/SettingTheme"/>
+
     </application>
 
 </manifest>

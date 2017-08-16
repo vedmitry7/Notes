@@ -40,7 +40,7 @@ public class Constants {
     public static final String DELIVER = "7413";
     public static final int GREEN = -11751600;
     public static final int RED = -769226;
-    public static final int YELLOW = -5317;
+    public static final int YELLOW = -141259;
     public static final int BLUE = -14575885;
     public static final long PERIOD_AT_ONCE = 1;
     public static final long PERIOD_ONE_DAY = 86400000;

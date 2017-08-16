@@ -681,13 +681,9 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
                 note.setReminderTime(firstTime);
                 saveTask(false);
 
-
-                String time = notificationTime.get(Calendar.HOUR_OF_DAY) + ":" + notificationTime.get(Calendar.MINUTE);
-
-                spinnerButtonTime.setText(time);
-                // cancelNotification();
-
-                //alarmManager1.cancel(pendingIntent);
+                java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
+                String formattedTime = timeFormat.format(notificationTime.getTimeInMillis());
+                spinnerButtonTime.setText(formattedTime);
             }
         }, hour, minute, true);
         timePickerDialog.show();
@@ -699,7 +695,10 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
 
                 notificationTime.set(year, month, day);
-                spinnerButtonDate.setText(day + ":" + month + ";" + year);
+
+                java.text.DateFormat dateFormat = DateFormat.getDateFormat(context);
+                String formattedDate = dateFormat.format(notificationTime.getTimeInMillis());
+                spinnerButtonDate.setText(formattedDate);
             }
         },notificationTime.get(Calendar.YEAR), notificationTime.get(Calendar.MONTH), notificationTime.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
