@@ -45,7 +45,7 @@ import java.util.List;
 
 public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
-    private ListNote task;
+    private ListNote note;
     public static RecyclerView recyclerView;
     private ListNoteRecyclerAdapter listNoteRecyclerAdapter;
     private Context context;
@@ -107,7 +107,7 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
 
         recyclerView = (RecyclerView) findViewById(R.id.list_activity_recycler_view);
 
-        listNoteRecyclerAdapter = new ListNoteRecyclerAdapter(task, ListNoteActivity.this);
+        listNoteRecyclerAdapter = new ListNoteRecyclerAdapter(note, ListNoteActivity.this);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
@@ -134,14 +134,14 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
             }
         });
 
-        if (task.getColor() != 0){
-            toolbar.setBackgroundColor(task.getColor());
+        if (note.getColor() != 0){
+            toolbar.setBackgroundColor(note.getColor());
             setWhiteNavIconColor();
         } else {
             setBlackNavIconColor();
         }
 
-        if(task.isRemind()){
+        if(note.isRemind()){
             Log.d("TAG", "is REMIND FALSE");
             cancelNotification.setVisibility(View.VISIBLE);
         } else {
@@ -152,17 +152,17 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
     }
 
     private void initTask() {
-        task = (ListNote) getIntent().getSerializableExtra(Constants.LIST_TASK);
-        if(task == null) {
+        note = (ListNote) getIntent().getSerializableExtra(Constants.LIST_TASK);
+        if(note == null) {
             System.out.println("LIST TASK = NULL!");
-            task = new ListNote();
-            task.setId(-1);
-            task.setPosition(getIntent().getIntExtra(Constants.POSITION, 0));
+            note = new ListNote();
+            note.setId(-1);
+            note.setPosition(getIntent().getIntExtra(Constants.POSITION, 0));
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
         else {
-            System.out.println("LIST TASK != NULL, id = " + task.getHeadLine());
-            Log.d("TAG", "COLOR - " + task.getColor());
+            System.out.println("LIST TASK != NULL, id = " + note.getHeadLine());
+            Log.d("TAG", "COLOR - " + note.getColor());
         }
         currentKind = getIntent().getStringExtra(Constants.KIND);
         if(currentKind==null)
@@ -188,34 +188,34 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
                 color = ContextCompat.getColor(this, R.color.taskColorGreen);
                 toolbar.setBackgroundColor(color);
                 setWhiteNavIconColor();
-                task.setColor(color);
+                note.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.red:
                 color = ContextCompat.getColor(this, R.color.taskColorRed);
                 toolbar.setBackgroundColor(color);
                 setWhiteNavIconColor();
-                task.setColor(color);
+                note.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.blue:
                 color = ContextCompat.getColor(this, R.color.taskColorBlue);
                 toolbar.setBackgroundColor(color);
                 setWhiteNavIconColor();
-                task.setColor(color);
+                note.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.yellow:
                 color = ContextCompat.getColor(this, R.color.taskColorYellow);
                 toolbar.setBackgroundColor(color);
                 setWhiteNavIconColor();
-                task.setColor(color);
+                note.setColor(color);
                 Log.d("TAG", "COLOR " + color);
                 break;
             case R.id.white:
                 toolbar.setBackgroundColor(Color.WHITE);
                 setBlackNavIconColor();
-                task.setColor(0);
+                note.setColor(0);
                 break;
         }
         dialog.dismiss();
@@ -298,14 +298,14 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
                 final Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
                 intent.setAction(Constants.ACTION_NOTIFICATION);
                 saveTask(true);
-                intent.putExtra(Constants.ID, task.getId());
+                intent.putExtra(Constants.ID, note.getId());
 
                 final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
                 if(repeating.equals("")) {
 
-                    task.setRepeatingPeriod(0);
-                    task.setRepeating(false);
+                    note.setRepeatingPeriod(0);
+                    note.setRepeating(false);
 
                     if(notificationTime.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()){
                         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
@@ -313,7 +313,7 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
                         mBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
                                 alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
                                 Log.d("TAG", " SET IN PAAAAAAAAAAST!!!!!!!!!!!!! ALARM ALARM!");
                             }
@@ -331,18 +331,54 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
                         return;
                     }
 
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
                     alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
+                } else {
+
+                    intent.putExtra(Constants.REPEATING, true);
+                    intent.putExtra(Constants.PERIOD, repeating);
+
+                    note.setRepeating(true);
+
+                    switch (repeating){
+                        case Constants.EVERY_DAY:
+                            note.setRepeatingPeriod(Constants.PERIOD_ONE_DAY);
+                            while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                                notificationTime.add(Calendar.DAY_OF_MONTH, 1);
+                            }
+                            PendingIntent pi1 = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
+                            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_ONE_DAY, pi1);
+                            break;
+                        case Constants.EVERY_WEEK:
+                            note.setRepeatingPeriod(Constants.PERIOD_WEEK);
+                            while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                                notificationTime.add(Calendar.WEEK_OF_MONTH, 1);
+                            }
+                            PendingIntent pi2 = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
+                            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_WEEK, pi2);
+                            break;
+                        case Constants.EVERY_MONTH:
+                            note.setRepeatingPeriod(Constants.PERIOD_MONTH);
+                            while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                                notificationTime.add(Calendar.MONTH, 1);
+                            }
+                            PendingIntent pi3 = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
+                            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_MONTH, pi3);
+                            break;
+                    }
+
+
                 }
-                if(repeating.equals(Constants.EVERY_DAY)) {
+
+               /* if(repeating.equals(Constants.EVERY_DAY)) {
                     Log.d("TAG", "REPEATING every day " + repeating);
 
                     Log.d("TAG", "difference 1 " + (notificationTime.getTimeInMillis() - System.currentTimeMillis()));
 
                     intent.putExtra(Constants.REPEATING, true);
                     intent.putExtra(Constants.PERIOD, Constants.PERIOD_ONE_DAY);
-                    task.setRepeatingPeriod(Constants.PERIOD_ONE_DAY);
-                    task.setRepeating(true);
+                    note.setRepeatingPeriod(Constants.PERIOD_ONE_DAY);
+                    note.setRepeating(true);
 
                     while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
 
@@ -351,21 +387,21 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
 
                     Log.d("TAG", "difference 2 " + (notificationTime.getTimeInMillis() - System.currentTimeMillis()));
 
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_ONE_DAY, pendingIntent);
                 }
                 if(repeating.equals(Constants.EVERY_WEEK)) {
                     Log.d("TAG", "REPEATING every WEEK " + repeating);
                     intent.putExtra(Constants.REPEATING, true);
                     intent.putExtra(Constants.PERIOD, Constants.PERIOD_WEEK);
-                    task.setRepeatingPeriod(Constants.PERIOD_WEEK);
-                    task.setRepeating(true);
+                    note.setRepeatingPeriod(Constants.PERIOD_WEEK);
+                    note.setRepeating(true);
 
                     while (notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
                         notificationTime.add(Calendar.WEEK_OF_MONTH, 1);
                     }
 
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_WEEK, pendingIntent);
                 }
 
@@ -373,19 +409,19 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
                     Log.d("TAG", "REPEATING every MOUTH " + repeating);
                     intent.putExtra(Constants.REPEATING, true);
                     intent.putExtra(Constants.PERIOD, Constants.PERIOD_MONTH);
-                    task.setRepeatingPeriod(Constants.PERIOD_MONTH);
-                    task.setRepeating(true);
+                    note.setRepeatingPeriod(Constants.PERIOD_MONTH);
+                    note.setRepeating(true);
 
                     while(notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
                         notificationTime.add(Calendar.MONTH, 1);
                     }
 
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),task.getId(), intent, 0);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_MONTH, pendingIntent);
                 }
-
-                task.setRemind(true);
-                task.setReminderTime(notificationTime.getTimeInMillis());
+*/
+                note.setRemind(true);
+                note.setReminderTime(notificationTime.getTimeInMillis());
                 saveTask(false);
                 cancelNotification.setVisibility(View.VISIBLE);
             }
@@ -408,7 +444,7 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
         getMenuInflater().inflate(R.menu.menu_colors, menu);
         deleteCheckedTasks = menu.findItem(R.id.delete_checked_tasks);
 
-        //changeMenuItemVisibility(task.getCheckedTasks().size());
+        //changeMenuItemVisibility(note.getCheckedTasks().size());
 
         return super.onCreateOptionsMenu(menu);
     }*/
@@ -423,8 +459,10 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
             public void onClick(DialogInterface dialogInterface, int i) {
                 cancelNotification();
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancel(task.getId());
+                notificationManager.cancel(note.getId());
                 cancelNotification.setVisibility(View.GONE);
+                note.setRepeating(false);
+                saveTask(false);
             }
         });
         alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -436,23 +474,23 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
         final AlertDialog.Builder inform = new AlertDialog.Builder(this);
         inform.setTitle(getResources().getString(R.string.notification));
 
-        if(task.getReminderTime() < System.currentTimeMillis()){
-            long period = task.getRepeatingPeriod();
-            while (task.getReminderTime() < System.currentTimeMillis()){
-                task.setReminderTime(task.getReminderTime() + period);
+        if(note.getReminderTime() < System.currentTimeMillis()){
+            long period = note.getRepeatingPeriod();
+            while (note.getReminderTime() < System.currentTimeMillis()){
+                note.setReminderTime(note.getReminderTime() + period);
             }
             saveTask(false);
         }
 
-        String dateString = DateFormat.format("dd/MM/yyyy", new Date(task.getReminderTime())).toString();
-        String timeString = DateFormat.format("H:mm", new Date(task.getReminderTime())).toString();
+        String dateString = DateFormat.format("dd/MM/yyyy", new Date(note.getReminderTime())).toString();
+        String timeString = DateFormat.format("H:mm", new Date(note.getReminderTime())).toString();
         String repeating;
 
-        if(task.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY){
+        if(note.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY){
             repeating = getResources().getString(R.string.every_day);
-        } else if(task.getRepeatingPeriod() == Constants.PERIOD_WEEK){
+        } else if(note.getRepeatingPeriod() == Constants.PERIOD_WEEK){
             repeating = getResources().getString(R.string.every_week);
-        } else if(task.getRepeatingPeriod() == Constants.PERIOD_MONTH){
+        } else if(note.getRepeatingPeriod() == Constants.PERIOD_MONTH){
             repeating = getResources().getString(R.string.every_month);
         } else {
             repeating = "None";
@@ -483,7 +521,7 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
         PopupMenu popupMenu = new PopupMenu(this, v);
         popupMenu.inflate(R.menu.menu_colors);
         deleteCheckedTasks = popupMenu.getMenu().findItem(R.id.delete_checked_tasks);
-        changeMenuItemVisibility(task.getCheckedTasks().size());
+        changeMenuItemVisibility(note.getCheckedTasks().size());
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -515,28 +553,28 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
 
         Intent intent1 = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
         intent1.setAction(Constants.ACTION_NOTIFICATION);
-        //intent1.putExtra("id", task.getId());
-        PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), task.getId(), intent1, 0);
+        //intent1.putExtra("id", note.getId());
+        PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent1, 0);
         AlarmManager alarmManager1 = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager1.cancel(sender);
 
-        task.setRemind(false);
+        note.setRemind(false);
     }
 
     private void saveTask(boolean check) {
-        task = listNoteRecyclerAdapter.getListNote();
+        note = listNoteRecyclerAdapter.getListNote();
 
-        // task.setHeadLine(headList.getText().toString());
+        // note.setHeadLine(headList.getText().toString());
 
         DBHelper dbHelper = new DBHelper(this);
-        if(task.getId() == -1){
-            task.setId(dbHelper.addTask(task, currentKind ));
+        if(note.getId() == -1){
+            note.setId(dbHelper.addTask(note, currentKind ));
         }
         else {
             if(check)
-                if(!dbHelper.isRemind(task))
-                    task.setRemind(false);
-            dbHelper.updateTask(task, currentKind);
+                if(!dbHelper.isRemind(note))
+                    note.setRemind(false);
+            dbHelper.updateTask(note, currentKind);
         }
     }
 
@@ -547,10 +585,10 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
 
     @Override
     protected void onPause() {
-        if(!(task.getHeadLine().length() == 0 &&
-                task.getCheckedTasks().size() == 0 &&
-                task.getUncheckedTasks().size() == 1 &&
-                task.getUncheckedTasks().get(0).length() == 0))
+        if(!(note.getHeadLine().length() == 0 &&
+                note.getCheckedTasks().size() == 0 &&
+                note.getUncheckedTasks().size() == 1 &&
+                note.getUncheckedTasks().get(0).length() == 0))
             saveTask(true);
         super.onPause();
     }
@@ -574,8 +612,8 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
 
                 long firstTime = calendar.getTimeInMillis();
 
-                task.setRemind(true);
-                task.setReminderTime(firstTime);
+                note.setRemind(true);
+                note.setReminderTime(firstTime);
                 saveTask(false);
 
                 java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);

@@ -39,7 +39,6 @@ import com.example.dmitryvedmed.taskbook.untils.Constants;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import static com.example.dmitryvedmed.taskbook.R.id.headTextView;
@@ -669,16 +668,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
                 SuperNote task = tasks.get(position);
 
-                String dateString = DateFormat.format("dd.MM.yyyy", new Date(task.getReminderTime())).toString();
-                String timeString = DateFormat.format("H:mm", new Date(task.getReminderTime())).toString();
                 String repeating;
 
                 java.text.DateFormat dateFormat = DateFormat.getDateFormat(context);
                 java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
 
                 String formattedDate = dateFormat.format(task.getReminderTime()) + " " + timeFormat.format(task.getReminderTime());
-
-                //String rightDateFormat = DateFormat.format("yyyy-MM-dd hh:mm a", new Date(task.getReminderTime())).toString();
 
                 if(task.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY){
                     repeating = activity.getResources().getString(R.string.every_day);
@@ -690,7 +685,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     repeating = "";
                 }
 
-             //   holder.notifInfo.setText(dateString + " " + timeString+ " " + repeating);
                 holder.notifInfo.setText(formattedDate + " " + repeating);
             }
         } else {

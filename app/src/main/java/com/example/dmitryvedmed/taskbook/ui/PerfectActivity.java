@@ -1,5 +1,7 @@
 package com.example.dmitryvedmed.taskbook.ui;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,7 +30,6 @@ import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -36,6 +37,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.dmitryvedmed.taskbook.NotifyTaskReceiver;
 import com.example.dmitryvedmed.taskbook.R;
 import com.example.dmitryvedmed.taskbook.helper.SimpleItemTouchHelperCallback;
 import com.example.dmitryvedmed.taskbook.helper.SpacesItemDecoration;
@@ -45,6 +47,7 @@ import com.example.dmitryvedmed.taskbook.logic.SuperNote;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -114,6 +117,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         }
 
         loadPreferences();
+        checkDeprecated();
+        checkRepeatingNotes();
         update();
         initView();
         initAnimation();
@@ -151,20 +156,10 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         textNoNotes = (TextView) findViewById(R.id.textNoNotes);
 
-
         if(sharedPreferences.getBoolean(NOTIF_ON, false)){
         }
 
         setSupportActionBar(toolbar);
-        toolbar.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                Log.d("TAG", "                  touch toolbar)");
-                hideFabs();
-                return false;
-            }
-        });
-
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_common);
         adapter = new MainRecyclerAdapter(values, PerfectActivity.this);
@@ -173,12 +168,11 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         if(s.equals(Constants.LAYOUT_LIST)) {
             layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-
         } else {
             layoutManager = new StaggeredGridLayoutManager(columnsNumber, 1);
         }
-        recyclerView.setLayoutManager(layoutManager);
 
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
@@ -188,19 +182,10 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
 
         toggle.syncState();
-
-        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("TAG", "      TOOOOOGLE CLICK ---");
-                hideFabs();
-            }
-        });
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -384,7 +369,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 clearBascet.setVisible(false);
             }
         } else
-         {
+        {
             getMenuInflater().inflate(R.menu.section_menu, menu);
         }
 
@@ -944,8 +929,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         } else {
             values = dbHelper.getNotificationTasks();
         }
-
-        checkDeprecated();
+        //checkDeprecated();
         if(adapter != null)
             adapter.dataChanged(values);
     }
@@ -959,6 +943,61 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 dbHelper.updateTask(s, currentKind);
             }
         }
+    }
+
+    private void checkRepeatingNotes(){
+        ArrayList<SuperNote> list = dbHelper.getNotificationTasks();
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        for (SuperNote note:list
+                ) {
+            if(note.isRepeating()){
+
+                Calendar notificationTime = Calendar.getInstance();
+                notificationTime.setTimeInMillis(note.getReminderTime());
+
+                final Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
+                intent.setAction(Constants.ACTION_NOTIFICATION);
+                intent.putExtra(Constants.ID, note.getId());
+
+                if (note.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY) {
+                    note.setRepeatingPeriod(Constants.PERIOD_ONE_DAY);
+                    while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                        notificationTime.add(Calendar.DAY_OF_MONTH, 1);
+                    }
+                    PendingIntent pi1 = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_ONE_DAY, pi1);
+
+                } else if (note.getRepeatingPeriod() == Constants.PERIOD_WEEK) {
+                    note.setRepeatingPeriod(Constants.PERIOD_WEEK);
+                    while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                        notificationTime.add(Calendar.WEEK_OF_MONTH, 1);
+                    }
+                    PendingIntent pi2 = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_WEEK, pi2);
+
+                } else if (note.getRepeatingPeriod() == Constants.PERIOD_MONTH) {
+                    note.setRepeatingPeriod(Constants.PERIOD_MONTH);
+                    while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                        notificationTime.add(Calendar.MONTH, 1);
+                    }
+                    PendingIntent pi3 = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_MONTH, pi3);
+                }
+
+                note.setReminderTime(notificationTime.getTimeInMillis());
+
+                dbHelper.updateTask(note, null);
+            } else {
+                Intent intent = new Intent(context, NotifyTaskReceiver.class);
+                intent.setAction("TASK_NOTIFICATION");
+                intent.putExtra("id", note.getId());
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, note.getId(), intent, 0);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, note.getReminderTime(), pendingIntent);
+            }
+        }
+
     }
 
     @Override

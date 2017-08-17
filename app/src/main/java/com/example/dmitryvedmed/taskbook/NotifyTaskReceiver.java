@@ -35,7 +35,6 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
         if(intent.getBooleanExtra(Constants.REPEATING, false))
             Log.d("TAG", "REPEATING DAAAAAA");
         int period2 = intent.getIntExtra(Constants.PERIOD, 0);
-        Log.d("TAG", "REPIOD " + period2);
 
         int id = intent.getIntExtra(Constants.ID, -2);
         Log.d("TAG", "ID = " + id);

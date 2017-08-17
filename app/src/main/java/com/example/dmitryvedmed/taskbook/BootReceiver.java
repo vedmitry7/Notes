@@ -8,10 +8,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.dmitryvedmed.taskbook.logic.DBHelper;
 import com.example.dmitryvedmed.taskbook.logic.SuperNote;
-
-import java.util.List;
 
 public class BootReceiver extends BroadcastReceiver {
     Context context;
@@ -27,7 +24,7 @@ public class BootReceiver extends BroadcastReceiver {
         this.intent = intent;
 
         Toast.makeText(context, "УРРРРРРАААААААА", Toast.LENGTH_LONG).show();
-        DBHelper dbHelper = new DBHelper(context);
+      /*  DBHelper dbHelper = new DBHelper(context);
         Log.d("TAG", "BOOT RECEIVER. WORK");
 
         List<SuperNote> tasks = dbHelper.getNotificationTasks();
@@ -60,7 +57,7 @@ public class BootReceiver extends BroadcastReceiver {
                 }
 
             }
-        }
+        }*/
     }
 
     private void createSingleNotification(SuperNote task){

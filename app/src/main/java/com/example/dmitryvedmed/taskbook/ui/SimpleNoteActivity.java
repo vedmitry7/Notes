@@ -306,6 +306,8 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.cancel(note.getId());
                 cancelNotification.setVisibility(View.GONE);
+                note.setRepeating(false);
+                saveTask(false);
             }
         });
         alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -500,8 +502,43 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
 
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
                     alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
+                } else {
+
+                    intent.putExtra(Constants.REPEATING, true);
+                    intent.putExtra(Constants.PERIOD, repeating);
+
+                    note.setRepeating(true);
+
+                    switch (repeating){
+                        case Constants.EVERY_DAY:
+                            note.setRepeatingPeriod(Constants.PERIOD_ONE_DAY);
+                            while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                                notificationTime.add(Calendar.DAY_OF_MONTH, 1);
+                            }
+                            PendingIntent pi1 = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
+                            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_ONE_DAY, pi1);
+                            break;
+                        case Constants.EVERY_WEEK:
+                            note.setRepeatingPeriod(Constants.PERIOD_WEEK);
+                            while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                                notificationTime.add(Calendar.WEEK_OF_MONTH, 1);
+                            }
+                            PendingIntent pi2 = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
+                            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_WEEK, pi2);
+                            break;
+                        case Constants.EVERY_MONTH:
+                            note.setRepeatingPeriod(Constants.PERIOD_MONTH);
+                            while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                                notificationTime.add(Calendar.MONTH, 1);
+                            }
+                            PendingIntent pi3 = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
+                            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_MONTH, pi3);
+                            break;
+                    }
+
+
                 }
-                if(repeating.equals(Constants.EVERY_DAY)) {
+               /* if(repeating.equals(Constants.EVERY_DAY)) {
                     Log.d("TAG", "REPEATING every day " + repeating);
 
                     Log.d("TAG", "difference 1 " + (notificationTime.getTimeInMillis() - System.currentTimeMillis()));
@@ -520,14 +557,14 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_ONE_DAY, pendingIntent);
                 }
-                while(repeating.equals(Constants.EVERY_WEEK)) {
+                if(repeating.equals(Constants.EVERY_WEEK)) {
                     Log.d("TAG", "REPEATING every WEEK " + repeating);
                     intent.putExtra(Constants.REPEATING, true);
                     intent.putExtra(Constants.PERIOD, Constants.PERIOD_WEEK);
                     note.setRepeatingPeriod(Constants.PERIOD_WEEK);
                     note.setRepeating(true);
 
-                    if(notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
+                    while (notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
                         notificationTime.add(Calendar.WEEK_OF_MONTH, 1);
                     }
 
@@ -548,7 +585,7 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
 
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_MONTH, pendingIntent);
-                }
+                }*/
 
                 note.setRemind(true);
                 note.setReminderTime(notificationTime.getTimeInMillis());
