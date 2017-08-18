@@ -27,7 +27,7 @@
             android:textSize="15sp"
             android:textColor="#222222"
 
-            android:alpha="0.5"
+            android:alpha="0.67"
             android:layout_toEndOf="@+id/add"
             android:layout_toRightOf="@+id/add"
             android:paddingBottom="5dp"/>

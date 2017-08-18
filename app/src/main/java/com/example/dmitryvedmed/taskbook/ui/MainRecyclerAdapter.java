@@ -407,7 +407,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             cardView.setOnClickListener(this);
             cardView.setOnLongClickListener(this);
             itemView.setOnTouchListener(this);
-
         }
 
         @Override
@@ -483,7 +482,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             System.out.println("        ItemSELECTED 2");
             if(mode == Mode.NORMAL)
                 activity.setSelectionMode();
-            int position = getAdapterPosition();
             onClick(new View(context));
         }
 

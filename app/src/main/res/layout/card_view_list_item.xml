@@ -10,6 +10,7 @@
         android:layout_marginLeft="2dp"
         android:layout_height="16dp"
         android:layout_width="16dp"
+        android:alpha="0.6"
         android:id="@+id/checkBoxDialog"
         android:background="@drawable/check_box_selector"
         />

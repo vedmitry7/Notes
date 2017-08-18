@@ -19,7 +19,7 @@
         android:background="#FFFFFF"
         android:textSize="16sp"
         app:fonts="robotoBold"
-        android:alpha="0.5"
+        android:alpha="0.67"
         android:inputType="textMultiLine|textCapSentences"
         android:focusableInTouchMode="true"
         android:layout_alignParentTop="true"

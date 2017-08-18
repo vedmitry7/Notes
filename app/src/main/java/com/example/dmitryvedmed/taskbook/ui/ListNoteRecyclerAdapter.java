@@ -301,7 +301,7 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                     // holder.editText.setMovementMethod();
 
                     holder.editText.setPaintFlags(Paint.ANTI_ALIAS_FLAG);
-                    holder.editText.setAlpha(1f);
+                    holder.editText.setAlpha(0.87f);
 
                     holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                         @Override

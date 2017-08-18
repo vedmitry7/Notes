@@ -43,12 +43,12 @@
         android:inputType="textMultiLine|textCapSentences"
         android:textSize="12sp"
         android:ems="10"
-        android:textStyle="normal"
+
         android:layout_gravity="center"
         android:layout_toRightOf="@+id/checkBox"
         android:layout_toLeftOf="@+id/delButton"
         app:fonts="robotoRegular"
-        android:alpha="0.5"
+        android:alpha="0.87"
         android:text="dfgl;sdfg'l dfsol;gj'dsfgkl"
         />
 
