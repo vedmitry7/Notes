@@ -155,6 +155,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         textNoNotes = (TextView) findViewById(R.id.textNoNotes);
+        textNoNotes.setText(R.string.empty);
 
         if(sharedPreferences.getBoolean(NOTIF_ON, false)){
         }
@@ -402,7 +403,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         navMenu.clear();
 
         navMenu.add(Menu.NONE, Constants.KEY_GENERAL_SECTION , Menu.NONE, R.string.all).setIcon(getResources().getDrawable(R.drawable.ic_note_multiple_grey600_36dp));
-        navMenu.add(Menu.NONE, Constants.KEY_NOTIFICATIONS_SECTION , Menu.NONE, "Напоминания").setIcon(getResources().getDrawable(R.drawable.ic_bell_grey600_36dp));
+        navMenu.add(Menu.NONE, Constants.KEY_NOTIFICATIONS_SECTION , Menu.NONE, R.string.notifications).setIcon(getResources().getDrawable(R.drawable.ic_bell_grey600_36dp));
         navMenu.add(Menu.NONE, Constants.KEY_ARCHIVE_SECTION , Menu.NONE, R.string.archive).setIcon(getResources().getDrawable(R.drawable.ic_package_down_grey600_36dp));
 
         undifinedPoint = navMenu.findItem(Constants.KEY_GENERAL_SECTION);

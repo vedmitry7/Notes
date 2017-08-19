@@ -18,7 +18,7 @@ import com.example.dmitryvedmed.taskbook.logic.Section;
 
 import java.util.List;
 
-public class SectionPositionActivity extends AppCompatActivity {
+public class SectionLocationActivity extends AppCompatActivity {
 
 
     private RecyclerView recyclerView;

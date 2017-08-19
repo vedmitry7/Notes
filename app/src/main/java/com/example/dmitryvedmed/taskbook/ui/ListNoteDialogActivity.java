@@ -54,7 +54,7 @@ public class ListNoteDialogActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        Log.d("TAG", "onNewIntent    action: " + intent.getAction()+" category: "+intent.getCategories());
+        Log.d("TAG", "onNewIntent    action: " + intent.getAction() + " category: "+intent.getCategories());
 
         super.onNewIntent(intent);
     }

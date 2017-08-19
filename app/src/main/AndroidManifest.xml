@@ -71,7 +71,7 @@
             android:noHistory="true"
             android:theme="@style/Theme.MyDialog" />
         <activity
-            android:name=".ui.SectionPositionActivity"
+            android:name=".ui.SectionLocationActivity"
             android:theme="@style/SettingTheme"/>
 
     </application>

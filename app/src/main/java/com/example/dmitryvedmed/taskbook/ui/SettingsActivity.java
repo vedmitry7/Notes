@@ -208,7 +208,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 popupMenu.show();
                 break;
             case R.id.setSectionPosition:
-                Intent intent = new Intent(this, SectionPositionActivity.class);
+                Intent intent = new Intent(this, SectionLocationActivity.class);
                 this.startActivity(intent);
                 return;
             case R.id.setSwipeAction:

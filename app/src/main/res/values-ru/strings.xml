@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="empty">Пусто</string>
+
+    <string name="morning">Утро</string>
+    <string name="afternoon">День</string>
+    <string name="evening">Вечер</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="today">Сегодня</string>
+    <string name="newPoint">Новый раздел</string>
+    <string name="bucket">Корзина</string>
+    <string name="settings">Настройки</string>
+    <string name="exit">Выход</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete_forever_massage">Вы действительно хотите удалить выделенные заметки из корзины навсегда?</string>
+    <string name="question_delete_section">Удалить раздел?</string>
+    <string name="delete_section_massage">Если раздел содержит заметки, то они будут отправлены в корзину</string>
+    <string name="archive">Архив</string>
+    <string name="notifications">Напоминания</string>
+    <string name="add_section">Добавить раздел</string>
+    <string name="unarchive">Разархивировать</string>
+    <string name="act_archive">Архивировать</string>
+    <string name="act_delete">Удалить</string>
+    <string name="act_ask">Спрашивать</string>
+    <string name="at_once">Сразу</string>
+    <string name="one_day">1 день</string>
+    <string name="tree_day">3 дня</string>
+    <string name="seven_day">7 дней</string>
+    <string name="month">Месяц</string>
+    <string name="all">Все</string>
+    <string name="notification">Напоминание</string>
+    <string name="question_delete_notification">Удалить напоминание?</string>
+    <string name="ok">OK</string>
+    <string name="every_day">Каждый день</string>
+    <string name="every_week">Каждую неделю</string>
+    <string name="act_open">Открыть</string>
+
+
+    <string name="question_clear_basket">Очистить корзину?</string>
+    <string name="question_clear_busket_additional">Вы действительно хотите удалить все заметки из корзины навсегда?</string>
+    <string name="fonts">Шрифты</string>
+    <string name="task_font_size">Размер шрифта заметки</string>
+    <string name="font_size_card">Размер шрифта карточки</string>
+    <string name="other">Другое</string>
+    <string name="deletion_from_bucket_period">Удаление из корзины</string>
+    <string name="action_with_swap">Действие при свайпе</string>
+    <string name="set_section_location">Установить позицию разделов</string>
+    <string name="section_position">Позиция пунктов</string>
+    <string name="edit">Править</string>
+    <string name="hide">Убрать</string>
+    <string name="leave">Оставить</string>
+    <string name="main_section">Основной раздел</string>
+    <string name="notify">Напомнить</string>
+    <string name="delete_notification">Убрать напоминание</string>
+    <string name="delete_checked">Удалить отмеченные</string>
+    <string name="set_color">Установить цвет</string>
+    <string name="choose_color">Выберите цвет</string>
+    <string name="clear_bucket">Очистить корзину</string>
+    <string name="act_remember">Запомнить</string>
+    <string name="title">Заголовок</string>
+    <string name="text">Текст</string>
+    <string name="new_point">Новый пункт</string>
+    <string name="without_color">Без цвета</string>
+
+
+    <string name="other_time">Другое время</string>
+    <string name="every_month">Каждый месяц</string>
+    <string name="never">Никогда</string>
+    <string name="choose_date">Выбрать дату</string>
+
+    <string name="date">Дата</string>
+    <string name="time">Время</string>
+    <string name="repeat">Повтор</string>
+    <string name="no_sections">Разделы отсутствуют</string>
+    <string name="reminder_past_time">Напоминание задано в прошедшем времени. Поместить в уведомления?</string>
+    <string name="section_location">Позиция разделов</string>
+</resources>

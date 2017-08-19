@@ -1,108 +1,82 @@
 <resources>
     <string name="app_name">TaskBook</string>
-    <string name="title_activity_main3">Main3Activity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
-    <string-array name="pref_list_titles">
-        <item>Список</item>
-        <item>Сетка</item>
-    </string-array>
-    <string-array name="pref_list_values">
-        <item>1</item>
-        <item>0</item>
-    </string-array>
-
-    <string-array name="dates">
-        <item>Сегодня</item>
-        <item>Завтра</item>
-        <item>Через неделю</item>
-        <item>Выбрать дату</item>
-    </string-array>
-
-    <string-array name="times">
-        <item>Утро</item>
-        <item>День</item>
-        <item>Вечер</item>
-        <item>Выбрать время</item>
-    </string-array>
-
-
-    <string name="morning">Утро</string>
-    <string name="afternoon">День</string>
-    <string name="evening">Вечер</string>
-    <string name="tomorrow">Завтра</string>
-    <string name="today">Сегодня</string>
-    <string name="newPoint">Новый пункт</string>
-    <string name="bucket">Корзина</string>
-    <string name="settings">Настройки</string>
-    <string name="exit">Выход</string>
-    <string name="cancel">Отмена</string>
-    <string name="delete_forever_massage">Вы действительно хотите удалить выделенные заметки из корзины навсегда?</string>
-    <string name="question_delete_section">Удалить раздел?</string>
-    <string name="delete_section_massage">Если раздел содержит заметки, то они будут отправлены в корзину</string>
-    <string name="archive">Архив</string>
-    <string name="notifications">Напоминания</string>
-    <string name="add_section">Добавить раздел</string>
-    <string name="unarchive">Разархивировать</string>
-    <string name="act_archive">Архивировать</string>
-    <string name="act_delete">Удалить</string>
-    <string name="act_ask">Спрашивать</string>
-    <string name="at_once">Сразу</string>
-    <string name="one_day">1 день</string>
-    <string name="tree_day">3 дня</string>
-    <string name="seven_day">7 дней</string>
-    <string name="month">Месяц</string>
-    <string name="all">Все</string>
-    <string name="notification">Напоминание</string>
-    <string name="question_delete_notification">Удалить напоминание?</string>
+    <string name="morning">Morning</string>
+    <string name="afternoon">Afternoon</string>
+    <string name="evening">Evening</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="today">Today</string>
+    <string name="newPoint">New item</string>
+    <string name="bucket">Bucket</string>
+    <string name="settings">Settings</string>
+    <string name="exit">Exit</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_forever_massage">Are you sure you want to delete the selected notes from the bucket forever?</string>
+    <string name="question_delete_section">Delete the section?</string>
+    <string name="delete_section_massage">If the section contains notes, they will go to the trash.</string>
+    <string name="archive">Archive</string>
+    <string name="notifications">Reminders</string>
+    <string name="add_section">Add a section</string>
+    <string name="unarchive">Unarchive</string>
+    <string name="act_archive">Archive</string>
+    <string name="act_delete">Delete</string>
+    <string name="act_ask">Ask</string>
+    <string name="at_once">At once</string>
+    <string name="one_day">1 day</string>
+    <string name="tree_day">3 days</string>
+    <string name="seven_day">7 days</string>
+    <string name="month">Month</string>
+    <string name="all">All</string>
+    <string name="notification">Reminder</string>
+    <string name="question_delete_notification">Delete the reminder?</string>
     <string name="ok">OK</string>
-    <string name="every_day">Каждый день</string>
-    <string name="every_week">Каждую неделю</string>
-    <string name="act_open">Открыть</string>
+    <string name="every_day">Every day</string>
+    <string name="every_week">Every week</string>
+    <string name="act_open">Open</string>
 
 
-    <string name="question_clear_basket">Очистить корзину?</string>
-    <string name="question_clear_busket_additional">Вы действительно хотите удалить все заметки из корзины навсегда?</string>
-    <string name="fonts">Шрифты</string>
-    <string name="task_font_size">Размер шрифта заметки</string>
-    <string name="font_size_card">Размер шрифта карточки</string>
-    <string name="other">Другое</string>
-    <string name="deletion_from_bucket_period">Удаление из корзины</string>
-    <string name="action_with_swap">Действие при свайпе</string>
-    <string name="set_section_location">Установить позицию разделов</string>
-    <string name="section_position">Позиция пунктов</string>
-    <string name="edit">Править</string>
-    <string name="hide">Убрать</string>
-    <string name="leave">Оставить</string>
-    <string name="main_section">Основной раздел</string>
-    <string name="notify">Напомнить</string>
-    <string name="delete_notification">Убрать напоминание</string>
-    <string name="delete_checked">Удалить отмеченные</string>
-    <string name="set_color">Установить цвет</string>
-    <string name="choose_color">Выберите цвет</string>
-    <string name="clear_bucket">Очистить корзину</string>
-    <string name="act_remember">Запомнить</string>
-    <string name="title">Заголовок</string>
-    <string name="text">Текст</string>
-    <string name="new_point">Новый пункт</string>
-    <string name="without_color">Без цвета</string>
+    <string name="question_clear_basket">Empty the Recycle Bin?</string>
+    <string name="question_clear_busket_additional">Are you sure you want to delete all notes from the Recycle Bin forever?</string>
+    <string name="fonts">Fonts</string>
+    <string name="task_font_size">Font size of note</string>
+    <string name="font_size_card">Font size of the card</string>
+    <string name="other">Other</string>
+    <string name="deletion_from_bucket_period">Remove from Recycle Bin</string>
+    <string name="action_with_swap">Action with swipe</string>
+    <string name="set_section_location">Set section location</string>
+    <string name="section_position">Section position</string>
+    <string name="edit">Edit</string>
+    <string name="hide">Hide</string>
+    <string name="leave">Leave</string>
+    <string name="main_section">Main section</string>
 
+    <string name="notify">Remind</string>
+    <string name="delete_notification">Remove reminder</string>
+    <string name="delete_checked">Remove checked</string>
+    <string name="set_color">Set color</string>
+    <string name="choose_color">Select the color</string>
+    <string name="clear_bucket">Empty Recycle Bin</string>
+    <string name="act_remember">Remember</string>
+    <string name="title">Title</string>
+    <string name="text">Text</string>
+    <string name="new_point">List item</string>
+    <string name="without_color">Without color</string>
 
-    <string name="other_time">Другое время</string>
-    <string name="every_month">Каждый месяц</string>
-    <string name="never">Никогда</string>
-    <string name="choose_date">Выбрать дату</string>
+    <string name="other_time">Another time</string>
+    <string name="every_month">Every month</string>
+    <string name="never">Never</string>
+    <string name="choose_date">Select date</string>
 
-    <string name="date">Дата</string>
-    <string name="time">Время</string>
-    <string name="repeat">Повтор</string>
-    <string name="no_sections">Разделы отсутствуют</string>
-    <string name="reminder_past_time">Напоминание задано в прошедшем времени. Поместить в уведомления?</string>
-    <string name="section_location">Позиция разделов</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="repeat">Repeat</string>
+
+    <string name="no_sections">No sections available</string>
+    <string name="reminder_past_time">The reminder is set in the past tense. Post to notifications?</string>
+    <string name="section_location">Section location</string>
+    <string name="empty">Empty</string>
 
 </resources>

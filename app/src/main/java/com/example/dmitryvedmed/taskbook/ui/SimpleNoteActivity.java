@@ -40,7 +40,6 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.Thing;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener  {
 
@@ -327,22 +326,27 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
             saveTask(false);
         }
 
-        String dateString = DateFormat.format("dd/MM/yyyy", new Date(note.getReminderTime())).toString();
-        String timeString = DateFormat.format("H:mm", new Date(note.getReminderTime())).toString();
-        String repeating;
+        java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
+        String formattedTime = timeFormat.format(note.getReminderTime());
+
+        java.text.DateFormat dateFormat = DateFormat.getDateFormat(context);
+        String formattedDate = dateFormat.format(note.getReminderTime());
+
+
+        String repeating = "\r\n" + getResources().getString(R.string.repeat)  + " : ";
 
         if(note.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY){
-            repeating = getResources().getString(R.string.every_day);
+            repeating = repeating + getResources().getString(R.string.every_day);
         } else if(note.getRepeatingPeriod() == Constants.PERIOD_WEEK){
-            repeating = getResources().getString(R.string.every_week);
+            repeating = repeating + getResources().getString(R.string.every_week);
         } else if(note.getRepeatingPeriod() == Constants.PERIOD_MONTH){
-            repeating = getResources().getString(R.string.every_month);
+            repeating = repeating + getResources().getString(R.string.every_month);
         } else {
-            repeating = "None";
+            repeating = "";
         }
 
-        inform.setMessage(getResources().getString(R.string.date) + " : " + dateString + "\r\n" +
-                "Время : " + timeString+ "\r\n" + "Повтор : " + repeating);
+        inform.setMessage(getResources().getString(R.string.date) + " : " + formattedDate + "\r\n" +
+                getResources().getString(R.string.time) + " : " + formattedTime + repeating);
 
         inform.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -364,7 +368,7 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
     public void menuButton(View v){
 
         PopupMenu popupMenu = new PopupMenu(this, v);
-        popupMenu.inflate(R.menu.menu_colors);
+        popupMenu.inflate(R.menu.menu_note);
         if(sharedPreferences.getString(Constants.CURRENT_KIND, Constants.UNDEFINED).equals(Constants.DELETED)){
             MenuItem notify = popupMenu.getMenu().findItem(R.id.notify);
             notify.setVisible(false);
@@ -637,7 +641,7 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
 
    /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_colors, menu);
+        getMenuInflater().inflate(R.menu.menu_note, menu);
         cancelNotification = menu.findItem(R.id.cancel_notif);
         Log.d("TAG", "IIIIIIIIIIIIINNNNNNNNNNNNNIIIIIIIIIIIIIIIITTTTTTTTTTTTTT MENU ITEM");
 
