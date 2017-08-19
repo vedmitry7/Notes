@@ -1,68 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+
+<RelativeLayout android:layout_width="match_parent"
+    android:background="@color/main_activity_bg_color"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:id="@+id/cl"
-    tools:context="com.example.dmitryvedmed.taskbook.ui.PerfectActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.design.widget.AppBarLayout
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_above="@+id/adViewContainer"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:id="@+id/cl"
+        tools:context="com.example.dmitryvedmed.taskbook.ui.PerfectActivity">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways"
-            android:background="@color/main_toolbar_color"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleTextAppearance="@style/ToolbarTitle">
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlways"
+                android:background="@color/main_toolbar_color"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:titleTextAppearance="@style/ToolbarTitle">
 
             </android.support.v7.widget.Toolbar>
 
-    </android.support.design.widget.AppBarLayout>
+        </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main"
-        android:id="@+id/include" />
+        <include layout="@layout/content_main"
+            android:id="@+id/include" />
 
-   <android.support.design.widget.FloatingActionButton
-       android:id="@+id/fab"
-        android:onClick="add"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_above="@+id/adViewContainer2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom">
+
+                <android.support.design.widget.FloatingActionButton
+
+                    android:id="@+id/fab"
+                    android:onClick="add"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/fab_margin"
+                    app:srcCompat="@drawable/ic_plus_white_24dp"
+                    android:elevation="@dimen/fab_elevation"/>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fabListNote"
+                    android:onClick="newSimpleTask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/list_note_fab_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    app:fabSize="mini"
+                    app:srcCompat="@drawable/ic_menu_black_24dp"
+                    android:visibility="invisible" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fabSimpleNote"
+                    android:onClick="newListTask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="invisible"
+                    android:layout_marginBottom="@dimen/simple_note_fab_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    app:fabSize="mini"
+                    app:srcCompat="@drawable/ic_format_list_checks_black_24dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/adViewContainer2"
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:visibility="gone">
+
+                <com.google.android.gms.ads.AdView
+                    android:id="@+id/adView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    ads:adSize="BANNER"
+
+                    ads:adUnitId="@string/banner_ad_unit_id">
+                </com.google.android.gms.ads.AdView>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <!--   <android.support.design.widget.FloatingActionButton
+               android:id="@+id/fab"
+                android:onClick="add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/fab_margin"
+                app:srcCompat="@drawable/ic_plus_white_24dp"
+                android:elevation="@dimen/fab_elevation"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabListNote"
+                android:onClick="newSimpleTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginBottom="@dimen/list_note_fab_margin"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                app:fabSize="mini"
+                app:srcCompat="@drawable/ic_menu_black_24dp"
+                android:visibility="invisible" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabSimpleNote"
+                android:onClick="newListTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:visibility="invisible"
+                android:layout_marginBottom="@dimen/simple_note_fab_margin"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                app:fabSize="mini"
+
+
+                app:srcCompat="@drawable/ic_format_list_checks_black_24dp" />-->
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <RelativeLayout
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/adViewContainer"
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_plus_white_24dp"
-        android:elevation="@dimen/fab_elevation"/>
+        android:layout_height="50dp"
+        android:visibility="visible"
+        >
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabListNote"
-        android:onClick="newSimpleTask"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="@dimen/list_note_fab_margin"
-        android:layout_marginRight="@dimen/activity_vertical_margin"
-        app:fabSize="mini"
-        app:srcCompat="@drawable/ic_menu_black_24dp"
-        android:visibility="invisible" />
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id">
+        </com.google.android.gms.ads.AdView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabSimpleNote"
-        android:onClick="newListTask"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:visibility="invisible"
-        android:layout_marginBottom="@dimen/simple_note_fab_margin"
-        android:layout_marginRight="@dimen/activity_vertical_margin"
-        app:fabSize="mini"
-        app:srcCompat="@drawable/ic_format_list_checks_black_24dp" />
+    </RelativeLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>
+
+

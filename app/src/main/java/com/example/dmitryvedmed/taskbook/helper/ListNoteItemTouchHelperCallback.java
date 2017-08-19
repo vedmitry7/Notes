@@ -35,30 +35,16 @@ public class ListNoteItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         if (isCanMovement()) {
-          /*  if (recyclerView.getLayoutManager() instanceof GridLayoutManager || recyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
-                final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-                //不需要滑动
-                final int swipeFlags = 0;
-                return makeMovementFlags(dragFlags, swipeFlags);
-            }*/
 
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-            System.out.println("    getMovementFlags ");
             return makeMovementFlags(dragFlags, 0);
         } else {
             return 0;
         }
     }
-   /* @Override
-    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            ViewCompat.setElevation(viewHolder.itemView, 10);
-    }*/
-
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder source, RecyclerView.ViewHolder target) {
-        System.out.println("ON Move - ");
         mAdapter.onItemMove(source.getAdapterPosition(), target.getAdapterPosition());
         wasMoved = true;
         return true;
@@ -67,19 +53,15 @@ public class ListNoteItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
         mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
-        System.out.println("ON Swipe - " + i);
     }
 
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-        System.out.println(" onSelectedChanged " + actionState);
-        if(actionState==ItemTouchHelper.ACTION_STATE_DRAG){
-            System.out.println("        ItemTouchHelper.ACTION_STATE_DRAG");
+        if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
             wasMoved = false;
         }
 
         if(actionState==ItemTouchHelper.ACTION_STATE_IDLE){
-            System.out.println("        ItemTouchHelper.ACTION_STATE_DRAG");
             if(!wasMoved){
                 mAdapter.onItemSelected();
             }
@@ -96,7 +78,6 @@ public class ListNoteItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-        System.out.println(" clearView ");
         ItemTouchHelperViewHolder itemViewHolder = (ItemTouchHelperViewHolder) viewHolder;
         itemViewHolder.onItemClear();
     }

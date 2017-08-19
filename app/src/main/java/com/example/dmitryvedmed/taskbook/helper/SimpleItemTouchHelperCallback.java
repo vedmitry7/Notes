@@ -49,7 +49,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
                 if (recyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
                     System.out.println("    GridLayoutManager ");
                     final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-                    final int swipeFlags = 0;
+                    final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
                     return makeMovementFlags(dragFlags, swipeFlags);
                 }
                 final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;

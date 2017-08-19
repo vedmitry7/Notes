@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -36,8 +35,6 @@ import com.example.dmitryvedmed.taskbook.logic.DBHelper;
 import com.example.dmitryvedmed.taskbook.logic.SimpleNote;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.Thing;
 
 import java.util.Calendar;
 
@@ -539,57 +536,7 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
                             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_MONTH, pi3);
                             break;
                     }
-
-
                 }
-               /* if(repeating.equals(Constants.EVERY_DAY)) {
-                    Log.d("TAG", "REPEATING every day " + repeating);
-
-                    Log.d("TAG", "difference 1 " + (notificationTime.getTimeInMillis() - System.currentTimeMillis()));
-
-                    intent.putExtra(Constants.REPEATING, true);
-                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_ONE_DAY);
-                    note.setRepeatingPeriod(Constants.PERIOD_ONE_DAY);
-                    note.setRepeating(true);
-
-                    while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
-                        notificationTime.add(Calendar.DAY_OF_MONTH, 1);
-                    }
-
-                    Log.d("TAG", "difference 2 " + (notificationTime.getTimeInMillis() - System.currentTimeMillis()));
-
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_ONE_DAY, pendingIntent);
-                }
-                if(repeating.equals(Constants.EVERY_WEEK)) {
-                    Log.d("TAG", "REPEATING every WEEK " + repeating);
-                    intent.putExtra(Constants.REPEATING, true);
-                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_WEEK);
-                    note.setRepeatingPeriod(Constants.PERIOD_WEEK);
-                    note.setRepeating(true);
-
-                    while (notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
-                        notificationTime.add(Calendar.WEEK_OF_MONTH, 1);
-                    }
-
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_WEEK, pendingIntent);
-                }
-
-                if(repeating.equals(Constants.EVERY_MONTH)) {
-                    Log.d("TAG", "REPEATING every MOUTH " + repeating);
-                    intent.putExtra(Constants.REPEATING, true);
-                    intent.putExtra(Constants.PERIOD, Constants.PERIOD_MONTH);
-                    note.setRepeatingPeriod(Constants.PERIOD_MONTH);
-                    note.setRepeating(true);
-
-                    while(notificationTime.getTimeInMillis()<System.currentTimeMillis()) {
-                        notificationTime.add(Calendar.MONTH, 1);
-                    }
-
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_MONTH, pendingIntent);
-                }*/
 
                 note.setRemind(true);
                 note.setReminderTime(notificationTime.getTimeInMillis());
@@ -615,9 +562,6 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
         String headline = String.valueOf(head.getText());
         String content = String.valueOf(text.getText());
 
-        Log.d("TAG", "SAVE  !!! " + headline + " " + content);
-        Log.d("TAG", "SAVE id = " + note.getId() + "???");
-
         note.setHeadLine(headline);
         note.setContext(content);
 
@@ -627,64 +571,20 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
             if (head.getText().length() == 0 && text.getText().length() == 0)
                 return;
             note.setId(dbHelper.addTask(note, currentKind));
-            Log.d("TAG", "      ADAPTER                 SAVE TASK " + currentKind);
-            Log.d("TAG", "NEW TASK ID = " + note.getId());
         } else {
-            Log.d("TAG", "UPDATE id = " + note.getId());
             if(check)
                 if(!dbHelper.isRemind(note))
                     note.setRemind(false);
-            Log.d("TAG", "      ADAPTER                 SAVE TASK " + currentKind);
             dbHelper.updateTask(note, currentKind);
         }
     }
 
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_note, menu);
-        cancelNotification = menu.findItem(R.id.cancel_notif);
-        Log.d("TAG", "IIIIIIIIIIIIINNNNNNNNNNNNNIIIIIIIIIIIIIIIITTTTTTTTTTTTTT MENU ITEM");
-
-
-        if (note.getColor() != 0){
-            toolbar.setBackgroundColor(note.getColor());
-            setWhiteNavIconColor();
-        } else {
-            setBlackNavIconColor();
-        }
-
-        if(note.isRemind()){
-            Log.d("TAG", "is REMIND FALSE");
-            cancelNotification.setVisible(true);
-        } else {
-            Log.d("TAG", "is REMIND TRUE");
-            cancelNotification.setVisible(false);
-        }
-        return super.onCreateOptionsMenu(menu);
-    }*/
 
     @Override
     protected void onPause() {
-        Log.d("TAG", "SIMPLE ACT ON PAUSE");
 
         saveTask(true);
         super.onPause();
-    }
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Task Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
     }
 
     @Override

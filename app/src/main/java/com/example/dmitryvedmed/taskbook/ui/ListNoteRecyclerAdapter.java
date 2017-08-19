@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -67,7 +66,6 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
 
     @Override
     public void onItemMove(final int fromPosition, final int toPosition) {
-        Log.d("TAG", " FROM P - " + fromPosition + " TO P - " + toPosition);
         activity.setItemMovement(false);
 
         int realFromPos = fromPosition-1;
@@ -79,7 +77,6 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
         if(fromPosition> listNote.getUncheckedTasks().size()+1){
             int fromP = realFromPos - (listNote.getUncheckedTasks().size()+1);
             int toP = realToPos - (listNote.getUncheckedTasks().size()+1);
-            Log.d("TAG", " NEW       FROM P - " + fromP + " TO P - " + toP);
             if(toP<0) {
                 return;
             }
@@ -108,7 +105,6 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
 
     @Override
     public void onItemSelected() {
-        System.out.println(" onItem SELECTED ");
     }
 
     void deleteCheckedTasks() {
@@ -132,18 +128,10 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
-            System.out.println("ViewHolder constructor");
-            System.out.println("TYPE = " + this.getItemViewType());
-            ///????
             editTextListener = new EditTextListener();
             checkBoxListener = new CheckBoxListener();
 
             deliver =  itemView.findViewById(R.id.deliver_rec);
-            if(deliver == null)
-                Log.d("TAG", "      DELIVER NUUUUUL" );
-            else{
-                Log.d("TAG", "      DELIVER NOT NUUUUUL" );
-            }
 
             switch (getItemViewType()){
                 case 0:
@@ -201,27 +189,21 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
 
         @Override
         public void onItemSelected2() {
-
         }
 
         @Override
         public void onItemClear() {
-            Log.d("TAG", "      CLEAR" );
             notifyItemChanged(fromPos);
             notifyItemChanged(toPos);
         }
 
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            Log.d("TAG", "      ON TOUCH " + motionEvent.getAction() );
             switch (motionEvent.getAction()){
                 case MotionEvent.ACTION_DOWN:
-                    Log.d("TAG", "      DOWN" );
                     activity.setItemMovement(true);
                     break;
                 case MotionEvent.ACTION_CANCEL:
-                    Log.d("TAG", "      UP" );
-                    //update();
                     break;
             }
             return false;
@@ -230,7 +212,6 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d("TAG", "                                          onCreateViewHolder" );
         RecyclerViewHolder recyclerViewHolder = null;
         switch (viewType)
         {
@@ -244,23 +225,9 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
             view1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.d("TAG", "click!!!!!!!!!!!!!!!!!" );
-
                         listNote.getUncheckedTasks().add("");
-                        Log.d("TAG", "Edit texts size = " + editTexts.size() );
-                        //activity.scroll(listNote.getUncheckedTasks().size()-1);
                         update();
-                        //requestFocusTo(listNote.getUncheckedTasks().size()-1);
                         requestFocusLast();
-
-                       /* for (int i = listNote.getUncheckedTasks().size(); i < getItemCount(); i++) {
-                            notifyItemChanged(i);
-                        }*/
-
-                        // notifyItemInserted(listNote.getUncheckedTasks().size());
-                        //notifyItemChanged(listNote.getUncheckedTasks().size());
-                        //notifyItemChanged(listNote.getUncheckedTasks().size()+1);
-                        //notifyItemRangeChanged(listNote.getUncheckedTasks().size()+1,getItemCount()-listNote.getUncheckedTasks().size());
                     }
                 });
             break;
@@ -268,18 +235,12 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                View view2 = LayoutInflater.from(parent.getContext()).inflate(R.layout.head_line_list_note_recycler_item, parent,false);
                 recyclerViewHolder = new RecyclerViewHolder(view2);
             break;
-
         }
         return recyclerViewHolder;
     }
 
     @Override
     public void onBindViewHolder(final RecyclerViewHolder holder, final int position) {
-        Log.d("TAG", "ON BIND VIEW HOLDER, TYPE = " + holder.getItemViewType() );
-        String type = holder.getItemViewType() == 0 ? "editText":"button";
-        Log.d("TAG", "POSITION -" + position + "," +" TYPE -" +  type );
-
-
 
         if(holder.headLineEditText!=null) {
             holder.headLineEditText.setText(listNote.getHeadLine());
@@ -298,15 +259,12 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                     holder.checkBox.setChecked(false);
                     onBind = false;
 
-                    // holder.editText.setMovementMethod();
-
                     holder.editText.setPaintFlags(Paint.ANTI_ALIAS_FLAG);
                     holder.editText.setAlpha(0.87f);
 
                     holder.editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                         @Override
                         public void onFocusChange(View view, boolean b) {
-                            Log.d("TAG", "ET " + position + " FOCUS " + b );
                             if(b) {
                                 holder.button.setVisibility(VISIBLE);
                                 holder.editText.setSelection(holder.editText.getText().length());
@@ -317,42 +275,24 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                         }
                     });
 
-        /*    if(position==listNote.getUncheckedTasks().size()-1) {
-
-              //  Log.d("TAG", "ET requestFocus for " + position  );
-        //        holder.editText.requestFocus();
-                holder.button.setVisibility(View.VISIBLE);
-            } else {
-                holder.button.setVisibility(View.INVISIBLE);
-            }
-*/
                     holder.button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             listNote.getUncheckedTasks().remove(realPosition);
                             editTexts.remove(realPosition);
-                            Log.d("TAG", "Edit texts remove = " + position );
-                            Log.d("TAG", "Edit texts size = " + editTexts.size() );
                             update();
                             requestFocusTo(realPosition-1);
-                            //notifyItemChanged(position);
                         }
                     });
 
-//              !!!
-
                     if(editTexts.size()==realPosition) {
                         editTexts.add(realPosition, holder.editText);
-                        Log.d("TAG", "Edit texts add = " + position );
                     }
                     else {
                         editTexts.remove(realPosition);
                         editTexts.add(realPosition, holder.editText);
-                        Log.d("TAG", "Edit texts remove and add = " + position );
                     }
 
-
-                    Log.d("TAG", "Edit texts size = " + editTexts.size() );
                 }
 
                 if(holder.editText!=null) {
@@ -363,10 +303,8 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                                     && keyEvent.getAction() == KeyEvent.ACTION_DOWN){
                                 if(listNote.getUncheckedTasks().size() < realPosition)
                                     return true;
-                                Log.d("TAG", "click ENTER Add " + position );
                                 listNote.getUncheckedTasks().add(realPosition + 1, "");
                                 update();
-                                //notifyItemChanged(position+1);
                                 requestFocusTo(realPosition+1);
                                 return true;
                             }
@@ -385,7 +323,6 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                                     return false;
                                 if(listNote.getUncheckedTasks().get(realPosition).length()==0){
                                     listNote.getUncheckedTasks().remove(realPosition);
-                                    //notifyItemRemoved(position);
                                     update();
                                     requestFocusTo(realPosition-1);
                                     return true;
@@ -421,7 +358,6 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                     holder.button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Log.d("TAG", " BUTTON          CLICK    " + position );
                             listNote.getCheckedTasks().remove(realPosition - (listNote.getUncheckedTasks().size()+1));
                             update();
                             requestFocusLast();
@@ -432,50 +368,25 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                     holder.checkBox.setChecked(true);
                     onBind = false;
                     System.out.println(position + " - " + listNote.getCheckedTasks().get(realPosition - (listNote.getUncheckedTasks().size()+1)));
-               /*     if(position>editTexts.size())
-                        return;
-                    if(editTexts.size() < position) {
-                        editTexts.add(position, holder.editText);
-                        Log.d("TAG", "Edit texts add = " + position );
-                    }
-                    else {
-                        editTexts.remove(position);
-                        editTexts.add(position, holder.editText);
-                        Log.d("TAG", "Edit texts remove and add = " + position );
-                    }*/
-
-                    Log.d("TAG", "Edit texts size = " + editTexts.size() );
                 }
-
 
                 break;
             case 1:
-                Log.d("TAG", "BUTTTON AND DELIVER" );
                 if(listNote.getCheckedTasks().size()==0){
                     holder.deliver.setVisibility(GONE);
-                    Log.d("TAG", "UNC = 0" );
-                    Log.d("TAG", "VISIBLE GONE" );
                 }
                 else{
                     holder.deliver.setVisibility(VISIBLE);
-                    Log.d("TAG", "UNC != 0" );
-                    Log.d("TAG", "VISIBLE TRUE" );
                 }
                 break;
             case 2:
-
         }
-
     }
 
     public void requestFocusLast(){
-        Log.d("TAG", "                                                                                                         requestFocusLast " );
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                Log.d("TAG", "delay " );
-                Log.d("TAG", "requestLastFocus" );
-                Log.d("TAG", "focus to " + (editTexts.size()-1) );
                 if(editTexts.size()>0)
                 editTexts.get(editTexts.size()-1).requestFocus();
             }
@@ -483,8 +394,6 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
     }
 
     public void setFocusToEditText(){
-        Log.d("TAG", "                                                                                                          setFocusToEditText() " );
-        Log.d("TAG", "UNCECKED TASK SIZE = " + listNote.getUncheckedTasks().size() );
         if(listNote.getUncheckedTasks().size()==0){
             listNote.getUncheckedTasks().add("");
             requestFocusTo(0);
@@ -494,7 +403,6 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
     }
 
     public void requestFocusTo(final int position){
-        Log.d("TAG", "                                                                                                         requestFocusTo " + position );
 
         if(position<0)
             return;
@@ -502,13 +410,6 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                Log.d("TAG", "delay " );
-                Log.d("TAG", "requestLastTo " + position + " eDIT TEXT SIZE = " + editTexts.size());
-                Log.d("TAG", "requestLastTo " + position );
-         /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!      if(position>=editTexts.size()){
-                    requestFocusLast();
-                    return;
-                }*/
                 if(editTexts.size()>0)
                     editTexts.get(position).requestFocus();
             }
@@ -516,7 +417,6 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
     }
 
     private void update(){
-        Log.d("TAG", "update " );
         notifyDataSetChanged();
     }
 
@@ -611,6 +511,4 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
             }
         }
     }
-
-
 }

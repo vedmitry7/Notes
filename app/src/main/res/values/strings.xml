@@ -78,5 +78,6 @@
     <string name="reminder_past_time">The reminder is set in the past tense. Post to notifications?</string>
     <string name="section_location">Section location</string>
     <string name="empty">Empty</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 
 </resources>
