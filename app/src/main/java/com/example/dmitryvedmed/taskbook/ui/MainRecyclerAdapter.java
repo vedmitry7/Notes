@@ -16,6 +16,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,6 +48,8 @@ import static com.example.dmitryvedmed.taskbook.R.id.taskTextView;
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.RecyclerViewHolder>
         implements ItemTouchHelperAdapter {
 
+    private int itemViewType;
+
     public void setSelectedNotesCounter(int selectedNotesCounter) {
         this.selectedNotesCounter = selectedNotesCounter;
     }
@@ -66,6 +69,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private SharedPreferences mSharedPreferences;
     private int textSize;
     private List<SuperNote> selectedNotesCopy;
+    int noteStartPosition;
+
 
     public int getSelectedNotesCounter() {
         return selectedNotesCounter;
@@ -439,22 +444,26 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
             if(mode == Mode.NORMAL) {
 
+                int count = mSharedPreferences.getInt(Constants.NOTES_CLICK_COUNTER, 0);
+                noteStartPosition = position;
                 switch (MainRecyclerAdapter.this.getItemViewType(position)) {
                     case 0:
-                        Intent intent = new Intent(mContext, SimpleNoteActivity.class);
-                        intent.putExtra(Constants.TASK, notes.get(position));
-                        intent.putExtra(Constants.KIND, mActivity.currentKind);
-                        mContext.startActivity(intent);
-                        mActivity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                        itemViewType = 0;
                         break;
                     case 1:
-                        Intent intent1 = new Intent(mContext, ListNoteActivity.class);
-                        intent1.putExtra(Constants.LIST_TASK, notes.get(position));
-                        intent1.putExtra(Constants.KIND, mActivity.currentKind);
-                        mContext.startActivity(intent1);
-                        mActivity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                        itemViewType = 1;
                         break;
                 }
+
+                if( count %2 == 0 ){
+                    mActivity.showAd();
+                } else {
+                    startNoteActivity(true);
+                }
+
+                SharedPreferences.Editor editor = mSharedPreferences.edit();
+                editor.putInt(Constants.NOTES_CLICK_COUNTER, count+1);
+                editor.commit();
             }
             else if (mode == Mode.SELECTION_MODE) {
                 if (selects[position]) {
@@ -472,7 +481,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     mActivity.selectedItemCount(selectedNotesCounter);
                     selects[position] = true;
                 }
-
             }
             notifyItemChanged(getAdapterPosition());
         }
@@ -515,10 +523,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 break;
         }
         return recyclerViewHolder;
-    }
-
-    public List<SuperNote> getSuperNotes() {
-        return superNotes;
     }
 
     private void setColorCardView(CardView cardView, int position){
@@ -739,6 +743,38 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private void setRightPosition(){
         for (int i = 0; i < notes.size(); i++) {
             notes.get(i).setPosition(notes.size()-i-1);
+        }
+    }
+
+    public void startNoteActivity(boolean animation){
+
+        switch (itemViewType){
+            case 0:
+                Intent intent = new Intent(mContext, SimpleNoteActivity.class);
+                intent.putExtra(Constants.TASK, notes.get(noteStartPosition));
+                intent.putExtra(Constants.KIND, mActivity.currentKind);
+                mContext.startActivity(intent);
+                if(animation){
+                    Log.i("TAG", "WITH ANIM");
+                    mActivity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                } else{
+                    mActivity.overridePendingTransition(0,0);
+                    Log.i("TAG", "WITH OUT ANIM");
+                }
+                break;
+            case 1:
+                Intent intent1 = new Intent(mContext, ListNoteActivity.class);
+                intent1.putExtra(Constants.LIST_TASK, notes.get(noteStartPosition));
+                intent1.putExtra(Constants.KIND, mActivity.currentKind);
+                mContext.startActivity(intent1);
+                if(animation){
+                    Log.i("TAG", "WITH ANIM");
+                    mActivity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                } else{
+                    mActivity.overridePendingTransition(0,0);
+                    Log.i("TAG", "WITH OUT ANIM");
+                }
+                break;
         }
     }
 }

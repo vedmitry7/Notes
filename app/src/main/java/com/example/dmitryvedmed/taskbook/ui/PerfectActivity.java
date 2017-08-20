@@ -47,6 +47,7 @@ import com.example.dmitryvedmed.taskbook.untils.Constants;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -95,6 +96,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private boolean mNotification_on;
     private boolean mFabPressed;
     public String currentKind = Constants.UNDEFINED;
+
+    private InterstitialAd interstitialAd;
 
     public boolean is_in_action_mode() {
         return is_action_mode_on;
@@ -146,6 +149,36 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
         mAdView.loadAd(adRequest);
+
+
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+
+        requestNewInterstitial();
+
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                mAdapter.startNoteActivity(false);
+                requestNewInterstitial();
+            }
+        });
+    }
+
+    public void showAd(){
+        if(interstitialAd.isLoaded()){
+            interstitialAd.show();
+        } else {
+            mAdapter.startNoteActivity(true);
+        }
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        interstitialAd.loadAd(adRequest);
+
     }
 
     private void loadPreferences(){

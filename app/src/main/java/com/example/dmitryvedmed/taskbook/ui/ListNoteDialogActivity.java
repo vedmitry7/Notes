@@ -53,10 +53,14 @@ public class ListNoteDialogActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+
         super.onNewIntent(intent);
     }
 
     private void initView() {
+
+
+        //mNote = (ListNote) getIntent().getSerializableExtra("ListNote");
 
         mNote = (ListNote) mDbHelper.getTask(getIntent().getIntExtra(Constants.ID, 0));
 
@@ -91,6 +95,7 @@ public class ListNoteDialogActivity extends AppCompatActivity {
     }
 
     public void edit(View v){
+
         Intent intent1 = new Intent(this, ListNoteActivity.class);
         intent1.putExtra(Constants.LIST_TASK, mNote);
         this.startActivity(intent1);

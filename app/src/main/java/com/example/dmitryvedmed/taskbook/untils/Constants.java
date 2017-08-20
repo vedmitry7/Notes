@@ -59,4 +59,5 @@ public class Constants {
     public static final int KEY_ARCHIVE_SECTION  = 456789791;
     public static final int KEY_SETTINGS  = 456789792;
     public static final int KEY_DELETED_SECTION  = 456789793;
+    public static final String NOTES_CLICK_COUNTER = "notes_click_number";
 }

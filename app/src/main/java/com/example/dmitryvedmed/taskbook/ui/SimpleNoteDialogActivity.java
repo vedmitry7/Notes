@@ -21,13 +21,13 @@ public class SimpleNoteDialogActivity extends AppCompatActivity {
 
     private TextView mHead, mContext;
     private SimpleNote mNote;
-    private DBHelper mDbHelper;
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDbHelper = new DBHelper(this);
+        dbHelper = new DBHelper(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.simple_note_dialog);
         initView();
@@ -43,7 +43,9 @@ public class SimpleNoteDialogActivity extends AppCompatActivity {
         mContext.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());
         mHead.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
 
-        mNote = (SimpleNote) mDbHelper.getTask(getIntent().getIntExtra(Constants.ID, 0));
+        //mNote = (SimpleNote) getIntent().getSerializableExtra("Task");
+
+        mNote = (SimpleNote) dbHelper.getTask(getIntent().getIntExtra(Constants.ID, 0));
         if(mNote.getHeadLine().length()>0)
             mHead.setText(mNote.getHeadLine());
         else
