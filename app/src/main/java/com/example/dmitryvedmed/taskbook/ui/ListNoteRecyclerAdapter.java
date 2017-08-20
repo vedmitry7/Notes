@@ -36,28 +36,25 @@ import static android.view.View.VISIBLE;
 public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecyclerAdapter.RecyclerViewHolder>
         implements ItemTouchHelperAdapter {
 
-    private Context context;
+    private Context mContext;
     private ListNote listNote;
     private boolean onBind;
     private List<EditText> editTexts;
-    private List<EditText> checkedTaskEditTexts;
-    private int hasInsertInside = -1;
-    private ListNoteActivity activity;
+    private ListNoteActivity mActivity;
     private int fromPos, toPos;
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences mSharedPreferences;
 
-    public ListNoteRecyclerAdapter(ListNote listNote, Context context) {
-        this.context = context;
-        activity = (ListNoteActivity)context;
+    public ListNoteRecyclerAdapter(ListNote listNote, Context mContext) {
+        this.mContext = mContext;
+        mActivity = (ListNoteActivity) mContext;
         this.listNote = listNote;
         if(listNote.getId() == -1) {
             listNote.setHeadLine("");
             listNote.getUncheckedTasks().add("");
         }
         editTexts = new ArrayList<>();
-        checkedTaskEditTexts = new ArrayList<>();
 
-        sharedPreferences = activity.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
+        mSharedPreferences = mActivity.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
     }
 
     public ListNote getListNote() {
@@ -66,7 +63,7 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
 
     @Override
     public void onItemMove(final int fromPosition, final int toPosition) {
-        activity.setItemMovement(false);
+        mActivity.setItemMovement(false);
 
         int realFromPos = fromPosition-1;
         int realToPos = toPosition -1;
@@ -142,8 +139,8 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
 
             editText = (EditText) itemView.findViewById(R.id.itemListEditText);
             if(editText!=null) {
-               // editText.setTypeface(SingletonFonts.getInstance(context).getRobotoRegular());
-                editText.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16));
+               // editText.setTypeface(SingletonFonts.getInstance(mContext).getRobotoRegular());
+                editText.setTextSize(mSharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16));
                 editText.addTextChangedListener(editTextListener);
             }
 
@@ -159,13 +156,13 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
             }
             newPoint = (TextView)itemView.findViewById(R.id.newPoint);
             if(newPoint!=null) {
-                newPoint.setTypeface(SingletonFonts.getInstance(context).getRobotoRegular());
-                newPoint.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16));
+                newPoint.setTypeface(SingletonFonts.getInstance(mContext).getRobotoRegular());
+                newPoint.setTextSize(mSharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16));
             }
 
             headLineEditText = (EditText) itemView.findViewById(R.id.listHeadEditText2);
             if(headLineEditText!=null) {
-                headLineEditText.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16));
+                headLineEditText.setTextSize(mSharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16));
                 headLineEditText.clearFocus();
                 headLineEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
                     @Override
@@ -201,7 +198,7 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
         public boolean onTouch(View view, MotionEvent motionEvent) {
             switch (motionEvent.getAction()){
                 case MotionEvent.ACTION_DOWN:
-                    activity.setItemMovement(true);
+                    mActivity.setItemMovement(true);
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     break;
@@ -499,13 +496,13 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                     listNote.getUncheckedTasks().remove(position);
                     editTexts.remove(position);
                     requestFocusTo(position-1);
-                    activity.changeMenuItemVisibility(listNote.getCheckedTasks().size());
+                    mActivity.changeMenuItemVisibility(listNote.getCheckedTasks().size());
                     update();
                 } else {
                     listNote.getUncheckedTasks().add(listNote.getCheckedTask(position - (listNote.getUncheckedTasks().size() + 1)));
                     listNote.getCheckedTasks().remove(position - (listNote.getUncheckedTasks().size()));
                     update();
-                    activity.changeMenuItemVisibility(listNote.getCheckedTasks().size());
+                    mActivity.changeMenuItemVisibility(listNote.getCheckedTasks().size());
                     requestFocusLast();
                 }
             }

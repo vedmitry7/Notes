@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -20,15 +19,15 @@ import com.example.dmitryvedmed.taskbook.untils.SingletonFonts;
 
 public class SimpleNoteDialogActivity extends AppCompatActivity {
 
-    private TextView head, context;
-    private SimpleNote task;
-    private DBHelper dbHelper;
+    private TextView mHead, mContext;
+    private SimpleNote mNote;
+    private DBHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbHelper = new DBHelper(this);
+        mDbHelper = new DBHelper(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.simple_note_dialog);
         initView();
@@ -39,19 +38,17 @@ public class SimpleNoteDialogActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        head = (TextView) findViewById(R.id.headTextView);
-        context = (TextView) findViewById(R.id.contextTextView);
-        context.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());
-        head.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
+        mHead = (TextView) findViewById(R.id.headTextView);
+        mContext = (TextView) findViewById(R.id.contextTextView);
+        mContext.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());
+        mHead.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
 
-        //task = (SimpleNote) getIntent().getSerializableExtra("Task");
-
-        task = (SimpleNote) dbHelper.getTask(getIntent().getIntExtra(Constants.ID, 0));
-        if(task.getHeadLine().length()>0)
-            head.setText(task.getHeadLine());
+        mNote = (SimpleNote) mDbHelper.getTask(getIntent().getIntExtra(Constants.ID, 0));
+        if(mNote.getHeadLine().length()>0)
+            mHead.setText(mNote.getHeadLine());
         else
-            head.setVisibility(View.GONE);
-        context.setText(task.getContext());
+            mHead.setVisibility(View.GONE);
+        mContext.setText(mNote.getContext());
 
 
         Window window = this.getWindow();
@@ -66,21 +63,18 @@ public class SimpleNoteDialogActivity extends AppCompatActivity {
 
 
     public void ok(View v){
-        Log.d("TAG", "clicccccccccccccccccccccccccccccck ok");
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(task.getId());
+        notificationManager.cancel(mNote.getId());
         finish();
     }
     public void leave(View v){
-        Log.d("TAG", "clicccccccccccccccccccccccccccccck leave");
         finish();
     }
 
     public void edit(View v){
-        Log.d("TAG", "clicccccccccccccccccccccccccccccck edit");
 
         Intent intent = new Intent(this, SimpleNoteActivity.class);
-        intent.putExtra(Constants.TASK, task);
+        intent.putExtra(Constants.TASK, mNote);
         this.startActivity(intent);
         this.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
 

@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.example.dmitryvedmed.taskbook.logic.DBHelper;
 import com.example.dmitryvedmed.taskbook.logic.ListNote;
@@ -27,17 +26,8 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // TODO: This method is called when the BroadcastReceiver is receiving
-        // an Intent broadcast.
-
-        Log.d("TAG", "NOTIFYYYYYYYYYYY");
-
-        if(intent.getBooleanExtra(Constants.REPEATING, false))
-            Log.d("TAG", "REPEATING DAAAAAA");
-        int period2 = intent.getIntExtra(Constants.PERIOD, 0);
 
         int id = intent.getIntExtra(Constants.ID, -2);
-        Log.d("TAG", "ID = " + id);
         if(id==-2) {
             return;
         }
@@ -45,9 +35,6 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
         SuperNote superNote = dbHelper.getTask(id);
         if(superNote == null)
             return;
-
-        Log.d("TAG", "ST != null" );
-
         Intent notificationIntent;
 
         if(superNote instanceof SimpleNote){
@@ -62,7 +49,6 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             notificationIntent.putExtra(Constants.ID, task.getId());
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            //notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             PendingIntent contentIntent = PendingIntent.getActivity(context,
                     0, notificationIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
@@ -72,27 +58,20 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             Resources res = context.getResources();
 
             builder.setContentIntent(contentIntent)
-                    .setSmallIcon(R.drawable.ic_menu_black_24dp)
-                    // большая картинка
+                    .setSmallIcon(R.drawable.ic_menu_white_24dp)
                     .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.super_ic))
                     .setTicker(String.valueOf(task.getId()))
                     .setWhen(System.currentTimeMillis())
                     .setAutoCancel(false)
-                    .addAction(R.drawable.ic_menu_black_24dp, context.getString(R.string.act_open), contentIntent)
+                    .addAction(R.drawable.ic_menu_white_24dp, context.getString(R.string.act_open), contentIntent)
                     .setContentTitle(task.getHeadLine())
-                    .setContentText(task.getContext()); // Текст уведомления
-
-            // Notification notification = builder.getNotification(); // до API 16
+                    .setContentText(task.getContext());
 
             Notification notification = builder.build();
-
-
             Uri ringURI =
                     RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             notification.sound = ringURI;
-
             notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
-
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(id, notification);
@@ -109,9 +88,6 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             notificationIntent.putExtra(Constants.ID, task.getId());
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-          //  notificationIntent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-          //  notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             PendingIntent contentIntent = PendingIntent.getActivity(context,
                     0, notificationIntent,
@@ -121,35 +97,45 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             Resources res = context.getResources();
 
+            String text = "";
+            if(task.getUncheckedTasks().size() != 0){
+                for (int i = task.getUncheckedTasks().size()-1;  i >= 0 ; i--) {
+                    if(!task.getUncheckedTask(i).equals("")){
+                        text = task.getUncheckedTask(i);
+                        continue;
+                    }
+                }
+            }
+            if (text.equals("")){
+                for (int i = task.getCheckedTasks().size()-1;  i >= 0 ; i--) {
+                    if(!task.getCheckedTask(i).equals("")){
+                        text = task.getCheckedTask(i);
+                        continue;
+                    }
+                }
+            }
+
+
             builder.setContentIntent(contentIntent)
-                    .setSmallIcon(R.drawable.ic_format_list_checks_black_24dp)
-                    // большая картинка
+                    .setSmallIcon(R.drawable.ic_format_list_checks_white_24dp)
                     .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.super_ic))
                     .setTicker(String.valueOf(task.getId()))
                     .setWhen(System.currentTimeMillis())
                     .setAutoCancel(false)
-                    .addAction(R.drawable.ic_format_list_checks_black_24dp, "Открыть", contentIntent)
+                    .addAction(R.drawable.ic_format_list_checks_white_24dp, context.getString(R.string.act_open), contentIntent)
                     .setContentTitle(task.getHeadLine())
-                    .setContentText("324");
-            // Notification notification = builder.getNotification(); // до API 16
+                    .setContentText(text);
 
             Notification notification = builder.build();
 
             Uri ringURI =
                     RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             notification.sound = ringURI;
-
             notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
-
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(id, notification);
             dbHelper.updateTask(task, null);
         }
-        //throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    private void notifyq(){
-
     }
 }

@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,110 +31,107 @@ import java.util.Calendar;
 public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
 
-    SharedPreferences sharedPreferences;
-    TextView taskFontLabel;
-    TextView cardFontLabel;
-    TextView taskFontValue;
-    TextView cardFontValue;
-    TextView deletionPeriodLabel;
-    TextView swipeAction;
-    TextView morningTime;
-    TextView afternoonTime;
-    TextView eveningTime;
-    SeekBar taskFontSeekBar;
-    SeekBar cardFontSeekBar;
-    SharedPreferences.Editor editor;
-    RelativeLayout setDeletionPeriod;
+    SharedPreferences mSharedPreferences;
+    TextView mNoteFontLabel;
+    TextView mCardFontLabel;
+    TextView mNoteFontValue;
+    TextView mCardFontValue;
+    TextView mDeletionPeriodLabel;
+    TextView mSwipeAction;
+    TextView mMorningTime;
+    TextView mAfternoonTime;
+    TextView mEveningTime;
+    SeekBar mNoteFontSeekBar;
+    SeekBar mCardFontSeekBar;
+    SharedPreferences.Editor mEditor;
+    RelativeLayout mDeletionPeriod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        sharedPreferences = getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
+        mSharedPreferences = getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.setting_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //  toolbar.setTitle(R.string.settings);
         getSupportActionBar().setTitle(R.string.settings);
 
         int color = ContextCompat.getColor(this, R.color.common_google_signin_btn_text_dark);
         toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 
 
-        cardFontLabel = (TextView) findViewById(R.id.labelCardFont);
-        taskFontLabel = (TextView) findViewById(R.id.labelTaskFont);
+        mCardFontLabel = (TextView) findViewById(R.id.labelCardFont);
+        mNoteFontLabel = (TextView) findViewById(R.id.labelNoteFont);
 
-        cardFontValue = (TextView) findViewById(R.id.textCardFontValue);
-        taskFontValue = (TextView) findViewById(R.id.textTaskFontValue);
+        mCardFontValue = (TextView) findViewById(R.id.textCardFontValue);
+        mNoteFontValue = (TextView) findViewById(R.id.textNoteFontValue);
 
         setTime();
 
-        taskFontSeekBar = (SeekBar) findViewById(R.id.seekBarTaskFont);
-        taskFontSeekBar.setOnSeekBarChangeListener(this);
-        cardFontSeekBar = (SeekBar) findViewById(R.id.seekBarCardFont);
-        cardFontSeekBar.setOnSeekBarChangeListener(this);
+        mNoteFontSeekBar = (SeekBar) findViewById(R.id.seekBarTaskFont);
+        mNoteFontSeekBar.setOnSeekBarChangeListener(this);
+        mCardFontSeekBar = (SeekBar) findViewById(R.id.seekBarCardFont);
+        mCardFontSeekBar.setOnSeekBarChangeListener(this);
 
-        deletionPeriodLabel = (TextView) findViewById(R.id.deletionPeriodValue);
-        Long deletionPeriod = sharedPreferences.getLong(Constants.DELETION_PERIOD,Constants.PERIOD_WEEK);
+        mDeletionPeriodLabel = (TextView) findViewById(R.id.deletionPeriodValue);
+        Long deletionPeriod = mSharedPreferences.getLong(Constants.DELETION_PERIOD,Constants.PERIOD_WEEK);
 
         if (deletionPeriod.equals(Constants.PERIOD_AT_ONCE)) {
-            deletionPeriodLabel.setText(R.string.at_once);
+            mDeletionPeriodLabel.setText(R.string.at_once);
 
         } else if (deletionPeriod.equals(Constants.PERIOD_ONE_DAY)) {
-            deletionPeriodLabel.setText(R.string.one_day);
+            mDeletionPeriodLabel.setText(R.string.one_day);
 
         } else if (deletionPeriod.equals(Constants.PERIOD_TREE_DAY)) {
-            deletionPeriodLabel.setText(R.string.tree_day);
+            mDeletionPeriodLabel.setText(R.string.tree_day);
 
         } else if (deletionPeriod.equals(Constants.PERIOD_WEEK)) {
-            deletionPeriodLabel.setText(R.string.seven_day);
+            mDeletionPeriodLabel.setText(R.string.seven_day);
 
         } else if (deletionPeriod.equals(Constants.PERIOD_MONTH)) {
-            deletionPeriodLabel.setText(R.string.month);
+            mDeletionPeriodLabel.setText(R.string.month);
 
         }
 
-        swipeAction = (TextView) findViewById(R.id.swipeAction);
-        String remember = sharedPreferences.getString(Constants.SWIPE_REMEMBER,"");
+        mSwipeAction = (TextView) findViewById(R.id.swipeAction);
+        String remember = mSharedPreferences.getString(Constants.SWIPE_REMEMBER,"");
         switch (remember){
             case Constants.ARCHIVE:
-                swipeAction.setText(R.string.act_archive);
+                mSwipeAction.setText(R.string.act_archive);
                 break;
             case Constants.DELETED:
-                swipeAction.setText(R.string.act_delete);
+                mSwipeAction.setText(R.string.act_delete);
                 break;
             case "":
-                swipeAction.setText(R.string.act_ask);
+                mSwipeAction.setText(R.string.act_ask);
                 break;
         }
 
-        setDeletionPeriod = (RelativeLayout) findViewById(R.id.setDeletionPeriod);
+        mDeletionPeriod = (RelativeLayout) findViewById(R.id.setDeletionPeriod);
 
-        Log.d("TAG", "FONT SIZE " + sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16));
-
-        taskFontSeekBar.setProgress(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16) - 12);
-        cardFontSeekBar.setProgress(sharedPreferences.getInt(Constants.CARD_FONT_SIZE, 17) - 12);
+        mNoteFontSeekBar.setProgress(mSharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16) - 12);
+        mCardFontSeekBar.setProgress(mSharedPreferences.getInt(Constants.CARD_FONT_SIZE, 17) - 12);
     }
 
     private void setTime() {
-        morningTime = (TextView) findViewById(R.id.morning_text);
-        afternoonTime = (TextView) findViewById(R.id.afternoon_text);
-        eveningTime = (TextView) findViewById(R.id.evening_text);
+        mMorningTime = (TextView) findViewById(R.id.morning_text);
+        mAfternoonTime = (TextView) findViewById(R.id.afternoon_text);
+        mEveningTime = (TextView) findViewById(R.id.evening_text);
 
-        String mHours = String.valueOf(sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 7));
-        String aHours = String.valueOf(sharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS, 13));
-        String eHours = String.valueOf(sharedPreferences.getInt(Constants.EVENING_TIME_HOURS, 19));
+        String mHours = String.valueOf(mSharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 7));
+        String aHours = String.valueOf(mSharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS, 13));
+        String eHours = String.valueOf(mSharedPreferences.getInt(Constants.EVENING_TIME_HOURS, 19));
 
-        String mMinutes = String.valueOf(sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 0));
+        String mMinutes = String.valueOf(mSharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 0));
         if(mMinutes.length()==1)
             mMinutes = "0" + mMinutes;
-        String aMinutes = String.valueOf(sharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES, 0));
+        String aMinutes = String.valueOf(mSharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES, 0));
         if(aMinutes.length()==1)
             aMinutes = "0" + aMinutes;
-        String eMinutes = String.valueOf(sharedPreferences.getInt(Constants.EVENING_TIME_MINUTES, 0));
+        String eMinutes = String.valueOf(mSharedPreferences.getInt(Constants.EVENING_TIME_MINUTES, 0));
         if(eMinutes.length()==1)
             eMinutes = "0" + eMinutes;
 
@@ -147,25 +143,23 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         time.set(Calendar.MINUTE, Integer.parseInt(mMinutes));
 
         formattedTime = timeFormat.format(time.getTimeInMillis());
-        morningTime.setText(formattedTime);
+        mMorningTime.setText(formattedTime);
 
         time.set(Calendar.HOUR_OF_DAY, Integer.parseInt(aHours));
         time.set(Calendar.MINUTE, Integer.parseInt(aMinutes));
 
         formattedTime = timeFormat.format(time.getTimeInMillis());
-        afternoonTime.setText(formattedTime);
+        mAfternoonTime.setText(formattedTime);
 
         time.set(Calendar.HOUR_OF_DAY, Integer.parseInt(eHours));
         time.set(Calendar.MINUTE, Integer.parseInt(eMinutes));
 
         formattedTime = timeFormat.format(time.getTimeInMillis());
-        eveningTime.setText(formattedTime);
+        mEveningTime.setText(formattedTime);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        System.out.println("                                        ertfgyhujikolp;jhgwaerdtfghjkl;");
-        //getMenuInflater().inflate(R.menu.menu_activity_main, menu);
         return true;
     }
 
@@ -173,35 +167,35 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.setDeletionPeriod:
-                editor = sharedPreferences.edit();
-                PopupMenu popupMenu = new PopupMenu(this,setDeletionPeriod);
+                mEditor = mSharedPreferences.edit();
+                PopupMenu popupMenu = new PopupMenu(this, mDeletionPeriod);
                 popupMenu.inflate(R.menu.deletion_period);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
                             case R.id.at_once:
-                                deletionPeriodLabel.setText(R.string.at_once);
-                                editor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_AT_ONCE);
+                                mDeletionPeriodLabel.setText(R.string.at_once);
+                                mEditor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_AT_ONCE);
                                 break;
                             case R.id.one_day:
-                                deletionPeriodLabel.setText(R.string.one_day);
-                                editor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_ONE_DAY);
+                                mDeletionPeriodLabel.setText(R.string.one_day);
+                                mEditor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_ONE_DAY);
                                 break;
                             case R.id.tree_days:
-                                deletionPeriodLabel.setText(R.string.tree_day);
-                                editor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_TREE_DAY);
+                                mDeletionPeriodLabel.setText(R.string.tree_day);
+                                mEditor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_TREE_DAY);
                                 break;
                             case R.id.seven_days:
-                                deletionPeriodLabel.setText(R.string.seven_day);
-                                editor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_WEEK);
+                                mDeletionPeriodLabel.setText(R.string.seven_day);
+                                mEditor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_WEEK);
                                 break;
                             case R.id.month:
-                                deletionPeriodLabel.setText(R.string.month);
-                                editor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_MONTH);
+                                mDeletionPeriodLabel.setText(R.string.month);
+                                mEditor.putLong(Constants.DELETION_PERIOD, Constants.PERIOD_MONTH);
                                 break;
                         }
-                        editor.commit();
+                        mEditor.commit();
                         return false;
                     }
                 });
@@ -219,22 +213,22 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 mBuilder.setAdapter(adapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        SharedPreferences.Editor editor = mSharedPreferences.edit();
                         switch (i){
                             case 0:
                                 editor.putString(Constants.SWIPE_REMEMBER, Constants.DELETED);
                                 editor.commit();
-                                swipeAction.setText(R.string.act_delete);
+                                mSwipeAction.setText(R.string.act_delete);
                                 break;
                             case 1:
                                 editor.putString(Constants.SWIPE_REMEMBER, Constants.ARCHIVE);
                                 editor.commit();
-                                swipeAction.setText(R.string.act_archive);
+                                mSwipeAction.setText(R.string.act_archive);
                                 break;
                             case 2:
                                 editor.putString(Constants.SWIPE_REMEMBER, "");
                                 editor.commit();
-                                swipeAction.setText(R.string.act_ask);
+                                mSwipeAction.setText(R.string.act_ask);
                                 break;
                         }
                     }
@@ -243,45 +237,45 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 dialog.show();
                 break;
             case R.id.setAfternoonTime:
-                final int hour = sharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS,13);
-                final int minute = sharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES,0);
+                final int hour = mSharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS,13);
+                final int minute = mSharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES,0);
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int h, int m) {
-                        editor.putInt(Constants.AFTERNOON_TIME_MINUTES, m);
-                        editor.putInt(Constants.AFTERNOON_TIME_HOURS, h);
-                        editor.commit();
+                        mEditor.putInt(Constants.AFTERNOON_TIME_MINUTES, m);
+                        mEditor.putInt(Constants.AFTERNOON_TIME_HOURS, h);
+                        mEditor.commit();
                         setTime();
                     }
                 }, hour, minute, true);
                 timePickerDialog.show();
                 break;
             case R.id.setMorningTime:
-                final int hour2 = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS,7);
-                final int minute2 = sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES,0);
+                final int hour2 = mSharedPreferences.getInt(Constants.MORNING_TIME_HOURS,7);
+                final int minute2 = mSharedPreferences.getInt(Constants.MORNING_TIME_MINUTES,0);
 
                 TimePickerDialog timePickerDialog2 = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int h, int m) {
-                        editor.putInt(Constants.MORNING_TIME_MINUTES, m);
-                        editor.putInt(Constants.MORNING_TIME_HOURS, h);
-                        editor.commit();
+                        mEditor.putInt(Constants.MORNING_TIME_MINUTES, m);
+                        mEditor.putInt(Constants.MORNING_TIME_HOURS, h);
+                        mEditor.commit();
                         setTime();
                     }
                 }, hour2, minute2, true);
                 timePickerDialog2.show();
                 break;
             case R.id.setEveningTime:
-                final int hour3 = sharedPreferences.getInt(Constants.EVENING_TIME_HOURS,19);
-                final int minute3 = sharedPreferences.getInt(Constants.EVENING_TIME_MINUTES,0);
+                final int hour3 = mSharedPreferences.getInt(Constants.EVENING_TIME_HOURS,19);
+                final int minute3 = mSharedPreferences.getInt(Constants.EVENING_TIME_MINUTES,0);
 
                 TimePickerDialog timePickerDialog3 = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int h, int m) {
-                        editor.putInt(Constants.EVENING_TIME_MINUTES, m);
-                        editor.putInt(Constants.EVENING_TIME_HOURS, h);
-                        editor.commit();
+                        mEditor.putInt(Constants.EVENING_TIME_MINUTES, m);
+                        mEditor.putInt(Constants.EVENING_TIME_HOURS, h);
+                        mEditor.commit();
                         setTime();
                     }
                 }, hour3, minute3, true);
@@ -302,22 +296,21 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        Log.d("TAG", "progress Changed " + i + "b " + b);
-        editor = sharedPreferences.edit();
+        mEditor = mSharedPreferences.edit();
         switch (seekBar.getId()) {
             case R.id.seekBarTaskFont:
-                taskFontLabel.setTextSize(i + 12);
-                taskFontValue.setText(String.valueOf(i + 12));
+                mNoteFontLabel.setTextSize(i + 12);
+                mNoteFontValue.setText(String.valueOf(i + 12));
                 if (b) {
-                    editor.putInt(Constants.TASK_FONT_SIZE, i + 12);
+                    mEditor.putInt(Constants.TASK_FONT_SIZE, i + 12);
                 }
                 break;
             case R.id.seekBarCardFont:
-                cardFontLabel.setTextSize(i + 12);
+                mCardFontLabel.setTextSize(i + 12);
                 if (b) {
-                    editor.putInt(Constants.CARD_FONT_SIZE, i + 12);
+                    mEditor.putInt(Constants.CARD_FONT_SIZE, i + 12);
                 }
-                cardFontValue.setText(String.valueOf(i + 12));
+                mCardFontValue.setText(String.valueOf(i + 12));
                 break;
         }
     }
@@ -329,7 +322,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        editor.commit();
+        mEditor.commit();
     }
 
 

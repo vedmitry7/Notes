@@ -12,8 +12,8 @@
         android:id="@+id/setting_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffc107"
-        app:titleTextColor="#FFFFFF"
+        android:background="@color/main_toolbar_color"
+        app:titleTextColor="@color/white"
         app:title="@string/settings"
         app:titleTextAppearance="@style/ToolbarTitle">
     </android.support.v7.widget.Toolbar>
@@ -55,21 +55,22 @@
                 <SeekBar
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/textTaskFontValue"
+                    android:layout_toLeftOf="@+id/textNoteFontValue"
                     android:max="14"
                     android:progress="4"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
-                    android:layout_below="@+id/labelTaskFont"
+                    android:layout_below="@+id/labelNoteFont"
                     android:id="@+id/seekBarTaskFont"/>
 
                 <TextView
+
                     android:paddingLeft="16dp"
                     android:textSize="16sp"
                     android:text="@string/task_font_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/labelTaskFont"
+                    android:id="@+id/labelNoteFont"
                     android:textStyle="normal"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true" />
@@ -80,7 +81,7 @@
                     android:paddingRight="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textTaskFontValue"
+                    android:id="@+id/textNoteFontValue"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
@@ -130,7 +131,7 @@
 
             <TextView
                 android:paddingTop="4dp"
-                android:textColor="#00796B"
+                android:textColor="@color/colorAccent"
                 android:paddingBottom="4dp"
                 android:paddingLeft="16dp"
                 android:text="@string/notifications"
@@ -272,6 +273,7 @@
                     android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+
                 <TextView
                     android:layout_marginTop="10dp"
                     android:paddingLeft="16dp"
@@ -303,16 +305,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-
             </RelativeLayout>
 
         </LinearLayout>
 
-
     </ScrollView>
-
-
-
 
 </LinearLayout>
 

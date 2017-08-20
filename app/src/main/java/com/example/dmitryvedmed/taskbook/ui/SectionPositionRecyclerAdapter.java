@@ -27,12 +27,6 @@ public class SectionPositionRecyclerAdapter extends RecyclerView.Adapter<Section
     public SectionPositionRecyclerAdapter(List<Section> sections) {
         this.sections = sections;
         compareSections();
-        Log.d("TAG", "          ADAPTER GET SECTION AND COMPARE");
-        for (Section s:sections
-                ) {
-            Log.d("TAG", "Section " + s.getName() + ". pos : " + s.getPosition());
-        }
-        Log.d("TAG", "_____________________________");
     }
 
     @Override
@@ -58,23 +52,19 @@ public class SectionPositionRecyclerAdapter extends RecyclerView.Adapter<Section
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
-
             textView = (TextView) itemView.findViewById(R.id.section_name);
         }
 
         @Override
         public void onItemSelected() {
-
         }
 
         @Override
         public void onItemSelected2() {
-
         }
 
         @Override
         public void onItemClear() {
-
         }
     }
 
@@ -96,7 +86,6 @@ public class SectionPositionRecyclerAdapter extends RecyclerView.Adapter<Section
     }
 
     private void compareSections(){
-        Log.d("TAG", "       Adapter --- compareSections");
         Comparator<Section> comparator = new Comparator<Section>() {
             @Override
             public int compare(Section section, Section t1) {

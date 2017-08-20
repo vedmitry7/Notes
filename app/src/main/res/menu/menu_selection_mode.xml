@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.dmitryvedmed.taskbook.ui.DrawerTestActivity">
+    tools:mContext="com.example.dmitryvedmed.taskbook.ui.DrawerTestActivity">
 
     <item android:icon="@drawable/ic_package_down_white_36dp"
         android:id="@+id/toArchive"

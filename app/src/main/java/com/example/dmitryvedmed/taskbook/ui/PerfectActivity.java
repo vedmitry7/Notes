@@ -44,6 +44,7 @@ import com.example.dmitryvedmed.taskbook.logic.DBHelper;
 import com.example.dmitryvedmed.taskbook.logic.Section;
 import com.example.dmitryvedmed.taskbook.logic.SuperNote;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -58,52 +59,51 @@ import static com.example.dmitryvedmed.taskbook.untils.Constants.NOTIF_ON;
 
 public class PerfectActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle toggle;
-
-    private List<SuperNote> values = new ArrayList<>();
-    public static DBHelper dbHelper;
-    public static RecyclerView recyclerView;
-    private MainRecyclerAdapter adapter;
+    private Context mContext;
+    public static DBHelper sDbHelper;
+    private MainRecyclerAdapter mAdapter;
     private ItemTouchHelper mItemTouchHelper;
-    private ItemTouchHelper.Callback callback;
-    boolean is_in_action_mode = false;
-    private Toolbar toolbar;
-    public String currentKind = Constants.UNDEFINED;
-    private Context context;
-    private Menu menu;
-    private FloatingActionButton fab;
-    private FloatingActionButton fabAddST;
-    private FloatingActionButton fabAddLT;
-    public static CoordinatorLayout coordinatorLayout;
-    private MenuItem  clearBascet, undifinedPoint;
-    private Animation fabAddAnimation, fabCancelAnimation, fabOpen, fabClose;
-    private boolean fabPressed;
-    private SharedPreferences sharedPreferences;
-    private ArrayList<Section> sections;
-    private Section currentSection;
-    private int columnsNumber;
-    private SharedPreferences.Editor editor;
-    private AlertDialog dialog;
-    ActionMode actionMode;
-    private boolean notification_on;
+    private ItemTouchHelper.Callback mCallback;
 
-    private MenuItem view;
-
-    private TextView textNoNotes;
-
-
+    public static RecyclerView sRecyclerView;
+    public static CoordinatorLayout sCoordinatorLayout;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
+    private Toolbar mToolbar;
+    private FloatingActionButton mFab;
+    private FloatingActionButton mFabAddST;
+    private FloatingActionButton mFabAddLT;
+    private TextView mTextNoNotes;
     private AdView mAdView;
 
+    private Menu mMenu;
+    private MenuItem mChangeView;
+    private MenuItem mClearBasket, mMainSection;
+
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+    private Animation mFabAddAnimation, mFabCancelAnimation, mFabOpen, mFabClose;
+    private Section mCurrentSection;
+    private AlertDialog mDialog;
+    private ActionMode mActionMode;
+
+    private List<SuperNote> mValues = new ArrayList<>();
+    private ArrayList<Section> mSections;
+
+    private boolean is_action_mode_on = false;
+    private int mColumnsNumber;
+    private boolean mNotification_on;
+    private boolean mFabPressed;
+    public String currentKind = Constants.UNDEFINED;
 
     public boolean is_in_action_mode() {
-        return is_in_action_mode;
+        return is_action_mode_on;
     }
 
     private ActionMode.Callback actionModeCallback;
 
-    public boolean isNotification_on() {
-        return notification_on;
+    public boolean ismNotification_on() {
+        return mNotification_on;
     }
 
     @Override
@@ -111,17 +111,15 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        initAds();
 
-        context = this;
-        dbHelper = new DBHelper(this);
+        mContext = this;
+        sDbHelper = new DBHelper(this);
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            columnsNumber = 2;
+            mColumnsNumber = 2;
         } else {
-            columnsNumber = 3;
+            mColumnsNumber = 3;
         }
 
         loadPreferences();
@@ -130,71 +128,85 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         update();
         initView();
         initAnimation();
-        //loadPreferences();
+    }
+
+    private void initAds() {
+        mAdView = (AdView) findViewById(R.id.adView);
+        mAdView.setVisibility(View.GONE);
+
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                if (mAdView.getVisibility() == View.GONE) {
+                    mAdView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mAdView.loadAd(adRequest);
     }
 
     private void loadPreferences(){
-        sharedPreferences = this.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
+        mSharedPreferences = this.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
 
-        notification_on = sharedPreferences.getBoolean(Constants.NOTIF_ON, false);
+        mNotification_on = mSharedPreferences.getBoolean(Constants.NOTIF_ON, false);
 
-        if(sharedPreferences.getString("first_launch","321").equals("321")) {
-            editor.putInt(Constants.MORNING_TIME_HOURS, 7);
-            editor.putInt(Constants.MORNING_TIME_MINUTES, 0);
-            editor.putInt(Constants.AFTERNOON_TIME_HOURS, 13);
-            editor.putInt(Constants.AFTERNOON_TIME_MINUTES, 0);
-            editor.putInt(Constants.EVENING_TIME_HOURS, 19);
-            editor.putInt(Constants.EVENING_TIME_MINUTES, 0);
-            editor.putString("first_launch", "123");
-            editor.commit();
+        if(mSharedPreferences.getString("first_launch","321").equals("321")) {
+            mEditor.putInt(Constants.MORNING_TIME_HOURS, 7);
+            mEditor.putInt(Constants.MORNING_TIME_MINUTES, 0);
+            mEditor.putInt(Constants.AFTERNOON_TIME_HOURS, 13);
+            mEditor.putInt(Constants.AFTERNOON_TIME_MINUTES, 0);
+            mEditor.putInt(Constants.EVENING_TIME_HOURS, 19);
+            mEditor.putInt(Constants.EVENING_TIME_MINUTES, 0);
+            mEditor.putString("first_launch", "123");
+            mEditor.commit();
         }
     }
 
     private void initView() {
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fabAddST = (FloatingActionButton) findViewById(R.id.fabListNote);
-        //  fabAddST.setVisibility(View.INVISIBLE);
-        fabAddLT = (FloatingActionButton) findViewById(R.id.fabSimpleNote);
-        //  fabAddLT.setVisibility(View.INVISIBLE);
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFabAddST = (FloatingActionButton) findViewById(R.id.fabListNote);
+        mFabAddLT = (FloatingActionButton) findViewById(R.id.fabSimpleNote);
 
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cl);
+        sCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.cl);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mTextNoNotes = (TextView) findViewById(R.id.textNoNotes);
+        mTextNoNotes.setText(R.string.empty);
 
-        textNoNotes = (TextView) findViewById(R.id.textNoNotes);
-        textNoNotes.setText(R.string.empty);
-
-        if(sharedPreferences.getBoolean(NOTIF_ON, false)){
+        if(mSharedPreferences.getBoolean(NOTIF_ON, false)){
         }
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_common);
-        adapter = new MainRecyclerAdapter(values, PerfectActivity.this);
+        sRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_common);
+        mAdapter = new MainRecyclerAdapter(mValues, PerfectActivity.this);
         RecyclerView.LayoutManager layoutManager;
-        String s = sharedPreferences.getString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_LIST);
+        String s = mSharedPreferences.getString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_LIST);
 
         if(s.equals(Constants.LAYOUT_LIST)) {
             layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         } else {
-            layoutManager = new StaggeredGridLayoutManager(columnsNumber, 1);
+            layoutManager = new StaggeredGridLayoutManager(mColumnsNumber, 1);
         }
 
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
+        sRecyclerView.setLayoutManager(layoutManager);
+        sRecyclerView.setHasFixedSize(true);
+        sRecyclerView.setAdapter(mAdapter);
 
-        recyclerView.addItemDecoration(new SpacesItemDecoration());
-        callback = new SimpleItemTouchHelperCallback(adapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(recyclerView);
+        sRecyclerView.addItemDecoration(new SpacesItemDecoration());
+        mCallback = new SimpleItemTouchHelperCallback(mAdapter);
+        mItemTouchHelper = new ItemTouchHelper(mCallback);
+        mItemTouchHelper.attachToRecyclerView(sRecyclerView);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(mToggle);
 
-        toggle.syncState();
+        mToggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -214,7 +226,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                     unarchive.setIcon(getResources().getDrawable(R.drawable.ic_package_up_white_36dp));
                 }
 
-                if(notification_on){
+                if(mNotification_on){
                     MenuItem unarchive = menu.findItem(R.id.toArchive);
                     MenuItem translate = menu.findItem(R.id.translateTo);
                     MenuItem delete = menu.findItem(R.id.delete_selection_items);
@@ -235,23 +247,21 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 switch (item.getItemId()) {
 
                     case R.id.set_color_3:
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        //builder.setTitle("Выберете цвет");
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                         builder.setView(R.layout.dialog_choose_color);
-                        dialog = builder.create();
-                        dialog.show();
+                        mDialog = builder.create();
+                        mDialog.show();
                         break;
 
                     case R.id.delete_selection_items:
                         if(currentKind == Constants.DELETED) {
 
-                            final AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                            // alert.setTitle("Очистить корзину?");
+                            final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
                             alert.setMessage(R.string.delete_forever_massage);
                             alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    adapter.deleteSelectedTasksForever();
+                                    mAdapter.deleteSelectedTasksForever();
                                     mode.finish();
                                 }
                             });
@@ -263,39 +273,39 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                             alert.show();
                             break;
                         }
-                        showSnackBar(Constants.DELETED, adapter.getSelectedTasksCounter());
-                        adapter.translateTo(Constants.DELETED);
+                        showSnackBar(Constants.DELETED, mAdapter.getSelectedNotesCounter());
+                        mAdapter.translateTo(Constants.DELETED);
                         mode.finish();
                         break;
 
                     case R.id.toArchive:
                         if(currentKind.equals(Constants.ARCHIVE)){
-                            adapter.translateTo(Constants.UNDEFINED);
+                            mAdapter.translateTo(Constants.UNDEFINED);
                         } else {
-                            adapter.translateTo(Constants.ARCHIVE);
+                            mAdapter.translateTo(Constants.ARCHIVE);
                         }
                         break;
 
                     case R.id.translateTo:
 
-                        sections = dbHelper.getAllSections();
-                        if(sections.size() == 0 && !currentKind.equals(Constants.DELETED)){
-                            Snackbar.make(coordinatorLayout, R.string.no_sections, Snackbar.LENGTH_SHORT)
+                        mSections = sDbHelper.getAllSections();
+                        if(mSections.size() == 0 && !currentKind.equals(Constants.DELETED)){
+                            Snackbar.make(sCoordinatorLayout, R.string.no_sections, Snackbar.LENGTH_SHORT)
                                     .show();
                             break;
                         }
-                        MenuBuilder menuBuilder = new MenuBuilder(context);
+                        MenuBuilder menuBuilder = new MenuBuilder(mContext);
 
-                        MenuPopupHelper optionsMenu = new MenuPopupHelper(context, menuBuilder, toolbar);
+                        MenuPopupHelper optionsMenu = new MenuPopupHelper(mContext, menuBuilder, mToolbar);
                         optionsMenu.setForceShowIcon(true);
 
-                        PopupMenu popupMenu = new PopupMenu(context, toolbar, Gravity.TOP);
+                        PopupMenu popupMenu = new PopupMenu(mContext, mToolbar, Gravity.TOP);
 
                         if(currentKind != Constants.UNDEFINED) {
                             popupMenu.getMenu().add(354, Menu.NONE,Menu.NONE, R.string.main_section);
                         }
 
-                        for (Section section:sections
+                        for (Section section: mSections
                                 ) {
                             popupMenu.getMenu().add(section.getName());
                         }
@@ -304,9 +314,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                             public boolean onMenuItemClick(MenuItem item) {
                                 //    if(item.getTitle().equals(R.string.main_section)){
                                 if(item.getGroupId() == 354){
-                                    adapter.translateTo(Constants.UNDEFINED);
+                                    mAdapter.translateTo(Constants.UNDEFINED);
                                 } else {
-                                    adapter.translateTo((String) item.getTitle());
+                                    mAdapter.translateTo((String) item.getTitle());
                                 }
                                 mode.finish();
                                 return true;
@@ -320,7 +330,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                adapter.cancelSelection();
+                mAdapter.cancelSelection();
             }
         };
     }
@@ -328,12 +338,12 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if(is_in_action_mode) {
+        if(is_action_mode_on) {
             outState.putInt(Constants.ACTION_MODE, 1);
-            outState.putBooleanArray(Constants.SELLECTION_ARRAY, adapter.getSelects());
-            editor.putInt(Constants.SELECTED_ITEM_COUNT, adapter.getSelectedTasksCounter());
-            editor.commit();
-            outState.putIntegerArrayList(Constants.SELECTED_ITEM_IDS, adapter.getSelectedListIds());
+            outState.putBooleanArray(Constants.SELLECTION_ARRAY, mAdapter.getSelects());
+            mEditor.putInt(Constants.SELECTED_ITEM_COUNT, mAdapter.getSelectedNotesCounter());
+            mEditor.commit();
+            outState.putIntegerArrayList(Constants.SELECTED_ITEM_IDS, mAdapter.getSelectedListIds());
         }
         else {
             outState.putInt(Constants.ACTION_MODE, 0);
@@ -344,13 +354,13 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         if(savedInstanceState!=null && savedInstanceState.getInt(Constants.ACTION_MODE)==1){
-            is_in_action_mode = true;
+            is_action_mode_on = true;
             setSelectionMode();
-            adapter.setSelectedTasksCounter(savedInstanceState.getInt(Constants.SELECTED_ITEM_COUNT));
-            adapter.setSelects(savedInstanceState.getBooleanArray(Constants.SELLECTION_ARRAY));
-            adapter.fillSelectedTasks(savedInstanceState.getIntegerArrayList(Constants.SELECTED_ITEM_IDS));
-            actionMode.setTitle(String.valueOf(sharedPreferences.getInt(Constants.SELECTED_ITEM_COUNT,0)));
-            adapter.setSelectedTasksCounter(sharedPreferences.getInt(Constants.SELECTED_ITEM_COUNT,0));
+            mAdapter.setSelectedNotesCounter(savedInstanceState.getInt(Constants.SELECTED_ITEM_COUNT));
+            mAdapter.setSelects(savedInstanceState.getBooleanArray(Constants.SELLECTION_ARRAY));
+            mAdapter.fillSelectedTasks(savedInstanceState.getIntegerArrayList(Constants.SELECTED_ITEM_IDS));
+            mActionMode.setTitle(String.valueOf(mSharedPreferences.getInt(Constants.SELECTED_ITEM_COUNT,0)));
+            mAdapter.setSelectedNotesCounter(mSharedPreferences.getInt(Constants.SELECTED_ITEM_COUNT,0));
         }
         super.onRestoreInstanceState(savedInstanceState);
     }
@@ -359,44 +369,44 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         menu.clear();
-        if(this.menu!=null)
-            this.menu.clear();
+        if(this.mMenu !=null)
+            this.mMenu.clear();
 
-        if(notification_on||currentKind.equals(Constants.UNDEFINED)||currentKind.equals(Constants.ARCHIVE)){
+        if(mNotification_on || currentKind.equals(Constants.UNDEFINED)|| currentKind.equals(Constants.ARCHIVE)){
             getMenuInflater().inflate(R.menu.main_menu, menu);
         } else
         if(currentKind.equals(Constants.DELETED)) {
             getMenuInflater().inflate(R.menu.bucket_menu, menu);
-            clearBascet = menu.findItem(R.id.clear_basket);
-            if(values.size()==0){
-                clearBascet.setVisible(false);
+            mClearBasket = menu.findItem(R.id.clear_basket);
+            if(mValues.size()==0){
+                mClearBasket.setVisible(false);
             }
         } else
         {
             getMenuInflater().inflate(R.menu.section_menu, menu);
         }
 
-        this.menu = menu;
-        view = menu.findItem(R.id.change_view);
+        this.mMenu = menu;
+        mChangeView = menu.findItem(R.id.change_view);
         setChangeViewMenuItemIcon();
         onCreateNavigationMenu();
         return  true;
     }
 
     private void setChangeViewMenuItemIcon() {
-        if(view==null) {
+        if(mChangeView ==null) {
             return;
         }
-        String s = sharedPreferences.getString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_LIST);
+        String s = mSharedPreferences.getString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_LIST);
         if(s.equals(Constants.LAYOUT_LIST)) {
-            view.setIcon(getResources().getDrawable(R.drawable.ic_view_dashboard_white_36dp));
+            mChangeView.setIcon(getResources().getDrawable(R.drawable.ic_view_dashboard_white_36dp));
         } else {
-            view.setIcon(getResources().getDrawable(R.drawable.ic_view_stream_white_36dp));
+            mChangeView.setIcon(getResources().getDrawable(R.drawable.ic_view_stream_white_36dp));
         }
     }
 
     private void onCreateNavigationMenu() {
-        sections = dbHelper.getAllSections();
+        mSections = sDbHelper.getAllSections();
 
         compareSections();
 
@@ -404,13 +414,13 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         Menu navMenu = navigationView.getMenu();
         navMenu.clear();
 
-        navMenu.add(Menu.NONE, Constants.KEY_GENERAL_SECTION , Menu.NONE, R.string.all).setIcon(getResources().getDrawable(R.drawable.ic_note_multiple_grey600_36dp));
+        navMenu.add(Menu.NONE, Constants.KEY_GENERAL_SECTION , Menu.NONE, R.string.main_section).setIcon(getResources().getDrawable(R.drawable.ic_note_multiple_grey600_36dp));
         navMenu.add(Menu.NONE, Constants.KEY_NOTIFICATIONS_SECTION , Menu.NONE, R.string.notifications).setIcon(getResources().getDrawable(R.drawable.ic_bell_grey600_36dp));
         navMenu.add(Menu.NONE, Constants.KEY_ARCHIVE_SECTION , Menu.NONE, R.string.archive).setIcon(getResources().getDrawable(R.drawable.ic_package_down_grey600_36dp));
 
-        undifinedPoint = navMenu.findItem(Constants.KEY_GENERAL_SECTION);
+        mMainSection = navMenu.findItem(Constants.KEY_GENERAL_SECTION);
 
-        for (Section s:sections
+        for (Section s: mSections
                 ) {
             navMenu.add(45, s.getId(), Menu.NONE, s.getName());
         }
@@ -425,9 +435,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (adapter.getMode()== MainRecyclerAdapter.Mode.SELECTION_MODE){
-            adapter.cancelSelection();
-            fab.show();
+        } else if (mAdapter.getMode()== MainRecyclerAdapter.Mode.SELECTION_MODE){
+            mAdapter.cancelSelection();
+            mFab.show();
         } else {
             super.onBackPressed();
         }
@@ -450,12 +460,12 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             default:
                 s1 = i + " заметкок добавлено в раздел " + s;
         }
-        Snackbar.make(coordinatorLayout, s1, Snackbar.LENGTH_SHORT)
+        Snackbar.make(sCoordinatorLayout, s1, Snackbar.LENGTH_SHORT)
                 .setAction(R.string.cancel, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         showSnackBarCancel();
-                        adapter.returnTranslatedTask(currentKind);
+                        mAdapter.returnTranslatedTask(currentKind);
 
                     }
                 })
@@ -463,27 +473,27 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     }
 
     private void showSnackBarCancel(){
-        Snackbar.make(coordinatorLayout,R.string.cancel, Snackbar.LENGTH_LONG)
+        Snackbar.make(sCoordinatorLayout,R.string.cancel, Snackbar.LENGTH_LONG)
                 .show();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(toggle.onOptionsItemSelected(item)) {
+        if(mToggle.onOptionsItemSelected(item)) {
             return true;
         }
 
         hideFabs();
         switch (item.getItemId()){
             case R.id.change_view:
-                String s = sharedPreferences.getString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_LIST);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
+                String s = mSharedPreferences.getString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_LIST);
+                SharedPreferences.Editor editor = mSharedPreferences.edit();
 
                 RecyclerView.LayoutManager layoutManager;
 
                 if(s.equals(Constants.LAYOUT_LIST)) {
-                    layoutManager = new StaggeredGridLayoutManager(columnsNumber, 1);
+                    layoutManager = new StaggeredGridLayoutManager(mColumnsNumber, 1);
                     editor.putString(Constants.MAIN_RECYCLER_LAYOUT, Constants.LAYOUT_GRID);
 
                 } else {
@@ -493,8 +503,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 editor.commit();
                 setChangeViewMenuItemIcon();
 
-                recyclerView.setLayoutManager(layoutManager);
-                adapter.notifyDataSetChanged();
+                sRecyclerView.setLayoutManager(layoutManager);
+                mAdapter.notifyDataSetChanged();
                 break;
             case R.id.delete_forever:
                 final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -504,8 +514,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        adapter.deleteSelectedTasksForever();
-                        clearBascet.setVisible(true);
+                        mAdapter.deleteSelectedTasksForever();
+                        mClearBasket.setVisible(true);
                     }
                 });
                 alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -522,13 +532,13 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 alert2.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        for (SuperNote t:dbHelper.getTasks(Constants.DELETED)
+                        for (SuperNote t: sDbHelper.getTasks(Constants.DELETED)
                                 ) {
-                            dbHelper.deleteTask(t);
+                            sDbHelper.deleteTask(t);
                         }
-                        adapter.getTasks().clear();
-                        adapter.notifyDataSetChanged();
-                        clearBascet.setVisible(false);
+                        mAdapter.getNotes().clear();
+                        mAdapter.notifyDataSetChanged();
+                        mClearBasket.setVisible(false);
                     }
                 });
                 alert2.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -539,19 +549,19 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 alert2.show();
                 break;
             case R.id.deleteSection:
-                if(values.size()>0) {
+                if(mValues.size()>0) {
                     AlertDialog.Builder alert3 = new AlertDialog.Builder(this);
                     alert3.setTitle(R.string.question_delete_section);
                     alert3.setMessage(R.string.delete_section_massage);
                     alert3.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            adapter.deleteSection();
+                            mAdapter.deleteSection();
                             //deleteSection.setVisible(false);
-                            onNavigationItemSelected(undifinedPoint);
-                            dbHelper.deleteSection(currentSection);
-                            sections.remove(currentSection);
-                            currentSection = null;
-                            onCreateOptionsMenu(menu);
+                            onNavigationItemSelected(mMainSection);
+                            sDbHelper.deleteSection(mCurrentSection);
+                            mSections.remove(mCurrentSection);
+                            mCurrentSection = null;
+                            onCreateOptionsMenu(mMenu);
                         }
                     });
                     alert3.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -561,11 +571,11 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                     });
                     alert3.show();
                 } else {
-                    onNavigationItemSelected(undifinedPoint);
-                    dbHelper.deleteSection(currentSection);
-                    sections.remove(currentSection);
-                    currentSection = null;
-                    onCreateOptionsMenu(menu);
+                    onNavigationItemSelected(mMainSection);
+                    sDbHelper.deleteSection(mCurrentSection);
+                    mSections.remove(mCurrentSection);
+                    mCurrentSection = null;
+                    onCreateOptionsMenu(mMenu);
                 }
                 break;
         }
@@ -573,63 +583,63 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     }
 
     private void saveCurrentKind(){
-        editor.putString(Constants.CURRENT_KIND, currentKind);
-        editor.commit();
+        mEditor.putString(Constants.CURRENT_KIND, currentKind);
+        mEditor.commit();
     }
 
     private void sectionWasChanged(){
 
-        editor.putBoolean(Constants.NOTIF_ON, false);
-        editor.commit();
+        mEditor.putBoolean(Constants.NOTIF_ON, false);
+        mEditor.commit();
 
-        values = dbHelper.getTasks(currentKind);
+        mValues = sDbHelper.getTasks(currentKind);
 
         isSectionEmpty();
 
         if(currentKind.equals(Constants.DELETED)){
             checkOldTask();
-            fab.hide();
+            mFab.hide();
         } else {
-            fab.show();
+            mFab.show();
         }
 
-        onCreateOptionsMenu(menu);
-        adapter.dataChanged(values);
+        onCreateOptionsMenu(mMenu);
+        mAdapter.dataChanged(mValues);
         saveCurrentKind();
         setTitle();
     }
 
     private void isSectionEmpty(){
 
-        if(values.size() == 0){
-            textNoNotes.setVisibility(View.VISIBLE);
+        if(mValues.size() == 0){
+            mTextNoNotes.setVisibility(View.VISIBLE);
         }
         else {
-            textNoNotes.setVisibility(View.GONE);
+            mTextNoNotes.setVisibility(View.GONE);
         }
     }
 
     private void setTitle() {
-        if(sharedPreferences.getBoolean(Constants.NOTIF_ON, false)){
-            toolbar.setTitle(R.string.notifications);
+        if(mSharedPreferences.getBoolean(Constants.NOTIF_ON, false)){
+            mToolbar.setTitle(R.string.notifications);
             return;
         }
         switch (currentKind){
             case Constants.DELETED:
-                toolbar.setTitle(R.string.bucket);
+                mToolbar.setTitle(R.string.bucket);
                 setItemMovement(false);
                 break;
             case Constants.ARCHIVE:
                 setItemMovement(false);
-                toolbar.setTitle(R.string.archive);
+                mToolbar.setTitle(R.string.archive);
                 break;
             case Constants.UNDEFINED:
                 setItemMovement(true);
-                toolbar.setTitle("");
+                mToolbar.setTitle("");
                 break;
             default:
                 setItemMovement(true);
-                toolbar.setTitle(currentKind);
+                mToolbar.setTitle(currentKind);
                 break;
         }
     }
@@ -637,22 +647,22 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
     public boolean onNavigationItemSelected(MenuItem item) {
         System.out.println(item.getTitle());
-        // Handle navigation view item clicks here.
+        // Handle navigation mChangeView item clicks here.
         hideFabs();
         int id = item.getItemId();
-        for (Section s:sections
+        for (Section s: mSections
                 ) {
             if(item.getItemId() == s.getId()){
                 saveNotes();
                 setItemMovement(false);
                 currentKind = s.getName();
-                currentSection = s;
+                mCurrentSection = s;
                 sectionWasChanged();
                 super.onOptionsItemSelected(item);
                 break;
             }
         }
-        notification_on = false;
+        mNotification_on = false;
 
         switch (item.getItemId()){
 
@@ -671,24 +681,24 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             case Constants.KEY_ARCHIVE_SECTION:
                 saveNotes();
                 setItemMovement(true);
-                toolbar.setTitle(R.string.archive);
+                mToolbar.setTitle(R.string.archive);
                 currentKind = Constants.ARCHIVE;
                 sectionWasChanged();
                 break;
             case Constants.KEY_NOTIFICATIONS_SECTION:
                 saveNotes();
-                notification_on = true;
+                mNotification_on = true;
 
-                onCreateOptionsMenu(menu);
+                onCreateOptionsMenu(mMenu);
 
-                editor.putBoolean(NOTIF_ON, true);
-                editor.commit();
+                mEditor.putBoolean(NOTIF_ON, true);
+                mEditor.commit();
 
-                toolbar.setTitle(R.string.notifications);
-                values = dbHelper.getNotificationTasks();
+                mToolbar.setTitle(R.string.notifications);
+                mValues = sDbHelper.getNotificationTasks();
                 isSectionEmpty();
-                adapter.dataChanged(values);
-                fab.hide();
+                mAdapter.dataChanged(mValues);
+                mFab.hide();
                 break;
             case Constants.KEY_SETTINGS:
                 Intent intent = new Intent(this, SettingsActivity.class);
@@ -717,12 +727,12 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                     });
                     Section section = new Section();
                     section.setName(value);
-                    section.setPosition(sections.size());
-                    int sectionId = dbHelper.addSection(section);
+                    section.setPosition(mSections.size());
+                    int sectionId = sDbHelper.addSection(section);
                     section.setId(sectionId);
-                    dbHelper.updateSection(section);
-                    menu.clear();
-                    onCreateOptionsMenu(menu);
+                    sDbHelper.updateSection(section);
+                    mMenu.clear();
+                    onCreateOptionsMenu(mMenu);
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
                 }
@@ -746,38 +756,38 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     }
 
     private void checkOldTask() {
-        long deletionPeriod = sharedPreferences.getLong(Constants.DELETION_PERIOD, Constants.PERIOD_WEEK);
-        for (SuperNote task : values
+        long deletionPeriod = mSharedPreferences.getLong(Constants.DELETION_PERIOD, Constants.PERIOD_WEEK);
+        for (SuperNote task : mValues
                 ) {
             if(task.getDeletionTime() + deletionPeriod < System.currentTimeMillis()) {
-                dbHelper.deleteTask(task);
+                sDbHelper.deleteTask(task);
             }
         }
-        values = dbHelper.getTasks(Constants.DELETED);
+        mValues = sDbHelper.getTasks(Constants.DELETED);
     }
 
     public void setSelectionMode(){
-        actionMode = startActionMode(actionModeCallback);
-        is_in_action_mode = true;
-        adapter.setSelectionMode(MainRecyclerAdapter.Mode.SELECTION_MODE);
-        editor.putInt(Constants.ACTION_MODE, 1);
-        editor.commit();
-        fab.hide();
+        mActionMode = startActionMode(actionModeCallback);
+        is_action_mode_on = true;
+        mAdapter.setSelectionMode(MainRecyclerAdapter.Mode.SELECTION_MODE);
+        mEditor.putInt(Constants.ACTION_MODE, 1);
+        mEditor.commit();
+        mFab.hide();
     }
 
     public void selectedItemCount(int selectedTasksCounter) {
         if(selectedTasksCounter == 0) {
-            if(actionMode!=null){
-                actionMode.finish();
+            if(mActionMode !=null){
+                mActionMode.finish();
             }
-            is_in_action_mode = false;
+            is_action_mode_on = false;
             setItemMovement(true);
-            fab.show();
-            onCreateOptionsMenu(menu);
-            editor.putInt(Constants.ACTION_MODE, 0);
-            editor.commit();
+            mFab.show();
+            onCreateOptionsMenu(mMenu);
+            mEditor.putInt(Constants.ACTION_MODE, 0);
+            mEditor.commit();
         } else {
-            actionMode.setTitle(String.valueOf(selectedTasksCounter));
+            mActionMode.setTitle(String.valueOf(selectedTasksCounter));
             setItemMovement(false);
             if(currentKind.equals(Constants.DELETED)) {
             }
@@ -785,40 +795,40 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     }
 
     public void hideFabs(){
-        if(!fabPressed)
+        if(!mFabPressed)
             return;
-        fab.startAnimation(fabCancelAnimation);
-        fabAddST.startAnimation(fabClose);
-        fabAddLT.startAnimation(fabClose);
-        fabAddST.setClickable(false);
-        fabAddLT.setClickable(false);
-        fabAddST.setVisibility(View.INVISIBLE);
-        fabAddLT.setVisibility(View.INVISIBLE);
-        fabPressed = false;
+        mFab.startAnimation(mFabCancelAnimation);
+        mFabAddST.startAnimation(mFabClose);
+        mFabAddLT.startAnimation(mFabClose);
+        mFabAddST.setClickable(false);
+        mFabAddLT.setClickable(false);
+        mFabAddST.setVisibility(View.INVISIBLE);
+        mFabAddLT.setVisibility(View.INVISIBLE);
+        mFabPressed = false;
     }
 
     public void add(View v){
-        if(fabPressed){
+        if(mFabPressed){
             hideFabs();
         } else {
-            fab.startAnimation(fabAddAnimation);
-            fabAddST.startAnimation(fabOpen);
-            fabAddLT.startAnimation(fabOpen);
-            fabAddST.setClickable(true);
-            fabAddLT.setClickable(true);
-            fabAddST.setVisibility(View.VISIBLE);
-            fabAddLT.setVisibility(View.VISIBLE);
-            fabPressed = true;
+            mFab.startAnimation(mFabAddAnimation);
+            mFabAddST.startAnimation(mFabOpen);
+            mFabAddLT.startAnimation(mFabOpen);
+            mFabAddST.setClickable(true);
+            mFabAddLT.setClickable(true);
+            mFabAddST.setVisibility(View.VISIBLE);
+            mFabAddLT.setVisibility(View.VISIBLE);
+            mFabPressed = true;
         }
     }
 
  /*   public void copyDb(View v) throws IOException {
 
        // File dbFile = new File ("/data/data/com/example/dmitryvedmed/databases/myDB8.db");
-      //  File dbFile = new File (context.getFilesDir().getPath() + "myDB8.db");
-      //  File dbFile = new File (context.getApplicationInfo().dataDir + "/databases/" + "myDB8.db");
-        // File dbFile = new File (context.getPackageName() + "/databases/" + "myDB8.db");
-        File dbFile =  (context.getDatabasePath("myDB8.db"));
+      //  File dbFile = new File (mContext.getFilesDir().getPath() + "myDB8.db");
+      //  File dbFile = new File (mContext.getApplicationInfo().dataDir + "/databases/" + "myDB8.db");
+        // File dbFile = new File (mContext.getPackageName() + "/databases/" + "myDB8.db");
+        File dbFile =  (mContext.getDatabasePath("myDB8.db"));
         FileInputStream fileInputStream = new FileInputStream(dbFile);
 
         OutputStream myOutput = new FileOutputStream("./sdcard/myDB8.db");
@@ -837,7 +847,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     public void newListTask(View v){
         hideFabs();
         Intent intent = new Intent(getApplicationContext(), ListNoteActivity.class);
-        intent.putExtra(Constants.POSITION, adapter.getTasks().size());
+        intent.putExtra(Constants.POSITION, mAdapter.getNotes().size());
         intent.putExtra(Constants.KIND, currentKind);
         startActivity(intent);
     }
@@ -846,7 +856,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     public void newSimpleTask(View v){
         hideFabs();
         Intent intent = new Intent(getApplicationContext(), SimpleNoteActivity.class);
-        intent.putExtra(Constants.POSITION, adapter.getTasks().size());
+        intent.putExtra(Constants.POSITION, mAdapter.getNotes().size());
         intent.putExtra(Constants.KIND, currentKind);
 
         intent.putExtra(Constants.KIND, currentKind);
@@ -854,63 +864,72 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     }
 
     private void initAnimation() {
-        fabAddAnimation = AnimationUtils.loadAnimation(this,R.anim.fab_add_rotation);
-        fabCancelAnimation = AnimationUtils.loadAnimation(this,R.anim.fab_cancel_rotation);
+        mFabAddAnimation = AnimationUtils.loadAnimation(this,R.anim.fab_add_rotation);
+        mFabCancelAnimation = AnimationUtils.loadAnimation(this,R.anim.fab_cancel_rotation);
 
-        fabOpen = AnimationUtils.loadAnimation(this,R.anim.fab_open);
-        fabClose = AnimationUtils.loadAnimation(this,R.anim.fab_close);
+        mFabOpen = AnimationUtils.loadAnimation(this,R.anim.fab_open);
+        mFabClose = AnimationUtils.loadAnimation(this,R.anim.fab_close);
     }
 
 
     public void setItemMovement(boolean b){
-        ((SimpleItemTouchHelperCallback)callback).setCanMovement(b);
+        ((SimpleItemTouchHelperCallback) mCallback).setCanMovement(b);
     }
 
     @Override
     protected void onPause() {
-        if(!notification_on){
+        if(!mNotification_on){
             saveNotes();
         }
+
+        if(mAdView!=null)
+            mAdView.pause();
         super.onPause();
     }
 
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mAdView!=null)
+            mAdView.destroy();
+    }
+
     private void saveNotes() {
-        if(sharedPreferences.getBoolean(Constants.NOTIF_ON, false))
+        if(mSharedPreferences.getBoolean(Constants.NOTIF_ON, false))
             return;
 
-        values = adapter.getTasks();
-        for (SuperNote s:values
+        mValues = mAdapter.getNotes();
+        for (SuperNote s: mValues
                 ) {
-            if(!dbHelper.isRemind(s)){
+            if(!sDbHelper.isRemind(s)){
                 s.setRemind(false);
             }
-            dbHelper.updateTask(s, currentKind);
+            sDbHelper.updateTask(s, currentKind);
         }
     }
 
     void update(){
-        currentKind = sharedPreferences.getString(Constants.CURRENT_KIND, Constants.UNDEFINED);
-        if(!sharedPreferences.getBoolean(NOTIF_ON, false)){
-            values = dbHelper.getTasks(currentKind);
+        currentKind = mSharedPreferences.getString(Constants.CURRENT_KIND, Constants.UNDEFINED);
+        if(!mSharedPreferences.getBoolean(NOTIF_ON, false)){
+            mValues = sDbHelper.getTasks(currentKind);
         } else {
-            values = dbHelper.getNotificationTasks();
+            mValues = sDbHelper.getNotificationTasks();
         }
-        if(adapter != null)
-            adapter.dataChanged(values);
+        if(mAdapter != null)
+            mAdapter.dataChanged(mValues);
     }
 
     private void checkDeprecated(){
-        for (SuperNote s:values
+        for (SuperNote s: mValues
                 ) {
             if(s.isRemind() == true && s.getReminderTime()<System.currentTimeMillis() && !s.isRepeating()){
                 s.setRemind(false);
-                dbHelper.updateTask(s, currentKind);
+                sDbHelper.updateTask(s, currentKind);
             }
         }
     }
 
     private void checkRepeatingNotes(){
-        ArrayList<SuperNote> list = dbHelper.getNotificationTasks();
+        ArrayList<SuperNote> list = sDbHelper.getNotificationTasks();
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -952,11 +971,11 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
                 note.setReminderTime(notificationTime.getTimeInMillis());
 
-                dbHelper.updateTask(note, null);
+                sDbHelper.updateTask(note, null);
             } else {
-                Intent intent = new Intent(context, NotifyTaskReceiver.class);
+                Intent intent = new Intent(mContext, NotifyTaskReceiver.class);
                 intent.putExtra("id", note.getId());
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, note.getId(), intent, 0);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, note.getId(), intent, 0);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, note.getReminderTime(), pendingIntent);
             }
         }
@@ -965,7 +984,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     @Override
     protected void onRestart() {
         update();
-        adapter.updateSelectedTask();
+        mAdapter.updateSelectedTask();
         super.onRestart();
     }
 
@@ -979,26 +998,26 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     public void setColor(View v){
         switch (v.getId()){
             case R.id.green:
-                adapter.setColorSelectionTasks(Constants.GREEN);
-                fab.show();
+                mAdapter.setColorSelectionTasks(Constants.GREEN);
+                mFab.show();
                 break;
             case R.id.red:
-                adapter.setColorSelectionTasks(Constants.RED);
-                fab.show();
+                mAdapter.setColorSelectionTasks(Constants.RED);
+                mFab.show();
                 break;
             case R.id.blue:
-                adapter.setColorSelectionTasks(Constants.BLUE);
-                fab.show();
+                mAdapter.setColorSelectionTasks(Constants.BLUE);
+                mFab.show();
                 break;
             case R.id.yellow:
-                adapter.setColorSelectionTasks(Constants.YELLOW);
-                fab.show();
+                mAdapter.setColorSelectionTasks(Constants.YELLOW);
+                mFab.show();
                 break;
             case R.id.white:
-                adapter.setColorSelectionTasks(0);
+                mAdapter.setColorSelectionTasks(0);
                 break;
         }
-        dialog.dismiss();
+        mDialog.dismiss();
     }
 
     private void compareSections(){
@@ -1008,6 +1027,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 return section.getPosition() < t1.getPosition() ? -1 : 1;
             }
         };
-        Collections.sort(sections, comparator);
+        Collections.sort(mSections, comparator);
     }
 }

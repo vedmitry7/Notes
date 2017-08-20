@@ -47,28 +47,28 @@ import static com.example.dmitryvedmed.taskbook.R.id.taskTextView;
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.RecyclerViewHolder>
         implements ItemTouchHelperAdapter {
 
-    public void setSelectedTasksCounter(int selectedTasksCounter) {
-        this.selectedTasksCounter = selectedTasksCounter;
+    public void setSelectedNotesCounter(int selectedNotesCounter) {
+        this.selectedNotesCounter = selectedNotesCounter;
     }
 
-    private List<SuperNote> tasks;
-    private List<SuperNote> selectedTasks;
-    private Context context;
+    private List<SuperNote> notes;
+    private List<SuperNote> superNotes;
+    private Context mContext;
     private ListNote listNote;
     private TextView textView;
     private Typeface typeFace;
     private Typeface boldTypeFace ;
-    private PerfectActivity activity;
+    private PerfectActivity mActivity;
     boolean wasSelected;
     private Mode mode;
-    private int selectedTasksCounter;
+    private int selectedNotesCounter;
     private boolean[] selects;
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences mSharedPreferences;
     private int textSize;
-    private List<SuperNote> selectedTaskCopy;
+    private List<SuperNote> selectedNotesCopy;
 
-    public int getSelectedTasksCounter() {
-        return selectedTasksCounter;
+    public int getSelectedNotesCounter() {
+        return selectedNotesCounter;
     }
 
     public boolean[] getSelects() {
@@ -77,7 +77,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public ArrayList<Integer> getSelectedListIds(){
         ArrayList<Integer> list = new ArrayList<>();
-        for (SuperNote t:selectedTasks
+        for (SuperNote t: superNotes
              ) {
             list.add(t.getId());
         }
@@ -88,22 +88,22 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public void fillSelectedTasks(ArrayList<Integer> list){
         for (Integer i : list
                 ) {
-            for (SuperNote t:tasks
+            for (SuperNote t: notes
                  ) {
                 if(t.getId() == i){
-                    selectedTasks.add(t);
+                    superNotes.add(t);
                 }
             }
         }
     }
 
     public void returnTranslatedTask(String s){
-        for (SuperNote st: selectedTaskCopy){
-            activity.dbHelper.updateTask(st, s);
+        for (SuperNote st: selectedNotesCopy){
+            mActivity.sDbHelper.updateTask(st, s);
         }
-        tasks.addAll(selectedTaskCopy);
-        selectedTaskCopy.clear();
-        dataChanged(tasks);
+        notes.addAll(selectedNotesCopy);
+        selectedNotesCopy.clear();
+        dataChanged(notes);
     }
 
     public void setSelects(boolean[] selects) {
@@ -114,12 +114,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public void cancelNotification(){
 
-        for (SuperNote note:selectedTasks
+        for (SuperNote note: superNotes
              ) {
-            Intent intent1 = new Intent(activity.getApplicationContext(), NotifyTaskReceiver.class);
+            Intent intent1 = new Intent(mActivity.getApplicationContext(), NotifyTaskReceiver.class);
             intent1.setAction(Constants.ACTION_NOTIFICATION);
-            PendingIntent sender = PendingIntent.getBroadcast(activity.getApplicationContext(), note.getId(), intent1, 0);
-            AlarmManager alarmManager1 = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
+            PendingIntent sender = PendingIntent.getBroadcast(mActivity.getApplicationContext(), note.getId(), intent1, 0);
+            AlarmManager alarmManager1 = (AlarmManager) mActivity.getSystemService(Context.ALARM_SERVICE);
             alarmManager1.cancel(sender);
 
             note.setRemind(false);
@@ -138,39 +138,39 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         this.mode = mode;
     }
 
-    List<SuperNote> getTasks() {
-        return tasks;
+    List<SuperNote> getNotes() {
+        return notes;
     }
 
-    MainRecyclerAdapter(List<SuperNote> tasks, Context context) {
-        this.tasks = tasks;
+    MainRecyclerAdapter(List<SuperNote> notes, Context mContext) {
+        this.notes = notes;
 
         compareTasks();
 
-        this.context = context;
-        selectedTasks = new ArrayList<>();
-        activity = (PerfectActivity) context;
-        textView = new TextView(context);
+        this.mContext = mContext;
+        superNotes = new ArrayList<>();
+        mActivity = (PerfectActivity) mContext;
+        textView = new TextView(mContext);
         textView.setText("1234we5r");
-        typeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Regular.ttf");
-        boldTypeFace = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Bold.ttf");
+        typeFace = Typeface.createFromAsset(mContext.getAssets(), "font/Roboto-Regular.ttf");
+        boldTypeFace = Typeface.createFromAsset(mContext.getAssets(), "font/Roboto-Bold.ttf");
         mode = Mode.NORMAL;
 
-        selects = new boolean[tasks.size()];
+        selects = new boolean[notes.size()];
 
-        selectedTaskCopy = new ArrayList<>();
+        selectedNotesCopy = new ArrayList<>();
 
-        sharedPreferences = activity.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
+        mSharedPreferences = mActivity.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
 
-        textSize = sharedPreferences.getInt("cardFontSize", 16);
+        textSize = mSharedPreferences.getInt("cardFontSize", 16);
     }
 
     private void cancelNotification(int requestCode){
 
-        Intent intent = new Intent(context, NotifyTaskReceiver.class);
+        Intent intent = new Intent(mContext, NotifyTaskReceiver.class);
         intent.setAction("TASK_NOTIFICATION");
-        PendingIntent sender = PendingIntent.getBroadcast(context, requestCode, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent sender = PendingIntent.getBroadcast(mContext, requestCode, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(sender);
 
     }
@@ -178,43 +178,43 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public void onItemDismiss(final int position) {
 
-        selectedTaskCopy.clear();
-        selectedTaskCopy.add(tasks.get(position));
+        selectedNotesCopy.clear();
+        selectedNotesCopy.add(notes.get(position));
 
-        String rem = sharedPreferences.getString(Constants.SWIPE_REMEMBER, "");
+        String rem = mSharedPreferences.getString(Constants.SWIPE_REMEMBER, "");
 
         switch (rem){
 
             case Constants.ARCHIVE:
-                if(activity.currentKind == Constants.ARCHIVE){
-                    activity.dbHelper.updateTask(tasks.get(position), Constants.UNDEFINED);
+                if(mActivity.currentKind == Constants.ARCHIVE){
+                    mActivity.sDbHelper.updateTask(notes.get(position), Constants.UNDEFINED);
                 } else {
-                    activity.dbHelper.updateTask(tasks.get(position), Constants.ARCHIVE);
+                    mActivity.sDbHelper.updateTask(notes.get(position), Constants.ARCHIVE);
                 }
-                activity.showSnackBar(Constants.ARCHIVE, 1);
-                tasks.get(position).setPosition(0);
-                tasks.remove(position);
+                mActivity.showSnackBar(Constants.ARCHIVE, 1);
+                notes.get(position).setPosition(0);
+                notes.remove(position);
                 notifyItemRemoved(position);
                 setRightPosition();
                 break;
             case Constants.DELETED:
-                activity.dbHelper.updateTask(tasks.get(position), Constants.DELETED);
-                cancelNotification(tasks.get(position).getId());
-                activity.showSnackBar(Constants.DELETED, 1);
-                tasks.get(position).setPosition(0);
-                tasks.get(position).setRemind(false);
-                tasks.remove(position);
+                mActivity.sDbHelper.updateTask(notes.get(position), Constants.DELETED);
+                cancelNotification(notes.get(position).getId());
+                mActivity.showSnackBar(Constants.DELETED, 1);
+                notes.get(position).setPosition(0);
+                notes.get(position).setRemind(false);
+                notes.remove(position);
                 notifyItemRemoved(position);
                 setRightPosition();
                 break;
             case "" :
-                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
-                View mView = activity.getLayoutInflater().inflate(R.layout.dialog_question_layout, null);
+                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(mContext);
+                View mView = mActivity.getLayoutInflater().inflate(R.layout.dialog_question_layout, null);
                 mBuilder.setCancelable(true);
                 RelativeLayout archive = (RelativeLayout) mView.findViewById(R.id.actionArchive);
                 RelativeLayout delete = (RelativeLayout) mView.findViewById(R.id.actionDelete);
                 final CheckBox remember = (CheckBox) mView.findViewById(R.id.remember);
-                if(activity.currentKind.equals(Constants.ARCHIVE)){
+                if(mActivity.currentKind.equals(Constants.ARCHIVE)){
                     TextView textView = (TextView) mView.findViewById(R.id.archiveTextView);
                     textView.setText(R.string.unarchive);
                 }
@@ -229,21 +229,21 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 archive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(activity.currentKind == Constants.ARCHIVE){
-                            activity.dbHelper.updateTask(tasks.get(position), Constants.UNDEFINED);
+                        if(mActivity.currentKind == Constants.ARCHIVE){
+                            mActivity.sDbHelper.updateTask(notes.get(position), Constants.UNDEFINED);
                         } else {
-                            activity.dbHelper.updateTask(tasks.get(position), Constants.ARCHIVE);
+                            mActivity.sDbHelper.updateTask(notes.get(position), Constants.ARCHIVE);
                         }
-                        activity.showSnackBar(Constants.ARCHIVE, 1);
+                        mActivity.showSnackBar(Constants.ARCHIVE, 1);
                         dialog.dismiss();
 
-                        tasks.get(position).setPosition(0);
+                        notes.get(position).setPosition(0);
 
-                        tasks.remove(position);
+                        notes.remove(position);
                         notifyItemRemoved(position);
                         setRightPosition();
                         if(remember.isChecked()){
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            SharedPreferences.Editor editor = mSharedPreferences.edit();
                             editor.putString(Constants.SWIPE_REMEMBER, Constants.ARCHIVE);
                             editor.commit();
                         }
@@ -252,19 +252,19 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        activity.dbHelper.updateTask(tasks.get(position), Constants.DELETED);
-                        cancelNotification(tasks.get(position).getId());
+                        mActivity.sDbHelper.updateTask(notes.get(position), Constants.DELETED);
+                        cancelNotification(notes.get(position).getId());
                         dialog.dismiss();
-                        activity.showSnackBar(Constants.DELETED, 1);
+                        mActivity.showSnackBar(Constants.DELETED, 1);
 
-                        tasks.get(position).setPosition(0);
-                        tasks.get(position).setRemind(false);
+                        notes.get(position).setPosition(0);
+                        notes.get(position).setRemind(false);
                         //?
-                        tasks.remove(position);
+                        notes.remove(position);
                         notifyItemRemoved(position);
                         setRightPosition();
                         if(remember.isChecked()){
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            SharedPreferences.Editor editor = mSharedPreferences.edit();
                             editor.putString(Constants.SWIPE_REMEMBER, Constants.DELETED);
                             editor.commit();
                         }
@@ -282,90 +282,90 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     public void translateTo(String s){
-        selectedTaskCopy.addAll(selectedTasks);
+        selectedNotesCopy.addAll(superNotes);
 
-        for (SuperNote t:selectedTasks
+        for (SuperNote t: superNotes
                 ) {
             if(s.equals(Constants.DELETED)){
                 t.setRemind(false);
             }
-            activity.dbHelper.updateTask(t, s);
+            mActivity.sDbHelper.updateTask(t, s);
         }
-        activity.showSnackBar(s, selectedTasksCounter);
-        tasks.removeAll(selectedTasks);
-        selectedTasks.clear();
+        mActivity.showSnackBar(s, selectedNotesCounter);
+        notes.removeAll(superNotes);
+        superNotes.clear();
 
         setRightPosition();
         notifyDataSetChanged();
-        selectedTasksCounter = 0;
-        activity.selectedItemCount(0);
+        selectedNotesCounter = 0;
+        mActivity.selectedItemCount(0);
         mode = Mode.NORMAL;
-        selects = new boolean[tasks.size()];
+        selects = new boolean[notes.size()];
     }
 
     public void cancelSelection() {
-        selectedTasks.clear();
+        superNotes.clear();
 
-        activity.selectedItemCount(0);
+        mActivity.selectedItemCount(0);
         mode = Mode.NORMAL;
         notifyDataSetChanged();
-        selectedTasksCounter = 0;
-        selects = new boolean[tasks.size()];
+        selectedNotesCounter = 0;
+        selects = new boolean[notes.size()];
     }
 
     public void deleteSelectedTasksForever() {
         compareSelectionTasks();
-        for (SuperNote t : selectedTasks
+        for (SuperNote t : superNotes
                 ) {
-            activity.dbHelper.deleteTask(t);
+            mActivity.sDbHelper.deleteTask(t);
         }
-        tasks.removeAll(selectedTasks);
-        selectedTasks.clear();
+        notes.removeAll(superNotes);
+        superNotes.clear();
         setRightPosition();
         notifyDataSetChanged();
-        activity.selectedItemCount(0);
+        mActivity.selectedItemCount(0);
         mode = Mode.NORMAL;
-        selectedTasksCounter = 0;
+        selectedNotesCounter = 0;
     }
 
 
     public void deleteSection(){
-        selectedTasks.addAll(tasks);
+        superNotes.addAll(notes);
         translateTo(Constants.DELETED);
     }
 
 
     public void setColorSelectionTasks(int color){
-        for (SuperNote s:selectedTasks
+        for (SuperNote s: superNotes
                 ) {
             s.setColor(color);
         }
         notifyDataSetChanged();
-        selectedTasks.clear();
+        superNotes.clear();
 
-        activity.selectedItemCount(0);
+        mActivity.selectedItemCount(0);
         mode = Mode.NORMAL;
-        selectedTasksCounter = 0;
-        selects = new boolean[tasks.size()];
+        selectedNotesCounter = 0;
+        selects = new boolean[notes.size()];
     }
 
     public void updateSelectedTask(){
         List<SuperNote> sa = new ArrayList<>();
-        for (SuperNote st:selectedTasks
+        for (SuperNote st: superNotes
              ) {
-            for (SuperNote t:tasks
+            for (SuperNote t: notes
                  ) {
                 if(t.getId()==st.getId())
                     sa.add(t);
             }
         }
-        selectedTasks = sa;
+        superNotes = sa;
     }
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-        SuperNote prev = tasks.remove(fromPosition);
-        tasks.add(toPosition, prev);
+        SuperNote prev = notes.remove(fromPosition);
+        notes.add(toPosition, prev);
         notifyItemMoved(fromPosition, toPosition);
         setRightPosition();
 
@@ -399,7 +399,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
             listHeadEditText = (TextView) itemView.findViewById(R.id.mainRecListItemHead);
             if(listHeadEditText!=null){
-                listHeadEditText.setTextSize(sharedPreferences.getInt("cardFontSize", 10));
+                listHeadEditText.setTextSize(mSharedPreferences.getInt("cardFontSize", 10));
             }
 
             layout = (LinearLayout) itemView.findViewById(R.id.card_view_list_layout);
@@ -416,7 +416,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             if(mode==Mode.NORMAL) {
                 cardView.setCardBackgroundColor(Color.LTGRAY);
                 wasSelected = true;
-                selectedTasks.add(tasks.get(getAdapterPosition()));
+                superNotes.add(notes.get(getAdapterPosition()));
             }
         }
 
@@ -424,7 +424,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         public void onItemClear() {
             if(mode != Mode.SELECTION_MODE) {
                 wasSelected = false;
-                selectedTasks.clear();
+                superNotes.clear();
                 if (getAdapterPosition() != -1)
                     setColorCardView(cardView, getAdapterPosition());
             }
@@ -441,35 +441,35 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
                 switch (MainRecyclerAdapter.this.getItemViewType(position)) {
                     case 0:
-                        Intent intent = new Intent(context, SimpleNoteActivity.class);
-                        intent.putExtra(Constants.TASK, tasks.get(position));
-                        intent.putExtra(Constants.KIND, activity.currentKind);
-                        context.startActivity(intent);
-                        activity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                        Intent intent = new Intent(mContext, SimpleNoteActivity.class);
+                        intent.putExtra(Constants.TASK, notes.get(position));
+                        intent.putExtra(Constants.KIND, mActivity.currentKind);
+                        mContext.startActivity(intent);
+                        mActivity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                         break;
                     case 1:
-                        Intent intent1 = new Intent(context, ListNoteActivity.class);
-                        intent1.putExtra(Constants.LIST_TASK, tasks.get(position));
-                        intent1.putExtra(Constants.KIND, activity.currentKind);
-                        context.startActivity(intent1);
-                        activity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                        Intent intent1 = new Intent(mContext, ListNoteActivity.class);
+                        intent1.putExtra(Constants.LIST_TASK, notes.get(position));
+                        intent1.putExtra(Constants.KIND, mActivity.currentKind);
+                        mContext.startActivity(intent1);
+                        mActivity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                         break;
                 }
             }
             else if (mode == Mode.SELECTION_MODE) {
                 if (selects[position]) {
-                    selectedTasks.remove(tasks.get(position));
+                    superNotes.remove(notes.get(position));
                     selects[position] = false;
-                    selectedTasksCounter--;
-                    activity.selectedItemCount(selectedTasksCounter);
-                    if(selectedTasksCounter==0) {
+                    selectedNotesCounter--;
+                    mActivity.selectedItemCount(selectedNotesCounter);
+                    if(selectedNotesCounter ==0) {
                         setSelectionMode(Mode.NORMAL);
                     }
                 } else {
-                    if(!selectedTasks.contains(tasks.get(position)))
-                    selectedTasks.add(tasks.get(position));
-                    selectedTasksCounter++;
-                    activity.selectedItemCount(selectedTasksCounter);
+                    if(!superNotes.contains(notes.get(position)))
+                    superNotes.add(notes.get(position));
+                    selectedNotesCounter++;
+                    mActivity.selectedItemCount(selectedNotesCounter);
                     selects[position] = true;
                 }
 
@@ -481,8 +481,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         public void onItemSelected2() {
             System.out.println("        ItemSELECTED 2");
             if(mode == Mode.NORMAL)
-                activity.setSelectionMode();
-            onClick(new View(context));
+                mActivity.setSelectionMode();
+            onClick(new View(mContext));
         }
 
         @Override
@@ -494,7 +494,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         public boolean onTouch(View view, MotionEvent motionEvent) {
             switch (motionEvent.getAction()){
                 case MotionEvent.ACTION_DOWN:
-                    activity.hideFabs();
+                    mActivity.hideFabs();
                     break;
             }
             return false;
@@ -517,29 +517,29 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return recyclerViewHolder;
     }
 
-    public List<SuperNote> getSelectedTasks() {
-        return selectedTasks;
+    public List<SuperNote> getSuperNotes() {
+        return superNotes;
     }
 
     private void setColorCardView(CardView cardView, int position){
         if(mode == Mode.SELECTION_MODE) {
-            if (selectedTasks.contains(tasks.get(position))) {
+            if (superNotes.contains(notes.get(position))) {
                 cardView.setCardBackgroundColor(Color.LTGRAY);
             } else {
-                if (position >= tasks.size())
+                if (position >= notes.size())
                     return;
-                switch (tasks.get(position).getColor()) {
+                switch (notes.get(position).getColor()) {
                     case Constants.GREEN:
-                        cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightGreen));
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.taskColorLightGreen));
                         break;
                     case Constants.RED:
-                        cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightRed));
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.taskColorLightRed));
                         break;
                     case Constants.YELLOW:
-                        cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightYellow));
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.taskColorLightYellow));
                         break;
                     case Constants.BLUE:
-                        cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightLightBlue));
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.taskColorLightLightBlue));
                         break;
                     case 0:
                         cardView.setCardBackgroundColor(Color.WHITE);
@@ -549,20 +549,20 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             return;
         }
 
-        if (position >= tasks.size())
+        if (position >= notes.size())
             return;
-        switch (tasks.get(position).getColor()) {
+        switch (notes.get(position).getColor()) {
             case Constants.GREEN:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightGreen));
+                cardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.taskColorLightGreen));
                 break;
             case Constants.RED:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightRed));
+                cardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.taskColorLightRed));
                 break;
             case Constants.YELLOW:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightYellow));
+                cardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.taskColorLightYellow));
                 break;
             case Constants.BLUE:
-                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.taskColorLightLightBlue));
+                cardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.taskColorLightLightBlue));
                 break;
             case 0:
                 cardView.setCardBackgroundColor(Color.WHITE);
@@ -576,7 +576,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         switch (getItemViewType(position)){
             case 0:
-                SimpleNote simpleNote = (SimpleNote) tasks.get(position);
+                SimpleNote simpleNote = (SimpleNote) notes.get(position);
                 holder.stHeadLine.setTextSize(textSize);
                 holder.stContent.setTextSize(textSize);
 
@@ -593,7 +593,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.stContent.setText(simpleNote.getContext());
                 }
 
-                if(tasks.get(position).isRemind()){
+                if(notes.get(position).isRemind()){
                     holder.alarm.setVisibility(View.VISIBLE);
                 } else
                     holder.alarm.setVisibility(View.GONE);
@@ -601,7 +601,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 break;
 
             case 1:
-                listNote = (ListNote) tasks.get(position);
+                listNote = (ListNote) notes.get(position);
                 holder.listHeadEditText.setTextSize(textSize);
                 if(listNote.getHeadLine()!=null && listNote.getHeadLine().length()==0) {
                     holder.listHeadEditText.setVisibility(View.GONE);
@@ -611,7 +611,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.listHeadEditText.setText(listNote.getHeadLine());
                 }
 
-                LayoutInflater inflater = (LayoutInflater)context.getSystemService
+                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService
                         (Context.LAYOUT_INFLATER_SERVICE);
 
                 holder.layout.removeAllViews();
@@ -652,7 +652,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.layout.addView(view);
 
                 }
-                if(tasks.get(position).isRemind()){
+                if(notes.get(position).isRemind()){
                     holder.alarm.setVisibility(View.VISIBLE);
                 } else
                     holder.alarm.setVisibility(View.GONE);
@@ -660,25 +660,25 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 break;
         }
 
-        if(activity.isNotification_on()){
+        if(mActivity.ismNotification_on()){
             holder.notifInfoContainer.setVisibility(View.VISIBLE);
             if(holder.notifInfo!=null) {
 
-                SuperNote task = tasks.get(position);
+                SuperNote task = notes.get(position);
 
                 String repeating;
 
-                java.text.DateFormat dateFormat = DateFormat.getDateFormat(context);
-                java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
+                java.text.DateFormat dateFormat = DateFormat.getDateFormat(mContext);
+                java.text.DateFormat timeFormat = DateFormat.getTimeFormat(mContext);
 
                 String formattedDate = dateFormat.format(task.getReminderTime()) + " " + timeFormat.format(task.getReminderTime());
 
                 if(task.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY){
-                    repeating = activity.getResources().getString(R.string.every_day);
+                    repeating = mActivity.getResources().getString(R.string.every_day);
                 } else if(task.getRepeatingPeriod() == Constants.PERIOD_WEEK){
-                    repeating = activity.getResources().getString(R.string.every_week);
+                    repeating = mActivity.getResources().getString(R.string.every_week);
                 } else if(task.getRepeatingPeriod() == Constants.PERIOD_MONTH){
-                    repeating = activity.getResources().getString(R.string.every_month);
+                    repeating = mActivity.getResources().getString(R.string.every_month);
                 } else {
                     repeating = "";
                 }
@@ -692,28 +692,28 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @Override
     public int getItemCount() {
-        return tasks.size();
+        return notes.size();
     }
 
     @Override
     public int getItemViewType(int position) {
 
-        if (tasks.get(position) instanceof SimpleNote)
+        if (notes.get(position) instanceof SimpleNote)
             return 0;
-        if(tasks.get(position) instanceof ListNote) {
+        if(notes.get(position) instanceof ListNote) {
             return 1;
         }
         return -1;
     }
 
     public void dataChanged(List<SuperNote> tasks){
-        this.tasks = tasks;
-        if(!activity.is_in_action_mode()){
+        this.notes = tasks;
+        if(!mActivity.is_in_action_mode()){
             selects = new boolean[tasks.size()];
         }
-        textSize = sharedPreferences.getInt("cardFontSize", 16);
+        textSize = mSharedPreferences.getInt("cardFontSize", 16);
         compareTasks();
-        selectedTaskCopy = new ArrayList<>();
+        selectedNotesCopy = new ArrayList<>();
         notifyDataSetChanged();
     }
 
@@ -724,7 +724,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 return superTask.getPosition() < t1.getPosition() ? 1 : -1;
             }
         };
-        Collections.sort(tasks, comparator);
+        Collections.sort(notes, comparator);
     }
     private void compareSelectionTasks(){
         Comparator<SuperNote> comparator = new Comparator<SuperNote>() {
@@ -733,12 +733,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 return superTask.getPosition() < t1.getPosition() ? 1 : -1;
             }
         };
-        Collections.sort(tasks, comparator);
+        Collections.sort(notes, comparator);
     }
 
     private void setRightPosition(){
-        for (int i = 0; i < tasks.size(); i++) {
-            tasks.get(i).setPosition(tasks.size()-i-1);
+        for (int i = 0; i < notes.size(); i++) {
+            notes.get(i).setPosition(notes.size()-i-1);
         }
     }
 }

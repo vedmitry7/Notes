@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.dmitryvedmed.taskbook.R;
@@ -21,11 +20,11 @@ import java.util.List;
 public class SectionLocationActivity extends AppCompatActivity {
 
 
-    private RecyclerView recyclerView;
-    private SectionPositionRecyclerAdapter adapter;
+    private RecyclerView mRecyclerView;
+    private SectionPositionRecyclerAdapter mAdapter;
     private ItemTouchHelper mItemTouchHelper;
-    private ItemTouchHelper.Callback callback;
-    private DBHelper dbHelper;
+    private ItemTouchHelper.Callback mCallback;
+    private DBHelper mDbHelper;
     private List<Section> sections;
 
     @Override
@@ -41,34 +40,25 @@ public class SectionLocationActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.section_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //  toolbar.setTitle(R.string.settings);
         getSupportActionBar().setTitle(R.string.section_location);
 
         int color = ContextCompat.getColor(this, R.color.common_google_signin_btn_text_dark);
         toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 
+        mDbHelper = new DBHelper(this);
+        sections = mDbHelper.getAllSections();
 
-        dbHelper = new DBHelper(this);
-        sections = dbHelper.getAllSections();
-
-        Log.d("TAG", "          ACTIVITY GET SECTION");
-        for (Section s:sections
-                ) {
-            Log.d("TAG", "Section " + s.getName() + ". pos : " + s.getPosition());
-        }
-        Log.d("TAG", "_____________________________");
-
-        recyclerView = (RecyclerView) findViewById(R.id.section_position_recycler_view);
-        adapter = new SectionPositionRecyclerAdapter(sections);
+        mRecyclerView = (RecyclerView) findViewById(R.id.section_position_recycler_view);
+        mAdapter = new SectionPositionRecyclerAdapter(sections);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setLayoutManager(layoutManager);
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mAdapter);
 
-        callback = new SectionTouchHelperCallback(adapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(recyclerView);
+        mCallback = new SectionTouchHelperCallback(mAdapter);
+        mItemTouchHelper = new ItemTouchHelper(mCallback);
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
     }
 
@@ -85,10 +75,10 @@ public class SectionLocationActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
 
-        sections = adapter.getSections();
+        sections = mAdapter.getSections();
         for (Section s : sections
                 ) {
-            dbHelper.updateSection(s);
+            mDbHelper.updateSection(s);
         }
         super.onPause();
     }

@@ -7,7 +7,9 @@
     android:layout_height="match_parent"
     tools:showIn="@layout/app_bar_main"
     android:background="@color/main_activity_bg_color"
+    android:paddingTop="@dimen/padding_3dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
 
     <TextView
         android:id="@+id/textNoNotes"

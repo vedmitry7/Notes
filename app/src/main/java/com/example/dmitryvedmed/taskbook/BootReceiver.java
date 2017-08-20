@@ -24,10 +24,10 @@ public class BootReceiver extends BroadcastReceiver {
         this.intent = intent;
 
         Toast.makeText(context, "УРРРРРРАААААААА", Toast.LENGTH_LONG).show();
-      /*  DBHelper dbHelper = new DBHelper(context);
+      /*  DBHelper sDbHelper = new DBHelper(context);
         Log.d("TAG", "BOOT RECEIVER. WORK");
 
-        List<SuperNote> tasks = dbHelper.getNotificationTasks();
+        List<SuperNote> tasks = sDbHelper.getNotificationTasks();
 
         for (SuperNote task:tasks
                 ) {
@@ -46,7 +46,7 @@ public class BootReceiver extends BroadcastReceiver {
                 }
                 else {
                     task.setRemind(false);
-                    dbHelper.updateTask(task, null);
+                    sDbHelper.updateTask(task, null);
                 }
             } else {
                 Log.d("TAG", task.getId() + " NOT OLD");

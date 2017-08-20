@@ -17,7 +17,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,79 +39,77 @@ import java.util.Calendar;
 
 public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener  {
 
-    private EditText head, text;
-    private SimpleNote note;
-    private String currentKind;
-    private Toolbar toolbar;
-    private String repeating;
-    AlertDialog dialog;
+    private EditText mHead, mText;
+    private SimpleNote mNote;
+    private String mCurrentKind;
+    private Toolbar mToolbar;
+    private String mRepeating;
+    private AlertDialog mDialog;
 
-    Context context;
+    private Context mContext;
 
-    private Button spinnerButtonTime, spinnerButtonDate, spinnerButtonRepeat;
-    private Calendar notificationTime;
+    private Button mSpinnerButtonTime, mSpinnerButtonDate, spinnerButtonRepeat;
+    private Calendar mNotificationTime;
     private SharedPreferences sharedPreferences;
-    int hours;
-    int minutes;
-    Button cancelNotification, menuButton;
+    private int mHours;
+    private int mMinutes;
+    Button mCancelNotification, mMenuButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_note);
-        context = this;
+        mContext = this;
 
         loadPreferences();
         initView();
         initTask();
         initDate();
-        repeating = "";
+        mRepeating = "";
 
     }
 
     private void initDate() {
-        notificationTime = Calendar.getInstance();
-        notificationTime.add(Calendar.DAY_OF_MONTH, 1);
-        notificationTime.set(Calendar.HOUR_OF_DAY, hours);
-        notificationTime.set(Calendar.MINUTE, minutes);
-        notificationTime.set(Calendar.SECOND, 0);
+        mNotificationTime = Calendar.getInstance();
+        mNotificationTime.add(Calendar.DAY_OF_MONTH, 1);
+        mNotificationTime.set(Calendar.HOUR_OF_DAY, mHours);
+        mNotificationTime.set(Calendar.MINUTE, mMinutes);
+        mNotificationTime.set(Calendar.SECOND, 0);
     }
 
     private void loadPreferences(){
         sharedPreferences = this.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        hours = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 8);
-        minutes = sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 15);
+        mHours = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 8);
+        mMinutes = sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 15);
     }
 
     private void initView() {
-        toolbar = (Toolbar) findViewById(R.id.st_toolbar);
-        toolbar.setTitle("");
-        toolbar.setBackgroundColor(Color.WHITE);
-        setSupportActionBar(toolbar);
-        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.taskColorGreen)));
+        mToolbar = (Toolbar) findViewById(R.id.st_toolbar);
+        mToolbar.setTitle("");
+        mToolbar.setBackgroundColor(Color.WHITE);
+        setSupportActionBar(mToolbar);
 
-        cancelNotification = (Button) findViewById(R.id.cancelNotifButton);
-        menuButton = (Button) findViewById(R.id.menuButton);
+        mCancelNotification = (Button) findViewById(R.id.cancelNotifButton);
+        mMenuButton = (Button) findViewById(R.id.menuButton);
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        head = (EditText) findViewById(R.id.headEditText);
-        text = (EditText) findViewById(R.id.taskEditText);
+        mHead = (EditText) findViewById(R.id.headEditText);
+        mText = (EditText) findViewById(R.id.taskEditText);
 
-        text.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());
-        head.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
+        mText.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());
+        mHead.setTypeface(SingletonFonts.getInstance(this).getRobotoBold());
 
-        text.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 17));
-        head.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 17));
+        mText.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 17));
+        mHead.setTextSize(sharedPreferences.getInt(Constants.TASK_FONT_SIZE, 17));
 
-        toolbar.setNavigationIcon(R.drawable.ic_back);
+        mToolbar.setNavigationIcon(R.drawable.ic_back);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("cek", "home selected");
                 finish();
                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
             }
@@ -120,90 +117,74 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
     }
 
     private void initTask() {
-        note = (SimpleNote) getIntent().getSerializableExtra(Constants.TASK);
-        if (note == null) {
-            note = new SimpleNote();
-            note.setId(-1);
-            note.setPosition(getIntent().getIntExtra(Constants.POSITION, 0));
-            Log.d("TAG", "TAAAAAAASKA  NEEEET");
-            Log.d("TAG", "ID = " + note.getId());
+        mNote = (SimpleNote) getIntent().getSerializableExtra(Constants.TASK);
+        if (mNote == null) {
+            mNote = new SimpleNote();
+            mNote.setId(-1);
+            mNote.setPosition(getIntent().getIntExtra(Constants.POSITION, 0));
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-            head.requestFocus();
-
-        } else {
-            Log.d("TAG", "TAAAAAAASK EST'!!!!!!!!");
-            Log.d("TAG", "ID = " + note.getId());
-            Log.d("TAG", "IIIIIIIIIIIIINNNNNNNNNNNNNIIIIIIIIIIIIIIIITTTTTTTTTTTTTT COLORS");
-
+            mHead.requestFocus();
         }
 
-
-        if(note.isRemind()){
-            Log.d("TAG", "is REMIND FALSE");
-            cancelNotification.setVisibility(View.VISIBLE);
+        if(mNote.isRemind()){
+            mCancelNotification.setVisibility(View.VISIBLE);
         } else {
-            Log.d("TAG", "is REMIND TRUE");
-            cancelNotification.setVisibility(View.GONE);
+            mCancelNotification.setVisibility(View.GONE);
         }
 
-        if (note.getColor() != 0){
-            toolbar.setBackgroundColor(note.getColor());
+        if (mNote.getColor() != 0){
+            mToolbar.setBackgroundColor(mNote.getColor());
             setWhiteNavIconColor();
         } else {
             setBlackNavIconColor();
         }
 
-        currentKind = getIntent().getStringExtra(Constants.KIND);
-        Log.d("TAG", "              TASK GET -  " + currentKind);
-        if (currentKind == null)
-            currentKind = Constants.UNDEFINED;
+        mCurrentKind = getIntent().getStringExtra(Constants.KIND);
+        if (mCurrentKind == null)
+            mCurrentKind = Constants.UNDEFINED;
 
-        head.setText(note.getHeadLine());
-        text.setText(note.getContext());
+        mHead.setText(mNote.getHeadLine());
+        mText.setText(mNote.getContext());
 
-        head.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+        mHead.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
                         && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                    Log.d("TAG", "                                  ENTER!");
-                    text.requestFocus();
+                    mText.requestFocus();
                     return true;
                 }
                 return false;
             }
         });
 
-        head.setOnKeyListener(new View.OnKeyListener() {
+        mHead.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    text.requestFocus();
+                    mText.requestFocus();
                 }
                 return false;
             }
         });
 
-        text.setOnKeyListener(new View.OnKeyListener() {
+        mText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (text.getText().toString().equals(""))
-                        head.requestFocus();
+                    if (mText.getText().toString().equals(""))
+                        mHead.requestFocus();
                 }
                 return false;
             }
         });
 
-        text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    // Always use a TextKeyListener when clearing a TextView to prevent android
-                    // warnings in the log
-                    Log.d("TAG", "EDITTWXT                  HAS FOKUS");
-                    text.setSelection(text.getText().length());
+                    mText.setSelection(mText.getText().length());
                 }
             }
         });
@@ -226,68 +207,61 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
         switch (v.getId()){
             case R.id.green:
                 color = ContextCompat.getColor(this, R.color.taskColorGreen);
-                toolbar.setBackgroundColor(color);
+                mToolbar.setBackgroundColor(color);
                 setWhiteNavIconColor();
-                note.setColor(color);
-                Log.d("TAG", "COLOR " + color);
+                mNote.setColor(color);
                 break;
             case R.id.red:
                 color = ContextCompat.getColor(this, R.color.taskColorRed);
-                toolbar.setBackgroundColor(color);
+                mToolbar.setBackgroundColor(color);
                 setWhiteNavIconColor();
-                note.setColor(color);
-                Log.d("TAG", "COLOR " + color);
+                mNote.setColor(color);
                 break;
             case R.id.blue:
                 color = ContextCompat.getColor(this, R.color.taskColorBlue);
-                toolbar.setBackgroundColor(color);
+                mToolbar.setBackgroundColor(color);
                 setWhiteNavIconColor();
-                note.setColor(color);
-                Log.d("TAG", "COLOR " + color);
+                mNote.setColor(color);
                 break;
             case R.id.yellow:
                 color = ContextCompat.getColor(this, R.color.taskColorYellow);
-                toolbar.setBackgroundColor(color);
+                mToolbar.setBackgroundColor(color);
                 setWhiteNavIconColor();
-                note.setColor(color);
-                Log.d("TAG", "COLOR " + color);
+                mNote.setColor(color);
                 break;
             case R.id.white:
-                toolbar.setBackgroundColor(Color.WHITE);
+                mToolbar.setBackgroundColor(Color.WHITE);
                 setBlackNavIconColor();
-                note.setColor(0);
+                mNote.setColor(0);
                 break;
         }
-        dialog.dismiss();
+        mDialog.dismiss();
     }
 
     private void setBlackNavIconColor(){
-        Log.d("TAG", "COLOR  BLAAAAAAAACK" );
         int color = ContextCompat.getColor(this, android.R.color.black);
-        cancelNotification.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_bell_outline_black_36dp));
-        menuButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_dots_vertical_black_36dp));
-        toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        mCancelNotification.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_bell_outline_black_36dp));
+        mMenuButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_dots_vertical_black_36dp));
+        mToolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
     private void setWhiteNavIconColor(){
-        Log.d("TAG", "COLOR  WHIIIIIIIIIITE" );
         int color = ContextCompat.getColor(this, android.R.color.white);
-        cancelNotification.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_bell_outline_white_36dp));
-        menuButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_dots_vertical_white_36dp));
-        cancelNotification.setFocusable(false);
-        toolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        mCancelNotification.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_bell_outline_white_36dp));
+        mMenuButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_dots_vertical_white_36dp));
+        mCancelNotification.setFocusable(false);
+        mToolbar.getNavigationIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
     private void cancelNotification(){
 
         Intent intent1 = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
         intent1.setAction(Constants.ACTION_NOTIFICATION);
-        //intent1.putExtra("id", note.getId());
-        PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent1, 0);
+        PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), mNote.getId(), intent1, 0);
         AlarmManager alarmManager1 = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager1.cancel(sender);
 
-        note.setRemind(false);
+        mNote.setRemind(false);
     }
 
     public void cancelNotification(View v){
@@ -300,9 +274,9 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
             public void onClick(DialogInterface dialogInterface, int i) {
                 cancelNotification();
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancel(note.getId());
-                cancelNotification.setVisibility(View.GONE);
-                note.setRepeating(false);
+                notificationManager.cancel(mNote.getId());
+                mCancelNotification.setVisibility(View.GONE);
+                mNote.setRepeating(false);
                 saveTask(false);
             }
         });
@@ -315,28 +289,28 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
         final AlertDialog.Builder inform = new AlertDialog.Builder(this);
         inform.setTitle(getResources().getString(R.string.notification));
 
-        if(note.getReminderTime() < System.currentTimeMillis()){
-            long period = note.getRepeatingPeriod();
-            while (note.getReminderTime() < System.currentTimeMillis()){
-                note.setReminderTime(note.getReminderTime() + period);
+        if(mNote.getReminderTime() < System.currentTimeMillis()){
+            long period = mNote.getRepeatingPeriod();
+            while (mNote.getReminderTime() < System.currentTimeMillis()){
+                mNote.setReminderTime(mNote.getReminderTime() + period);
             }
             saveTask(false);
         }
 
-        java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
-        String formattedTime = timeFormat.format(note.getReminderTime());
+        java.text.DateFormat timeFormat = DateFormat.getTimeFormat(mContext);
+        String formattedTime = timeFormat.format(mNote.getReminderTime());
 
-        java.text.DateFormat dateFormat = DateFormat.getDateFormat(context);
-        String formattedDate = dateFormat.format(note.getReminderTime());
+        java.text.DateFormat dateFormat = DateFormat.getDateFormat(mContext);
+        String formattedDate = dateFormat.format(mNote.getReminderTime());
 
 
         String repeating = "\r\n" + getResources().getString(R.string.repeat)  + " : ";
 
-        if(note.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY){
+        if(mNote.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY){
             repeating = repeating + getResources().getString(R.string.every_day);
-        } else if(note.getRepeatingPeriod() == Constants.PERIOD_WEEK){
+        } else if(mNote.getRepeatingPeriod() == Constants.PERIOD_WEEK){
             repeating = repeating + getResources().getString(R.string.every_week);
-        } else if(note.getRepeatingPeriod() == Constants.PERIOD_MONTH){
+        } else if(mNote.getRepeatingPeriod() == Constants.PERIOD_MONTH){
             repeating = repeating + getResources().getString(R.string.every_month);
         } else {
             repeating = "";
@@ -375,11 +349,10 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()){
                     case R.id.set_color2:
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        //builder.setTitle("Выберете цвет");
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                         builder.setView(R.layout.dialog_choose_color);
-                        dialog = builder.create();
-                        dialog.show();
+                        mDialog = builder.create();
+                        mDialog.show();
                         break;
                     case R.id.notify:
                         createDialog();
@@ -393,30 +366,30 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
 
     private void createDialog() {
 
-        repeating = "";
+        mRepeating = "";
 
-        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
+        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(mContext);
 
         View mView = getLayoutInflater().inflate(R.layout.dialog_spiner, null);
 
-        spinnerButtonTime = (Button) mView.findViewById(R.id.spinnerButtonTime);
-        spinnerButtonTime.setText(R.string.morning);
-        spinnerButtonTime.setOnClickListener(new View.OnClickListener() {
+        mSpinnerButtonTime = (Button) mView.findViewById(R.id.spinnerButtonTime);
+        mSpinnerButtonTime.setText(R.string.morning);
+        mSpinnerButtonTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(context, view);
+                PopupMenu popupMenu = new PopupMenu(mContext, view);
                 popupMenu.inflate(R.menu.popup_time);
                 popupMenu.show();
                 popupMenu.setOnMenuItemClickListener(SimpleNoteActivity.this);
             }
         });
 
-        spinnerButtonDate = (Button) mView.findViewById(R.id.spinnerButtonDate);
-        spinnerButtonDate.setText(R.string.tomorrow);
-        spinnerButtonDate.setOnClickListener(new View.OnClickListener() {
+        mSpinnerButtonDate = (Button) mView.findViewById(R.id.spinnerButtonDate);
+        mSpinnerButtonDate.setText(R.string.tomorrow);
+        mSpinnerButtonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(context, view);
+                PopupMenu popupMenu = new PopupMenu(mContext, view);
                 popupMenu.inflate(R.menu.popup_date);
                 popupMenu.show();
                 popupMenu.setOnMenuItemClickListener(SimpleNoteActivity.this);
@@ -429,7 +402,7 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
         spinnerButtonRepeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(context, view);
+                PopupMenu popupMenu = new PopupMenu(mContext, view);
                 popupMenu.inflate(R.menu.popup_repeat);
                 popupMenu.show();
                 popupMenu.setOnMenuItemClickListener(SimpleNoteActivity.this);
@@ -441,51 +414,27 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
         mBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Log.d("TAG", "----------------------OK");
-                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.YEAR)));
-                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.MONTH)));
-                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.DAY_OF_MONTH)));
-                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.HOUR_OF_DAY)));
-                Log.d("TAG", String.valueOf(notificationTime.get(Calendar.MINUTE)));
-                Log.d("TAG", "----------------------");
-
-          /*      Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
-                intent.setAction(Constants.ACTION_NOTIFICATION);
-                saveTask(true);
-                intent.putExtra("id", note.getId());
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),note.getId(), intent, 0);
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
-
-                note.setRemind(true);
-                note.setReminderTime(notificationTime.getTimeInMillis());
-                saveTask(false);
-                cancelNotification.setVisible(true);
-
-*/
-                Log.d("TAG", "REPEATING + " + "." + repeating + ".");
 
                 final Intent intent = new Intent(getApplicationContext(), NotifyTaskReceiver.class);
                 intent.setAction(Constants.ACTION_NOTIFICATION);
                 saveTask(true);
-                intent.putExtra(Constants.ID, note.getId());
+                intent.putExtra(Constants.ID, mNote.getId());
 
                 final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-                if(repeating.equals("")) {
+                if(mRepeating.equals("")) {
 
-                    note.setRepeatingPeriod(0);
-                    note.setRepeating(false);
+                    mNote.setRepeatingPeriod(0);
+                    mNote.setRepeating(false);
 
-                    if(notificationTime.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()){
-                        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
+                    if(mNotificationTime.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()){
+                        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(mContext);
                         mBuilder.setMessage(R.string.reminder_past_time);
                         mBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
+                                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), mNote.getId(), intent, 0);
                                 alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
-                                Log.d("TAG", " SET IN PAAAAAAAAAAST!!!!!!!!!!!!! ALARM ALARM!");
                             }
                         });
 
@@ -501,47 +450,47 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
                         return;
                     }
 
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), pendingIntent);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), mNote.getId(), intent, 0);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, mNotificationTime.getTimeInMillis(), pendingIntent);
                 } else {
 
                     intent.putExtra(Constants.REPEATING, true);
-                    intent.putExtra(Constants.PERIOD, repeating);
+                    intent.putExtra(Constants.PERIOD, mRepeating);
 
-                    note.setRepeating(true);
+                    mNote.setRepeating(true);
 
-                    switch (repeating){
+                    switch (mRepeating){
                         case Constants.EVERY_DAY:
-                            note.setRepeatingPeriod(Constants.PERIOD_ONE_DAY);
-                            while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
-                                notificationTime.add(Calendar.DAY_OF_MONTH, 1);
+                            mNote.setRepeatingPeriod(Constants.PERIOD_ONE_DAY);
+                            while (mNotificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                                mNotificationTime.add(Calendar.DAY_OF_MONTH, 1);
                             }
-                            PendingIntent pi1 = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
-                            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_ONE_DAY, pi1);
+                            PendingIntent pi1 = PendingIntent.getBroadcast(getApplicationContext(), mNote.getId(), intent, 0);
+                            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, mNotificationTime.getTimeInMillis(), Constants.PERIOD_ONE_DAY, pi1);
                             break;
                         case Constants.EVERY_WEEK:
-                            note.setRepeatingPeriod(Constants.PERIOD_WEEK);
-                            while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
-                                notificationTime.add(Calendar.WEEK_OF_MONTH, 1);
+                            mNote.setRepeatingPeriod(Constants.PERIOD_WEEK);
+                            while (mNotificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                                mNotificationTime.add(Calendar.WEEK_OF_MONTH, 1);
                             }
-                            PendingIntent pi2 = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
-                            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_WEEK, pi2);
+                            PendingIntent pi2 = PendingIntent.getBroadcast(getApplicationContext(), mNote.getId(), intent, 0);
+                            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, mNotificationTime.getTimeInMillis(), Constants.PERIOD_WEEK, pi2);
                             break;
                         case Constants.EVERY_MONTH:
-                            note.setRepeatingPeriod(Constants.PERIOD_MONTH);
-                            while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
-                                notificationTime.add(Calendar.MONTH, 1);
+                            mNote.setRepeatingPeriod(Constants.PERIOD_MONTH);
+                            while (mNotificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                                mNotificationTime.add(Calendar.MONTH, 1);
                             }
-                            PendingIntent pi3 = PendingIntent.getBroadcast(getApplicationContext(), note.getId(), intent, 0);
-                            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_MONTH, pi3);
+                            PendingIntent pi3 = PendingIntent.getBroadcast(getApplicationContext(), mNote.getId(), intent, 0);
+                            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, mNotificationTime.getTimeInMillis(), Constants.PERIOD_MONTH, pi3);
                             break;
                     }
                 }
 
-                note.setRemind(true);
-                note.setReminderTime(notificationTime.getTimeInMillis());
+                mNote.setRemind(true);
+                mNote.setReminderTime(mNotificationTime.getTimeInMillis());
                 saveTask(false);
-                cancelNotification.setVisibility(View.VISIBLE);
+                mCancelNotification.setVisibility(View.VISIBLE);
             }
         });
 
@@ -559,26 +508,25 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
 
 
     private void saveTask(boolean check) {
-        String headline = String.valueOf(head.getText());
-        String content = String.valueOf(text.getText());
+        String headline = String.valueOf(mHead.getText());
+        String content = String.valueOf(mText.getText());
 
-        note.setHeadLine(headline);
-        note.setContext(content);
+        mNote.setHeadLine(headline);
+        mNote.setContext(content);
 
 
         DBHelper dbHelper = new DBHelper(this);
-        if (note.getId() == -1) {
-            if (head.getText().length() == 0 && text.getText().length() == 0)
+        if (mNote.getId() == -1) {
+            if (mHead.getText().length() == 0 && mText.getText().length() == 0)
                 return;
-            note.setId(dbHelper.addTask(note, currentKind));
+            mNote.setId(dbHelper.addTask(mNote, mCurrentKind));
         } else {
             if(check)
-                if(!dbHelper.isRemind(note))
-                    note.setRemind(false);
-            dbHelper.updateTask(note, currentKind);
+                if(!dbHelper.isRemind(mNote))
+                    mNote.setRemind(false);
+            dbHelper.updateTask(mNote, mCurrentKind);
         }
     }
-
 
     @Override
     protected void onPause() {
@@ -609,39 +557,37 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
             @Override
             public void onTimeSet(TimePicker timePicker, int h, int m) {
 
-                notificationTime.set(Calendar.HOUR_OF_DAY, h);
-                notificationTime.set(Calendar.MINUTE, m);
-                notificationTime.set(Calendar.SECOND, 0);
-
-                Log.d("TAG", "TIME: " + h + ":" + m);
+                mNotificationTime.set(Calendar.SECOND, 0);
+                mNotificationTime.set(Calendar.HOUR_OF_DAY, h);
+                mNotificationTime.set(Calendar.MINUTE, m);
 
                 long firstTime = calendar.getTimeInMillis();
 
 
-                note.setRemind(true);
-                note.setReminderTime(firstTime);
+                mNote.setRemind(true);
+                mNote.setReminderTime(firstTime);
                 saveTask(false);
 
-                java.text.DateFormat timeFormat = DateFormat.getTimeFormat(context);
-                String formattedTime = timeFormat.format(notificationTime.getTimeInMillis());
-                spinnerButtonTime.setText(formattedTime);
+                java.text.DateFormat timeFormat = DateFormat.getTimeFormat(mContext);
+                String formattedTime = timeFormat.format(mNotificationTime.getTimeInMillis());
+                mSpinnerButtonTime.setText(formattedTime);
             }
         }, hour, minute, true);
         timePickerDialog.show();
     }
 
     private void showDatePickerDialog() {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
 
-                notificationTime.set(year, month, day);
+                mNotificationTime.set(year, month, day);
 
-                java.text.DateFormat dateFormat = DateFormat.getDateFormat(context);
-                String formattedDate = dateFormat.format(notificationTime.getTimeInMillis());
-                spinnerButtonDate.setText(formattedDate);
+                java.text.DateFormat dateFormat = DateFormat.getDateFormat(mContext);
+                String formattedDate = dateFormat.format(mNotificationTime.getTimeInMillis());
+                mSpinnerButtonDate.setText(formattedDate);
             }
-        },notificationTime.get(Calendar.YEAR), notificationTime.get(Calendar.MONTH), notificationTime.get(Calendar.DAY_OF_MONTH));
+        }, mNotificationTime.get(Calendar.YEAR), mNotificationTime.get(Calendar.MONTH), mNotificationTime.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 
@@ -651,60 +597,59 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
         switch (menuItem.getItemId()){
 
             case R.id.item_morning:
-                spinnerButtonTime.setText(getResources().getString(R.string.morning));
-                hours = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 14);
-                minutes = sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 15);
-                notificationTime.set(Calendar.HOUR_OF_DAY, hours);
-                notificationTime.set(Calendar.MINUTE, minutes);
+                mSpinnerButtonTime.setText(getResources().getString(R.string.morning));
+                mHours = sharedPreferences.getInt(Constants.MORNING_TIME_HOURS, 14);
+                mMinutes = sharedPreferences.getInt(Constants.MORNING_TIME_MINUTES, 15);
+                mNotificationTime.set(Calendar.HOUR_OF_DAY, mHours);
+                mNotificationTime.set(Calendar.MINUTE, mMinutes);
                 break;
             case R.id.item_afternoon:
-                spinnerButtonTime.setText(getResources().getString(R.string.afternoon));
-                hours = sharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS, 14);
-                minutes = sharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES, 15);
-                notificationTime.set(Calendar.HOUR_OF_DAY, hours);
-                notificationTime.set(Calendar.MINUTE, minutes);
+                mSpinnerButtonTime.setText(getResources().getString(R.string.afternoon));
+                mHours = sharedPreferences.getInt(Constants.AFTERNOON_TIME_HOURS, 14);
+                mMinutes = sharedPreferences.getInt(Constants.AFTERNOON_TIME_MINUTES, 15);
+                mNotificationTime.set(Calendar.HOUR_OF_DAY, mHours);
+                mNotificationTime.set(Calendar.MINUTE, mMinutes);
                 break;
             case R.id.item_evening:
-                spinnerButtonTime.setText(getResources().getString(R.string.evening));
-                hours = sharedPreferences.getInt(Constants.EVENING_TIME_HOURS, 20);
-                minutes = sharedPreferences.getInt(Constants.EVENING_TIME_MINUTES, 15);
-                notificationTime.set(Calendar.HOUR_OF_DAY, hours);
-                notificationTime.set(Calendar.MINUTE, minutes);
+                mSpinnerButtonTime.setText(getResources().getString(R.string.evening));
+                mHours = sharedPreferences.getInt(Constants.EVENING_TIME_HOURS, 20);
+                mMinutes = sharedPreferences.getInt(Constants.EVENING_TIME_MINUTES, 15);
+                mNotificationTime.set(Calendar.HOUR_OF_DAY, mHours);
+                mNotificationTime.set(Calendar.MINUTE, mMinutes);
                 break;
             case R.id.item_chose_time:
                 showTimePickerDialog();
                 break;
             case R.id.item_today:
-                notificationTime = Calendar.getInstance();
-                notificationTime.set(Calendar.HOUR_OF_DAY, hours);
-                notificationTime.set(Calendar.MINUTE, minutes);
-                Log.d("TAG", "DAY - " + String.valueOf(notificationTime.get(Calendar.DAY_OF_MONTH)));
-                spinnerButtonDate.setText(getResources().getString(R.string.today));
+                mNotificationTime = Calendar.getInstance();
+                mNotificationTime.set(Calendar.HOUR_OF_DAY, mHours);
+                mNotificationTime.set(Calendar.MINUTE, mMinutes);
+                mSpinnerButtonDate.setText(getResources().getString(R.string.today));
                 break;
             case R.id.item_tomorrow:
-                notificationTime = Calendar.getInstance();
-                notificationTime.set(Calendar.HOUR_OF_DAY, hours);
-                notificationTime.set(Calendar.MINUTE, minutes);
-                notificationTime.add(Calendar.DAY_OF_MONTH, 1);
-                spinnerButtonDate.setText(getResources().getString(R.string.tomorrow));
+                mNotificationTime = Calendar.getInstance();
+                mNotificationTime.set(Calendar.HOUR_OF_DAY, mHours);
+                mNotificationTime.set(Calendar.MINUTE, mMinutes);
+                mNotificationTime.add(Calendar.DAY_OF_MONTH, 1);
+                mSpinnerButtonDate.setText(getResources().getString(R.string.tomorrow));
                 break;
             case R.id.item_chose_date:
                 showDatePickerDialog();
                 break;
             case R.id.item_every_day:
-                repeating = Constants.EVERY_DAY;
+                mRepeating = Constants.EVERY_DAY;
                 spinnerButtonRepeat.setText(R.string.every_day);
                 break;
             case R.id.item_every_week:
-                repeating = Constants.EVERY_WEEK;
+                mRepeating = Constants.EVERY_WEEK;
                 spinnerButtonRepeat.setText(R.string.every_week);
                 break;
             case R.id.item_every_month:
-                repeating = Constants.EVERY_MONTH;
+                mRepeating = Constants.EVERY_MONTH;
                 spinnerButtonRepeat.setText(R.string.every_month);
                 break;
             case R.id.item_newer:
-                repeating = "";
+                mRepeating = "";
                 break;
         }
         return false;
