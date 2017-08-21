@@ -13,6 +13,8 @@ public class SuperNote implements Serializable {
     private long repeatingPeriod;
     private boolean repeating;
 
+    public SuperNote() {
+    }
 
     public long getDeletionTime() {
         return deletionTime;
