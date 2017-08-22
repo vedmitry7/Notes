@@ -590,11 +590,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.stHeadLine.setVisibility(View.VISIBLE);
                     holder.stHeadLine.setText(simpleNote.getHeadLine());
                 }
-                if(simpleNote.getContext().length()==0)
+                if(simpleNote.getContent().length()==0)
                     holder.stContent.setVisibility(View.GONE);
                 else {
                     holder.stContent.setVisibility(View.VISIBLE);
-                    holder.stContent.setText(simpleNote.getContext());
+                    holder.stContent.setText(simpleNote.getContent());
                 }
 
                 if(notes.get(position).isRemind()){
@@ -623,11 +623,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 int count = 0;
                 String s = null;
                 for (int i = 0; i < 5; i++) {
-                    if(listNote.getUncheckedTasks().size()-1 < i){
+                    if(listNote.getUncheckedItems().size()-1 < i){
                         break;
                     }
                     count++;
-                    s = listNote.getUncheckedTasks().get(i);
+                    s = listNote.getUncheckedItems().get(i);
                     View view = inflater.inflate(R.layout.card_view_list_item, null, false);
                     TextView t = (TextView) view.findViewById(R.id.textView3);
                     t.setMaxLines(2);
@@ -639,10 +639,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     holder.layout.addView(view);
                 }
                 for (int i = 0; i < 5 - count ; i++) {
-                    if(listNote.getCheckedTasks().size()-1 < i){
+                    if(listNote.getCheckedItems().size()-1 < i){
                         break;
                     }
-                    s = listNote.getCheckedTasks().get(i);
+                    s = listNote.getCheckedItems().get(i);
                     View view = inflater.inflate(R.layout.card_view_list_item, null, false);
                     TextView t = (TextView) view.findViewById(R.id.textView3);
                     t.setMaxLines(2);

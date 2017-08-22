@@ -50,7 +50,7 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
         this.listNote = listNote;
         if(listNote.getId() == -1) {
             listNote.setHeadLine("");
-            listNote.getUncheckedTasks().add("");
+            listNote.getUncheckedItems().add("");
         }
         editTexts = new ArrayList<>();
 
@@ -71,25 +71,25 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
         if(toPosition==0)
             return;
 
-        if(fromPosition> listNote.getUncheckedTasks().size()+1){
-            int fromP = realFromPos - (listNote.getUncheckedTasks().size()+1);
-            int toP = realToPos - (listNote.getUncheckedTasks().size()+1);
+        if(fromPosition> listNote.getUncheckedItems().size()+1){
+            int fromP = realFromPos - (listNote.getUncheckedItems().size()+1);
+            int toP = realToPos - (listNote.getUncheckedItems().size()+1);
             if(toP<0) {
                 return;
             }
-            String prev = listNote.getCheckedTasks().remove(fromP);
-            listNote.getCheckedTasks().add(toP, prev);
+            String prev = listNote.getCheckedItems().remove(fromP);
+            listNote.getCheckedItems().add(toP, prev);
             notifyItemMoved(fromPosition, toPosition);
             notifyItemChanged(fromPosition);
             notifyItemChanged(toPosition);
             return;
         }
 
-        if(toPosition>= listNote.getUncheckedTasks().size()+1)
+        if(toPosition>= listNote.getUncheckedItems().size()+1)
             return;
 
-        String prev = listNote.getUncheckedTasks().remove(realFromPos);
-        listNote.getUncheckedTasks().add(realToPos, prev);
+        String prev = listNote.getUncheckedItems().remove(realFromPos);
+        listNote.getUncheckedItems().add(realToPos, prev);
         notifyItemMoved(fromPosition, toPosition);
         notifyItemChanged(fromPosition);
         notifyItemChanged(toPosition);
@@ -105,7 +105,7 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
     }
 
     void deleteCheckedTasks() {
-        listNote.getCheckedTasks().clear();
+        listNote.getCheckedItems().clear();
         update();
         requestFocusLast();
     }
@@ -222,7 +222,7 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
             view1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        listNote.getUncheckedTasks().add("");
+                        listNote.getUncheckedItems().add("");
                         update();
                         requestFocusLast();
                     }
@@ -247,9 +247,9 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
         switch (holder.getItemViewType()){
             case 0:
                 final int realPosition = position - 1;
-                if(realPosition < listNote.getUncheckedTasks().size()) {
+                if(realPosition < listNote.getUncheckedItems().size()) {
                     holder.editTextListener.updatePosition(realPosition);
-                    holder.editText.setText(listNote.getUncheckedTasks().get(realPosition));
+                    holder.editText.setText(listNote.getUncheckedItems().get(realPosition));
                     holder.checkBoxListener.updatePosition(realPosition);
 
                     onBind = true;
@@ -275,7 +275,7 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                     holder.button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            listNote.getUncheckedTasks().remove(realPosition);
+                            listNote.getUncheckedItems().remove(realPosition);
                             editTexts.remove(realPosition);
                             update();
                             requestFocusTo(realPosition-1);
@@ -298,9 +298,9 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                             if( keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER
                                     && keyEvent.getAction() == KeyEvent.ACTION_DOWN){
-                                if(listNote.getUncheckedTasks().size() < realPosition)
+                                if(listNote.getUncheckedItems().size() < realPosition)
                                     return true;
-                                listNote.getUncheckedTasks().add(realPosition + 1, "");
+                                listNote.getUncheckedItems().add(realPosition + 1, "");
                                 update();
                                 requestFocusTo(realPosition+1);
                                 return true;
@@ -316,10 +316,10 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                             if(event.getAction() == KeyEvent.ACTION_DOWN &&
                                     (keyCode == KeyEvent.KEYCODE_DEL))
                             {
-                                if(listNote.getUncheckedTasks().size() < position)
+                                if(listNote.getUncheckedItems().size() < position)
                                     return false;
-                                if(listNote.getUncheckedTasks().get(realPosition).length()==0){
-                                    listNote.getUncheckedTasks().remove(realPosition);
+                                if(listNote.getUncheckedItems().get(realPosition).length()==0){
+                                    listNote.getUncheckedItems().remove(realPosition);
                                     update();
                                     requestFocusTo(realPosition-1);
                                     return true;
@@ -331,10 +331,10 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                     );
                 }
 
-                if(realPosition > listNote.getUncheckedTasks().size())
+                if(realPosition > listNote.getUncheckedItems().size())
                 {
                     holder.editTextListener.updatePosition(realPosition);
-                    String s = (listNote.getCheckedTasks().get(realPosition - (listNote.getUncheckedTasks().size()+1)));
+                    String s = (listNote.getCheckedItems().get(realPosition - (listNote.getUncheckedItems().size()+1)));
                     holder.editText.setText(s);
                     holder.editText.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                     holder.editText.setAlpha(0.5f);
@@ -355,7 +355,7 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                     holder.button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            listNote.getCheckedTasks().remove(realPosition - (listNote.getUncheckedTasks().size()+1));
+                            listNote.getCheckedItems().remove(realPosition - (listNote.getUncheckedItems().size()+1));
                             update();
                             requestFocusLast();
                         }
@@ -364,12 +364,12 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                     onBind = true;
                     holder.checkBox.setChecked(true);
                     onBind = false;
-                    System.out.println(position + " - " + listNote.getCheckedTasks().get(realPosition - (listNote.getUncheckedTasks().size()+1)));
+                    System.out.println(position + " - " + listNote.getCheckedItems().get(realPosition - (listNote.getUncheckedItems().size()+1)));
                 }
 
                 break;
             case 1:
-                if(listNote.getCheckedTasks().size()==0){
+                if(listNote.getCheckedItems().size()==0){
                     holder.deliver.setVisibility(GONE);
                 }
                 else{
@@ -391,8 +391,8 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
     }
 
     public void setFocusToEditText(){
-        if(listNote.getUncheckedTasks().size()==0){
-            listNote.getUncheckedTasks().add("");
+        if(listNote.getUncheckedItems().size()==0){
+            listNote.getUncheckedItems().add("");
             requestFocusTo(0);
             update();
         } else
@@ -421,7 +421,7 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
     public int getItemViewType(int position) {
         if(position==0)
             return 2;
-        if(position == listNote.getUncheckedTasks().size()+1)
+        if(position == listNote.getUncheckedItems().size()+1)
             return 1;
         else
             return 0;
@@ -429,7 +429,7 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
 
     @Override
     public int getItemCount() {
-        return listNote.getUncheckedTasks().size() + listNote.getCheckedTasks().size()+2;
+        return listNote.getUncheckedItems().size() + listNote.getCheckedItems().size()+2;
     }
 
     private class EditTextListener implements TextWatcher  {
@@ -446,10 +446,10 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-            if(position< listNote.getUncheckedTasks().size())
-                listNote.getUncheckedTasks().set(position, charSequence.toString());
-            if(position > listNote.getUncheckedTasks().size())
-                listNote.getCheckedTasks().set(position - (listNote.getUncheckedTasks().size() + 1), charSequence.toString());
+            if(position< listNote.getUncheckedItems().size())
+                listNote.getUncheckedItems().set(position, charSequence.toString());
+            if(position > listNote.getUncheckedItems().size())
+                listNote.getCheckedItems().set(position - (listNote.getUncheckedItems().size() + 1), charSequence.toString());
         }
 
         @Override
@@ -492,17 +492,17 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
             if (!onBind) {
                 if (b) {
-                    listNote.getCheckedTasks().add(listNote.getUncheckedTask(position));
-                    listNote.getUncheckedTasks().remove(position);
+                    listNote.getCheckedItems().add(listNote.getUncheckedItems(position));
+                    listNote.getUncheckedItems().remove(position);
                     editTexts.remove(position);
                     requestFocusTo(position-1);
-                    mActivity.changeMenuItemVisibility(listNote.getCheckedTasks().size());
+                    mActivity.changeMenuItemVisibility(listNote.getCheckedItems().size());
                     update();
                 } else {
-                    listNote.getUncheckedTasks().add(listNote.getCheckedTask(position - (listNote.getUncheckedTasks().size() + 1)));
-                    listNote.getCheckedTasks().remove(position - (listNote.getUncheckedTasks().size()));
+                    listNote.getUncheckedItems().add(listNote.getCheckedItem(position - (listNote.getUncheckedItems().size() + 1)));
+                    listNote.getCheckedItems().remove(position - (listNote.getUncheckedItems().size()));
                     update();
-                    mActivity.changeMenuItemVisibility(listNote.getCheckedTasks().size());
+                    mActivity.changeMenuItemVisibility(listNote.getCheckedItems().size());
                     requestFocusLast();
                 }
             }

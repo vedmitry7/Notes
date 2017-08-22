@@ -65,7 +65,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
                     .setAutoCancel(false)
                     .addAction(R.drawable.ic_menu_white_24dp, context.getString(R.string.act_open), contentIntent)
                     .setContentTitle(task.getHeadLine())
-                    .setContentText(task.getContext());
+                    .setContentText(task.getContent());
 
             Notification notification = builder.build();
             Uri ringURI =
@@ -98,18 +98,18 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             Resources res = context.getResources();
 
             String text = "";
-            if(task.getUncheckedTasks().size() != 0){
-                for (int i = task.getUncheckedTasks().size()-1;  i >= 0 ; i--) {
-                    if(!task.getUncheckedTask(i).equals("")){
-                        text = task.getUncheckedTask(i);
+            if(task.getUncheckedItems().size() != 0){
+                for (int i = task.getUncheckedItems().size()-1; i >= 0 ; i--) {
+                    if(!task.getUncheckedItems(i).equals("")){
+                        text = task.getUncheckedItems(i);
                         continue;
                     }
                 }
             }
             if (text.equals("")){
-                for (int i = task.getCheckedTasks().size()-1;  i >= 0 ; i--) {
-                    if(!task.getCheckedTask(i).equals("")){
-                        text = task.getCheckedTask(i);
+                for (int i = task.getCheckedItems().size()-1; i >= 0 ; i--) {
+                    if(!task.getCheckedItem(i).equals("")){
+                        text = task.getCheckedItem(i);
                         continue;
                     }
                 }

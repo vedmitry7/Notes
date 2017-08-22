@@ -441,7 +441,7 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
         PopupMenu popupMenu = new PopupMenu(this, v);
         popupMenu.inflate(R.menu.menu_note);
         mDeleteCheckedTasks = popupMenu.getMenu().findItem(R.id.delete_checked_tasks);
-        changeMenuItemVisibility(mNote.getCheckedTasks().size());
+        changeMenuItemVisibility(mNote.getCheckedItems().size());
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -501,9 +501,9 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
     @Override
     protected void onPause() {
         if(!(mNote.getHeadLine().length() == 0 &&
-                mNote.getCheckedTasks().size() == 0 &&
-                mNote.getUncheckedTasks().size() == 1 &&
-                mNote.getUncheckedTasks().get(0).length() == 0))
+                mNote.getCheckedItems().size() == 0 &&
+                mNote.getUncheckedItems().size() == 1 &&
+                mNote.getUncheckedItems().get(0).length() == 0))
             saveTask(true);
         super.onPause();
     }

@@ -144,7 +144,7 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
             mCurrentKind = Constants.UNDEFINED;
 
         mHead.setText(mNote.getHeadLine());
-        mText.setText(mNote.getContext());
+        mText.setText(mNote.getContent());
 
         mHead.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
@@ -512,7 +512,7 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
         String content = String.valueOf(mText.getText());
 
         mNote.setHeadLine(headline);
-        mNote.setContext(content);
+        mNote.setContent(content);
 
 
         DBHelper dbHelper = new DBHelper(this);

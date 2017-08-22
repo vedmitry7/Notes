@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 public class SuperNote implements Serializable {
     private int id;
+    private String section;
     private int position;
     private int color;
     private long reminderTime;
@@ -12,6 +13,14 @@ public class SuperNote implements Serializable {
     private boolean remind;
     private long repeatingPeriod;
     private boolean repeating;
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
 
     public SuperNote() {
     }

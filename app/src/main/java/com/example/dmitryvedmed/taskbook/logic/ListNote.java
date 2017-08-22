@@ -7,12 +7,12 @@ import java.util.ArrayList;
 public class ListNote extends SuperNote implements Serializable {
 
     private String headLine;
-    private ArrayList<String> uncheckedTasks;
-    private ArrayList<String> checkedTasks;
+    private ArrayList<String> uncheckedItems;
+    private ArrayList<String> checkedItems;
 
     public ListNote() {
-        uncheckedTasks = new ArrayList<>();
-        checkedTasks = new ArrayList<>();
+        uncheckedItems = new ArrayList<>();
+        checkedItems = new ArrayList<>();
     }
 
     public String getHeadLine() {
@@ -23,35 +23,35 @@ public class ListNote extends SuperNote implements Serializable {
         this.headLine = headLine;
     }
 
-    public ArrayList<String> getUncheckedTasks() {
-        return uncheckedTasks;
+    public ArrayList<String> getUncheckedItems() {
+        return uncheckedItems;
     }
 
-    public void setUncheckedTasks(ArrayList<String> tasks) {
-        this.uncheckedTasks = tasks;
+    public void setUncheckedItems(ArrayList<String> tasks) {
+        this.uncheckedItems = tasks;
     }
 
-    public void addUncheckedTask(String s){
-        uncheckedTasks.add(s);
+    public void addUncheckedItem(String s){
+        uncheckedItems.add(s);
     }
 
-    public String getUncheckedTask(int i){
-        return uncheckedTasks.get(i);
+    public String getUncheckedItems(int i){
+        return uncheckedItems.get(i);
     }
 
-    public void addCheckedTask(String s){
-        checkedTasks.add(s);
+    public void addCheckedItem(String s){
+        checkedItems.add(s);
     }
 
-    public String getCheckedTask(int i){
-        return checkedTasks.get(i);
+    public String getCheckedItem(int i){
+        return checkedItems.get(i);
     }
 
-    public ArrayList<String> getCheckedTasks() {
-        return checkedTasks;
+    public ArrayList<String> getCheckedItems() {
+        return checkedItems;
     }
 
-    public void setCheckedTasks(ArrayList<String> tasks) {
-        this.checkedTasks = tasks;
+    public void setCheckedItems(ArrayList<String> tasks) {
+        this.checkedItems = tasks;
     }
 }

@@ -50,7 +50,7 @@ public class SimpleNoteDialogActivity extends AppCompatActivity {
             mHead.setText(mNote.getHeadLine());
         else
             mHead.setVisibility(View.GONE);
-        mContext.setText(mNote.getContext());
+        mContext.setText(mNote.getContent());
 
 
         Window window = this.getWindow();

@@ -5,12 +5,12 @@ import java.io.Serializable;
 
 public class SimpleNote extends SuperNote implements Serializable {
 
-    private String headLine, context;
+    private String headLine, content;
 
-    public SimpleNote(int id, String headLine, String context) {
+    public SimpleNote(int id, String headLine, String content) {
         this.setId(id);
         this.headLine = headLine;
-        this.context = context;
+        this.content = content;
     }
 
     public SimpleNote() {
@@ -24,12 +24,12 @@ public class SimpleNote extends SuperNote implements Serializable {
         this.headLine = headLine;
     }
 
-    public String getContext() {
-        return context;
+    public String getContent() {
+        return content;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setContent(String content) {
+        this.content = content;
     }
 
 
@@ -38,7 +38,7 @@ public class SimpleNote extends SuperNote implements Serializable {
         return "SimpleNote{" +
                 "id=" + getId() +
                 ", headLine='" + headLine + '\'' +
-                ", context='" + context + '\'' +
+                ", content='" + content + '\'' +
                 '}';
     }
 }
