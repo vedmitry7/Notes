@@ -9,6 +9,7 @@ import com.example.dmitryvedmed.taskbook.logic.SuperNote;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,6 +29,9 @@ public class Test {
         simpleNote.setSection("deleted");
 
         SuperNote superNote1 = simpleNote;
+
+
+        System.out.println("&&& " + (superNote1 instanceof SimpleNote));
 
         ListNote listNote = new ListNote();
         listNote.setHeadLine("fghd");
@@ -90,6 +94,51 @@ public class Test {
                 "  ]\n" +
                 "}]";
 
+        String supermass = "[{\n" +
+                "  \"section\": \"undefined\",\n" +
+                "  \"color\": 0,\n" +
+                "  \"type\": \"simple note\",\n" +
+                "  \"headline\": \" доп лала залп Адамов Адама \",\n" +
+                "  \"content\": \"Лада взвивa leg Roger Ed \\nEh did ridge fbfj\"\n" +
+                "},\n" +
+                "{\n" +
+                "  \"section\": \"undefined\",\n" +
+                "  \"color\": 0,\n" +
+                "  \"type\": \"list note\",\n" +
+                "  \"headline\": \"Huff \",\n" +
+                "  \"unchecked items\": [\n" +
+                "    \"Shushed \",\n" +
+                "    \"\"\n" +
+                "  ],\n" +
+                "  \"checked items\": [\n" +
+                "    \"I didn\\u0027t \"\n" +
+                "  ]\n" +
+                "},\n" +
+                "{\n" +
+                "  \"section\": \"archive_code\",\n" +
+                "  \"color\": 0,\n" +
+                "  \"type\": \"list note\",\n" +
+                "  \"headline\": \"USB DJ\\u0027s \",\n" +
+                "  \"unchecked items\": [\n" +
+                "    \"Xjdufдала \",\n" +
+                "    \"Ща шалаша \",\n" +
+                "    \"Плащ шага \",\n" +
+                "    \"Шалаш ал-Ала \",\n" +
+                "    \"Ослвлал\"\n" +
+                "  ],\n" +
+                "  \"checked items\": [\n" +
+                "    \"I didn\\u0027t \"\n" +
+                "  ]\n" +
+                "},\n" +
+                "{\n" +
+                "  \"section\": \"Цйцйцйцйц\",\n" +
+                "  \"color\": 0,\n" +
+                "  \"type\": \"simple note\",\n" +
+                "  \"headline\": \"Ствола \",\n" +
+                "  \"content\": \"Балаково \"\n" +
+                "}\n" +
+                "]";
+
         String s = "{\n" +
                 "  \"section\": \"unknown\",\n" +
                 "  \"color\": 4567,\n" +
@@ -105,17 +154,47 @@ public class Test {
                 "}";
 
 
-        JsonArray jsonArray = gson2.fromJson(textOut, JsonArray.class);
+        JsonArray jsonArray = gson2.fromJson(supermass, JsonArray.class);
 
-        System.out.println(jsonArray.get(0));
-        System.out.println(jsonArray.get(1));
 
-        SuperNote superNote = gson2.fromJson(jsonArray.get(1), SuperNote.class);
+ /*       for (JsonElement e:jsonArray
+                ) {
+            SuperNote superNote = gson.fromJson(e, SuperNote.class);
+            if(superNote instanceof ListNote) {
+                System.out.println(((ListNote) superNote).getUncheckedItems().get(0));
+                System.out.println(((ListNote) superNote).getUncheckedItems().get(1));
+                System.out.println(((ListNote) superNote).getCheckedItems().get(0));
+                System.out.println(superNote.getSection());
+            }
+            if(superNote instanceof SimpleNote) {
+                System.out.println(((SimpleNote) superNote).getHeadLine());
+                System.out.println(((SimpleNote) superNote).getContent());
+                System.out.println(superNote.getSection());
+            }
+        }
+*/
 
-        System.out.println(((ListNote)superNote).getUncheckedItems().get(0));
-        System.out.println(((ListNote)superNote).getUncheckedItems().get(1));
-        System.out.println(((ListNote)superNote).getCheckedItems().get(0));
-        System.out.println(superNote.getSection());
+
+        for (JsonElement e:jsonArray
+                ) {
+
+
+            SuperNote superNote = gson2.fromJson(e, SuperNote.class);
+            System.out.println("&&&SN " + (superNote instanceof SimpleNote));
+
+            if (superNote instanceof SimpleNote) {
+                System.out.println(((SimpleNote) superNote).getHeadLine());
+                System.out.println(((SimpleNote) superNote).getContent());
+                System.out.println(superNote.getSection());
+            } else {
+                System.out.println("&&&LN " + (superNote instanceof ListNote));
+                System.out.println(((ListNote) superNote).getUncheckedItems().get(0));
+                System.out.println(((ListNote) superNote).getUncheckedItems().get(1));
+                System.out.println(((ListNote) superNote).getCheckedItems().get(0));
+            }
+
+        }
+
 
 
 

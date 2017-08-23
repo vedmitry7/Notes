@@ -45,7 +45,7 @@ public class SimpleNoteDialogActivity extends AppCompatActivity {
 
         //mNote = (SimpleNote) getIntent().getSerializableExtra("Task");
 
-        mNote = (SimpleNote) dbHelper.getTask(getIntent().getIntExtra(Constants.ID, 0));
+        mNote = (SimpleNote) dbHelper.getNote(getIntent().getIntExtra(Constants.ID, 0));
         if(mNote.getHeadLine().length()>0)
             mHead.setText(mNote.getHeadLine());
         else

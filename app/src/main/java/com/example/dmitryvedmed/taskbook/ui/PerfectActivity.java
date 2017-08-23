@@ -565,9 +565,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 alert2.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        for (SuperNote t: sDbHelper.getTasks(Constants.DELETED)
+                        for (SuperNote t: sDbHelper.getNotes(Constants.DELETED)
                                 ) {
-                            sDbHelper.deleteTask(t);
+                            sDbHelper.deleteNote(t);
                         }
                         mAdapter.getNotes().clear();
                         mAdapter.notifyDataSetChanged();
@@ -625,7 +625,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         mEditor.putBoolean(Constants.NOTIF_ON, false);
         mEditor.commit();
 
-        mValues = sDbHelper.getTasks(currentKind);
+        mValues = sDbHelper.getNotes(currentKind);
 
         isSectionEmpty();
 
@@ -728,7 +728,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 mEditor.commit();
 
                 mToolbar.setTitle(R.string.notifications);
-                mValues = sDbHelper.getNotificationTasks();
+                mValues = sDbHelper.getNotificationNotes();
                 isSectionEmpty();
                 mAdapter.dataChanged(mValues);
                 mFab.hide();
@@ -793,10 +793,10 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
         for (SuperNote task : mValues
                 ) {
             if(task.getDeletionTime() + deletionPeriod < System.currentTimeMillis()) {
-                sDbHelper.deleteTask(task);
+                sDbHelper.deleteNote(task);
             }
         }
-        mValues = sDbHelper.getTasks(Constants.DELETED);
+        mValues = sDbHelper.getNotes(Constants.DELETED);
     }
 
     public void setSelectionMode(){
@@ -936,16 +936,16 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             if(!sDbHelper.isRemind(s)){
                 s.setRemind(false);
             }
-            sDbHelper.updateTask(s, currentKind);
+            sDbHelper.updateNote(s, currentKind);
         }
     }
 
     void update(){
         currentKind = mSharedPreferences.getString(Constants.CURRENT_KIND, Constants.UNDEFINED);
         if(!mSharedPreferences.getBoolean(NOTIF_ON, false)){
-            mValues = sDbHelper.getTasks(currentKind);
+            mValues = sDbHelper.getNotes(currentKind);
         } else {
-            mValues = sDbHelper.getNotificationTasks();
+            mValues = sDbHelper.getNotificationNotes();
         }
         if(mAdapter != null)
             mAdapter.dataChanged(mValues);
@@ -956,13 +956,13 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 ) {
             if(s.isRemind() == true && s.getReminderTime()<System.currentTimeMillis() && !s.isRepeating()){
                 s.setRemind(false);
-                sDbHelper.updateTask(s, currentKind);
+                sDbHelper.updateNote(s, currentKind);
             }
         }
     }
 
     private void checkRepeatingNotes(){
-        ArrayList<SuperNote> list = sDbHelper.getNotificationTasks();
+        ArrayList<SuperNote> list = sDbHelper.getNotificationNotes();
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -1004,7 +1004,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
                 note.setReminderTime(notificationTime.getTimeInMillis());
 
-                sDbHelper.updateTask(note, null);
+                sDbHelper.updateNote(note, null);
             } else {
                 Intent intent = new Intent(mContext, NotifyTaskReceiver.class);
                 intent.putExtra("id", note.getId());

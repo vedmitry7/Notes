@@ -182,8 +182,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return sections;
     }
 
-    public int addTask(SuperNote task, String kind) {
+    public int addNote(SuperNote note, String section) {
         // 1. get reference to writable DB
+
+        note.setSection(section);
+
         SQLiteDatabase db = this.getWritableDatabase();
         // 2. create ContentValues to add key "column"/value
         byte[] bytes = null;
@@ -191,7 +194,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ObjectOutput out = null;
         try {
             out = new ObjectOutputStream(bos);
-            out.writeObject(task);
+            out.writeObject(note);
             out.flush();
             bytes = bos.toByteArray();
 
@@ -207,19 +210,19 @@ public class DBHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_TASK,  bytes);
-        values.put(KEY_KIND, kind);
-        values.put(KEY_REMIND,task.isRemind() ? 1 : 0);
+        values.put(KEY_KIND, section);
+        values.put(KEY_REMIND,note.isRemind() ? 1 : 0);
         // 3. insert
         long id = db.insert(TABLE, null, values);
         // 4. close
         db.close();
-        Log.d("TAG", "      DBHelper  addTask "  + task.toString());
+        Log.d("TAG", "      DBHelper  addNote "  + note.toString());
         Log.d("TAG", "      DBHelper  ID "  + id);
 
         return (int) id;
     }
 
-    public int addTask(SuperNote task) {
+    public int addNote(SuperNote note) {
         // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
         // 2. create ContentValues to add key "column"/value
@@ -228,7 +231,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ObjectOutput out = null;
         try {
             out = new ObjectOutputStream(bos);
-            out.writeObject(task);
+            out.writeObject(note);
             out.flush();
             bytes = bos.toByteArray();
 
@@ -245,21 +248,19 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_TASK,  bytes);
         values.put(KEY_KIND, Constants.UNDEFINED);
-        values.put(KEY_REMIND,task.isRemind() ? 1 : 0);
+        values.put(KEY_REMIND,note.isRemind() ? 1 : 0);
         // 3. insert
         long id = db.insert(TABLE, null, values);
         // 4. close
         db.close();
-        Log.d("TAG", "      DBHelper  addTask "  + task.toString());
+        Log.d("TAG", "      DBHelper  addNote "  + note.toString());
         Log.d("TAG", "      DBHelper  ID "  + id);
 
         return (int) id;
     }
 
-
-
-    public ArrayList<SuperNote> getAllTask() {
-        ArrayList<SuperNote> tasks = new ArrayList<>();
+    public ArrayList<SuperNote> getAllNote() {
+        ArrayList<SuperNote> notes = new ArrayList<>();
 
         // 1. build the query
         String query = "SELECT  * FROM " + TABLE;
@@ -268,7 +269,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        Log.d("TAG", "      DBHelper - getAllTask"  );
+        Log.d("TAG", "      DBHelper - getAllNote"  );
         // 3. go over each row, build book and add it to list
         SuperNote task = null;
         if (cursor.moveToFirst()) {
@@ -296,27 +297,27 @@ public class DBHelper extends SQLiteOpenHelper {
                 task.setId(Integer.parseInt(cursor.getString(0)));
 
                 // Add book to books
-                tasks.add(task);
+                notes.add(task);
             } while (cursor.moveToNext());
         }
 
-        Log.d("TAG", "      DBHelper    getAllTask"  + tasks.toString());
+        Log.d("TAG", "      DBHelper    getAllNote"  + notes.toString());
 
-        return tasks;
+        return notes;
     }
 
-    public SuperNote getTask(int id){
+    public SuperNote getNote(int id){
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT  * FROM " + TABLE + " WHERE id = '" + id + "'";
         Cursor cursor = db.rawQuery(query, null);
-        SuperNote task = null;
+        SuperNote note = null;
         if (cursor.moveToFirst()) {
             byte[] bytes = cursor.getBlob(2);
             ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
             ObjectInput in = null;
             try {
                 in = new ObjectInputStream(bis);
-                task = (SuperNote) in.readObject();
+                note = (SuperNote) in.readObject();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -331,10 +332,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 }
             }
 
-            task.setId(id);
+            note.setId(id);
 
         }
-        return task;
+        return note;
     }
 
 
@@ -361,20 +362,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public ArrayList<SuperNote> getTasks(String kind) {
+    public ArrayList<SuperNote> getNotes(String section) {
         ArrayList<SuperNote> tasks = new ArrayList<>();
 
         // 1. build the query
-        String query = "SELECT  * FROM " + TABLE + " WHERE kind = '" + kind + "'";
+        String query = "SELECT  * FROM " + TABLE + " WHERE kind = '" + section + "'";
 
         // 2. get reference to writable DB
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        Log.d("TAG", "      DBHelper - getTasks KIND - " + kind);
+        Log.d("TAG", "      DBHelper - getNotes KIND - " + section);
 
 
-        Log.d("TAG", "      DBHelper - getTasks KIND - " + kind!=null?kind:"null");
+        Log.d("TAG", "      DBHelper - getNotes KIND - " + section!=null?section:"null");
         // 3. go over each row, build book and add it to list
         SuperNote task = null;
         if (cursor.moveToFirst()) {
@@ -403,7 +404,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 System.out.println("DB          ID - " + id);
                 System.out.println(task==null);
                 if(task==null) {
-                    Log.d("TAG", "      DBHelper    getTasks, task with id = "  + cursor.getInt(0) + " - null");
+                    Log.d("TAG", "      DBHelper    getNotes, task with id = "  + cursor.getInt(0) + " - null");
                     continue;
                 }
                 task.setId(cursor.getInt(0));
@@ -416,21 +417,18 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
-        Log.d("TAG", "      DBHelper    getTasks(kind)"  + tasks.toString());
+        Log.d("TAG", "      DBHelper    getNotes(kind)"  + tasks.toString());
 
         return tasks;
     }
 
-    public int updateTask(SuperNote task, String kind) {
-        // 1. get reference to writable DB
+    public int updateNote(SuperNote note, String section) {
 
-
-
-//        Log.d("TAG", "      DBHelper - UPDATE tasks KIND - " + kind!=null ? kind : "null");
-
-        if(kind!=null && kind.equals(Constants.DELETED)){
-            task.setDeletionTime(System.currentTimeMillis());
+        if(section!=null && section.equals(Constants.DELETED)){
+            note.setDeletionTime(System.currentTimeMillis());
         }
+
+        note.setSection(section);
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -439,7 +437,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ObjectOutput out = null;
         try {
             out = new ObjectOutputStream(bos);
-            out.writeObject(task);
+            out.writeObject(note);
             out.flush();
             bytes = bos.toByteArray();
 
@@ -455,27 +453,27 @@ public class DBHelper extends SQLiteOpenHelper {
         // 2. create ContentValues to add key "column"/value
         ContentValues values = new ContentValues(); // get title
         values.put(KEY_TASK, bytes); // get author
-        if(kind != null)
-        values.put(KEY_KIND, kind);
-        values.put(KEY_REMIND, task.isRemind() ? 1 : 0);
+        if(section != null)
+        values.put(KEY_KIND, section);
+        values.put(KEY_REMIND, note.isRemind() ? 1 : 0);
 
         // 3. updating row
         int i = db.update(TABLE, //table
                 values, // column/value
                 KEY_ID + " = ?", // selections
-                new String[] { String.valueOf(task.getId()) }); //selection args
+                new String[] { String.valueOf(note.getId()) }); //selection args
 
         // 4. close
         db.close();
-        Log.d("TAG", "      DBHelper Update " + task.toString());
-        Log.d("TAG", "      DBHelper Update " + kind);
+        Log.d("TAG", "      DBHelper Update " + note.toString());
+        Log.d("TAG", "      DBHelper Update " + section);
 
-        Log.d("TAG", "      DBHelper Update remaind " + task.isRemind());
+        Log.d("TAG", "      DBHelper Update remaind " + note.isRemind());
         return i;
     }
 
-    public ArrayList<SuperNote> getNotificationTasks() {
-        ArrayList<SuperNote> tasks = new ArrayList<>();
+    public ArrayList<SuperNote> getNotificationNotes() {
+        ArrayList<SuperNote> notes = new ArrayList<>();
 
         // 1. build the query
         String query = "SELECT  * FROM " + TABLE + " WHERE remind = '" + 1 + "'";
@@ -484,9 +482,9 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        Log.d("TAG", "      DBHelper - getTasks"  );
+        Log.d("TAG", "      DBHelper - getNotes"  );
         // 3. go over each row, build book and add it to list
-        SuperNote task = null;
+        SuperNote note = null;
         if (cursor.moveToFirst()) {
             do {
                 byte[] bytes = cursor.getBlob(2);
@@ -494,7 +492,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 ObjectInput in = null;
                 try {
                     in = new ObjectInputStream(bis);
-                    task = (SuperNote) in.readObject();
+                    note = (SuperNote) in.readObject();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -511,36 +509,36 @@ public class DBHelper extends SQLiteOpenHelper {
 
                 int id = cursor.getInt(0);
                 System.out.println("DB          ID - " + id);
-                System.out.println(task==null);
-                if(task==null) {
-                    Log.d("TAG", "      DBHelper    getTasks, task with id = "  + cursor.getInt(0) + " - null");
+                System.out.println(note==null);
+                if(note==null) {
+                    Log.d("TAG", "      DBHelper    getNotes, note with id = "  + cursor.getInt(0) + " - null");
                     continue;
                 }
-                task.setId(cursor.getInt(0));
+                note.setId(cursor.getInt(0));
 
                 //Log.d("TAG", "     remind " + cursor.getInt(3));
-                Log.d("TAG", "     remind " + task.isRemind() + " " + task.getPosition());
+                Log.d("TAG", "     remind " + note.isRemind() + " " + note.getPosition());
 
                 // Add book to books
-                tasks.add(task);
+                notes.add(note);
             } while (cursor.moveToNext());
         }
 
-        Log.d("TAG", "      DBHelper    getAllTask"  + tasks.toString());
+        Log.d("TAG", "      DBHelper    getAllNote"  + notes.toString());
 
-        return tasks;
+        return notes;
     }
 
 
-    public void deleteTask(SuperNote task) {
+    public void deleteNote(SuperNote note) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE,
                 KEY_ID + " = ?",
-                new String[] { String.valueOf(task.getId()) });
+                new String[] { String.valueOf(note.getId()) });
         db.close();
 
-        Log.d("TAG", "      DBHelper Delate " + task.toString());
+        Log.d("TAG", "      DBHelper Delate " + note.toString());
     }
 
     public void clearDB(){

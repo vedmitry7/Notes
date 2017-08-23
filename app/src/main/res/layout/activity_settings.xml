@@ -307,6 +307,54 @@
 
             </RelativeLayout>
 
+
+            <TextView
+                android:paddingTop="4dp"
+                android:textColor="#00796B"
+                android:paddingBottom="4dp"
+                android:paddingLeft="16dp"
+                android:text="Резервное копирование"
+                android:layout_width="match_parent"
+                android:textSize="16sp"
+                android:layout_height="wrap_content"
+                android:textStyle="normal|bold" />
+
+            <View style="@style/Divider"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:id="@+id/makeCopy"
+                android:onClick="makeCopy">
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="16dp"
+                    android:textSize="16sp"
+                    android:text="Экспорт"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:id="@+id/downloadCopy"
+                android:onClick="downloadCopy">
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="16dp"
+                    android:textSize="16sp"
+                    android:text="Импорт"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
         </LinearLayout>
 
     </ScrollView>

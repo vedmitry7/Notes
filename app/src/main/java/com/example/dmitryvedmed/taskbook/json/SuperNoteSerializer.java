@@ -24,7 +24,7 @@ public class SuperNoteSerializer implements JsonSerializer<SuperNote> {
 
         if(src instanceof SimpleNote){
             result.addProperty("type", "simple note");
-            result.addProperty("headLine", ((SimpleNote) src).getHeadLine());
+            result.addProperty("headline", ((SimpleNote) src).getHeadLine());
             result.addProperty("content", ((SimpleNote) src).getContent());
         } else
         if(src instanceof ListNote){

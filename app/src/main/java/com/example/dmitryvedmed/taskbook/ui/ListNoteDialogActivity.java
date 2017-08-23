@@ -62,7 +62,7 @@ public class ListNoteDialogActivity extends AppCompatActivity {
 
         //mNote = (ListNote) getIntent().getSerializableExtra("ListNote");
 
-        mNote = (ListNote) mDbHelper.getTask(getIntent().getIntExtra(Constants.ID, 0));
+        mNote = (ListNote) mDbHelper.getNote(getIntent().getIntExtra(Constants.ID, 0));
 
         mHead = (TextView) findViewById(R.id.listTaskDialogHeadTextView);
         mHead.setTypeface(SingletonFonts.getInstance(this).getRobotoRegular());

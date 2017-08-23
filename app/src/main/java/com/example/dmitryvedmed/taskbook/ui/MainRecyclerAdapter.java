@@ -104,7 +104,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public void returnTranslatedTask(String s){
         for (SuperNote st: selectedNotesCopy){
-            mActivity.sDbHelper.updateTask(st, s);
+            mActivity.sDbHelper.updateNote(st, s);
         }
         notes.addAll(selectedNotesCopy);
         selectedNotesCopy.clear();
@@ -192,9 +192,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
             case Constants.ARCHIVE:
                 if(mActivity.currentKind == Constants.ARCHIVE){
-                    mActivity.sDbHelper.updateTask(notes.get(position), Constants.UNDEFINED);
+                    mActivity.sDbHelper.updateNote(notes.get(position), Constants.UNDEFINED);
                 } else {
-                    mActivity.sDbHelper.updateTask(notes.get(position), Constants.ARCHIVE);
+                    mActivity.sDbHelper.updateNote(notes.get(position), Constants.ARCHIVE);
                 }
                 mActivity.showSnackBar(Constants.ARCHIVE, 1);
                 notes.get(position).setPosition(0);
@@ -203,7 +203,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 setRightPosition();
                 break;
             case Constants.DELETED:
-                mActivity.sDbHelper.updateTask(notes.get(position), Constants.DELETED);
+                mActivity.sDbHelper.updateNote(notes.get(position), Constants.DELETED);
                 cancelNotification(notes.get(position).getId());
                 mActivity.showSnackBar(Constants.DELETED, 1);
                 notes.get(position).setPosition(0);
@@ -235,9 +235,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     @Override
                     public void onClick(View view) {
                         if(mActivity.currentKind == Constants.ARCHIVE){
-                            mActivity.sDbHelper.updateTask(notes.get(position), Constants.UNDEFINED);
+                            mActivity.sDbHelper.updateNote(notes.get(position), Constants.UNDEFINED);
                         } else {
-                            mActivity.sDbHelper.updateTask(notes.get(position), Constants.ARCHIVE);
+                            mActivity.sDbHelper.updateNote(notes.get(position), Constants.ARCHIVE);
                         }
                         mActivity.showSnackBar(Constants.ARCHIVE, 1);
                         dialog.dismiss();
@@ -257,7 +257,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mActivity.sDbHelper.updateTask(notes.get(position), Constants.DELETED);
+                        mActivity.sDbHelper.updateNote(notes.get(position), Constants.DELETED);
                         cancelNotification(notes.get(position).getId());
                         dialog.dismiss();
                         mActivity.showSnackBar(Constants.DELETED, 1);
@@ -294,7 +294,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             if(s.equals(Constants.DELETED)){
                 t.setRemind(false);
             }
-            mActivity.sDbHelper.updateTask(t, s);
+            mActivity.sDbHelper.updateNote(t, s);
         }
         mActivity.showSnackBar(s, selectedNotesCounter);
         notes.removeAll(superNotes);
@@ -322,7 +322,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         compareSelectionTasks();
         for (SuperNote t : superNotes
                 ) {
-            mActivity.sDbHelper.deleteTask(t);
+            mActivity.sDbHelper.deleteNote(t);
         }
         notes.removeAll(superNotes);
         superNotes.clear();

@@ -165,7 +165,7 @@ public class ListNoteDialogRecyclerAdapter extends RecyclerView.Adapter<ListNote
     }
 
     private void update(){
-        mDbHelper.updateTask(listNote, null);
+        mDbHelper.updateNote(listNote, null);
         notifyDataSetChanged();
     }
 }

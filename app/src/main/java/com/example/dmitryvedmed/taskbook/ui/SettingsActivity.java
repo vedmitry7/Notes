@@ -23,13 +23,35 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.dmitryvedmed.taskbook.R;
+import com.example.dmitryvedmed.taskbook.json.SuperNoteDeserializer;
+import com.example.dmitryvedmed.taskbook.json.SuperNoteSerializer;
+import com.example.dmitryvedmed.taskbook.logic.DBHelper;
+import com.example.dmitryvedmed.taskbook.logic.ListNote;
+import com.example.dmitryvedmed.taskbook.logic.SimpleNote;
+import com.example.dmitryvedmed.taskbook.logic.SuperNote;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Calendar;
+
+import ru.bartwell.exfilepicker.ExFilePicker;
+import ru.bartwell.exfilepicker.data.ExFilePickerResult;
 
 
 public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
+    private static final int EX_FILE_PICKER_RESULT_UPLOAD = 8;
+    private static final int EX_FILE_PICKER_RESULT_DOWNLOAD = 16;
 
     SharedPreferences mSharedPreferences;
     TextView mNoteFontLabel;
@@ -326,4 +348,163 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
     }
 
 
+    public void makeCopy(View view) {
+        ExFilePicker exFilePicker = new ExFilePicker();
+        exFilePicker.setCanChooseOnlyOneItem(true);
+        //exFilePicker.setShowOnlyExtensions("apk");
+        exFilePicker.setChoiceType(ExFilePicker.ChoiceType.DIRECTORIES);
+        exFilePicker.start(this, EX_FILE_PICKER_RESULT_UPLOAD);
+
+    }
+
+    public void downloadCopy(View view) {
+
+        ExFilePicker exFilePicker = new ExFilePicker();
+        exFilePicker.setCanChooseOnlyOneItem(true);
+        exFilePicker.setShowOnlyExtensions("json");
+        exFilePicker.setChoiceType(ExFilePicker.ChoiceType.FILES);
+        exFilePicker.start(this, EX_FILE_PICKER_RESULT_DOWNLOAD);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == EX_FILE_PICKER_RESULT_UPLOAD) {
+            ExFilePickerResult result = ExFilePickerResult.getFromIntent(data);
+            if (result != null && result.getCount() > 0) {
+                // Here is object contains selected files names and path
+
+                System.out.println(result.getPath()+result.getNames().get(0));
+
+                DBHelper dbHelper = new DBHelper(this);
+
+                GsonBuilder builder = new GsonBuilder();
+                Gson gson = builder
+                        .registerTypeAdapter(SimpleNote.class, new SuperNoteSerializer())
+                        .registerTypeAdapter(ListNote.class, new SuperNoteSerializer())
+                        .setPrettyPrinting()
+                        .create();
+
+                ArrayList<SuperNote> notes =  dbHelper.getAllNote();
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("[");
+                for (SuperNote note:notes
+                     ) {
+                    stringBuilder.append(gson.toJson(note));
+                    stringBuilder.append(",\n");
+                }
+                stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(","));
+                stringBuilder.append("]");
+
+
+                System.out.println(stringBuilder.toString());
+
+                write(result.getPath()+result.getNames().get(0)  + "/notes.json", stringBuilder.toString());
+
+            }
+        }
+
+        if (requestCode == EX_FILE_PICKER_RESULT_DOWNLOAD) {
+            ExFilePickerResult result = ExFilePickerResult.getFromIntent(data);
+            if (result != null && result.getCount() > 0) {
+                // Here is object contains selected files names and path
+
+                String filePath = result.getPath() + result.getNames().get(0);
+                System.out.println(filePath);
+                String notesContent = null;
+                try {
+                    notesContent = read(filePath);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println(notesContent);
+
+                GsonBuilder builder = new GsonBuilder();
+                Gson gson = builder
+                        .registerTypeAdapter(SuperNote.class, new SuperNoteDeserializer())
+                        .setPrettyPrinting()
+                        .create();
+
+                JsonArray jsonArray = gson.fromJson(notesContent, JsonArray.class);
+
+
+                for (JsonElement e:jsonArray
+                        ) {
+
+                    SuperNote superNote = gson.fromJson(e, SuperNote.class);
+                    System.out.println("&&&SN " + (superNote instanceof SimpleNote));
+
+                    if (superNote instanceof SimpleNote) {
+                        System.out.println(((SimpleNote) superNote).getHeadLine());
+                        System.out.println(((SimpleNote) superNote).getContent());
+                        System.out.println(superNote.getSection());
+                    } else {
+                        System.out.println("&&&LN " + (superNote instanceof ListNote));
+                        System.out.println(((ListNote) superNote).getUncheckedItems().get(0));
+                        System.out.println(((ListNote) superNote).getUncheckedItems().get(1));
+                        System.out.println(((ListNote) superNote).getCheckedItems().get(0));
+                    }
+
+                }
+
+
+            }
+        }
+    }
+
+    public static void write(String fileName, String text) {
+        //Определяем файл
+        System.out.println("WRITE");
+        File file = new File(fileName);
+
+        try {
+            //проверяем, что если файл не существует то создаем его
+            if(!file.exists()){
+                file.createNewFile();
+                System.out.println("CREATE");
+            }
+
+            //PrintWriter обеспечит возможности записи в файл
+            PrintWriter out = new PrintWriter(file.getAbsoluteFile());
+
+            try {
+                //Записываем текст у файл
+                out.print(text);
+                System.out.println("PRINT");
+
+            } finally {
+                //После чего мы должны закрыть файл
+                //Иначе файл не запишется
+                out.close();
+            }
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String read(String fileName) throws FileNotFoundException {
+        //Этот спец. объект для построения строки
+        StringBuilder sb = new StringBuilder();
+
+        try {
+            //Объект для чтения файла в буфер
+            BufferedReader in = new BufferedReader(new FileReader( fileName));
+            try {
+                //В цикле построчно считываем файл
+                String s;
+                while ((s = in.readLine()) != null) {
+                    sb.append(s);
+                    sb.append("\n");
+                }
+            } finally {
+                //Также не забываем закрыть файл
+                in.close();
+            }
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //Возвращаем полученный текст с файла
+        return sb.toString();
+    }
 }

@@ -32,7 +32,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             return;
         }
         DBHelper dbHelper = new DBHelper(context);
-        SuperNote superNote = dbHelper.getTask(id);
+        SuperNote superNote = dbHelper.getNote(id);
         if(superNote == null)
             return;
         Intent notificationIntent;
@@ -75,7 +75,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(id, notification);
-            dbHelper.updateTask(task, null);
+            dbHelper.updateNote(task, null);
         }
         else{
             notificationIntent = new Intent(context, ListNoteDialogActivity.class);
@@ -135,7 +135,7 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(id, notification);
-            dbHelper.updateTask(task, null);
+            dbHelper.updateNote(task, null);
         }
     }
 }

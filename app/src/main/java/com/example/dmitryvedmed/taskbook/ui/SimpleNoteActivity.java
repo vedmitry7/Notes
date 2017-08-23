@@ -519,12 +519,12 @@ public class SimpleNoteActivity extends AppCompatActivity implements PopupMenu.O
         if (mNote.getId() == -1) {
             if (mHead.getText().length() == 0 && mText.getText().length() == 0)
                 return;
-            mNote.setId(dbHelper.addTask(mNote, mCurrentKind));
+            mNote.setId(dbHelper.addNote(mNote, mCurrentKind));
         } else {
             if(check)
                 if(!dbHelper.isRemind(mNote))
                     mNote.setRemind(false);
-            dbHelper.updateTask(mNote, mCurrentKind);
+            dbHelper.updateNote(mNote, mCurrentKind);
         }
     }
 

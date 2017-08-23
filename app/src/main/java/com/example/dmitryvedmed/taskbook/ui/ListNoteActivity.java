@@ -484,13 +484,13 @@ public class ListNoteActivity extends AppCompatActivity implements PopupMenu.OnM
 
         DBHelper dbHelper = new DBHelper(this);
         if(mNote.getId() == -1){
-            mNote.setId(dbHelper.addTask(mNote, mCurrentKind));
+            mNote.setId(dbHelper.addNote(mNote, mCurrentKind));
         }
         else {
             if(check)
                 if(!dbHelper.isRemind(mNote))
                     mNote.setRemind(false);
-            dbHelper.updateTask(mNote, mCurrentKind);
+            dbHelper.updateNote(mNote, mCurrentKind);
         }
     }
 

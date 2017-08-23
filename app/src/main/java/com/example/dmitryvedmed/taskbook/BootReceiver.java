@@ -27,7 +27,7 @@ public class BootReceiver extends BroadcastReceiver {
       /*  DBHelper sDbHelper = new DBHelper(context);
         Log.d("TAG", "BOOT RECEIVER. WORK");
 
-        List<SuperNote> tasks = sDbHelper.getNotificationTasks();
+        List<SuperNote> tasks = sDbHelper.getNotificationNotes();
 
         for (SuperNote task:tasks
                 ) {
@@ -46,7 +46,7 @@ public class BootReceiver extends BroadcastReceiver {
                 }
                 else {
                     task.setRemind(false);
-                    sDbHelper.updateTask(task, null);
+                    sDbHelper.updateNote(task, null);
                 }
             } else {
                 Log.d("TAG", task.getId() + " NOT OLD");

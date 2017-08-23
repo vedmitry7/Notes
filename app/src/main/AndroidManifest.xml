@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.dmitryvedmed.taskbook">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -76,6 +77,11 @@
         <activity
             android:name=".ui.SectionLocationActivity"
             android:theme="@style/SettingTheme"/>
+
+        <activity
+            android:name="ru.bartwell.exfilepicker.ui.activity.ExFilePickerActivity"
+            android:theme="@style/ExFilePickerThemeDark"
+            tools:replace="android:theme"/>
 
     </application>
 
