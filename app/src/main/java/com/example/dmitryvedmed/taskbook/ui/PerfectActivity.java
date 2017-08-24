@@ -592,6 +592,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                             //deleteSection.setVisible(false);
                             onNavigationItemSelected(mMainSection);
                             sDbHelper.deleteSection(mCurrentSection);
+                            System.out.println(mCurrentSection);
                             mSections.remove(mCurrentSection);
                             mCurrentSection = null;
                             onCreateOptionsMenu(mMenu);
@@ -758,6 +759,17 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         public void onClick(View view) {
                         }
                     });
+                    for (Section s:mSections
+                         ) {
+                        if(value.equals(s.getName())){
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
+                            Snackbar.make(sCoordinatorLayout,"Раздел с таким именем уже существует.", Snackbar.LENGTH_LONG)
+                                    .show();
+                            return;
+                        }
+
+                    }
                     Section section = new Section();
                     section.setName(value);
                     section.setPosition(mSections.size());

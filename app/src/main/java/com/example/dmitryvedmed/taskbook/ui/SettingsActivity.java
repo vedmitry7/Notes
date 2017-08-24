@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.example.dmitryvedmed.taskbook.json.SuperNoteDeserializer;
 import com.example.dmitryvedmed.taskbook.json.SuperNoteSerializer;
 import com.example.dmitryvedmed.taskbook.logic.DBHelper;
 import com.example.dmitryvedmed.taskbook.logic.ListNote;
+import com.example.dmitryvedmed.taskbook.logic.Section;
 import com.example.dmitryvedmed.taskbook.logic.SimpleNote;
 import com.example.dmitryvedmed.taskbook.logic.SuperNote;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
@@ -43,6 +45,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import ru.bartwell.exfilepicker.ExFilePicker;
 import ru.bartwell.exfilepicker.data.ExFilePickerResult;
@@ -428,13 +435,37 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 JsonArray jsonArray = gson.fromJson(notesContent, JsonArray.class);
 
 
+                DBHelper dbHelper = new DBHelper(this);
+                dbHelper.clearDB();
+
+                List<Section> sections = dbHelper.getAllSections();
+                for (Section section:sections
+                     ) {
+                    dbHelper.deleteSection(section);
+                }
+
+                //List<SuperNote> notes = new ArrayList<>();
+                List<String> sectionNames = new ArrayList<>();
+                String sectionName;
+
                 for (JsonElement e:jsonArray
                         ) {
 
                     SuperNote superNote = gson.fromJson(e, SuperNote.class);
                     System.out.println("&&&SN " + (superNote instanceof SimpleNote));
 
-                    if (superNote instanceof SimpleNote) {
+                    int id = dbHelper.addNote(superNote);
+                    superNote.setId(id);
+                    dbHelper.updateNote(superNote,superNote.getSection());
+                    //notes.add(superNote);
+
+                    sectionName = superNote.getSection();
+                    if(!sectionName.equals(Constants.UNDEFINED) && !sectionName.equals(Constants.ARCHIVE)
+                            && !sectionNames.contains(sectionName)){
+                        sectionNames.add(sectionName);
+                    }
+
+               /*     if (superNote instanceof SimpleNote) {
                         System.out.println(((SimpleNote) superNote).getHeadLine());
                         System.out.println(((SimpleNote) superNote).getContent());
                         System.out.println(superNote.getSection());
@@ -443,11 +474,24 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                         System.out.println(((ListNote) superNote).getUncheckedItems().get(0));
                         System.out.println(((ListNote) superNote).getUncheckedItems().get(1));
                         System.out.println(((ListNote) superNote).getCheckedItems().get(0));
-                    }
-
+                    }*/
                 }
 
+                Section section;
 
+                for (String s:sectionNames
+                     ) {
+                    section = new Section();
+                    section.setName(s);
+                    int id = dbHelper.addSection(section);
+                    section.setId(id);
+                    dbHelper.updateSection(section);
+                }
+
+             /*   for (SuperNote sn:notes
+                     ) {
+                    dbHelper.updateNote(sn,sn.getSection());
+                }*/
             }
         }
     }
@@ -507,4 +551,42 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         //Возвращаем полученный текст с файла
         return sb.toString();
     }
+    public static String encrypt(String key, String initVector, String value) {
+        try {
+            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+
+            byte[] encrypted = cipher.doFinal(value.getBytes());
+            System.out.println("encrypted string: "
+                    + Base64.encodeToString(encrypted,11));
+
+            return Base64.encodeToString(encrypted,11);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static String decrypt(String key, String initVector, String encrypted) {
+        try {
+            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+
+            byte[] original = cipher.doFinal(Base64.decode(encrypted, 11));
+
+            return new String(original);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
 }
