@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
-import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,12 +46,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
 import ru.bartwell.exfilepicker.ExFilePicker;
 import ru.bartwell.exfilepicker.data.ExFilePickerResult;
+import se.simbio.encryption.Encryption;
 
 
 public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
@@ -359,6 +355,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         ExFilePicker exFilePicker = new ExFilePicker();
         exFilePicker.setCanChooseOnlyOneItem(true);
         //exFilePicker.setShowOnlyExtensions("apk");
+        exFilePicker.setQuitButtonEnabled(true);
         exFilePicker.setChoiceType(ExFilePicker.ChoiceType.DIRECTORIES);
         exFilePicker.start(this, EX_FILE_PICKER_RESULT_UPLOAD);
 
@@ -369,6 +366,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         ExFilePicker exFilePicker = new ExFilePicker();
         exFilePicker.setCanChooseOnlyOneItem(true);
         exFilePicker.setShowOnlyExtensions("json");
+        exFilePicker.setQuitButtonEnabled(true);
         exFilePicker.setChoiceType(ExFilePicker.ChoiceType.FILES);
         exFilePicker.start(this, EX_FILE_PICKER_RESULT_DOWNLOAD);
     }
@@ -378,7 +376,6 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         if (requestCode == EX_FILE_PICKER_RESULT_UPLOAD) {
             ExFilePickerResult result = ExFilePickerResult.getFromIntent(data);
             if (result != null && result.getCount() > 0) {
-                // Here is object contains selected files names and path
 
                 System.out.println(result.getPath()+result.getNames().get(0));
 
@@ -402,10 +399,12 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(","));
                 stringBuilder.append("]");
 
+                byte[] iv = new byte[16];
+                Encryption encryption = Encryption.getDefault(Constants.SUPER_KEY, Constants.SALT, iv);
 
-                System.out.println(stringBuilder.toString());
+                String encrypted = encryption.encryptOrNull(stringBuilder.toString());
 
-                write(result.getPath()+result.getNames().get(0)  + "/notes.json", stringBuilder.toString());
+                write(result.getPath()+result.getNames().get(0)  + "/notes.json", encrypted);
 
             }
         }
@@ -424,6 +423,11 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                     e.printStackTrace();
                 }
 
+                byte[] iv = new byte[16];
+                Encryption encryption = Encryption.getDefault(Constants.SUPER_KEY, Constants.SALT, iv);
+
+                String decrypted = encryption.decryptOrNull(notesContent);
+
                 System.out.println(notesContent);
 
                 GsonBuilder builder = new GsonBuilder();
@@ -432,7 +436,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                         .setPrettyPrinting()
                         .create();
 
-                JsonArray jsonArray = gson.fromJson(notesContent, JsonArray.class);
+                JsonArray jsonArray = gson.fromJson(decrypted, JsonArray.class);
 
 
                 DBHelper dbHelper = new DBHelper(this);
@@ -444,7 +448,6 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                     dbHelper.deleteSection(section);
                 }
 
-                //List<SuperNote> notes = new ArrayList<>();
                 List<String> sectionNames = new ArrayList<>();
                 String sectionName;
 
@@ -457,24 +460,12 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                     int id = dbHelper.addNote(superNote);
                     superNote.setId(id);
                     dbHelper.updateNote(superNote,superNote.getSection());
-                    //notes.add(superNote);
 
                     sectionName = superNote.getSection();
                     if(!sectionName.equals(Constants.UNDEFINED) && !sectionName.equals(Constants.ARCHIVE)
                             && !sectionNames.contains(sectionName)){
                         sectionNames.add(sectionName);
                     }
-
-               /*     if (superNote instanceof SimpleNote) {
-                        System.out.println(((SimpleNote) superNote).getHeadLine());
-                        System.out.println(((SimpleNote) superNote).getContent());
-                        System.out.println(superNote.getSection());
-                    } else {
-                        System.out.println("&&&LN " + (superNote instanceof ListNote));
-                        System.out.println(((ListNote) superNote).getUncheckedItems().get(0));
-                        System.out.println(((ListNote) superNote).getUncheckedItems().get(1));
-                        System.out.println(((ListNote) superNote).getCheckedItems().get(0));
-                    }*/
                 }
 
                 Section section;
@@ -487,38 +478,23 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                     section.setId(id);
                     dbHelper.updateSection(section);
                 }
-
-             /*   for (SuperNote sn:notes
-                     ) {
-                    dbHelper.updateNote(sn,sn.getSection());
-                }*/
             }
         }
     }
 
     public static void write(String fileName, String text) {
-        //Определяем файл
-        System.out.println("WRITE");
         File file = new File(fileName);
 
         try {
-            //проверяем, что если файл не существует то создаем его
             if(!file.exists()){
                 file.createNewFile();
-                System.out.println("CREATE");
             }
 
-            //PrintWriter обеспечит возможности записи в файл
             PrintWriter out = new PrintWriter(file.getAbsoluteFile());
 
             try {
-                //Записываем текст у файл
                 out.print(text);
-                System.out.println("PRINT");
-
             } finally {
-                //После чего мы должны закрыть файл
-                //Иначе файл не запишется
                 out.close();
             }
         } catch(IOException e) {
@@ -527,66 +503,23 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
     }
 
     public static String read(String fileName) throws FileNotFoundException {
-        //Этот спец. объект для построения строки
         StringBuilder sb = new StringBuilder();
 
         try {
-            //Объект для чтения файла в буфер
             BufferedReader in = new BufferedReader(new FileReader( fileName));
             try {
-                //В цикле построчно считываем файл
                 String s;
                 while ((s = in.readLine()) != null) {
                     sb.append(s);
                     sb.append("\n");
                 }
             } finally {
-                //Также не забываем закрыть файл
                 in.close();
             }
         } catch(IOException e) {
             throw new RuntimeException(e);
         }
 
-        //Возвращаем полученный текст с файла
         return sb.toString();
     }
-    public static String encrypt(String key, String initVector, String value) {
-        try {
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
-
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
-
-            byte[] encrypted = cipher.doFinal(value.getBytes());
-            System.out.println("encrypted string: "
-                    + Base64.encodeToString(encrypted,11));
-
-            return Base64.encodeToString(encrypted,11);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public static String decrypt(String key, String initVector, String encrypted) {
-        try {
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
-
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
-
-            byte[] original = cipher.doFinal(Base64.decode(encrypted, 11));
-
-            return new String(original);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return null;
-    }
-
 }

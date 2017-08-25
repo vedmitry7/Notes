@@ -1,8 +1,6 @@
 package com.example.dmitryvedmed.taskbook;
 
 
-import android.util.Base64;
-
 import com.example.dmitryvedmed.taskbook.json.SuperNoteDeserializer;
 import com.example.dmitryvedmed.taskbook.json.SuperNoteSerializer;
 import com.example.dmitryvedmed.taskbook.logic.ListNote;
@@ -19,16 +17,22 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+import se.simbio.encryption.Encryption;
 
 public class Test {
 
-    public static void main(String[] args) {
+
+    private static String cryptoPass = "sup3rS3xy";
+
+    public static void main(String[] args) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
 
         SimpleNote simpleNote = new SimpleNote();
         simpleNote.setColor(123);
@@ -203,34 +207,33 @@ public class Test {
 
         }
 
+        String code = "фывапролqwertyджэ";
 
-        List<String> sectionNames = new ArrayList<>();
-
-
-        String s1 = "sdfsd";
-        sectionNames.add(s1);
-        s1 = "qqqqq";
-        sectionNames.add(s1);
-
-        for (String ssss:sectionNames
-             ) {
-            System.out.println(ssss);
-        }
-
-        System.out.println(sectionNames.contains(s1));
-        s1 = "qewrty";
-        System.out.println(sectionNames.contains(s1));
+        String key = "YourKey";
+        String salt = "YourSalt";
+        byte[] iv = new byte[16];
+        Encryption encryption = Encryption.getDefault(key, salt, iv);
 
 
-        String key = "123www";
+        String encrypted = encryption.encryptOrNull(code);
+
+        System.out.println(encrypted);
+
+        String decrypted = encryption.decryptOrNull(encrypted);
+
+        System.out.println(decrypted);
+
+
+
+ /*       String key = "123wwwqertyuqwertyasdfasdf";
         String initVector = "RandomInitVector";
-        String code = "qwerty";
-        String coded = encrypt(key, initVector,code);
+
+
         System.out.println(coded);
 
         String decoded = decrypt(key,initVector,coded);
 
-        System.out.println(decoded);
+        System.out.println(decoded);*/
 
 
       /*  Type collectionType = new TypeToken<Collection<SuperNote>>(){}.getType();
@@ -363,41 +366,4 @@ public class Test {
         }
     }
 
-    public static String encrypt(String key, String initVector, String value) {
-        try {
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
-
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
-
-            byte[] encrypted = cipher.doFinal(value.getBytes());
-            System.out.println("encrypted string: "
-                    + Base64.encodeToString(encrypted,11));
-
-            return Base64.encodeToString(encrypted,11);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public static String decrypt(String key, String initVector, String encrypted) {
-        try {
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
-
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
-
-            byte[] original = cipher.doFinal(Base64.decode(encrypted, 11));
-
-            return new String(original);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return null;
-    }
 }
