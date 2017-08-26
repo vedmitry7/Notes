@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout android:orientation="vertical"
+    android:id="@+id/setting_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFF"
@@ -144,7 +145,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="48dp"
                 android:onClick="onClick"
                 android:id="@+id/setMorningTime">
                 <TextView
@@ -169,7 +170,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="48dp"
                 android:onClick="onClick"
                 android:id="@+id/setAfternoonTime">
                 <TextView
@@ -195,7 +196,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="48dp"
                 android:onClick="onClick"
                 android:id="@+id/setEveningTime">
                 <TextView
@@ -234,17 +235,20 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="48dp"
                 android:id="@+id/setDeletionPeriod"
                 android:onClick="onClick">
 
                 <TextView
                     android:paddingLeft="16dp"
                     android:textSize="16sp"
-                    android:layout_centerVertical="true"
                     android:text="@string/deletion_from_bucket_period"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/deletionPeriodValue"
+                    android:layout_alignBottom="@+id/deletionPeriodValue"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
 
                 <TextView
                     android:textSize="16sp"
@@ -261,7 +265,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="48dp"
                 android:id="@+id/setSwipeAction"
                 android:onClick="onClick">
 
@@ -270,9 +274,11 @@
                     android:paddingLeft="16dp"
                     android:textSize="16sp"
                     android:text="@string/action_with_swap"
-                    android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
 
                 <TextView
                     android:layout_marginTop="10dp"
@@ -292,9 +298,10 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="48dp"
                 android:id="@+id/setSectionPosition"
-                android:onClick="onClick">
+                android:onClick="onClick"
+                >
 
                 <TextView
                     android:layout_centerVertical="true"
@@ -323,7 +330,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="48dp"
                 android:id="@+id/makeCopy"
                 android:onClick="makeCopy">
 
@@ -340,9 +347,11 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="48dp"
                 android:id="@+id/downloadCopy"
-                android:onClick="downloadCopy">
+                android:onClick="downloadCopy"
+                android:layout_marginBottom="10dp"
+                >
 
                 <TextView
                     android:layout_centerVertical="true"
@@ -356,6 +365,7 @@
             </RelativeLayout>
 
         </LinearLayout>
+
 
     </ScrollView>
 

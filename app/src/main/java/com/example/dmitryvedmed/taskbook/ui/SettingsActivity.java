@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -70,11 +73,14 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
     SeekBar mCardFontSeekBar;
     SharedPreferences.Editor mEditor;
     RelativeLayout mDeletionPeriod;
+    LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        linearLayout = (LinearLayout) findViewById(R.id.setting_layout);
 
         mSharedPreferences = getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
@@ -354,10 +360,10 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
     public void makeCopy(View view) {
         ExFilePicker exFilePicker = new ExFilePicker();
         exFilePicker.setCanChooseOnlyOneItem(true);
-        //exFilePicker.setShowOnlyExtensions("apk");
-        exFilePicker.setQuitButtonEnabled(true);
+        exFilePicker.setShowOnlyExtensions("nts");
         exFilePicker.setChoiceType(ExFilePicker.ChoiceType.DIRECTORIES);
         exFilePicker.start(this, EX_FILE_PICKER_RESULT_UPLOAD);
+        exFilePicker.setQuitButtonEnabled(true);
 
     }
 
@@ -365,7 +371,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
 
         ExFilePicker exFilePicker = new ExFilePicker();
         exFilePicker.setCanChooseOnlyOneItem(true);
-        exFilePicker.setShowOnlyExtensions("json");
+        //exFilePicker.setShowOnlyExtensions("nts");
         exFilePicker.setQuitButtonEnabled(true);
         exFilePicker.setChoiceType(ExFilePicker.ChoiceType.FILES);
         exFilePicker.start(this, EX_FILE_PICKER_RESULT_DOWNLOAD);
@@ -374,48 +380,71 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EX_FILE_PICKER_RESULT_UPLOAD) {
-            ExFilePickerResult result = ExFilePickerResult.getFromIntent(data);
+            final ExFilePickerResult result = ExFilePickerResult.getFromIntent(data);
             if (result != null && result.getCount() > 0) {
 
-                System.out.println(result.getPath()+result.getNames().get(0));
 
-                DBHelper dbHelper = new DBHelper(this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle("Введите имя файла");
+                View mView = getLayoutInflater().inflate(R.layout.dialog_add_section, null);
 
-                GsonBuilder builder = new GsonBuilder();
-                Gson gson = builder
-                        .registerTypeAdapter(SimpleNote.class, new SuperNoteSerializer())
-                        .registerTypeAdapter(ListNote.class, new SuperNoteSerializer())
-                        .setPrettyPrinting()
-                        .create();
+                final EditText input = (EditText) mView.findViewById(R.id.text_view_dialog_add_section);
+                input.setBackgroundColor(0);
+                alert.setView(mView);
+                alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                ArrayList<SuperNote> notes =  dbHelper.getAllNote();
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append("[");
-                for (SuperNote note:notes
-                     ) {
-                    stringBuilder.append(gson.toJson(note));
-                    stringBuilder.append(",\n");
-                }
-                stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(","));
-                stringBuilder.append("]");
+                        DBHelper dbHelper = new DBHelper(getApplicationContext());
 
-                byte[] iv = new byte[16];
-                Encryption encryption = Encryption.getDefault(Constants.SUPER_KEY, Constants.SALT, iv);
+                        GsonBuilder builder = new GsonBuilder();
+                        Gson gson = builder
+                                .registerTypeAdapter(SimpleNote.class, new SuperNoteSerializer())
+                                .registerTypeAdapter(ListNote.class, new SuperNoteSerializer())
+                                .setPrettyPrinting()
+                                .create();
 
-                String encrypted = encryption.encryptOrNull(stringBuilder.toString());
+                        ArrayList<SuperNote> notes =  dbHelper.getAllNote();
+                        StringBuilder stringBuilder = new StringBuilder();
+                        stringBuilder.append("[");
+                        for (SuperNote note:notes
+                                ) {
+                            stringBuilder.append(gson.toJson(note));
+                            stringBuilder.append(",\n");
+                        }
+                        stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(","));
+                        stringBuilder.append("]");
 
-                write(result.getPath()+result.getNames().get(0)  + "/notes.json", encrypted);
+                        byte[] iv = new byte[16];
+                        Encryption encryption = Encryption.getDefault(Constants.SUPER_KEY, Constants.SALT, iv);
 
+                        String encrypted = encryption.encryptOrNull(stringBuilder.toString());
+
+                        String fileName = input.getText().toString();
+                        if(fileName.equals("")){
+                            fileName = "notes";
+                        }
+
+                        write(result.getPath()+result.getNames().get(0)  + "/" + fileName +".nts", encrypted);
+
+                        Snackbar.make(linearLayout, "Копия сохранена!", Snackbar.LENGTH_SHORT)
+                                .show();
+                    }
+                });
+                alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                alert.show();
             }
         }
 
         if (requestCode == EX_FILE_PICKER_RESULT_DOWNLOAD) {
             ExFilePickerResult result = ExFilePickerResult.getFromIntent(data);
             if (result != null && result.getCount() > 0) {
-                // Here is object contains selected files names and path
 
                 String filePath = result.getPath() + result.getNames().get(0);
-                System.out.println(filePath);
                 String notesContent = null;
                 try {
                     notesContent = read(filePath);
@@ -428,8 +457,6 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
 
                 String decrypted = encryption.decryptOrNull(notesContent);
 
-                System.out.println(notesContent);
-
                 GsonBuilder builder = new GsonBuilder();
                 Gson gson = builder
                         .registerTypeAdapter(SuperNote.class, new SuperNoteDeserializer())
@@ -437,7 +464,6 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                         .create();
 
                 JsonArray jsonArray = gson.fromJson(decrypted, JsonArray.class);
-
 
                 DBHelper dbHelper = new DBHelper(this);
                 dbHelper.clearDB();
@@ -455,7 +481,6 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                         ) {
 
                     SuperNote superNote = gson.fromJson(e, SuperNote.class);
-                    System.out.println("&&&SN " + (superNote instanceof SimpleNote));
 
                     int id = dbHelper.addNote(superNote);
                     superNote.setId(id);
@@ -478,6 +503,9 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                     section.setId(id);
                     dbHelper.updateSection(section);
                 }
+
+                Snackbar.make(linearLayout, "Копия восстановленныа!", Snackbar.LENGTH_SHORT)
+                        .show();
             }
         }
     }

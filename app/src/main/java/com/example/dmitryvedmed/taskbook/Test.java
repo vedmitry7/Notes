@@ -163,7 +163,7 @@ public class Test {
                 "  \"checked items\": [\n" +
                 "    \"checked\"\n" +
                 "  ]\n" +
-                "}";
+                "ро";
 
 
         JsonArray jsonArray = gson2.fromJson(supermass, JsonArray.class);
