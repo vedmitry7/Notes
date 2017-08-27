@@ -16,6 +16,6 @@
     <item
         android:id="@+id/clear_basket"
         android:orderInCategory="100"
-        android:title="@string/clear_bucket"
+        android:title="@string/clear_basket"
         app:showAsAction="never" />
 </menu>

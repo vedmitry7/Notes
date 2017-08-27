@@ -46,7 +46,6 @@ import com.example.dmitryvedmed.taskbook.logic.SuperNote;
 import com.example.dmitryvedmed.taskbook.untils.Constants;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 
 import java.util.ArrayList;
@@ -75,7 +74,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     private FloatingActionButton mFabAddST;
     private FloatingActionButton mFabAddLT;
     private TextView mTextNoNotes;
-    private AdView mAdView;
 
     private Menu mMenu;
     private MenuItem mChangeView;
@@ -134,22 +132,9 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     }
 
     private void initAds() {
-        mAdView = (AdView) findViewById(R.id.adView);
-        mAdView.setVisibility(View.GONE);
-
-        mAdView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                if (mAdView.getVisibility() == View.GONE) {
-                    mAdView.setVisibility(View.VISIBLE);
-                }
-            }
-        });
 
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
-        mAdView.loadAd(adRequest);
-
 
         interstitialAd = new InterstitialAd(this);
         interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
@@ -209,7 +194,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         mTextNoNotes = (TextView) findViewById(R.id.textNoNotes);
         mTextNoNotes.setText(R.string.empty);
-
+        isSectionEmpty();
         if(mSharedPreferences.getBoolean(NOTIF_ON, false)){
         }
 
@@ -482,16 +467,16 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
 
         switch (s){
             case Constants.UNDEFINED:
-                s1 =  i + " заметок добавлено в основной раздел";
+                s1 =  getString(R.string.notes_added_to_main_section) + " (" + i + ")";
                 break;
             case Constants.DELETED:
-                s1 = i + " заметкок добавлено в корзину!";
+                s1 = getString(R.string.notes_added_to_bucket) + " (" + i + ")";
                 break;
             case Constants.ARCHIVE:
-                s1 = i + " заметкок архивированно!";
+                s1 = getString(R.string.notes_archived) + " (" + i + ")";
                 break;
             default:
-                s1 = i + " заметкок добавлено в раздел " + s;
+                s1 = getString(R.string.notes_added_to) +" " + s + " (" + i + ")";
         }
         Snackbar.make(sCoordinatorLayout, s1, Snackbar.LENGTH_SHORT)
                 .setAction(R.string.cancel, new View.OnClickListener() {
@@ -541,7 +526,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 break;
             case R.id.delete_forever:
                 final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                // alert.setTitle("Очистить корзину?");
                 alert.setMessage(R.string.delete_forever_massage);
 
                 alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -560,8 +544,8 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 break;
             case R.id.clear_basket:
                 final AlertDialog.Builder alert2 = new AlertDialog.Builder(this);
-                alert2.setTitle(R.string.question_clear_basket);
-                alert2.setMessage(R.string.question_clear_busket_additional);
+                alert2.setTitle(R.string.question_clear_trash);
+                alert2.setMessage(R.string.question_clear_trash_additional);
                 alert2.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -752,7 +736,6 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     String value = String.valueOf(input.getText());
-                    // Do something with value!
                     NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
                     navigationView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -764,7 +747,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                         if(value.equals(s.getName())){
                             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
-                            Snackbar.make(sCoordinatorLayout,"Раздел с таким именем уже существует.", Snackbar.LENGTH_LONG)
+                            Snackbar.make(sCoordinatorLayout, R.string.section_already_exist, Snackbar.LENGTH_LONG)
                                     .show();
                             return;
                         }
@@ -927,15 +910,11 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             saveNotes();
         }
 
-        if(mAdView!=null)
-            mAdView.pause();
         super.onPause();
     }
 
     protected void onDestroy() {
         super.onDestroy();
-        if(mAdView!=null)
-            mAdView.destroy();
     }
 
     private void saveNotes() {
@@ -1036,6 +1015,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
     @Override
     protected void onResume() {
         setTitle();
+        isSectionEmpty();
         onCreateNavigationMenu();
         super.onResume();
     }

@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -149,7 +150,7 @@ public class Test {
                 "  \"headline\": \"Ствола \",\n" +
                 "  \"content\": \"Балаково \"\n" +
                 "}\n" +
-                "]";
+                "";
 
         String s = "{\n" +
                 "  \"section\": \"unknown\",\n" +
@@ -166,7 +167,31 @@ public class Test {
                 "ро";
 
 
-        JsonArray jsonArray = gson2.fromJson(supermass, JsonArray.class);
+
+        try{
+            JsonArray jsonArray = gson2.fromJson(supermass, JsonArray.class);
+
+
+            for (JsonElement e:jsonArray
+                    ) {
+                SuperNote superNote = gson.fromJson(e, SuperNote.class);
+                if(superNote instanceof ListNote) {
+                    System.out.println(((ListNote) superNote).getUncheckedItems().get(0));
+                    System.out.println(((ListNote) superNote).getUncheckedItems().get(1));
+                    System.out.println(((ListNote) superNote).getCheckedItems().get(0));
+                    System.out.println(superNote.getSection());
+                }
+                if(superNote instanceof SimpleNote) {
+                    System.out.println(((SimpleNote) superNote).getHeadLine());
+                    System.out.println(((SimpleNote) superNote).getContent());
+                    System.out.println(superNote.getSection());
+                }
+            }
+        } catch (JsonSyntaxException e){
+
+
+            System.out.println("e///");
+        }
 
 
  /*       for (JsonElement e:jsonArray
@@ -186,10 +211,9 @@ public class Test {
         }
 */
 
-
+/*
         for (JsonElement e:jsonArray
                 ) {
-
 
             SuperNote superNote = gson2.fromJson(e, SuperNote.class);
             System.out.println("&&&SN " + (superNote instanceof SimpleNote));
@@ -205,7 +229,7 @@ public class Test {
                 System.out.println(((ListNote) superNote).getCheckedItems().get(0));
             }
 
-        }
+        }*/
 
         String code = "фывапролqwertyджэ";
 

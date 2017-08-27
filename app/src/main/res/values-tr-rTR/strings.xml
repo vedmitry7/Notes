@@ -6,7 +6,7 @@
     <string name="evening">Akşam</string>
     <string name="tomorrow">Yarın</string>
     <string name="today">Bugün</string>
-    <string name="newPoint">Yeni öğe</string>
+    <string name="newPoint">Bölüm ekle</string>
     <string name="bucket">Sepet</string>
     <string name="settings">Ayarlar</string>
     <string name="exit">Çıkış</string>
@@ -34,8 +34,8 @@
     <string name="every_week">Her hafta</string>
     <string name="act_open">Açık</string>
 
-    <string name="question_clear_basket">Boş Çöp?</string>
-    <string name="question_clear_busket_additional">Kalıcı geri dönüşüm kutusundan tüm notları silmek istediğiniz emin misiniz?</string>
+    <string name="question_clear_trash">Boş Çöp?</string>
+    <string name="question_clear_trash_additional">Kalıcı geri dönüşüm kutusundan tüm notları silmek istediğiniz emin misiniz?</string>
     <string name="fonts">Yazı</string>
     <string name="task_font_size">Yazı boyutunu notları</string>
     <string name="font_size_card">Yazı boyutunu kartı</string>
@@ -54,7 +54,7 @@
     <string name="delete_checked">Kaldır işaretli</string>
     <string name="set_color">Rengini ayarlamak</string>
     <string name="choose_color">Bir renk seçin</string>
-    <string name="clear_bucket">Boş Çöp</string>
+    <string name="clear_basket">Boş Çöp</string>
     <string name="act_remember">Hatırla</string>
     <string name="title">Başlık</string>
     <string name="text">Metin</string>
@@ -73,4 +73,18 @@
     <string name="no_sections">Bölüm bulunmamaktadır</string>
     <string name="reminder_past_time">Hatırlatma geçmiş zamana göre ayarlanır. Bildirimler için gönderilsin mi?</string>
     <string name="section_location">Bölüm konumu</string>
+
+
+    <string name="section_already_exist">Bu ada sahip bir bölüm zaten mevcut</string>
+    <string name="copy_restored">Geri yüklendi</string>
+    <string name="file_error">Dosya hatası!</string>
+    <string name="copy_saved_as">Olarak kopyalandı</string>
+    <string name="notes_added_to_main_section">Ana bölüme notlar eklendi </string>
+    <string name="notes_added_to_bucket">Notlar çöp kutusuna eklendi </string>
+    <string name="notes_archived">Notlar arşivlendi </string>
+    <string name="notes_added_to">Notlar bölümüne eklendi </string>
+    <string name="enter_file_name">Dosya adını girin!</string>
+    <string name="backup">Yedek</string>
+    <string name="export">Ihracat</string>
+    <string name="import_">Ithalat</string>
 </resources>

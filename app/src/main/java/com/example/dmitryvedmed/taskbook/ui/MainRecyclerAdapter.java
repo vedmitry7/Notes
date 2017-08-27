@@ -16,7 +16,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -455,7 +454,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         break;
                 }
 
-                if( count %2 == 0 ){
+                if( count %15 == 0 ){
                     mActivity.showAd();
                 } else {
                     startNoteActivity(true);
@@ -465,6 +464,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 editor.putInt(Constants.NOTES_CLICK_COUNTER, count+1);
                 editor.commit();
             }
+
             else if (mode == Mode.SELECTION_MODE) {
                 if (selects[position]) {
                     superNotes.remove(notes.get(position));
@@ -487,7 +487,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         @Override
         public void onItemSelected2() {
-            System.out.println("        ItemSELECTED 2");
             if(mode == Mode.NORMAL)
                 mActivity.setSelectionMode();
             onClick(new View(mContext));
@@ -755,11 +754,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 intent.putExtra(Constants.KIND, mActivity.currentKind);
                 mContext.startActivity(intent);
                 if(animation){
-                    Log.i("TAG", "WITH ANIM");
                     mActivity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                 } else{
                     mActivity.overridePendingTransition(0,0);
-                    Log.i("TAG", "WITH OUT ANIM");
                 }
                 break;
             case 1:
@@ -768,11 +765,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 intent1.putExtra(Constants.KIND, mActivity.currentKind);
                 mContext.startActivity(intent1);
                 if(animation){
-                    Log.i("TAG", "WITH ANIM");
                     mActivity.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                 } else{
                     mActivity.overridePendingTransition(0,0);
-                    Log.i("TAG", "WITH OUT ANIM");
                 }
                 break;
         }

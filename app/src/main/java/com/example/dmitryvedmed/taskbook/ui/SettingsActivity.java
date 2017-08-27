@@ -144,7 +144,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         mDeletionPeriod = (RelativeLayout) findViewById(R.id.setDeletionPeriod);
 
         mNoteFontSeekBar.setProgress(mSharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16) - 12);
-        mCardFontSeekBar.setProgress(mSharedPreferences.getInt(Constants.CARD_FONT_SIZE, 17) - 12);
+        mCardFontSeekBar.setProgress(mSharedPreferences.getInt(Constants.CARD_FONT_SIZE, 16) - 12);
     }
 
     private void setTime() {
@@ -233,6 +233,12 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 popupMenu.show();
                 break;
             case R.id.setSectionPosition:
+                DBHelper dbHelper = new DBHelper(this);
+                if(dbHelper.getAllSections().size()==0){
+                    Snackbar.make(linearLayout, R.string.no_sections, Snackbar.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
                 Intent intent = new Intent(this, SectionLocationActivity.class);
                 this.startActivity(intent);
                 return;
@@ -360,7 +366,6 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
     public void makeCopy(View view) {
         ExFilePicker exFilePicker = new ExFilePicker();
         exFilePicker.setCanChooseOnlyOneItem(true);
-        exFilePicker.setShowOnlyExtensions("nts");
         exFilePicker.setChoiceType(ExFilePicker.ChoiceType.DIRECTORIES);
         exFilePicker.start(this, EX_FILE_PICKER_RESULT_UPLOAD);
         exFilePicker.setQuitButtonEnabled(true);
@@ -371,7 +376,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
 
         ExFilePicker exFilePicker = new ExFilePicker();
         exFilePicker.setCanChooseOnlyOneItem(true);
-        //exFilePicker.setShowOnlyExtensions("nts");
+        exFilePicker.setShowOnlyExtensions("nts");
         exFilePicker.setQuitButtonEnabled(true);
         exFilePicker.setChoiceType(ExFilePicker.ChoiceType.FILES);
         exFilePicker.start(this, EX_FILE_PICKER_RESULT_DOWNLOAD);
@@ -383,9 +388,8 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
             final ExFilePickerResult result = ExFilePickerResult.getFromIntent(data);
             if (result != null && result.getCount() > 0) {
 
-
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setTitle("Введите имя файла");
+                alert.setTitle(R.string.enter_file_name);
                 View mView = getLayoutInflater().inflate(R.layout.dialog_add_section, null);
 
                 final EditText input = (EditText) mView.findViewById(R.id.text_view_dialog_add_section);
@@ -425,9 +429,9 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                             fileName = "notes";
                         }
 
-                        write(result.getPath()+result.getNames().get(0)  + "/" + fileName +".nts", encrypted);
+                        write(result.getPath()+result.getNames().get(0)  + "/" + fileName + Constants.FILE_EXTENSION, encrypted);
 
-                        Snackbar.make(linearLayout, "Копия сохранена!", Snackbar.LENGTH_SHORT)
+                        Snackbar.make(linearLayout, getResources().getString(R.string.copy_saved_as) + " " + fileName + Constants.FILE_EXTENSION, Snackbar.LENGTH_SHORT)
                                 .show();
                     }
                 });
@@ -456,6 +460,13 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                 Encryption encryption = Encryption.getDefault(Constants.SUPER_KEY, Constants.SALT, iv);
 
                 String decrypted = encryption.decryptOrNull(notesContent);
+
+                if(decrypted == null){
+
+                    Snackbar.make(linearLayout, R.string.file_error, Snackbar.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
 
                 GsonBuilder builder = new GsonBuilder();
                 Gson gson = builder
@@ -504,7 +515,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
                     dbHelper.updateSection(section);
                 }
 
-                Snackbar.make(linearLayout, "Копия восстановленныа!", Snackbar.LENGTH_SHORT)
+                Snackbar.make(linearLayout, R.string.copy_restored, Snackbar.LENGTH_SHORT)
                         .show();
             }
         }

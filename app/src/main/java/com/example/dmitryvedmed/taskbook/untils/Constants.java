@@ -50,7 +50,7 @@ public class Constants {
     public static final String NAME_PREFERENCES  = "pref";
     public static final String LAYOUT_LIST  = "list";
     public static final String LAYOUT_GRID  = "grid";
-    public static final String MAIN_RECYCLER_LAYOUT  = "recucler_layout";
+    public static final String MAIN_RECYCLER_LAYOUT  = "recycler_layout";
     public static final String NOTIF_ON = "notification_on";
 
 
@@ -62,4 +62,5 @@ public class Constants {
     public static final String NOTES_CLICK_COUNTER = "notes_click_number";
     public static final String SUPER_KEY = "super difficult key";
     public static final String SALT = "salt";
+    public static final String FILE_EXTENSION = ".nts";
 }

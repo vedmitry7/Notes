@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="morning">Утро</string>
     <string name="afternoon">День</string>
     <string name="evening">Вечер</string>
     <string name="tomorrow">Завтра</string>
     <string name="today">Сегодня</string>
-    <string name="newPoint">Новый раздел</string>
+    <string name="newPoint">Добавить раздел</string>
     <string name="bucket">Корзина</string>
     <string name="settings">Настройки</string>
     <string name="exit">Выход</string>
@@ -34,8 +33,8 @@
     <string name="every_week">Каждую неделю</string>
     <string name="act_open">Открыть</string>
 
-    <string name="question_clear_basket">Очистить корзину?</string>
-    <string name="question_clear_busket_additional">Вы действительно хотите удалить все заметки из корзины навсегда?</string>
+    <string name="question_clear_trash">Очистить корзину?</string>
+    <string name="question_clear_trash_additional">Вы действительно хотите удалить все заметки из корзины навсегда?</string>
     <string name="fonts">Шрифты</string>
     <string name="task_font_size">Размер шрифта заметки</string>
     <string name="font_size_card">Размер шрифта карточки</string>
@@ -53,7 +52,7 @@
     <string name="delete_checked">Удалить отмеченные</string>
     <string name="set_color">Установить цвет</string>
     <string name="choose_color">Выберите цвет</string>
-    <string name="clear_bucket">Очистить корзину</string>
+    <string name="clear_basket">Очистить корзину</string>
     <string name="act_remember">Запомнить</string>
     <string name="title">Заголовок</string>
     <string name="text">Текст</string>
@@ -69,9 +68,23 @@
     <string name="date">Дата</string>
     <string name="time">Время</string>
     <string name="repeat">Повтор</string>
-    <string name="no_sections">Разделы отсутствуют</string>
+    <string name="no_sections">Разделы отсутствуют!</string>
     <string name="reminder_past_time">Напоминание задано в прошедшем времени. Поместить в уведомления?</string>
     <string name="section_location">Позиция разделов</string>
     <string name="empty">"Пусто "</string>
+
+
+    <string name="section_already_exist">Раздел с таким именем уже существует.</string>
+    <string name="copy_restored">Копия восстановленныа!</string>
+    <string name="file_error">Ошибка файла!</string>
+    <string name="copy_saved_as">Копия сохранена как</string>
+    <string name="notes_added_to_main_section">Заметки добавлены в основной раздел </string>
+    <string name="notes_added_to_bucket">Заметки добавлены в корзину </string>
+    <string name="notes_archived">Заметки архивированны </string>
+    <string name="notes_added_to">Заметки добавлены в раздел </string>
+    <string name="enter_file_name">Введите имя файла</string>
+    <string name="backup">Резервное копирование</string>
+    <string name="export">Экспорт</string>
+    <string name="import_">Импорт</string>
 
 </resources>

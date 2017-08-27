@@ -1,0 +1,22 @@
+[
+{
+  "section": "deleted",
+  "color": 123,
+  "type": "simple note",
+  "headline": "headlineSN",
+  "content": "ContentSN"
+},
+{
+  "section": "unknown",
+  "color": 4567,
+  "type": "list note",
+  "headline": "fghd",
+  "unchecked items": [
+    "qwerty",
+    "ytrewq"
+  ],
+  "checked items": [
+    "checked"
+  ]
+}
+]
