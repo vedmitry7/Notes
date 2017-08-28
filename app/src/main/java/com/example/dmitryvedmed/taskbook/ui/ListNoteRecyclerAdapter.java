@@ -139,7 +139,6 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
 
             editText = (EditText) itemView.findViewById(R.id.itemListEditText);
             if(editText!=null) {
-               // editText.setTypeface(SingletonFonts.getInstance(mContext).getRobotoRegular());
                 editText.setTextSize(mSharedPreferences.getInt(Constants.TASK_FONT_SIZE, 16));
                 editText.addTextChangedListener(editTextListener);
             }
@@ -254,6 +253,7 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
 
                     onBind = true;
                     holder.checkBox.setChecked(false);
+                    holder.checkBox.setSelected(false);
                     onBind = false;
 
                     holder.editText.setPaintFlags(Paint.ANTI_ALIAS_FLAG);
@@ -363,6 +363,7 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
                     holder.checkBoxListener.updatePosition(realPosition);
                     onBind = true;
                     holder.checkBox.setChecked(true);
+                    holder.checkBox.setSelected(true);
                     onBind = false;
                     System.out.println(position + " - " + listNote.getCheckedItems().get(realPosition - (listNote.getUncheckedItems().size()+1)));
                 }
@@ -441,7 +442,6 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
 
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
         }
 
         @Override
@@ -454,20 +454,13 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
 
         @Override
         public void afterTextChanged(Editable editable) {
-
         }
     }
 
     private class HeadLineEditTextListener implements TextWatcher  {
-        private int position;
-
-        public void updatePosition(int position) {
-            this.position = position;
-        }
 
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
         }
 
         @Override
@@ -477,7 +470,6 @@ public class ListNoteRecyclerAdapter extends RecyclerView.Adapter<ListNoteRecycl
 
         @Override
         public void afterTextChanged(Editable editable) {
-
         }
     }
 

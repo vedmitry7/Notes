@@ -5,12 +5,17 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.example.dmitryvedmed.taskbook.logic.DBHelper;
 import com.example.dmitryvedmed.taskbook.logic.SuperNote;
+import com.example.dmitryvedmed.taskbook.untils.Constants;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 public class BootReceiver extends BroadcastReceiver {
+
     Context context;
     Intent intent;
 
@@ -18,66 +23,62 @@ public class BootReceiver extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(Context context, Intent i) {
 
         this.context = context;
-        this.intent = intent;
+        this.intent = i;
 
         Toast.makeText(context, "УРРРРРРАААААААА", Toast.LENGTH_LONG).show();
-      /*  DBHelper sDbHelper = new DBHelper(context);
-        Log.d("TAG", "BOOT RECEIVER. WORK");
+        DBHelper sDbHelper = new DBHelper(context);
+        ArrayList<SuperNote> list = sDbHelper.getNotificationNotes();
 
-        List<SuperNote> tasks = sDbHelper.getNotificationNotes();
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        for (SuperNote task:tasks
+        for (SuperNote note:list
                 ) {
-            Log.d("TAG", "BOOT RECEIVER. " + task.getId() + " repeat " + task.isRepeating());
+            if(note.isRepeating()){
 
-            if(task.getReminderTime() < System.currentTimeMillis()) {
-                Log.d("TAG", task.getId() + " is OLD");
-                if(task.isRepeating()) {
-                    for (int i = 0; i < 10; i++) {
-                        if (System.currentTimeMillis() < task.getReminderTime()) {
-                            task.setReminderTime(task.getReminderTime() + task.getRepeatingPeriod());
-                        }
+                Calendar notificationTime = Calendar.getInstance();
+                notificationTime.setTimeInMillis(note.getReminderTime());
+
+                final Intent intent = new Intent(context, NotifyTaskReceiver.class);
+                intent.setAction(Constants.ACTION_NOTIFICATION);
+                intent.putExtra(Constants.ID, note.getId());
+
+                if (note.getRepeatingPeriod() == Constants.PERIOD_ONE_DAY) {
+                    note.setRepeatingPeriod(Constants.PERIOD_ONE_DAY);
+                    while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                        notificationTime.add(Calendar.DAY_OF_MONTH, 1);
                     }
-                    if (System.currentTimeMillis() < task.getReminderTime())
-                        createRepeatingNotification(task);
+                    PendingIntent pi1 = PendingIntent.getBroadcast(context, note.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_ONE_DAY, pi1);
+
+                } else if (note.getRepeatingPeriod() == Constants.PERIOD_WEEK) {
+                    note.setRepeatingPeriod(Constants.PERIOD_WEEK);
+                    while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                        notificationTime.add(Calendar.WEEK_OF_MONTH, 1);
+                    }
+                    PendingIntent pi2 = PendingIntent.getBroadcast(context, note.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_WEEK, pi2);
+
+                } else if (note.getRepeatingPeriod() == Constants.PERIOD_MONTH) {
+                    note.setRepeatingPeriod(Constants.PERIOD_MONTH);
+                    while (notificationTime.getTimeInMillis() < System.currentTimeMillis()) {
+                        notificationTime.add(Calendar.MONTH, 1);
+                    }
+                    PendingIntent pi3 = PendingIntent.getBroadcast(context, note.getId(), intent, 0);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), Constants.PERIOD_MONTH, pi3);
                 }
-                else {
-                    task.setRemind(false);
-                    sDbHelper.updateNote(task, null);
-                }
+
+                note.setReminderTime(notificationTime.getTimeInMillis());
+
+                sDbHelper.updateNote(note, null);
             } else {
-                Log.d("TAG", task.getId() + " NOT OLD");
-                if(task.isRepeating()) {
-                    createRepeatingNotification(task);
-                } else  {
-                    createSingleNotification(task);
-                }
-
+                Intent intent = new Intent(context, NotifyTaskReceiver.class);
+                intent.putExtra("id", note.getId());
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, note.getId(), intent, 0);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, note.getReminderTime(), pendingIntent);
             }
-        }*/
-    }
-
-    private void createSingleNotification(SuperNote task){
-        Log.d("TAG", task.getId() + " SIngle not");
-
-        Intent i = new Intent(context, NotifyTaskReceiver.class);
-        intent.setAction("TASK_NOTIFICATION");
-        intent.putExtra("id", task.getId());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, task.getId(), intent, 0);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, task.getReminderTime(), pendingIntent);
-    }
-
-    private void createRepeatingNotification(SuperNote task){
-        Log.d("TAG", task.getId() + " rep not not");
-        Intent i = new Intent(context, NotifyTaskReceiver.class);
-        intent.setAction("TASK_NOTIFICATION");
-        intent.putExtra("id", task.getId());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, task.getId(), intent, 0);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, task.getReminderTime(), task.getRepeatingPeriod(), pendingIntent);
+        }
     }
 }
