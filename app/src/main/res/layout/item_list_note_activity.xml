@@ -32,7 +32,7 @@
         android:layout_centerVertical="true"
         />
 
-    <com.example.dmitryvedmed.taskbook.untils.RobotoFontEditText
+    <com.vedmitryapps.notes.untils.RobotoFontEditText
         android:background="#FFFFFF"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

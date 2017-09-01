@@ -1,11 +1,10 @@
 <resources>
 
     <string name="app_name">Notes</string>
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_ad_app">ca-app-pub-2209532931509792~4050738267</string>
+    <string name="banner_ad_app" translatable="false">ca-app-pub-2209532931509792/1729016626</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
     <string name="morning">Morning</string>
     <string name="afternoon">Afternoon</string>
@@ -89,10 +88,18 @@
     <string name="notes_added_to_main_section">Notes added to main section </string>
     <string name="notes_added_to_bucket">Notes added to Trash </string>
     <string name="notes_archived">Notes are archived </string>
-    <string name="notes_added_to">Notes added to the section </string>
+    <string name="notes_added_to">Оценить</string>
     <string name="enter_file_name">Enter the file name!</string>
     <string name="backup">Backup</string>
     <string name="export">Export</string>
     <string name="import_">Import</string>
+    <string name="insert_SD">Insert an SD card!</string>
+    <string name="delete_section">Delete section</string>
+
+    <string name="rate_dialog_title">Rate this App</string>
+    <string name="rate_dialog_message">Please rate the application, it will take no more than a minute! Your assessment is very important for us.</string>
+    <string name="rate">Rate</string>
+    <string name="welcome">Welcome!</string>
+    <string name="write_notes">Write notes and everything will be fine.</string>
 
 </resources>

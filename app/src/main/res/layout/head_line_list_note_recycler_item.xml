@@ -7,7 +7,7 @@
 
 
 
-    <com.example.dmitryvedmed.taskbook.untils.RobotoFontEditText
+    <com.vedmitryapps.notes.untils.RobotoFontEditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/listHeadEditText2"

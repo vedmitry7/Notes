@@ -9,7 +9,7 @@
     <item
         android:id="@+id/deleteSection"
         android:orderInCategory="100"
-        android:title="Удалить раздел"
+        android:title="@string/delete_section"
         app:showAsAction="never" />
 
 </menu>

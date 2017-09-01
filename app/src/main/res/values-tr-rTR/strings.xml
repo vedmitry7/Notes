@@ -87,4 +87,13 @@
     <string name="backup">Yedek</string>
     <string name="export">Ihracat</string>
     <string name="import_">Ithalat</string>
+    <string name="insert_SD">SD kartını takın!</string>
+    <string name="delete_section">Bölümü Sil</string>
+    <string name="app_name">Notlar</string>
+    <string name="rate_dialog_message">Lütfen başvuruyu değerlendirin, bir dakikadan fazla sürmez! Değerlendirmeniz bizim için çok önemlidir.</string>
+    <string name="rate_dialog_title">Bu Uygulamayı değerlendi</string>
+    <string name="rate">Oran</string>
+    <string name="welcome">Welcome!</string>
+    <string name="write_notes">Write notes and everything will be fine.</string>
+
 </resources>

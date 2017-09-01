@@ -86,5 +86,14 @@
     <string name="backup">Резервное копирование</string>
     <string name="export">Экспорт</string>
     <string name="import_">Импорт</string>
+    <string name="insert_SD">Необходима карта SD!</string>
+    <string name="delete_section">Удалить раздел</string>
+    <string name="app_name">Заметки</string>
+    <string name="rate_dialog_message">Пожалуйста, оцените приложение, это займет не больше минуты! Ваша оценка для нас очень важна.</string>
+    <string name="rate_dialog_title">Оцените приложение</string>
+    <string name="rate">Оценить</string>
+    <string name="welcome">Добро пожаловать!</string>
+    <string name="write_notes">Пишите заметки и все будет хорошо.</string>
+
 
 </resources>
