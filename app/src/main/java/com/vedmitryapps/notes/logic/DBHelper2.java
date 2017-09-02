@@ -50,6 +50,9 @@ public class DBHelper2 extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+
+
     }
 
     public void deleteSection(Section section){
