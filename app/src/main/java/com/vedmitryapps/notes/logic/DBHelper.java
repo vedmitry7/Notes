@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.vedmitryapps.notes.json.SuperNoteSerializer;
+import com.vedmitryapps.notes.json.SuperNoteDeserializerForDb;
+import com.vedmitryapps.notes.json.SuperNoteSerializerForDb;
 import com.vedmitryapps.notes.untils.Constants;
 
 import java.io.ByteArrayInputStream;
@@ -24,7 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String TABLE = "mytable";
     private static final String KEY_ID = "id";
-    private static final String KEY_TASK = "task";
+    private static final String KEY_NOTE = "note";
     private static final String KEY_SECTION = "section";
     private static final String KEY_REMIND = "remind";
 
@@ -39,7 +41,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table mytable ("
                 + "id integer primary key autoincrement,"
                 + "section text,"
-                + "task blob,"
+                + "note blob,"
                 + "remind integer default 0" + ");");
 
 
@@ -169,47 +171,21 @@ public class DBHelper extends SQLiteOpenHelper {
 
         note.setSection(section);
 
-
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder
-                .registerTypeAdapter(SimpleNote.class, new SuperNoteSerializer())
-                .registerTypeAdapter(ListNote.class, new SuperNoteSerializer())
+                .registerTypeAdapter(SimpleNote.class, new SuperNoteSerializerForDb())
+                .registerTypeAdapter(ListNote.class, new SuperNoteSerializerForDb())
                 .setPrettyPrinting()
                 .create();
 
-
-
-
         String parsedNote = gson.toJson(note);
-        byte[] bt = parsedNote.getBytes();
-        String str = bt.toString();
 
         SQLiteDatabase db = this.getWritableDatabase();
-        byte[] bytes = null;
-
-
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutput out = null;
-        try {
-            out = new ObjectOutputStream(bos);
-            out.writeObject(note);
-            out.flush();
-            bytes = bos.toByteArray();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                bos.close();
-            } catch (IOException ex) {
-            }
-        }
 
         ContentValues values = new ContentValues();
-        values.put(KEY_TASK,  bytes);
+        values.put(KEY_NOTE,  parsedNote);
         values.put(KEY_SECTION, section);
-        values.put(KEY_REMIND,note.isRemind() ? 1 : 0);
+        values.put(KEY_REMIND, note.isRemind() ? 1 : 0);
         long id = db.insert(TABLE, null, values);
         db.close();
 
@@ -217,31 +193,26 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int addNote(SuperNote note) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        byte[] bytes = null;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutput out = null;
-        try {
-            out = new ObjectOutputStream(bos);
-            out.writeObject(note);
-            out.flush();
-            bytes = bos.toByteArray();
+        note.setSection(Constants.UNDEFINED);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                bos.close();
-            } catch (IOException ex) {
-            }
-        }
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder
+                .registerTypeAdapter(SimpleNote.class, new SuperNoteSerializerForDb())
+                .registerTypeAdapter(ListNote.class, new SuperNoteSerializerForDb())
+                .setPrettyPrinting()
+                .create();
+
+        String parsedNote = gson.toJson(note);
+
+        SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_TASK,  bytes);
+        values.put(KEY_NOTE,  parsedNote);
         values.put(KEY_SECTION, Constants.UNDEFINED);
         values.put(KEY_REMIND,note.isRemind() ? 1 : 0);
         long id = db.insert(TABLE, null, values);
         db.close();
+
         return (int) id;
     }
 
@@ -253,31 +224,25 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        SuperNote task = null;
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder
+                .registerTypeAdapter(SuperNote.class, new SuperNoteDeserializerForDb())
+                .setPrettyPrinting()
+                .create();
+
+
+        SuperNote note = null;
+
+
         if (cursor.moveToFirst()) {
             do {
-                byte[] bytes = cursor.getBlob(2);
-                ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                ObjectInput in = null;
-                try {
-                    in = new ObjectInputStream(bis);
-                    task = (SuperNote) in.readObject();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if (in != null) {
-                            in.close();
-                        }
-                    } catch (IOException ex) {
-                    }
-                }
+                String noteString = cursor.getString(2);
+                note = gson.fromJson(noteString, SuperNote.class);
 
-                task.setId(Integer.parseInt(cursor.getString(0)));
+                note.setId(Integer.parseInt(cursor.getString(0)));
 
-                notes.add(task);
+                notes.add(note);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -290,27 +255,21 @@ public class DBHelper extends SQLiteOpenHelper {
         String query = "SELECT  * FROM " + TABLE + " WHERE id = '" + id + "'";
         Cursor cursor = db.rawQuery(query, null);
         SuperNote note = null;
+
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder
+                .registerTypeAdapter(SuperNote.class, new SuperNoteDeserializerForDb())
+                .setPrettyPrinting()
+                .create();
+
         if (cursor.moveToFirst()) {
-            byte[] bytes = cursor.getBlob(2);
-            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-            ObjectInput in = null;
-            try {
-                in = new ObjectInputStream(bis);
-                note = (SuperNote) in.readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (in != null) {
-                        in.close();
-                    }
-                } catch (IOException ex) {
-                }
-            }
+            String noteString = cursor.getString(2);
+            note = gson.fromJson(noteString, SuperNote.class);
+
             note.setId(id);
         }
+
         cursor.close();
         return note;
     }
@@ -336,77 +295,67 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<SuperNote> getNotes(String section) {
-        ArrayList<SuperNote> tasks = new ArrayList<>();
+        ArrayList<SuperNote> notes = new ArrayList<>();
 
         String query = "SELECT  * FROM " + TABLE + " WHERE section = '" + section + "'";
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder
+                .registerTypeAdapter(SuperNote.class, new SuperNoteDeserializerForDb())
+                .setPrettyPrinting()
+                .create();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        SuperNote task = null;
+        SuperNote note = null;
+
+
         if (cursor.moveToFirst()) {
             do {
-                byte[] bytes = cursor.getBlob(2);
-                ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                ObjectInput in = null;
-                try {
-                    in = new ObjectInputStream(bis);
-                    task = (SuperNote) in.readObject();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if (in != null) {
-                            in.close();
-                        }
-                    } catch (IOException ex) {
-                    }
-                }
+                String noteString = cursor.getString(2);
+                note = gson.fromJson(noteString, SuperNote.class);
 
                 int id = cursor.getInt(0);
-                if(task==null) {
+                if(note==null) {
                     continue;
                 }
-                task.setId(cursor.getInt(0));
+                note.setId(cursor.getInt(0));
 
-                tasks.add(task);
+                notes.add(note);
             } while (cursor.moveToNext());
         }
         cursor.close();
-        return tasks;
+        return notes;
     }
 
     public int updateNote(SuperNote note, String section) {
+
+        Log.i("TAG", "Update: remind -" + note.isRemind());
 
         if(section!=null && section.equals(Constants.DELETED)){
             note.setDeletionTime(System.currentTimeMillis());
         }
 
-        note.setSection(section);
+        if(section == null){
+            note.setSection(Constants.CURRENT_KIND);
+        } else {
+            note.setSection(section);
+        }
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        byte[] bytes = null;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutput out = null;
-        try {
-            out = new ObjectOutputStream(bos);
-            out.writeObject(note);
-            out.flush();
-            bytes = bos.toByteArray();
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder
+                .registerTypeAdapter(SimpleNote.class, new SuperNoteSerializerForDb())
+                .registerTypeAdapter(ListNote.class, new SuperNoteSerializerForDb())
+                .setPrettyPrinting()
+                .create();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                bos.close();
-            } catch (IOException ex) {
-            }
-        }
+        String parsedNote = gson.toJson(note);
+
         ContentValues values = new ContentValues();
-        values.put(KEY_TASK, bytes);
+        values.put(KEY_NOTE, parsedNote);
         if(section != null)
         values.put(KEY_SECTION, section);
         values.put(KEY_REMIND, note.isRemind() ? 1 : 0);
@@ -428,39 +377,28 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
+        Log.i("TAG", "getNotificationNotes(): count - " + cursor.getCount());
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder
+                .registerTypeAdapter(SuperNote.class, new SuperNoteDeserializerForDb())
+                .setPrettyPrinting()
+                .create();
 
         SuperNote note = null;
+
         if (cursor.moveToFirst()) {
             do {
-                byte[] bytes = cursor.getBlob(2);
-                ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                ObjectInput in = null;
-                try {
-                    in = new ObjectInputStream(bis);
-                    note = (SuperNote) in.readObject();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if (in != null) {
-                            in.close();
-                        }
-                    } catch (IOException ex) {
-                    }
-                }
+                String noteString = cursor.getString(2);
+                note = gson.fromJson(noteString, SuperNote.class);
 
-                int id = cursor.getInt(0);
-                if(note==null) {
-                    continue;
-                }
-                note.setId(cursor.getInt(0));
+                note.setId(Integer.parseInt(cursor.getString(0)));
 
                 notes.add(note);
             } while (cursor.moveToNext());
         }
         cursor.close();
+        Log.i("TAG", "getNotificationNotes(): size - " + notes.size());
 
         return notes;
     }

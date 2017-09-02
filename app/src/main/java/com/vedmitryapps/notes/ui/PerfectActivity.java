@@ -26,6 +26,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.Menu;
@@ -46,7 +47,6 @@ import com.vedmitryapps.notes.helper.SimpleItemTouchHelperCallback;
 import com.vedmitryapps.notes.helper.SpacesItemDecoration;
 import com.vedmitryapps.notes.logic.DBHelper;
 import com.vedmitryapps.notes.logic.Section;
-import com.vedmitryapps.notes.logic.SimpleNote;
 import com.vedmitryapps.notes.logic.SuperNote;
 import com.vedmitryapps.notes.untils.Constants;
 
@@ -207,11 +207,11 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             mEditor.putString("first_launch", "123");
             mEditor.commit();
 
-            SimpleNote sn = new SimpleNote();
+  /*          SimpleNote sn = new SimpleNote();
             sn.setHeadLine(getString(R.string.welcome));
             sn.setContent(getString(R.string.write_notes));
             sn.setId(0);
-            sDbHelper.addNote(sn);
+            sDbHelper.addNote(sn);*/
 
         }
     }
@@ -930,11 +930,14 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
             return;
 
         mValues = mAdapter.getNotes();
+
         for (SuperNote s: mValues
                 ) {
+            Log.i("TAG", "Perfect act : remind - " + s.isRemind());
             if(!sDbHelper.isRemind(s)){
                 s.setRemind(false);
             }
+            Log.i("TAG", "Perfect act update : remind - " + s.isRemind());
             sDbHelper.updateNote(s, currentKind);
         }
     }
@@ -955,6 +958,7 @@ public class PerfectActivity extends AppCompatActivity implements NavigationView
                 ) {
             if(s.isRemind() == true && s.getReminderTime()<System.currentTimeMillis() && !s.isRepeating()){
                 s.setRemind(false);
+                Log.i("TAG", "Perfect act : check deprecated - " + s.isRemind());
                 sDbHelper.updateNote(s, currentKind);
             }
         }

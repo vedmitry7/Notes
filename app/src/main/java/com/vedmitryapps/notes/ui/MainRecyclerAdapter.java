@@ -16,6 +16,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,6 +44,7 @@ import java.util.List;
 
 import static com.vedmitryapps.notes.R.id.headTextView;
 import static com.vedmitryapps.notes.R.id.taskTextView;
+import static com.vedmitryapps.notes.ui.PerfectActivity.sDbHelper;
 
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.RecyclerViewHolder>
@@ -104,7 +106,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public void returnTranslatedTask(String s){
         for (SuperNote st: selectedNotesCopy){
-            mActivity.sDbHelper.updateNote(st, s);
+            sDbHelper.updateNote(st, s);
         }
         notes.addAll(selectedNotesCopy);
         selectedNotesCopy.clear();
@@ -155,11 +157,20 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     List<SuperNote> getNotes() {
+        for (SuperNote s: notes
+                ) {
+            Log.i("TAG", "Adapter getNotes : remind - " + s.isRemind());
+        }
         return notes;
     }
 
     MainRecyclerAdapter(List<SuperNote> notes, Context mContext) {
         this.notes = notes;
+
+        for (SuperNote s: notes
+                ) {
+            Log.i("TAG", "Adapter getNotes : remind - " + s.isRemind());
+        }
 
         compareTasks();
 
@@ -179,6 +190,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mSharedPreferences = mActivity.getSharedPreferences(Constants.NAME_PREFERENCES, Context.MODE_PRIVATE);
 
         textSize = mSharedPreferences.getInt("cardFontSize", 16);
+
+
     }
 
     private void cancelNotification(int requestCode){
@@ -203,9 +216,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
             case Constants.ARCHIVE:
                 if(mActivity.currentKind == Constants.ARCHIVE){
-                    mActivity.sDbHelper.updateNote(notes.get(position), Constants.UNDEFINED);
+                    sDbHelper.updateNote(notes.get(position), Constants.UNDEFINED);
                 } else {
-                    mActivity.sDbHelper.updateNote(notes.get(position), Constants.ARCHIVE);
+                    sDbHelper.updateNote(notes.get(position), Constants.ARCHIVE);
                 }
                 mActivity.showSnackBar(Constants.ARCHIVE, 1);
                 notes.get(position).setPosition(0);
@@ -214,7 +227,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 setRightPosition();
                 break;
             case Constants.DELETED:
-                mActivity.sDbHelper.updateNote(notes.get(position), Constants.DELETED);
+                sDbHelper.updateNote(notes.get(position), Constants.DELETED);
                 cancelNotification(notes.get(position).getId());
                 mActivity.showSnackBar(Constants.DELETED, 1);
                 notes.get(position).setPosition(0);
@@ -246,9 +259,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     @Override
                     public void onClick(View view) {
                         if(mActivity.currentKind == Constants.ARCHIVE){
-                            mActivity.sDbHelper.updateNote(notes.get(position), Constants.UNDEFINED);
+                            sDbHelper.updateNote(notes.get(position), Constants.UNDEFINED);
                         } else {
-                            mActivity.sDbHelper.updateNote(notes.get(position), Constants.ARCHIVE);
+                            sDbHelper.updateNote(notes.get(position), Constants.ARCHIVE);
                         }
                         mActivity.showSnackBar(Constants.ARCHIVE, 1);
                         dialog.dismiss();
@@ -268,7 +281,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mActivity.sDbHelper.updateNote(notes.get(position), Constants.DELETED);
+                        sDbHelper.updateNote(notes.get(position), Constants.DELETED);
                         cancelNotification(notes.get(position).getId());
                         dialog.dismiss();
                         mActivity.showSnackBar(Constants.DELETED, 1);
@@ -307,7 +320,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 note.setRepeating(false);
                 cancelNotification(note);
             }
-            mActivity.sDbHelper.updateNote(note, s);
+            sDbHelper.updateNote(note, s);
         }
         mActivity.showSnackBar(s, selectedNotesCounter);
         notes.removeAll(superNotes);
@@ -335,7 +348,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         compareSelectionTasks();
         for (SuperNote t : superNotes
                 ) {
-            mActivity.sDbHelper.deleteNote(t);
+            sDbHelper.deleteNote(t);
         }
         notes.removeAll(superNotes);
         superNotes.clear();
