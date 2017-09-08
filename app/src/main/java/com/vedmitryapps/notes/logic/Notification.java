@@ -1,6 +1,8 @@
 package com.vedmitryapps.notes.logic;
 
 
+import android.content.Context;
+
 public class Notification {
 
     private int id;
@@ -40,5 +42,15 @@ public class Notification {
         this.repeatingPeriod = repeatingPeriod;
     }
 
-    public void
+
+    public void sendSingleNotification(Context context){
+
+    }
+    public void sendRepeatingNotification(Context context){
+
+    }
+    public void cancelNotification(){
+
+    }
+
 }
